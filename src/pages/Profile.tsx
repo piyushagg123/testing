@@ -1,114 +1,107 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import img from "../assets/background.jpg";
-
+import projectImage from "../assets/noProjectAdded.jpg";
 import reviewImage from "../assets/noReviewsAdded.png";
-
-import { FaFacebook, FaInstagram, FaExternalLinkAlt } from "react-icons/fa";
-import { IoMdAddCircle } from "react-icons/io";
-import { FaSquareXTwitter } from "react-icons/fa6";
-
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import XIcon from "@mui/icons-material/X";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+} from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
-
+import Carousel from "../components/Carousel";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useQuery } from "react-query";
 import { AuthContext } from "../context/Login";
+
+const fetchData = async () => {
+  const response = await axios.get(
+    `https://designmatch.ddns.net/vendor/auth/details`,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response.data.data;
+};
+
+const fetchProjects = async () => {
+  const response = await axios.get(
+    `https://designmatch.ddns.net/vendor/auth/project/details`,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response.data.data;
+};
+
 const Profile = () => {
-  const { setLogin } = useContext(AuthContext);
+  const { setLogin, userDetails } = useContext(AuthContext);
   const [about, setAbout] = useState(true);
   const [projects, setProjects] = useState(false);
   const [reviews, setReviews] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState("");
-
-  const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [data, setData] = useState({});
-  const navigate = useNavigate();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response = await axios.get(
-          `https://designmatch.ddns.net/vendor/auth/details`,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-          }
-        );
-        setData(response.data.data);
-
-        setIsLoading(false);
-        // console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLogin(false);
-        navigate("/error");
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Review:", review);
-    console.log("Rating:", rating);
-    setShowModal(false);
-  };
-
   const [open, setOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const { data, error, isLoading } = useQuery("vendorDetails", fetchData, {
+    onError: () => {
+      setLogin(false);
+      navigate("/error");
+    },
+  });
+
+  const { data: projectsData } = useQuery("vendorProjects", fetchProjects);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setShowModal(false);
+  };
 
   const handleClose = () => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") {
-      return;
-    }
     setOpen(false);
     setIsSubmitted(false);
     setSelectedSubCategories([]);
   };
+
   const handleFormSubmit = (subCategories) => {
     setSelectedSubCategories(subCategories);
     setIsSubmitted(true);
   };
+
   const formatCategory = (str) => {
     let formattedStr = str.replace(/_/g, " ");
-
     formattedStr = formattedStr
       .toLowerCase()
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
-
     return formattedStr;
   };
 
-  const [projectsData, setProjectsData] = useState([]);
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching data</p>;
 
-  if (isLoading) return;
-  else if (!data) {
-    return (
-      <>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <p>Session has expired</p>
-      </>
-    );
-  }
   return (
     <div className="mt-[70px] text-text h-screen flex  justify-center gap-3">
       <div className="text-[10px] md:text-[16px]  flex flex-col gap-7 md:gap-0 pl-4">
         <br />
-
         <div className="w-[310px] md:w-max">
           <br />
           <div className="flex items-end gap-3">
@@ -143,12 +136,10 @@ const Profile = () => {
             </div>
           </div>
           <br />
-
           <div className="flex gap-3">
             <div></div>
           </div>
           <br />
-
           <div className="flex gap-3 text-[18px] border-b-[0.3px] border-black">
             <button
               className={`${about ? "border-b-[2px] border-black" : ""}`}
@@ -201,13 +192,36 @@ const Profile = () => {
                 className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
                 onClick={() => setOpen(true)}
               >
-                <IoMdAddCircle /> Add a new project
+                <AddCircleIcon /> Add a new project
               </button>
             </div>
             <br />
-            <div className="flex flex-wrap gap-10 justify-between"></div>
+            <div className="flex flex-wrap gap-10 justify-between">
+              {!projectsData ? (
+                <div className="flex flex-col">
+                  <div className="">
+                    <img src={projectImage} alt="" className="w-[300px]" />
+                  </div>
+                  <br />
+                  <p className="">No projects added yet by the designer</p>
+                  <br />
+                </div>
+              ) : (
+                projectsData.map((item, ind) => (
+                  <Carousel
+                    imageObj={item.images}
+                    title={item.title}
+                    desc={item.description}
+                    city={item.city}
+                    spaces={item.sub_category_2}
+                    state={item.state}
+                    theme={item.sub_category_1}
+                    key={ind}
+                  />
+                ))
+              )}
+            </div>
             <br />
-
             <br />
             <br />
           </div>
@@ -258,13 +272,13 @@ const Profile = () => {
             <p className="font-bold">Socials</p>
             <div className="flex gap-3 text-[16px]">
               <a href="">
-                <FaFacebook />
+                <FacebookIcon />
               </a>
               <a href="">
-                <FaInstagram />
+                <InstagramIcon />
               </a>
               <a href="">
-                <FaSquareXTwitter />
+                <XIcon />
               </a>
             </div>
           </div>
@@ -283,7 +297,7 @@ const Profile = () => {
               href="https://homezdesigners.com/"
               className="flex items-center gap-1 text-[16px]"
             >
-              homezdesigners.com <FaExternalLinkAlt />
+              homezdesigners.com <OpenInNewIcon />
             </a>
           </div>
 
@@ -293,7 +307,7 @@ const Profile = () => {
               href={`mailto:${data.email}`}
               className="flex items-center gap-1 text-[16px]"
             >
-              {data.email} <FaExternalLinkAlt />
+              {data.email} <OpenInNewIcon />
             </a>
           </div>
           <br />
@@ -319,10 +333,11 @@ const Profile = () => {
           </div>
           {!isSubmitted ? (
             <>
-              <AddAProject handleClose={handleClose} />{" "}
+              <AddAProject handleFormSubmit={handleFormSubmit} />{" "}
             </>
           ) : (
             <>
+              {/* <p>rvrvrvrvrrvrtvtrrvrtvt</p> */}
               <ProjectImages
                 subCategories={selectedSubCategories}
                 handleClose={handleClose}

@@ -22,21 +22,26 @@ const ImageCarousel = ({
   });
 
   return (
-    <Card sx={{ maxWidth: 355, height: 500 }}>
+    <Card sx={{ height: 310, width: "47%" }}>
       <CardActionArea>
-        <Box sx={{ width: 355 }}>
+        <Box sx={{ width: "100%" }}>
           <Carousel
             autoPlay={true}
             animation="slide"
             cycleNavigation={true}
             interval={2000}
+            indicatorIconButtonProps={{
+              style: {
+                display: "none",
+              },
+            }}
           >
             {arr.map((item, i) => (
               <Item key={i} item={item} />
             ))}
           </Carousel>
         </Box>
-        <CardContent>
+        <CardContent sx={{ padding: "0px 5px" }}>
           <Typography gutterBottom variant="h5" component="div">
             {title}
           </Typography>
@@ -45,12 +50,12 @@ const ImageCarousel = ({
             <p>
               <span className="font-bold">Theme:</span> {theme}
             </p>
-            <p>
+            {/* <p>
               <span className="font-bold">Spaces:</span> {spaces}
-            </p>
-            <p>
+            </p> */}
+            {/* <p>
               {city},{state}
-            </p>
+            </p> */}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -64,7 +69,7 @@ const Item = ({ item }) => {
       <img
         src={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${item}`}
         alt="Carousel Item"
-        style={{ width: "100%", height: "312px" }}
+        style={{ width: "100%", height: "200px" }}
       />
     </Paper>
   );

@@ -17,7 +17,6 @@ const ProjectImages = ({ subCategories, handleClose }) => {
     async (spaceIndex, imageIndex, e) => {
       const file = e.target.files[0];
       if (!file) {
-        console.error("No file selected");
         return;
       }
 
@@ -53,12 +52,7 @@ const ProjectImages = ({ subCategories, handleClose }) => {
           updatedSpaces[spaceIndex].imageNames[imageIndex] = imageName;
           return updatedSpaces;
         });
-      } catch (error) {
-        console.error(
-          `Error uploading image for ${subCategories[spaceIndex]}:`,
-          error
-        );
-      }
+      } catch (error) {}
     },
     [subCategories, projectId, accessToken]
   );
@@ -67,7 +61,6 @@ const ProjectImages = ({ subCategories, handleClose }) => {
     async (spaceIndex, imageIndex) => {
       const imageName = spaceTypes[spaceIndex].imageNames[imageIndex];
       if (!imageName) {
-        console.error("No image to delete");
         return;
       }
 
@@ -88,12 +81,7 @@ const ProjectImages = ({ subCategories, handleClose }) => {
           updatedSpaces[spaceIndex].imageNames[imageIndex] = null;
           return updatedSpaces;
         });
-      } catch (error) {
-        console.error(
-          `Error deleting image for ${subCategories[spaceIndex]}:`,
-          error
-        );
-      }
+      } catch (error) {}
     },
     [spaceTypes, subCategories, projectId, accessToken]
   );

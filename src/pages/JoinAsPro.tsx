@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
-import MultipleSelect from "../components/Testing";
+import MultipleSelect from "../components/MultipleSelect";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -8,12 +8,9 @@ import { AuthContext } from "../context/Login";
 
 const JoinAsPro = ({ handleClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-
-  const [loadingStates, setLoadingStates] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
-  const { setJoinAsPro, is_vendor } = useContext(AuthContext);
+  const { setJoinAsPro, is_vendor, state } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     business_name: "",
@@ -34,23 +31,6 @@ const JoinAsPro = ({ handleClose }) => {
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
 
-  useEffect(() => {
-    const fetchStateData = async () => {
-      setLoadingStates(true);
-      try {
-        const response = await axios.get(
-          "https://designmatch.ddns.net/location/states"
-        );
-        setStates(response.data.data);
-      } catch (error) {
-        console.error("Error fetching state data:", error);
-      } finally {
-        setLoadingStates(false);
-      }
-    };
-    fetchStateData();
-  }, []);
-
   const handleStateChange = async (event, value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -66,7 +46,6 @@ const JoinAsPro = ({ handleClose }) => {
         );
         setCities(response.data.data);
       } catch (error) {
-        console.error("Error fetching city data:", error);
       } finally {
         setLoadingCities(false);
       }
@@ -123,9 +102,7 @@ const JoinAsPro = ({ handleClose }) => {
           }
         );
       }
-    } catch (error) {
-      console.error("Error during profile creation or file upload:", error);
-    }
+    } catch (error) {}
 
     is_vendor(true);
     handleClose();
@@ -280,7 +257,6 @@ const JoinAsPro = ({ handleClose }) => {
                   apiEndpoint="https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER"
                   maxSelection={3}
                   onChange={(selected) => {
-                    console.log("Selected Sub Category 1:", selected);
                     setFormData((prevData) => ({
                       ...prevData,
                       sub_category_1: selected,
@@ -347,26 +323,60 @@ const JoinAsPro = ({ handleClose }) => {
             <>
               <br />
 
-              <label htmlFor="" className="flex items-center justify-around">
+              <div className="flex flex-wrap gap-2">
+                <label className="flex flex-col text-[16px]">
+                  Instagram
+                  <input
+                    type="url"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    name="address"
+                    className="w-[220px] px-2"
+                    // value={formData.address}
+                    // onChange={handleChange}
+                    // required
+                  />
+                </label>
+                <label className="flex flex-col text-[16px]">
+                  Facebook
+                  <input
+                    type="url"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    name="address"
+                    className="w-[220px] px-2"
+                    // value={formData.address}
+                    // onChange={handleChange}
+                    // required
+                  />
+                </label>
+                <label className="flex flex-col text-[16px]">
+                  Website
+                  <input
+                    type="url"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    name="address"
+                    className="w-[220px] px-2"
+                    // value={formData.address}
+                    // onChange={handleChange}
+                    // required
+                  />
+                </label>
+              </div>
+              <label htmlFor="" className="flex items-center justify-between">
                 <p>Select your state</p>
                 <Autocomplete
                   disablePortal
                   id="state-autocomplete"
-                  options={states}
+                  options={state}
                   onChange={handleStateChange}
-                  loading={loadingStates}
                   sx={{ width: 220 }}
+                  size="small"
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      // label="Enter your state"
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (
                           <React.Fragment>
-                            {loadingStates ? (
-                              <CircularProgress color="inherit" size={20} />
-                            ) : null}
                             {params.InputProps.endAdornment}
                           </React.Fragment>
                         ),
@@ -377,13 +387,14 @@ const JoinAsPro = ({ handleClose }) => {
               </label>
               <label
                 htmlFor=""
-                className="flex items-center justify-around gap-[10px]"
+                className="flex items-center justify-between gap-[10px]"
               >
                 <p>Select your city</p>
                 <Autocomplete
                   disablePortal
                   id="city-autocomplete"
                   options={cityOptions}
+                  size="small"
                   onChange={(event, value) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -412,24 +423,26 @@ const JoinAsPro = ({ handleClose }) => {
                 />
               </label>
 
-              <label className="flex flex-col text-[16px] mt-4">
-                Upload Logo
+              <label className="flex justify-between mt-4">
+                <p>Upload Logo</p>
                 <input
                   type="file"
                   name="logo"
                   onChange={handleLogoChange}
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  className="w-[220px] px-2"
+                  className="w-[220px] px-2 text-[14px]"
                   required
                 />
               </label>
               {logoPreview && (
-                <img
-                  src={logoPreview}
-                  alt="Logo Preview"
-                  className="w-[220px] h-auto mt-2"
-                  style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                />
+                <div className="flex items-center justify-center">
+                  <img
+                    src={logoPreview}
+                    alt="Logo Preview"
+                    className="w-[100px] h-auto mt-2"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  />
+                </div>
               )}
               <br />
               <div className="flex gap-2 w-[455px] justify-between">
@@ -440,6 +453,7 @@ const JoinAsPro = ({ handleClose }) => {
                 >
                   Back
                 </button>
+
                 <button
                   type="submit"
                   className="p-2 w-[100px] bg-sec rounded-[5px] border-[2px] text-white"

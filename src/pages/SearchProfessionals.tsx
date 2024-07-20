@@ -16,15 +16,14 @@ import { AuthContext } from "../context/Login";
 
 const SearchProfessionals = () => {
   const [sortBy, setSortBy] = useState("");
-  const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
-  const [loadingStates, setLoadingStates] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
   const [data, setData] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { state } = useContext(AuthContext);
 
   const [filter1, setFilter1] = useState("");
   const [filter2, setFilter2] = useState("");
@@ -34,25 +33,7 @@ const SearchProfessionals = () => {
     fetchVendorList(filter1, filter2, filter3);
   }, [filter1, filter2, filter3]);
 
-  const fetchStateData = async () => {
-    setLoadingStates(true);
-    try {
-      const response = await axios.get(
-        "https://designmatch.ddns.net/location/states"
-      );
-      setStates(response.data.data);
-    } catch (error) {
-      console.error("Error fetching state data:", error);
-    } finally {
-      setLoadingStates(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchStateData();
-  }, []);
-
-  const handleStateChange = async (value) => {
+  const handleStateChange = async (event, value) => {
     setSelectedState(value);
     setSelectedCity(null);
 
@@ -64,7 +45,6 @@ const SearchProfessionals = () => {
         );
         setCities(response.data.data);
       } catch (error) {
-        console.error("Error fetching city data:", error);
       } finally {
         setLoadingCities(false);
       }
@@ -100,27 +80,26 @@ const SearchProfessionals = () => {
       setFilteredItems(response.data.data);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error);
       setIsLoading(false);
     }
   };
 
-  const handleFilterChange = (selectedOptions) => {
+  const handleThemeFilter = (selectedOptions) => {
     setFilter1(selectedOptions);
   };
 
-  const handleFilterChange2 = (selectedOptions2) => {
+  const handleSpaceFilter = (selectedOptions2) => {
     setFilter2(selectedOptions2);
   };
 
-  const handleFilterChange3 = (selectedOptions3) => {
+  const handleExecutionFilter = (selectedOptions3) => {
     setFilter3(selectedOptions3);
   };
 
   return (
     <div className="mt-16">
       <div className="flex flex-col">
-        <div className="bg-text text-prim w-[100%] m-auto flex flex-col items-center p-10">
+        <div className="bg-[#2b3618] text-prim w-[100%] m-auto flex flex-col items-center p-10">
           <h1 className="text-2xl sm:text-3xl">
             Get matched with local professionals
           </h1>
@@ -130,64 +109,74 @@ const SearchProfessionals = () => {
           </p>
           <br />
           <br />
-          <div className="flex flex-col md:flex-row gap-2 bg-white p-3">
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="state-autocomplete"
-              options={states}
-              onChange={handleStateChange}
-              loading={loadingStates}
-              sx={{ width: 225, color: "white" }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Enter your state"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <React.Fragment>
-                        {loadingStates ? (
-                          <CircularProgress color="inherit" size={20} />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </React.Fragment>
-                    ),
-                  }}
-                />
-              )}
-            />
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="city-autocomplete"
-              options={selectedState ? cities : ["Select a state first"]}
-              onChange={(event, value) => setSelectedCity(value)}
-              loading={loadingCities}
-              disabled={!selectedState} // Disable if no state is selected
-              sx={{ width: 225, color: "white" }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={
-                    !selectedState ? "Select a state first" : "Enter your city"
-                  }
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <React.Fragment>
-                        {loadingCities ? (
-                          <CircularProgress color="inherit" size={20} />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </React.Fragment>
-                    ),
-                  }}
-                />
-              )}
-            />
+          <div className="flex flex-col md:flex-row gap-2 items-end bg-[#2b3618]">
+            <label htmlFor="">
+              Select your state
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="state-autocomplete"
+                options={state}
+                onChange={handleStateChange}
+                sx={{
+                  width: 225,
+                  color: "white",
+                  background: "white",
+                  borderRadius: "4px",
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    // label="Enter your state"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <React.Fragment>
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </label>
+            <label htmlFor="">
+              Select your city
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="city-autocomplete"
+                options={selectedState ? cities : ["Select a state first"]}
+                onChange={(event, value) => setSelectedCity(value)}
+                loading={loadingCities}
+                disabled={!selectedState}
+                sx={{
+                  width: 225,
+                  color: "white",
+                  background: "white",
+                  borderRadius: "4px",
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={!selectedState ? "Select a state first" : ""}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <React.Fragment>
+                          {loadingCities ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </label>
             <button
-              className="bg-text text-prim border-[2px]  border-prim h-[40px] text-sm  p-2 hover:bg-prim hover:text-text "
+              className="bg-white text-[#2b3618] border-[2px]  border-prim h-[40px] text-sm  p-2 hover:bg-prim hover:text-text "
               style={{ borderRadius: "5px" }}
             >
               Get started
@@ -196,18 +185,18 @@ const SearchProfessionals = () => {
         </div>
       </div>
       <br />
-      <div className="flex  justify-start flex-col lg:flex-row">
+      <div className="flex  justify-start flex-col lg:flex-row items-start">
         <div className="w-fit" style={{ borderRight: "solid 0.5px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
             <Filters
-              handleFilterChange={handleFilterChange}
-              handleFilterChange2={handleFilterChange2}
-              handleFilterChange3={handleFilterChange3}
+              handleThemeFilter={handleThemeFilter}
+              handleSpaceFilter={handleSpaceFilter}
+              handleExecutionFilter={handleExecutionFilter}
             />
           </div>
         </div>
         <div className="w-full">
-          <div className="flex mt-2 md:mt-0 gap-2 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-center md:items-start">
+          <div className="flex mt-2 md:mt-0 gap-2 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
             {filteredItems ? (
               <p>{filteredItems.length} Home improvement pros</p>
             ) : (

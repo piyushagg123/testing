@@ -1,5 +1,6 @@
-import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { AiOutlineStar } from "react-icons/ai";
+import StarIcon from "@mui/icons-material/Star";
+import StarHalfIcon from "@mui/icons-material/StarHalf";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const StarRating = ({ stars }) => {
   const ratingStar = Array.from({ length: 5 }, (index) => {
@@ -7,16 +8,16 @@ const StarRating = ({ stars }) => {
     return (
       <span key={index}>
         {stars >= index + 1 ? (
-          <FaStar className="icon text-[#FFBE28]" />
+          <StarIcon className="icon text-[#FFBE28]" />
         ) : stars >= number ? (
-          <FaStarHalfAlt className="icon text-[#FFBE28]" />
+          <StarHalfIcon className="icon text-[#FFBE28]" />
         ) : (
-          <AiOutlineStar className="icon" />
+          <StarBorderIcon className="icon" />
         )}
       </span>
     );
   });
-  return <div className="flex items-center">{ratingStar}</div>;
+  return <div className="flex items-center text-[#c7511f]">{ratingStar}</div>;
 };
 
 export default StarRating;

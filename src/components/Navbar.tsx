@@ -1,15 +1,13 @@
 import { useState, useContext, useRef, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
-import { RxCross2 } from "react-icons/rx";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
 import { Dialog, DialogContent, IconButton } from "@mui/material";
 import JoinAsPro from "../pages/JoinAsPro";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
-import { CgProfile } from "react-icons/cg";
-import { IoIosLogOut } from "react-icons/io";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 const Navbar = () => {
   const [isDivVisible, setIsDivVisible] = useState(false);
   const divRef = useRef(null);
@@ -35,6 +33,8 @@ const Navbar = () => {
 
   const [toggleMenu, setToggleMenu] = useState(false);
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
+
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       const result = await axios.delete(
@@ -49,13 +49,9 @@ const Navbar = () => {
         setToggleProfileMenu(false);
         setLogin(false);
         sessionStorage.removeItem("token");
-      } else console.log("Cant log out");
-    } catch (error) {
-      console.log("error during logging out: ", error);
-    }
-  };
-  const toggle = () => {
-    setToggleMenu(!toggleMenu);
+        navigate("/");
+      }
+    } catch (error) {}
   };
 
   const [open, setOpen] = useState(false);
@@ -69,11 +65,6 @@ const Navbar = () => {
   return (
     <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg">
       <div className="flex items-center gap-4">
-        <div className="lg:hidden">
-          <button onClick={toggle}>
-            {toggleMenu ? <RxCross2 /> : <FaBars />}
-          </button>
-        </div>
         <div className="logo">
           <Link to="/">LOGO</Link>
         </div>
@@ -149,7 +140,7 @@ const Navbar = () => {
                         className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[350px] hover:bg-[#f3f1f1] transition-all"
                         onClick={() => setToggleProfileMenu(false)}
                       >
-                        <CgProfile /> <p>View Profile</p>
+                        <AccountCircleIcon /> <p>View Profile</p>
                       </NavLink>
                     </div>
                   ) : (
@@ -165,7 +156,7 @@ const Navbar = () => {
                         handleLogout();
                       }}
                     >
-                      <IoIosLogOut /> <p>Log Out</p>
+                      <LogoutIcon /> <p>Log Out</p>
                     </button>
                     <br />
                     <br />

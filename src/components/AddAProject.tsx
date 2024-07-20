@@ -1,7 +1,7 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
-
-import MultipleSelect from "./Testing";
+import { useQuery } from "react-query";
+import MultipleSelect from "./MultipleSelect";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -13,9 +13,7 @@ const AddAProject = ({ handleClose }) => {
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [loadingStates, setLoadingStates] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
@@ -34,28 +32,23 @@ const AddAProject = ({ handleClose }) => {
     state: "",
   });
 
-  useEffect(() => {
-    const fetchStateData = async () => {
-      setLoadingStates(true);
-      try {
-        const response = await axios.get(
-          "https://designmatch.ddns.net/location/states"
-        );
-        setStates(response.data.data);
-      } catch (error) {
-        console.error("Error fetching state data:", error);
-      } finally {
-        setLoadingStates(false);
-      }
-    };
-    fetchStateData();
-  }, []);
+  const fetchStates = async () => {
+    const response = await axios.get(
+      "https://designmatch.ddns.net/location/states"
+    );
+    return response.data.data;
+  };
 
-  const handleStateChange = async (value) => {
+  const { data: states, isLoading: loadingStates } = useQuery(
+    "states",
+    fetchStates
+  );
+
+  const handleStateChange = async (event, value) => {
     setFormData((prevData) => ({
       ...prevData,
       state: value,
-      city: "", // Reset city value when state changes
+      city: "",
     }));
     setCities([]);
     setLoadingCities(true);
@@ -66,7 +59,6 @@ const AddAProject = ({ handleClose }) => {
         );
         setCities(response.data.data);
       } catch (error) {
-        console.error("Error fetching city data:", error);
       } finally {
         setLoadingCities(false);
       }
@@ -137,20 +129,10 @@ const AddAProject = ({ handleClose }) => {
           },
         }
       );
-      console.log("Project creation successful:", response);
-      console.log(response.data.data.project_id);
       setProjectId(response.data.data.project_id);
-
-      // Set the selected subcategories and mark the form as submitted
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
-
-      // Optionally, navigate to a different route if needed
-      // navigate("/some-route");
-    } catch (error) {
-      console.error("Error during project creation:", error);
-    }
-    // handleClose();
+    } catch (error) {}
   };
 
   if (isSubmitted) {
@@ -247,7 +229,6 @@ const AddAProject = ({ handleClose }) => {
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
                   size="small"
-                  // label="Theme"
                   apiEndpoint="https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER"
                   maxSelection={7}
                   onChange={(selected) => {
@@ -266,7 +247,6 @@ const AddAProject = ({ handleClose }) => {
                 <p>Select the spaces (maximum of 7)</p>
                 <MultipleSelect
                   size="small"
-                  // label="Spaces"
                   apiEndpoint="https://designmatch.ddns.net/category/subcategory2/list?category=INTERIOR_DESIGNER"
                   maxSelection={7}
                   onChange={(selected) => {
@@ -284,7 +264,6 @@ const AddAProject = ({ handleClose }) => {
                 <p>Type of execution</p>
                 <MultipleSelect
                   size="small"
-                  // label="Execution Type"
                   apiEndpoint="https://designmatch.ddns.net/category/subcategory3/list?category=INTERIOR_DESIGNER"
                   maxSelection={1}
                   onChange={(selected) => {
@@ -316,7 +295,6 @@ const AddAProject = ({ handleClose }) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        // label="State"
                         InputProps={{
                           ...params.InputProps,
                           endAdornment: (
@@ -357,7 +335,6 @@ const AddAProject = ({ handleClose }) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        // label="City"
                         InputProps={{
                           ...params.InputProps,
                           endAdornment: (
@@ -394,16 +371,6 @@ const AddAProject = ({ handleClose }) => {
             </div>
           </>
         )}
-
-        {/* <div className="flex justify-center">
-          <button
-            type="submit"
-            style={{ borderRadius: "5px" }}
-            className="p-2 mt-4 w-[250px] rounded-md border-text border-[2px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text"
-          >
-            Add Project
-          </button>
-        </div> */}
       </form>
     </div>
   );

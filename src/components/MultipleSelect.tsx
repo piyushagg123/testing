@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useQuery } from "react-query";
 import axios from "axios";
 
 const ITEM_HEIGHT = 30;
@@ -27,6 +28,11 @@ function getStyles(value, selectedValues, theme) {
   };
 }
 
+const fetchOptions = async (apiEndpoint) => {
+  const response = await axios.get(apiEndpoint);
+  return response.data.data.value;
+};
+
 export default function MultipleSelect({
   label,
   apiEndpoint,
@@ -35,8 +41,11 @@ export default function MultipleSelect({
 }) {
   const theme = useTheme();
   const [selectedValues, setSelectedValues] = useState([]);
-  const [options, setOptions] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const { data: options = [], isLoading } = useQuery(
+    ["options", apiEndpoint],
+    () => fetchOptions(apiEndpoint)
+  );
 
   const handleChange = (event) => {
     const {
@@ -51,21 +60,6 @@ export default function MultipleSelect({
     setSelectedValues(newValue);
     onChange(newValue);
   };
-
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const response = await axios.get(apiEndpoint);
-        setOptions(response.data.data.value);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOptions();
-  }, [apiEndpoint]);
 
   const selectedValuesWithIds = selectedValues.map((value) => {
     const option = options.find((option) => option.value === value);
@@ -99,7 +93,7 @@ export default function MultipleSelect({
           }}
           size="small"
         >
-          {loading ? (
+          {isLoading ? (
             <MenuItem disabled>
               <CircularProgress size={24} />
             </MenuItem>

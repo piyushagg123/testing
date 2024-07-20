@@ -1,6 +1,4 @@
 import * as React from "react";
-
-//dialog
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -14,6 +12,8 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { Input as BaseInput } from "@mui/base/Input";
 import { styled } from "@mui/system";
+import axios from "axios";
+import CryptoJS from "crypto-js";
 
 function OTP({ separator, length, value, onChange }) {
   const inputRefs = React.useRef(new Array(length).fill(null));
@@ -111,6 +111,8 @@ function OTP({ separator, length, value, onChange }) {
   const handlePaste = (event, currentIndex) => {
     event.preventDefault();
     const clipboardData = event.clipboardData;
+
+    // Check if there is text data in the clipboard
     if (clipboardData.types.includes("text/plain")) {
       let pastedText = clipboardData.getData("text/plain");
       pastedText = pastedText.substring(0, length).trim();
@@ -223,7 +225,6 @@ const InputElement = styled("input")(
       };
     }
 
-    // firefox
     &:focus-visible {
       outline: 0;
     }
@@ -240,36 +241,69 @@ OTP.propTypes = {
 const ForgotPassword = () => {
   const [otp, setOtp] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const steps = [
-    "Enter you email address",
+    "Enter your email address",
     "Enter the OTP",
     "Enter the new password",
   ];
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  const [open, setOpen] = React.useState(false);
+  const [accessToken, setAccessToken] = React.useState("");
 
-  const handleNext = () => {
-    let newSkipped = skipped;
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  const handleNext = async () => {
+    try {
+      if (activeStep === 0) {
+        const response = await axios.get(
+          `https://designmatch.ddns.net/user/password-reset/otp?email=${email}`
+        );
+        if (response) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+      } else if (activeStep === 1) {
+        const response = await axios.get(
+          `https://designmatch.ddns.net/user/password-reset/validate-otp?otp=${otp}&email=${email}`
+        );
+        if (response) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          setAccessToken(response.data.otp_access_token);
+        }
+      } else if (activeStep === 2) {
+        const newPass = CryptoJS.SHA1(password).toString();
+        const response = await axios.post(
+          "https://designmatch.ddns.net/user/password-reset/update",
+          { password: newPass },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (response.data.success) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+        handleClose();
+      }
+    } catch (error) {}
   };
 
   const handleReset = () => {
     setActiveStep(0);
+    setEmail("");
+    setOtp("");
+    setPassword("");
   };
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
     setOpen(false);
+    handleReset();
   };
 
   return (
@@ -280,41 +314,33 @@ const ForgotPassword = () => {
       <Dialog
         open={open}
         onClose={handleClose}
+        BackdropProps={{
+          onClick: (event) => handleClose(event, "backdropClick"),
+        }}
         PaperProps={{
-          component: "form",
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            handleClose();
+          onKeyDown: (event) => {
+            if (event.key === "Escape") {
+              handleClose(event, "escapeKeyDown");
+            }
           },
         }}
       >
-        <DialogTitle className="bg-prim ">
+        <DialogTitle className="bg-prim">
           <p className="text-text text-2xl">Forgot your password</p>
         </DialogTitle>
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
-            <br />
-            <br />
             <Stepper activeStep={activeStep}>
-              {steps.map((label, index) => {
-                const stepProps = {};
-                const labelProps = {};
-
-                return (
-                  <Step key={label} {...stepProps}>
-                    <StepLabel {...labelProps}>{label}</StepLabel>
-                  </Step>
-                );
-              })}
+              {steps.map((label, index) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
             </Stepper>
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
-                  All steps completed - you&apos;re finished
+                  All steps completed - you're finished
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                   <Box sx={{ flex: "1 1 auto" }} />
@@ -324,100 +350,74 @@ const ForgotPassword = () => {
             ) : (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
-                  {activeStep == 0 ? (
-                    <>
-                      <Box
-                        component="form"
-                        sx={{
-                          "& > :not(style)": { m: 1, width: "300px" },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                      >
-                        <TextField
-                          id="standard-basic"
-                          label="Enter your registered email ID"
-                          variant="standard"
-                          value={email}
-                          onChange={setEmail}
-                        />
-                      </Box>
-                    </>
+                  {activeStep === 0 ? (
+                    <Box
+                      component="form"
+                      sx={{ "& > :not(style)": { m: 1, width: "500px" } }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        id="standard-basic"
+                        label="Enter your registered email ID"
+                        variant="standard"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        sx={{ width: "500px" }}
+                      />
+                    </Box>
+                  ) : activeStep === 1 ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        gap: 2,
+                      }}
+                    >
+                      <OTP
+                        separator={<span>-</span>}
+                        value={otp}
+                        onChange={setOtp}
+                        length={6}
+                      />
+                    </Box>
                   ) : (
-                    <>
-                      <br />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          gap: 2,
-                        }}
-                      >
-                        <OTP
-                          separator={<span>-</span>}
-                          value={otp}
-                          onChange={setOtp}
-                          length={5}
-                        />
-                      </Box>
-                    </>
+                    <Box
+                      component="form"
+                      sx={{ "& > :not(style)": { m: 1, width: "300px" } }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        id="standard-basic"
+                        label="Enter your new password"
+                        variant="standard"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </Box>
                   )}
                 </Typography>
-                <br />
-                <br />
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     pt: 2,
-                    justifyContent: "space-between",
+                    justifyContent: "flex-end",
                   }}
                 >
-                  <div>
-                    <Button
-                      color="inherit"
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
-                    >
-                      <p
-                        className={`border-text border-[2px] text-text px-3 py-1 rounded-[8px] `}
-                      >
-                        Back
-                      </p>{" "}
-                    </Button>
-                  </div>
-
-                  <div
-                    className={`${
-                      activeStep === steps.length - 1 ? "hidden" : "block "
-                    } text-text`}
-                  >
-                    <Button onClick={handleNext}>
-                      <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
-                        {activeStep === steps.length - 1 ? "" : "Next"}
-                      </p>
-                    </Button>
-                  </div>
-                  <div
-                    className={`${
-                      activeStep !== steps.length - 1 ? "hidden" : "block"
-                    } text-text`}
-                  >
-                    <Button onClick={handleClose} className="text-text">
-                      <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
-                        {activeStep === steps.length - 1 ? "Submit" : ""}
-                      </p>
-                    </Button>
-                  </div>
+                  <Button onClick={handleNext}>
+                    <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
+                      {activeStep === steps.length - 1 ? "Submit" : "Next"}
+                    </p>
+                  </Button>
                 </Box>
               </React.Fragment>
             )}
           </Box>
         </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions> */}
       </Dialog>
     </div>
   );

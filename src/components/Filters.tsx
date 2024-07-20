@@ -1,80 +1,59 @@
-import { useEffect, useState } from "react";
-import { IoMdCloseCircleOutline } from "react-icons/io";
+import { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "./Checkbox";
 import axios from "axios";
+import { useQuery } from "react-query";
 
+const fetchThemes = async () => {
+  const response = await axios.get(
+    `https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER`
+  );
+  return response.data.data.value;
+};
+
+const fetchSpaces = async () => {
+  const response = await axios.get(
+    `https://designmatch.ddns.net/category/subcategory2/list?category=INTERIOR_DESIGNER`
+  );
+  return response.data.data.value;
+};
+
+const fetchExecutionTypes = async () => {
+  const response = await axios.get(
+    `https://designmatch.ddns.net/category/subcategory3/list?category=INTERIOR_DESIGNER`
+  );
+  return response.data.data.value;
+};
 const Filters = ({
-  handleFilterChange,
-  handleFilterChange2,
-  handleFilterChange3,
+  handleThemeFilter,
+  handleSpaceFilter,
+  handleExecutionFilter,
 }) => {
-  const [profession, setProfession] = useState([]);
-  const [theme, setTheme] = useState([]);
-  const [spaces, setSpaces] = useState([]);
-  const [executionType, setExecutionType] = useState([]);
-  useEffect(() => {
-    const fetchProfession = async () => {
-      try {
-        let response = await axios.get(
-          `https://designmatch.ddns.net/category/list`
-        );
-        setProfession(response.data.data.value);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    const fetchTheme = async () => {
-      try {
-        let response = await axios.get(
-          `https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER`
-        );
-        setTheme(response.data.data.value);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    const fetchSpaces = async () => {
-      try {
-        let response = await axios.get(
-          `https://designmatch.ddns.net/category/subcategory2/list?category=INTERIOR_DESIGNER`
-        );
-        setSpaces(response.data.data.value);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    const fetchExecution = async () => {
-      try {
-        let response = await axios.get(
-          `https://designmatch.ddns.net/category/subcategory3/list?category=INTERIOR_DESIGNER`
-        );
-        setExecutionType(response.data.data.value);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const { data: theme = [], isLoading: themeLoading } = useQuery(
+    "themes",
+    fetchThemes
+  );
+  const { data: spaces = [], isLoading: spacesLoading } = useQuery(
+    "spaces",
+    fetchSpaces
+  );
+  const { data: executionType = [], isLoading: executionLoading } = useQuery(
+    "executionTypes",
+    fetchExecutionTypes
+  );
 
-    fetchProfession();
-    fetchSpaces();
-    fetchTheme();
-    fetchExecution();
-  }, []);
-
-  const formatString = (str: String) => {
-    return str
-      .toLowerCase()
-      .replace(/_/g, " ")
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+  const formatString = (str) => {
+    const formattedStr = str.toLowerCase().replace(/_/g, " ");
+    return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
+
   const formattedThemes = theme.map((item) => formatString(item.value));
   const formattedSpaces = spaces.map((item) => formatString(item.value));
   const formattedExecution = executionType.map((item) =>
     formatString(item.value)
   );
 
-  let [filterMenu, setFilterMenu] = useState(false);
+  const [filterMenu, setFilterMenu] = useState(false);
   return (
     <div className=" flex flex-col gap-3  text-text w-[225px]">
       <div className="flex gap-5 justify-between pr-2 pl-2 xl:pr-4 xl:pl-4 text-[15px]">
@@ -84,146 +63,37 @@ const Filters = ({
         {filterMenu ? (
           <>
             <div
-              className={"block absolute bg-white w-screen z-10 md:hidden p-3"}
+              className={"block absolute bg-white w-screen z-10 lg:hidden p-3"}
             >
               <div>
                 <div className="flex items-center justify-between pr-4">
-                  <h1>FILTERS</h1>
-                  <IoMdCloseCircleOutline
-                    onClick={() => setFilterMenu(false)}
-                  />
+                  <h1 className="font-bold">FILTERS</h1>
+                  <CloseIcon onClick={() => setFilterMenu(false)} />
                 </div>
                 <div className="flex flex-col gap-2 p-3 ">
-                  <h3 className="font-bold text-[19px]">Location</h3>
-                  <ul className="flex flex-col gap-1">
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Delhi
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Ghaziabad
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Greater Noida
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Gurugram
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Noida
-                      </label>
-                    </li>
-                  </ul>
+                  <h3 className="font-bold text-[19px]">Themes</h3>
+
+                  <Checkbox
+                    options={formattedThemes}
+                    onChange={handleThemeFilter}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 p-3">
+                  <h3 className="font-bold text-[19px]">Spaces</h3>
+
+                  <Checkbox
+                    options={formattedSpaces}
+                    onChange={handleSpaceFilter}
+                  />
                 </div>
                 <div className="flex flex-col gap-2 p-3">
-                  <h3 className="font-bold text-[19px]">
-                    Professional Category
-                  </h3>
-                  <ul className="flex flex-col gap-1">
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Architects and Building Designers
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Home Builders
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Interior Designers and Decorators
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Civil Engineers and Contractors
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          value=""
-                          className="mr-3"
-                        />
-                        Design-Build Firms
-                      </label>
-                    </li>
-                  </ul>
+                  <h3 className="font-bold text-[19px]">Execution Type</h3>
+
+                  <Checkbox
+                    options={formattedExecution}
+                    onChange={handleExecutionFilter}
+                  />
                 </div>
                 <div className="flex justify-center">
                   <button
@@ -247,20 +117,20 @@ const Filters = ({
         <div className="flex flex-col gap-2 p-3 ">
           <h3 className="font-bold text-[19px]">Themes</h3>
 
-          <Checkbox options={formattedThemes} onChange={handleFilterChange} />
+          <Checkbox options={formattedThemes} onChange={handleThemeFilter} />
         </div>
 
         <div className="flex flex-col gap-2 p-3">
           <h3 className="font-bold text-[19px]">Spaces</h3>
 
-          <Checkbox options={formattedSpaces} onChange={handleFilterChange2} />
+          <Checkbox options={formattedSpaces} onChange={handleSpaceFilter} />
         </div>
         <div className="flex flex-col gap-2 p-3">
           <h3 className="font-bold text-[19px]">Execution Type</h3>
 
           <Checkbox
             options={formattedExecution}
-            onChange={handleFilterChange3}
+            onChange={handleExecutionFilter}
           />
         </div>
       </div>

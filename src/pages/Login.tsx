@@ -1,27 +1,14 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import ForgotPassword from "../components/ForgotPassword";
-// import https from "https";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setLogin, userDetails, setUserDetails } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    emailOrMobile: "",
-    password: "",
-  });
+  const { setLogin, setUserDetails } = useContext(AuthContext);
   const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const isEmail = (input) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,28 +22,35 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    if (!formData.emailOrMobile) {
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const emailOrMobile = formData.get("emailOrMobile");
+    const password = formData.get("password");
+
+    if (!emailOrMobile) {
       setError("Please enter your email or mobile number.");
       return;
     }
 
-    if (!formData.password) {
+    if (!password) {
       setError("Please enter your password.");
       return;
     }
 
     let data = {};
-    if (isEmail(formData.emailOrMobile)) {
-      data.email = formData.emailOrMobile;
-    } else if (isMobile(formData.emailOrMobile)) {
-      data.mobile = formData.emailOrMobile;
+    if (isEmail(emailOrMobile)) {
+      data.email = emailOrMobile;
+    } else if (isMobile(emailOrMobile)) {
+      data.mobile = emailOrMobile;
     } else {
       setError("Please enter a valid email or mobile number.");
       return;
     }
 
-    data.password = CryptoJS.SHA1(formData.password).toString();
+    data.password = CryptoJS.SHA1(password).toString();
 
     try {
       const response = await axios.post(
@@ -77,14 +71,13 @@ const Login = () => {
       setLogin(true);
       navigate("/");
     } catch (error) {
-      console.error("Error during login:", error);
       setError(error.response.data.debug_info);
     }
   };
 
   return (
     <div className="mt-16">
-      <div className=" lg:h-screen h-full flex flex-col">
+      <div className="lg:h-screen h-full flex flex-col">
         <div
           className="w-fit m-auto p-8"
           style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
@@ -108,8 +101,6 @@ const Login = () => {
                 type="text"
                 id="emailOrMobile"
                 name="emailOrMobile"
-                value={formData.emailOrMobile}
-                onChange={handleChange}
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
             </label>
@@ -125,8 +116,6 @@ const Login = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
               <br />

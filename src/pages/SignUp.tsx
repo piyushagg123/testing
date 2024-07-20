@@ -1,86 +1,77 @@
-import process from "process";
 import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { MdLabelImportant } from "react-icons/md";
+import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
-
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import JoinAsPro from "./JoinAsPro";
 import { IconButton } from "@mui/material";
 
 const SignUp = () => {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   const navigate = useNavigate();
-  const [isChecked, setIsChecked] = useState(false);
   const { setLogin, setUserDetails } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    mobile: "",
-    password: "",
-  });
+  const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!formData.first_name) {
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const formObject = {};
+    formData.forEach((value, key) => {
+      formObject[key] = value;
+    });
+
+    if (!formObject.first_name) {
       setError("Please enter your first name.");
       return;
     }
 
-    if (!formData.last_name) {
+    if (!formObject.last_name) {
       setError("Please enter your last name.");
       return;
     }
 
-    if (!formData.email) {
+    if (!formObject.email) {
       setError("Please enter your email.");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(formObject.email)) {
       setError("Please enter a valid email.");
       return;
     }
 
-    if (!formData.mobile) {
+    if (!formObject.mobile) {
       setError("Please enter your mobile number.");
       return;
     }
 
     const mobileRegex = /^[0-9]{10}$/;
-    if (!mobileRegex.test(formData.mobile)) {
+    if (!mobileRegex.test(formObject.mobile)) {
       setError("Please enter a valid mobile number.");
       return;
     }
 
-    if (!formData.password) {
+    if (!formObject.password) {
       setError("Please enter your password.");
       return;
     }
 
-    formData.password = CryptoJS.SHA1(formData.password).toString();
-
+    formObject.password = CryptoJS.SHA1(formObject.password).toString();
     try {
       const response = await axios.post(
         `https://designmatch.ddns.net/user/register`,
-        formData
+        formObject
       );
+
       sessionStorage.setItem("token", response.data.access_token);
       const user_data = await axios.get(
         "https://designmatch.ddns.net/user/details",
@@ -100,7 +91,6 @@ const SignUp = () => {
         navigate("/");
       }
     } catch (error) {
-      console.error("Error during signup:", error);
       setError(error.response.data.debug_info);
     }
   };
@@ -127,17 +117,17 @@ const SignUp = () => {
           <br />
           <br />
           <div className="flex items-center">
-            <MdLabelImportant className="text-sm" />
+            <LabelImportantIcon className="text-sm" />
             <p>Explore vast selection of ideas</p>
           </div>
           <br />
           <div className="flex items-center">
-            <MdLabelImportant className="text-sm" />
+            <LabelImportantIcon className="text-sm" />
             <p>Get matched with best interior designers near you</p>
           </div>
           <br />
           <div className="flex items-center">
-            <MdLabelImportant className="text-sm" />
+            <LabelImportantIcon className="text-sm" />
             <p>Sit back, relax and get your home recreated.</p>
           </div>
         </div>
@@ -162,8 +152,6 @@ const SignUp = () => {
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 id="first_name"
                 name="first_name"
-                value={formData.first_name}
-                onChange={handleChange}
               />
             </label>
             <br />
@@ -174,8 +162,6 @@ const SignUp = () => {
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 id="last_name"
                 name="last_name"
-                value={formData.last_name}
-                onChange={handleChange}
               />
             </label>
             <br />
@@ -186,8 +172,6 @@ const SignUp = () => {
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 id="mobile"
                 name="mobile"
-                value={formData.mobile}
-                onChange={handleChange}
               />
             </label>
             <br />
@@ -197,8 +181,6 @@ const SignUp = () => {
                 type="text"
                 id="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
             </label>
@@ -211,8 +193,6 @@ const SignUp = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
                 className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
               <br />
@@ -221,8 +201,8 @@ const SignUp = () => {
                 <div>
                   <input
                     type="checkbox"
-                    name=""
-                    id=""
+                    name="join_as_pro"
+                    id="join_as_pro"
                     checked={isChecked}
                     onChange={(e) => setIsChecked(e.target.checked)}
                   />
