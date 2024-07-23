@@ -8,6 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import JoinAsPro from "./JoinAsPro";
 import { IconButton } from "@mui/material";
+import config from "../config";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -68,19 +69,16 @@ const SignUp = () => {
     formObject.password = CryptoJS.SHA1(formObject.password).toString();
     try {
       const response = await axios.post(
-        `https://designmatch.ddns.net/user/register`,
+        `${config.apiBaseUrl}/user/register`,
         formObject
       );
 
       sessionStorage.setItem("token", response.data.access_token);
-      const user_data = await axios.get(
-        "https://designmatch.ddns.net/user/details",
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
+      const user_data = await axios.get(`${config.apiBaseUrl}/user/details`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       setUserDetails(user_data.data);
 
       setLogin(true);

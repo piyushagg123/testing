@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import ForgotPassword from "../components/ForgotPassword";
+import config from "../config";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,19 +55,16 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://designmatch.ddns.net/user/login",
+        `${config.apiBaseUrl}/user/login`,
         data
       );
 
       sessionStorage.setItem("token", response.data.access_token);
-      const user_data = await axios.get(
-        "https://designmatch.ddns.net/user/details",
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
+      const user_data = await axios.get(`${config.apiBaseUrl}/user/details`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       setUserDetails(user_data.data);
       setLogin(true);
       navigate("/");

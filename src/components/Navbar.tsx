@@ -8,6 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import config from "../config";
 const Navbar = () => {
   const [isDivVisible, setIsDivVisible] = useState(false);
   const divRef = useRef(null);
@@ -29,7 +30,7 @@ const Navbar = () => {
     };
   }, [isDivVisible]);
 
-  const { login, setLogin, userDetails, vendor } = useContext(AuthContext);
+  const { login, setLogin, userDetails } = useContext(AuthContext);
 
   const [toggleMenu, setToggleMenu] = useState(false);
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
@@ -37,14 +38,11 @@ const Navbar = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const result = await axios.delete(
-        "https://designmatch.ddns.net/user/logout",
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
+      const result = await axios.delete(`${config.apiBaseUrl}/user/logout`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       if (result) {
         setToggleProfileMenu(false);
         setLogin(false);
@@ -66,7 +64,9 @@ const Navbar = () => {
     <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg">
       <div className="flex items-center gap-4">
         <div className="logo">
-          <Link to="/">LOGO</Link>
+          <Link to="/" className="text-[purple]">
+            pickele
+          </Link>
         </div>
         <div
           className={
@@ -78,7 +78,7 @@ const Navbar = () => {
       </div>
       {login ? (
         <div className="flex gap-4 items-center">
-          {vendor || userDetails.data.is_vendor ? (
+          {userDetails?.data?.is_vendor ? (
             ""
           ) : (
             <div>
@@ -101,7 +101,7 @@ const Navbar = () => {
                 }}
               >
                 <Avatar sx={{ bgcolor: deepOrange[500] }}>
-                  {`${userDetails.data.first_name[0]}${userDetails.data.last_name[0]}`}
+                  {`${userDetails?.data?.first_name[0]}${userDetails?.data?.last_name[0]}`}
                 </Avatar>
               </button>
             </div>
@@ -114,7 +114,7 @@ const Navbar = () => {
               style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
               ref={divRef}
             >
-              <p className=" mt-3">{userDetails.data.email}</p>
+              <p className=" mt-3">{userDetails?.data?.email}</p>
               <Avatar
                 sx={{
                   bgcolor: deepOrange[500],
@@ -123,17 +123,17 @@ const Navbar = () => {
                   marginTop: 2,
                 }}
               >
-                {`${userDetails.data.first_name[0]}${userDetails.data.last_name[0]}`}
+                {`${userDetails?.data?.first_name[0]}${userDetails?.data?.last_name[0]}`}
               </Avatar>
               <p className="text-2xl pb-[16px]">
-                Hi {userDetails.data.first_name}!!
+                Hi {userDetails?.data?.first_name}!!
               </p>
 
               <br />
 
               <div className="">
                 <div className="flex flex-col items-center bg-white justify-center w-[370px] rounded-[10px] p-2 mb-2">
-                  {vendor || userDetails.data.is_vendor ? (
+                  {userDetails?.data?.is_vendor ? (
                     <div className="">
                       <NavLink
                         to={"/profile"}

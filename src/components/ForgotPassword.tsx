@@ -8,12 +8,12 @@ import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { Input as BaseInput } from "@mui/base/Input";
 import { styled } from "@mui/system";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import config from "../config";
 
 function OTP({ separator, length, value, onChange }) {
   const inputRefs = React.useRef(new Array(length).fill(null));
@@ -255,14 +255,14 @@ const ForgotPassword = () => {
     try {
       if (activeStep === 0) {
         const response = await axios.get(
-          `https://designmatch.ddns.net/user/password-reset/otp?email=${email}`
+          `${config.apiBaseUrl}/user/password-reset/otp?email=${email}`
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
       } else if (activeStep === 1) {
         const response = await axios.get(
-          `https://designmatch.ddns.net/user/password-reset/validate-otp?otp=${otp}&email=${email}`
+          `${config.apiBaseUrl}/user/password-reset/validate-otp?otp=${otp}&email=${email}`
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -271,7 +271,7 @@ const ForgotPassword = () => {
       } else if (activeStep === 2) {
         const newPass = CryptoJS.SHA1(password).toString();
         const response = await axios.post(
-          "https://designmatch.ddns.net/user/password-reset/update",
+          `${config.apiBaseUrl}/user/password-reset/update`,
           { password: newPass },
           {
             headers: {
@@ -339,9 +339,6 @@ const ForgotPassword = () => {
             </Stepper>
             {activeStep === steps.length ? (
               <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  All steps completed - you're finished
-                </Typography>
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                   <Box sx={{ flex: "1 1 auto" }} />
                   <Button onClick={handleReset}>Reset</Button>
@@ -349,7 +346,7 @@ const ForgotPassword = () => {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
+                <div sx={{ mt: 2, mb: 1 }}>
                   {activeStep === 0 ? (
                     <Box
                       component="form"
@@ -399,7 +396,7 @@ const ForgotPassword = () => {
                       />
                     </Box>
                   )}
-                </Typography>
+                </div>
                 <Box
                   sx={{
                     display: "flex",

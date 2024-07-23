@@ -5,10 +5,10 @@ import MultipleSelect from "./MultipleSelect";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { AuthContext } from "../context/Login";
 import ProjectImages from "./ProjectImages";
+import config from "../config";
 
-const AddAProject = ({ handleClose }) => {
+const AddAProject = ({ handleClose, setProjectId, projectId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -17,11 +17,30 @@ const AddAProject = ({ handleClose }) => {
   const [loadingCities, setLoadingCities] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-  const { setProjectId } = useContext(AuthContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState("");
 
-  const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
+  const nextStep = () => {
+    if (currentStep === 1) {
+      if (!title) {
+        setError("Please enter a title");
+        return;
+      }
+      if (!startDate) {
+        setError("Please enter a starting date of project");
+        return;
+      }
+      if (!endDate) {
+        setError("Please enter a ending date of project");
+        return;
+      }
+      if (!description) {
+        setError("Please enter a description about the project");
+        return;
+      }
+    }
+    setCurrentStep((prevStep) => prevStep + 1);
+  };
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
 
   const [formData, setFormData] = useState({
@@ -33,9 +52,7 @@ const AddAProject = ({ handleClose }) => {
   });
 
   const fetchStates = async () => {
-    const response = await axios.get(
-      "https://designmatch.ddns.net/location/states"
-    );
+    const response = await axios.get(`${config.apiBaseUrl}/location/states`);
     return response.data.data;
   };
 
@@ -55,7 +72,7 @@ const AddAProject = ({ handleClose }) => {
     if (value) {
       try {
         const response = await axios.get(
-          `https://designmatch.ddns.net/location/cities?state=${value}`
+          `${config.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -81,23 +98,6 @@ const AddAProject = ({ handleClose }) => {
       sub_category_3: formData.sub_category_3.join(","),
       category: "INTERIOR_DESIGNER",
     };
-
-    if (!title) {
-      setError("Please enter a title");
-      return;
-    }
-    if (!startDate) {
-      setError("Please enter a starting date of project");
-      return;
-    }
-    if (!endDate) {
-      setError("Please enter a ending date of project");
-      return;
-    }
-    if (!description) {
-      setError("Please enter a description about the project");
-      return;
-    }
     if (!processedFormData.sub_category_1) {
       setError("Please select the theme of the project");
       return;
@@ -121,7 +121,7 @@ const AddAProject = ({ handleClose }) => {
 
     try {
       const response = await axios.post(
-        "https://designmatch.ddns.net/vendor/project",
+        `${config.apiBaseUrl}/vendor/project`,
         processedFormData,
         {
           headers: {
@@ -140,6 +140,7 @@ const AddAProject = ({ handleClose }) => {
       <ProjectImages
         subCategories={selectedSubCategories}
         handleClose={handleClose}
+        projectId={projectId}
       />
     );
   }
@@ -151,6 +152,9 @@ const AddAProject = ({ handleClose }) => {
       <form onSubmit={handleSubmit} className="flex flex-col mt-6 h-[548]">
         {currentStep === 1 && (
           <div className="h-[385px]">
+            <p className="flex items-center justify-center text-[red]">
+              {error}
+            </p>
             <div className="flex gap-4">
               <label className="text-sm w-full md:w-auto">
                 Title <br />
@@ -229,7 +233,7 @@ const AddAProject = ({ handleClose }) => {
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
                   size="small"
-                  apiEndpoint="https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER"
+                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -247,7 +251,7 @@ const AddAProject = ({ handleClose }) => {
                 <p>Select the spaces (maximum of 7)</p>
                 <MultipleSelect
                   size="small"
-                  apiEndpoint="https://designmatch.ddns.net/category/subcategory2/list?category=INTERIOR_DESIGNER"
+                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -264,7 +268,7 @@ const AddAProject = ({ handleClose }) => {
                 <p>Type of execution</p>
                 <MultipleSelect
                   size="small"
-                  apiEndpoint="https://designmatch.ddns.net/category/subcategory3/list?category=INTERIOR_DESIGNER"
+                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
                   onChange={(selected) => {
                     setFormData((prevData) => ({

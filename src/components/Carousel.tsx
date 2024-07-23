@@ -3,8 +3,9 @@ import { Paper, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { CardActionArea } from "@mui/material";
-
+import PlaceIcon from "@mui/icons-material/Place";
 import Box from "@mui/material/Box";
+import config from "../config";
 
 const ImageCarousel = ({
   title,
@@ -22,7 +23,7 @@ const ImageCarousel = ({
   });
 
   return (
-    <Card sx={{ height: 310, width: "47%" }}>
+    <Card sx={{ height: 290, width: "47%" }}>
       <CardActionArea>
         <Box sx={{ width: "100%" }}>
           <Carousel
@@ -42,15 +43,24 @@ const ImageCarousel = ({
           </Carousel>
         </Box>
         <CardContent sx={{ padding: "0px 5px" }}>
-          <Typography gutterBottom variant="h5" component="div">
-            {title}
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            className="flex items-center justify-between"
+          >
+            <p>{title}</p>
+            <p className="text-sm flex items-center">
+              <PlaceIcon />
+              {city},{state}
+            </p>
           </Typography>
           <Typography variant="body2">
-            <p>{desc}</p>
+            {/* <p>{desc}</p> */}
             <p>
               <span className="font-bold">Theme:</span> {theme}
             </p>
-            {/* <p>
+            {/* <p className="overflow-x-clip">
               <span className="font-bold">Spaces:</span> {spaces}
             </p> */}
             {/* <p>
@@ -67,7 +77,7 @@ const Item = ({ item }) => {
   return (
     <Paper>
       <img
-        src={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${item}`}
+        src={`${config.apiImageUrl}/${item}`}
         alt="Carousel Item"
         style={{ width: "100%", height: "200px" }}
       />

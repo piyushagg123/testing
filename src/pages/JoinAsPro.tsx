@@ -4,13 +4,18 @@ import MultipleSelect from "../components/MultipleSelect";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { AuthContext } from "../context/Login";
+import { StateContext } from "../context/State";
+import config from "../config";
+
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 const JoinAsPro = ({ handleClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [cities, setCities] = useState([]);
   const [loadingCities, setLoadingCities] = useState(false);
-  const { setJoinAsPro, is_vendor, state } = useContext(AuthContext);
+  const { state } = useContext(StateContext);
 
   const [formData, setFormData] = useState({
     business_name: "",
@@ -26,6 +31,11 @@ const JoinAsPro = ({ handleClose }) => {
     city: "",
     state: "",
     description: "",
+    social: {
+      instagram: "",
+      facebook: "",
+      website: "",
+    },
   });
 
   const [logoFile, setLogoFile] = useState(null);
@@ -42,7 +52,7 @@ const JoinAsPro = ({ handleClose }) => {
     if (value) {
       try {
         const response = await axios.get(
-          `https://designmatch.ddns.net/location/cities?state=${value}`
+          `${config.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -52,6 +62,17 @@ const JoinAsPro = ({ handleClose }) => {
     } else {
       setLoadingCities(false);
     }
+  };
+
+  const handleSocialChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      social: {
+        ...prevData.social,
+        [name]: value,
+      },
+    }));
   };
 
   const handleChange = (e) => {
@@ -75,9 +96,11 @@ const JoinAsPro = ({ handleClose }) => {
       sub_category_3: formData.sub_category_3.join(","),
     };
 
+    console.log(processedFormData);
+
     try {
       const response = await axios.post(
-        "https://designmatch.ddns.net/vendor/onboard",
+        `${config.apiBaseUrl}/vendor/onboard`,
         processedFormData,
         {
           headers: {
@@ -85,14 +108,17 @@ const JoinAsPro = ({ handleClose }) => {
           },
         }
       );
-      setJoinAsPro(true);
+      console.log(response);
+
+      sessionStorage.removeItem("token");
+      sessionStorage.setItem("token", response.data.access_token);
 
       if (logoFile) {
         const formData = new FormData();
         formData.append("logo", logoFile);
 
         const fileUploadResponse = await axios.post(
-          "https://designmatch.ddns.net/image-upload/logo",
+          `${config.apiBaseUrl}/image-upload/logo`,
           formData,
           {
             headers: {
@@ -103,8 +129,7 @@ const JoinAsPro = ({ handleClose }) => {
         );
       }
     } catch (error) {}
-
-    is_vendor(true);
+    window.location.reload();
     handleClose();
   };
 
@@ -254,7 +279,7 @@ const JoinAsPro = ({ handleClose }) => {
                 <p>Select your themes (maximum of three)</p>
                 <MultipleSelect
                   size="small"
-                  apiEndpoint="https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER"
+                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -270,7 +295,7 @@ const JoinAsPro = ({ handleClose }) => {
                 <MultipleSelect
                   size="small"
                   // label="Spaces"
-                  apiEndpoint="https://designmatch.ddns.net/category/subcategory2/list?category=INTERIOR_DESIGNER"
+                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -289,7 +314,7 @@ const JoinAsPro = ({ handleClose }) => {
                 <MultipleSelect
                   size="small"
                   // label="Execution Type"
-                  apiEndpoint="https://designmatch.ddns.net/category/subcategory3/list?category=INTERIOR_DESIGNER"
+                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -322,45 +347,6 @@ const JoinAsPro = ({ handleClose }) => {
           {currentStep === 3 && (
             <>
               <br />
-
-              <div className="flex flex-wrap gap-2">
-                <label className="flex flex-col text-[16px]">
-                  Instagram
-                  <input
-                    type="url"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="address"
-                    className="w-[220px] px-2"
-                    // value={formData.address}
-                    // onChange={handleChange}
-                    // required
-                  />
-                </label>
-                <label className="flex flex-col text-[16px]">
-                  Facebook
-                  <input
-                    type="url"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="address"
-                    className="w-[220px] px-2"
-                    // value={formData.address}
-                    // onChange={handleChange}
-                    // required
-                  />
-                </label>
-                <label className="flex flex-col text-[16px]">
-                  Website
-                  <input
-                    type="url"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="address"
-                    className="w-[220px] px-2"
-                    // value={formData.address}
-                    // onChange={handleChange}
-                    // required
-                  />
-                </label>
-              </div>
               <label htmlFor="" className="flex items-center justify-between">
                 <p>Select your state</p>
                 <Autocomplete
@@ -444,6 +430,74 @@ const JoinAsPro = ({ handleClose }) => {
                   />
                 </div>
               )}
+              <br />
+              <div className="flex gap-2 w-[455px] justify-between">
+                <button
+                  type="button"
+                  onClick={prevStep}
+                  className="p-2 w-[100px] rounded-[5px] border-text border-[2px] text-text bg-prim"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="p-2 w-[100px] bg-sec rounded-[5px] border-[2px] text-white"
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+          {currentStep === 4 && (
+            <>
+              <br />
+
+              <div className="flex flex-col gap-2">
+                <label className="flex text-[16px] justify-between">
+                  <p>
+                    Instagram <InstagramIcon />
+                  </p>
+                  <input
+                    type="url"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    name="instagram"
+                    className="w-[220px] px-2"
+                    value={formData.social.instagram}
+                    onChange={handleSocialChange}
+                  />
+                </label>
+                <br />
+                <label className="flex text-[16px] justify-between">
+                  <p>
+                    Facebook <FacebookIcon />
+                  </p>
+                  <input
+                    type="url"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    name="facebook"
+                    className="w-[220px] px-2"
+                    value={formData.social.facebook}
+                    onChange={handleSocialChange}
+                  />
+                </label>
+                <br />
+                <label className="flex text-[16px] justify-between">
+                  <p>
+                    Website <OpenInNewIcon />
+                  </p>
+                  <input
+                    type="url"
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    name="website"
+                    className="w-[220px] px-2"
+                    value={formData.social.website}
+                    onChange={handleSocialChange}
+                  />
+                </label>
+              </div>
+
               <br />
               <div className="flex gap-2 w-[455px] justify-between">
                 <button

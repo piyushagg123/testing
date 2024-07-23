@@ -21,22 +21,23 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { AuthContext } from "../context/Login";
+import config from "../config";
 
 const fetchData = async () => {
-  const response = await axios.get(
-    `https://designmatch.ddns.net/vendor/auth/details`,
-    {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    }
-  );
+  const response = await axios.get(`${config.apiBaseUrl}/vendor/auth/details`, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
+
+  console.log(response.data.data);
+
   return response.data.data;
 };
 
 const fetchProjects = async () => {
   const response = await axios.get(
-    `https://designmatch.ddns.net/vendor/auth/project/details`,
+    `${config.apiBaseUrl}/vendor/auth/project/details`,
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -59,6 +60,8 @@ const Profile = () => {
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [projectId, setProjectId] = useState();
 
   const { data, error, isLoading } = useQuery("vendorDetails", fetchData, {
     onError: () => {
@@ -108,7 +111,7 @@ const Profile = () => {
             <div>
               {data.logo ? (
                 <img
-                  src={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${data.logo}`}
+                  src={`${config.apiImageUrl}/${data.logo}`}
                   alt=""
                   className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
                 />
@@ -196,7 +199,7 @@ const Profile = () => {
               </button>
             </div>
             <br />
-            <div className="flex flex-wrap gap-10 justify-between">
+            <div className="flex w-[100%] flex-wrap gap-10 justify-between">
               {!projectsData ? (
                 <div className="flex flex-col">
                   <div className="">
@@ -268,20 +271,23 @@ const Profile = () => {
             <p className="font-bold">Contact Number</p>
             <p className="text-[16px]">{data.mobile}</p>
           </div>
-          <div className=" ">
-            <p className="font-bold">Socials</p>
-            <div className="flex gap-3 text-[16px]">
-              <a href="">
-                <FacebookIcon />
-              </a>
-              <a href="">
-                <InstagramIcon />
-              </a>
-              <a href="">
-                <XIcon />
-              </a>
-            </div>
-          </div>
+          {data.social.instagram || data.social.facebook ? (
+            <>
+              <div className=" ">
+                <p className="font-bold">Socials</p>
+                <div className="flex gap-3 text-[16px]">
+                  <a href={data?.social?.facebook}>
+                    <FacebookIcon />
+                  </a>
+                  <a href={data?.social?.instagram}>
+                    <InstagramIcon />
+                  </a>
+                </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
 
           <div className=" ">
             <p className="font-bold">Address</p>
@@ -291,15 +297,21 @@ const Profile = () => {
               {data.state}
             </p>
           </div>
-          <div className=" ">
-            <p className="font-bold">Website</p>
-            <a
-              href="https://homezdesigners.com/"
-              className="flex items-center gap-1 text-[16px]"
-            >
-              homezdesigners.com <OpenInNewIcon />
-            </a>
-          </div>
+          {data.social.website ? (
+            <>
+              <div className=" ">
+                <p className="font-bold">Website</p>
+                <a
+                  href={data?.social?.website}
+                  className="flex items-center gap-1 text-[16px]"
+                >
+                  homezdesigners.com <OpenInNewIcon />
+                </a>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
 
           <div className=" ">
             <p className="font-bold">Email</p>
@@ -333,14 +345,18 @@ const Profile = () => {
           </div>
           {!isSubmitted ? (
             <>
-              <AddAProject handleFormSubmit={handleFormSubmit} />{" "}
+              <AddAProject
+                handleClose={handleClose}
+                setProjectId={setProjectId}
+                projectId={projectId}
+              />{" "}
             </>
           ) : (
             <>
-              {/* <p>rvrvrvrvrrvrtvtrrvrtvt</p> */}
               <ProjectImages
                 subCategories={selectedSubCategories}
                 handleClose={handleClose}
+                projectId={projectId}
               />
             </>
           )}

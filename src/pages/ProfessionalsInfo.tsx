@@ -6,7 +6,6 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import XIcon from "@mui/icons-material/X";
 import { Dialog, DialogContent } from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
@@ -14,17 +13,20 @@ import Carousel from "../components/Carousel";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
+import config from "../config";
 
 const fetchVendorDetails = async (id) => {
   const { data } = await axios.get(
-    `https://designmatch.ddns.net/vendor/details?vendor_id=${id}`
+    `${config.apiBaseUrl}/vendor/details?vendor_id=${id}`
   );
+  console.log(data.data);
+
   return data.data;
 };
 
 const fetchVendorProjects = async (id) => {
   const { data } = await axios.get(
-    `https://designmatch.ddns.net/vendor/project/details?vendor_id=${id}`
+    `${config.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
   );
   return data.data;
 };
@@ -89,7 +91,7 @@ const ProfessionalsInfo = () => {
             <div>
               {vendorData.logo ? (
                 <img
-                  src={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${vendorData.logo}`}
+                  src={`${config.apiImageUrl}/${vendorData.logo}`}
                   alt=""
                   className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
                 />
@@ -176,7 +178,7 @@ const ProfessionalsInfo = () => {
             }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
           >
             <br />
-            <div className="flex flex-wrap gap-10 justify-between">
+            <div className="flex w-[100%] flex-wrap gap-10 justify-between">
               {!projectsData ? (
                 <>
                   <div className="flex flex-col">
@@ -259,44 +261,42 @@ const ProfessionalsInfo = () => {
             <p className="font-bold">Location</p>
             <p className="text-[16px]">{vendorData.city}</p>
           </div>
-          <div className="flex gap-2">
-            {vendorData.socialMedia && vendorData.socialMedia.facebook && (
-              <a
-                href={vendorData.socialMedia.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FacebookIcon />
-              </a>
-            )}
-            {vendorData.socialMedia && vendorData.socialMedia.instagram && (
-              <a
-                href={vendorData.socialMedia.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <InstagramIcon />
-              </a>
-            )}
-            {vendorData.socialMedia && vendorData.socialMedia.website && (
-              <a
-                href={vendorData.socialMedia.website}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <OpenInNewIcon />
-              </a>
-            )}
-            {vendorData.socialMedia && vendorData.socialMedia.linkedin && (
-              <a
-                href={vendorData.socialMedia.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <XIcon />
-              </a>
-            )}
-          </div>
+          {vendorData.social ? (
+            <>
+              <div>
+                <p className="font-bold">Socials</p>
+                {vendorData.social && vendorData.social.facebook && (
+                  <a
+                    href={vendorData.social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FacebookIcon />
+                  </a>
+                )}
+                {vendorData.social && vendorData.social.instagram && (
+                  <a
+                    href={vendorData.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InstagramIcon />
+                  </a>
+                )}
+                {vendorData.social && vendorData.social.website && (
+                  <a
+                    href={vendorData.social.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <OpenInNewIcon />
+                  </a>
+                )}
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <Dialog
           fullWidth

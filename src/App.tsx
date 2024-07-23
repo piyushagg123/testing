@@ -9,30 +9,29 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import { AuthContext } from "./context/Login";
+import { StateContext } from "./context/State";
 import axios from "axios";
 import Error from "./pages/Error";
+import config from "./config";
 
 const fetchUserData = async () => {
-  const { data } = await axios.get(
-    "https://designmatch.ddns.net/user/details",
-    {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    }
-  );
+  const { data } = await axios.get(`${config.apiBaseUrl}/user/details`, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
+
   return data;
 };
 
 const fetchStateData = async () => {
-  const { data } = await axios.get(
-    "https://designmatch.ddns.net/location/states"
-  );
+  const { data } = await axios.get(`${config.apiBaseUrl}/location/states`);
   return data;
 };
 
 function App() {
-  const { setLogin, setState, setUserDetails } = useContext(AuthContext);
+  const { setLogin, setUserDetails } = useContext(AuthContext);
+  const { setState } = useContext(StateContext);
 
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {

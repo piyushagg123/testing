@@ -1,9 +1,10 @@
 import { useState, useCallback, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
+import config from "../config";
 
-const ProjectImages = ({ subCategories, handleClose }) => {
-  const { projectId, accessToken } = useContext(AuthContext);
+const ProjectImages = ({ subCategories, handleClose, projectId }) => {
+  const { accessToken } = useContext(AuthContext);
   const [spaceTypes, setSpaceTypes] = useState(
     subCategories.map((subCategory) => ({
       subCategory,
@@ -36,7 +37,7 @@ const ProjectImages = ({ subCategories, handleClose }) => {
 
       try {
         const response = await axios.post(
-          `https://designmatch.ddns.net/image-upload/project?project_id=${projectId}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
+          `${config.apiBaseUrl}/image-upload/project?project_id=${projectId}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
           formData,
           {
             headers: {
@@ -66,7 +67,7 @@ const ProjectImages = ({ subCategories, handleClose }) => {
 
       try {
         await axios.delete(
-          `https://designmatch.ddns.net/image-upload/project?project_id=${projectId}&key=${imageName}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
+          `${config.apiBaseUrl}/image-upload/project?project_id=${projectId}&key=${imageName}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,

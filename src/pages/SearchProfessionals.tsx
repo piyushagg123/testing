@@ -12,7 +12,8 @@ import {
 } from "@mui/material";
 import Professional from "../components/Professional";
 import Filters from "../components/Filters";
-import { AuthContext } from "../context/Login";
+import config from "../config";
+import { StateContext } from "../context/State";
 
 const SearchProfessionals = () => {
   const [sortBy, setSortBy] = useState("");
@@ -20,10 +21,9 @@ const SearchProfessionals = () => {
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [loadingCities, setLoadingCities] = useState(false);
-  const [data, setData] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(StateContext);
 
   const [filter1, setFilter1] = useState("");
   const [filter2, setFilter2] = useState("");
@@ -41,7 +41,7 @@ const SearchProfessionals = () => {
       setLoadingCities(true);
       try {
         const response = await axios.get(
-          `https://designmatch.ddns.net/location/cities?state=${value}`
+          `${config.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -65,18 +65,14 @@ const SearchProfessionals = () => {
   ) => {
     setIsLoading(true);
     try {
-      let response = await axios.get(
-        "https://designmatch.ddns.net/vendor/list",
-        {
-          params: {
-            category: "INTERIOR_DESIGNER",
-            sub_category_1: selectedOptions.toUpperCase(),
-            sub_category_2: selectedOptions2.toUpperCase(),
-            sub_category_3: selectedOptions3.toUpperCase(),
-          },
-        }
-      );
-      setData(response.data.data);
+      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
+        params: {
+          category: "INTERIOR_DESIGNER",
+          sub_category_1: selectedOptions.toUpperCase(),
+          sub_category_2: selectedOptions2.toUpperCase(),
+          sub_category_3: selectedOptions3.toUpperCase(),
+        },
+      });
       setFilteredItems(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -238,7 +234,7 @@ const SearchProfessionals = () => {
                     <Professional
                       about={item.description}
                       rating={item.rating}
-                      img={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${item.logo}`}
+                      img={`${config.apiImageUrl}/${item.logo}`}
                       profCat={item.business_name}
                     />
                     <hr />

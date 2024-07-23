@@ -3,24 +3,25 @@ import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "./Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
+import config from "../config";
 
 const fetchThemes = async () => {
   const response = await axios.get(
-    `https://designmatch.ddns.net/category/subcategory1/list?category=INTERIOR_DESIGNER`
+    `${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
   );
   return response.data.data.value;
 };
 
 const fetchSpaces = async () => {
   const response = await axios.get(
-    `https://designmatch.ddns.net/category/subcategory2/list?category=INTERIOR_DESIGNER`
+    `${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
   );
   return response.data.data.value;
 };
 
 const fetchExecutionTypes = async () => {
   const response = await axios.get(
-    `https://designmatch.ddns.net/category/subcategory3/list?category=INTERIOR_DESIGNER`
+    `${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
   );
   return response.data.data.value;
 };
