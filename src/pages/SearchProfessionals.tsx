@@ -14,6 +14,7 @@ import Professional from "../components/Professional";
 import Filters from "../components/Filters";
 import config from "../config";
 import { StateContext } from "../context/State";
+import { Button } from "@mui/material";
 
 const SearchProfessionals = () => {
   const [sortBy, setSortBy] = useState("");
@@ -95,18 +96,18 @@ const SearchProfessionals = () => {
   return (
     <div className="mt-16">
       <div className="flex flex-col">
-        <div className="bg-[#2b3618] text-prim w-[100%] m-auto flex flex-col items-center p-10">
-          <h1 className="text-2xl sm:text-3xl">
+        <div className="bg-[#f0f0f0] text-prim w-[100%] m-auto flex flex-col items-center p-10">
+          <h1 className="text-2xl sm:text-3xl text-black">
             Get matched with local professionals
           </h1>
-          <p>
+          <p className="text-black">
             Answer a few questions and we will put you in touch with pros who
             can help.
           </p>
           <br />
           <br />
-          <div className="flex flex-col md:flex-row gap-2 items-end bg-[#2b3618]">
-            <label htmlFor="">
+          <div className="flex flex-col md:flex-row gap-2 items-end bg-[#f0f0f0]">
+            <label htmlFor="" className="text-black">
               Select your state
               <Autocomplete
                 size="small"
@@ -136,7 +137,7 @@ const SearchProfessionals = () => {
                 )}
               />
             </label>
-            <label htmlFor="">
+            <label htmlFor="" className="text-black">
               Select your city
               <Autocomplete
                 size="small"
@@ -171,12 +172,12 @@ const SearchProfessionals = () => {
                 )}
               />
             </label>
-            <button
-              className="bg-white text-[#2b3618] border-[2px]  border-prim h-[40px] text-sm  p-2 hover:bg-prim hover:text-text "
-              style={{ borderRadius: "5px" }}
+            <Button
+              variant="outlined"
+              style={{backgroundColor:"#8c52ff", color: "white"}}
             >
               Get started
-            </button>
+            </Button>
           </div>
         </div>
       </div>

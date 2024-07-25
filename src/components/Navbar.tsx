@@ -5,10 +5,13 @@ import axios from "axios";
 import { Dialog, DialogContent, IconButton } from "@mui/material";
 import JoinAsPro from "../pages/JoinAsPro";
 import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
+import { deepOrange, grey } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import config from "../config";
+import pickelelogo from "../assets/PickeleLogo.png";
+import { Button as MaterialButton } from "@mui/material";
+
 const Navbar = () => {
   const [isDivVisible, setIsDivVisible] = useState(false);
   const divRef = useRef(null);
@@ -65,7 +68,7 @@ const Navbar = () => {
       <div className="flex items-center gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
-            pickele
+            <img src={pickelelogo} alt="Pickele" className="h-10 w-auto" />
           </Link>
         </div>
         <div
@@ -82,12 +85,14 @@ const Navbar = () => {
             ""
           ) : (
             <div>
-              <button
-                className="border-text border-[2px] px-[12px] py-[4px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text rounded-[5px] transition-all text-[16px]"
+              <MaterialButton
+                variant="outlined"
+                style={{ borderColor: "#8c52ff", color: "#8c52ff" }}
+                
                 onClick={() => setOpen(true)}
               >
                 Join as Pro
-              </button>
+              </MaterialButton>
             </div>
           )}
           <div className={`p-[6px] mr-2 `}>
@@ -100,7 +105,7 @@ const Navbar = () => {
                   setIsDivVisible(true);
                 }}
               >
-                <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                <Avatar sx={{ bgcolor: grey[400] }}>
                   {`${userDetails?.data?.first_name[0]}${userDetails?.data?.last_name[0]}`}
                 </Avatar>
               </button>
@@ -168,16 +173,8 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="flex gap-4 pr-5">
-          <div>
-            <button className="border-text border-[2px] px-[12px] py-[4px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text rounded-[5px] transition-all text-[16px]">
-              <NavLink to={"/login"}>Log In</NavLink>
-            </button>
-          </div>
-          <div>
-            <button className="border-text border-[2px] px-[12px] text-[16px] py-[4px] rounded-[5px] transition-all text-text bg-prim hover:bg-text hover:text-prim hover:border-text">
-              <NavLink to={"/signup"}>Join</NavLink>
-            </button>
-          </div>
+          <MaterialButton variant="outlined" style={{color: "black", borderColor:"black"}} onClick={()=>navigate("/login")}>Log In</MaterialButton>
+          <MaterialButton variant="outlined" style={{backgroundColor:"#8c52ff", color: "white"}} onClick={()=>navigate("/signup")}>Join</MaterialButton>            
         </div>
       )}
       <Dialog
