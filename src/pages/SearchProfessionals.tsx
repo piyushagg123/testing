@@ -26,13 +26,13 @@ const SearchProfessionals = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { state } = useContext(StateContext);
 
-  const [filter1, setFilter1] = useState("");
-  const [filter2, setFilter2] = useState("");
-  const [filter3, setFilter3] = useState("");
+  const [themeFilters, setThemeFilters] = useState(new Set());
+  const [spaceFilters, setSpaceFilters] = useState(new Set());
+  const [executionFilters, setExecutionFilters] = useState(new Set());
 
   useEffect(() => {
-    fetchVendorList(filter1, filter2, filter3);
-  }, [filter1, filter2, filter3]);
+    fetchVendorList(themeFilters, spaceFilters, executionFilters);
+  }, [themeFilters, spaceFilters, executionFilters]);
 
   const handleStateChange = async (event, value) => {
     setSelectedState(value);
@@ -60,18 +60,18 @@ const SearchProfessionals = () => {
   };
 
   const fetchVendorList = async (
-    selectedOptions = "",
-    selectedOptions2 = "",
-    selectedOptions3 = ""
+    themeFilters = new Set(),
+    spaceFilters = new Set(),
+    executionFilters = new Set()
   ) => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
         params: {
           category: "INTERIOR_DESIGNER",
-          sub_category_1: selectedOptions.toUpperCase(),
-          sub_category_2: selectedOptions2.toUpperCase(),
-          sub_category_3: selectedOptions3.toUpperCase(),
+          sub_category_1: Array.from(themeFilters).map(option => option.toUpperCase()).join(","),
+          sub_category_2: Array.from(spaceFilters).map(option => option.toUpperCase()).join(","),
+          sub_category_3: Array.from(executionFilters).map(option => option.toUpperCase()).join(","),
         },
       });
       setFilteredItems(response.data.data);
@@ -81,24 +81,45 @@ const SearchProfessionals = () => {
     }
   };
 
-  const handleThemeFilter = (selectedOptions) => {
-    setFilter1(selectedOptions);
+  const onThemeFiltersUpdate = (updatedItem) => {
+    updatedItem = updatedItem.replace(/\s+/g, '_');
+    let updatedThemeFilters = new Set(themeFilters);
+    if (updatedThemeFilters.has(updatedItem)) {
+      updatedThemeFilters.delete(updatedItem);
+    } else {
+      updatedThemeFilters.add(updatedItem);
+    }
+    setThemeFilters(updatedThemeFilters);
   };
 
-  const handleSpaceFilter = (selectedOptions2) => {
-    setFilter2(selectedOptions2);
+  const onSpaceFiltersUpdate = (updatedItem) => {
+    updatedItem = updatedItem.replace(/\s+/g, '_');
+    let updatedSpaceFilters = new Set(spaceFilters);
+    if (updatedSpaceFilters.has(updatedItem)) {
+      updatedSpaceFilters.delete(updatedItem);
+    } else {
+      updatedSpaceFilters.add(updatedItem);
+    }
+    setSpaceFilters(updatedSpaceFilters);
   };
 
-  const handleExecutionFilter = (selectedOptions3) => {
-    setFilter3(selectedOptions3);
+  const onExecutionFiltersUpdate = (updatedItem) => {
+    updatedItem = updatedItem.replace(/\s+/g, '_');
+    let updatedExecutionFilters = new Set(executionFilters);
+    if (updatedExecutionFilters.has(updatedItem)) {
+      updatedExecutionFilters.delete(updatedItem);
+    } else {
+      updatedExecutionFilters.add(updatedItem);
+    }
+    setExecutionFilters(updatedExecutionFilters);
   };
 
   return (
-    <div className="mt-16">
+    <div className="mt-16"  >
       <div className="flex flex-col">
         <div className="bg-[#f0f0f0] text-prim w-[100%] m-auto flex flex-col items-center p-10">
-          <h1 className="text-2xl sm:text-3xl text-black">
-            Get matched with local professionals
+          <h1 className="font-bold text-lg" style={{ color: '#576375' }}>
+            FIND THE MOST SUITABLE INTERIOR DESIGNER NEAR YOU
           </h1>
           <p className="text-black">
             Answer a few questions and we will put you in touch with pros who
@@ -174,7 +195,7 @@ const SearchProfessionals = () => {
             </label>
             <Button
               variant="outlined"
-              style={{backgroundColor:"#8c52ff", color: "white"}}
+              style={{ backgroundColor: "#8c52ff", color: "white" }}
             >
               Get started
             </Button>
@@ -182,14 +203,16 @@ const SearchProfessionals = () => {
         </div>
       </div>
       <br />
-      <div className="flex  justify-start flex-col lg:flex-row items-start">
+      <div className="flex  justify-start flex-col lg:flex-row items-start" style={{ paddingLeft: '64px', paddingRight: '64px' }}>
         <div className="w-fit" style={{ borderRight: "solid 0.5px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
             <Filters
-              handleThemeFilter={handleThemeFilter}
-              handleSpaceFilter={handleSpaceFilter}
-              handleExecutionFilter={handleExecutionFilter}
+              handleThemeFilter={onThemeFiltersUpdate}
+              handleSpaceFilter={onSpaceFiltersUpdate}
+              handleExecutionFilter={onExecutionFiltersUpdate}
             />
+
+
           </div>
         </div>
         <div className="w-full">

@@ -57,14 +57,14 @@ const Navbar = () => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClose = (event, reason) => {
+  const handleClose = (event, reason?:any) => {
     if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
       return;
     }
     setOpen(false);
   };
   return (
-    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg">
+    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg"  style={{ paddingLeft: '64px', paddingRight: '64px' }}>
       <div className="flex items-center gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">

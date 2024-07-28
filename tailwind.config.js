@@ -1,3 +1,5 @@
+import { purple, red } from '@mui/material/colors';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -9,6 +11,11 @@ export default {
         text: "var(--text-color)",
         darkk: "var(--dark-color)",
         lightt: "var(--light-color)",
+        white: "var(--white)",
+        lightgrey: "var(--light-grey)",
+        darkgrey: "var(--dark-grey)",
+        purple: "var(--purple)",
+        red: "var(--red)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
