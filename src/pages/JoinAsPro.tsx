@@ -10,6 +10,7 @@ import config from "../config";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import { useNavigate } from "react-router-dom";
 
 interface SocialLinks {
   instagram: string;
@@ -70,6 +71,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     },
   });
 
+  const navigate = useNavigate();
+
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | ArrayBuffer | null>(
     null
@@ -108,14 +111,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
       },
     }));
   };
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value, type, checked } = e.target;
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]: type === "checkbox" ? checked : value,
-  //   }));
-  // };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -171,6 +166,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     } catch (error) {}
     window.location.reload();
     handleClose();
+    navigate("/");
   };
 
   const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
@@ -430,7 +426,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      // label="Enter your city"
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (

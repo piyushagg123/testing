@@ -12,7 +12,6 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import config from "../config";
 
-// Define types for vendor data and projects data
 interface VendorData {
   logo?: string;
   category: string;

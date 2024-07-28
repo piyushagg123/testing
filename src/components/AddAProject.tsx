@@ -13,11 +13,6 @@ interface AddAProjectProps {
   projectId: number;
 }
 
-// interface StateOption {
-//   id: number;
-//   label: string;
-// }
-
 interface CityOption {
   id: number;
   label: string;
@@ -88,32 +83,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     "states",
     fetchStates
   );
-
-  // const handleStateChange = async (
-  //   event: React.ChangeEvent<{}>,
-  //   value: string
-  // ) => {
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     state: value,
-  //     city: "",
-  //   }));
-  //   setCities([]);
-  //   setLoadingCities(true);
-  //   if (value) {
-  //     try {
-  //       const response = await axios.get(
-  //         `${config.apiBaseUrl}/location/cities?state=${value}`
-  //       );
-  //       setCities(response.data.data);
-  //     } catch (error) {
-  //     } finally {
-  //       setLoadingCities(false);
-  //     }
-  //   } else {
-  //     setLoadingCities(false);
-  //   }
-  // };
 
   const handleStateChange = async (_event: any, value: string) => {
     setFormData((prevData) => ({

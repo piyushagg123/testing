@@ -31,10 +31,8 @@ const SearchProfessionals: React.FC = () => {
   }
 
   const { state } = stateContext;
-  const [sortBy, setSortBy] = useState<string>("");
   const [cities, setCities] = useState<string[]>([]);
   const [selectedState, setSelectedState] = useState<string>("");
-  const [selectedCity, setSelectedCity] = useState<string>("");
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
   const [filteredItems, setFilteredItems] = useState<VendorItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -49,7 +47,6 @@ const SearchProfessionals: React.FC = () => {
 
   const handleStateChange = async (_event: any, value: string | null) => {
     setSelectedState(value ?? "");
-    setSelectedCity("");
 
     if (value) {
       setLoadingCities(true);
@@ -153,7 +150,6 @@ const SearchProfessionals: React.FC = () => {
                 disablePortal
                 id="city-autocomplete"
                 options={selectedState ? cities : ["Select a state first"]}
-                onChange={(_, value) => setSelectedCity(value ?? "")}
                 loading={loadingCities}
                 disabled={!selectedState}
                 sx={{
@@ -219,9 +215,7 @@ const SearchProfessionals: React.FC = () => {
                   className="bg-prim"
                   labelId="sort-by-label"
                   id="sort-by-select"
-                  value={sortBy}
                   label="Sort By"
-                  // onChange={handleSortChange}
                 >
                   <MenuItem value={"rating"}>Rating</MenuItem>
                   <MenuItem value={"recommended"}>Recommended</MenuItem>

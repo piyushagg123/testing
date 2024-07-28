@@ -17,13 +17,13 @@ import { AuthContext } from "../context/Login";
 import config from "../config";
 
 interface ProjectItem {
-  images: Record<string, string[]>; // Assuming images is an object with arrays of strings
+  images: Record<string, string[]>;
   title: string;
   description: string;
   city: string;
-  sub_category_2: string; // Assuming this represents spaces
+  sub_category_2: string;
   state: string;
-  sub_category_1: string; // Assuming this represents theme
+  sub_category_1: string;
 }
 const fetchData = async () => {
   const response = await axios.get(`${config.apiBaseUrl}/vendor/auth/details`, {

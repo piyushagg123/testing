@@ -102,7 +102,6 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
     const lastValue = currentValue[currentValue.length - 1];
     otpArray[indexToEnter] = lastValue;
 
-    // Call onChange with the new OTP value directly
     onChange(otpArray.join(""));
 
     if (currentValue !== "" && currentIndex < length - 1) {
@@ -124,7 +123,6 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
     event.preventDefault();
     const clipboardData = event.clipboardData;
 
-    // Check if there is text data in the clipboard
     if (clipboardData.types.includes("text/plain")) {
       let pastedText = clipboardData.getData("text/plain");
       pastedText = pastedText.substring(0, length).trim();
