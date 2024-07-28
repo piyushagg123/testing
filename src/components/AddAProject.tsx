@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { FormEvent, useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import MultipleSelect from "./MultipleSelect";
@@ -8,17 +8,44 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import config from "../config";
 
-const AddAProject = ({ handleClose, setProjectId, projectId }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [cities, setCities] = useState([]);
-  const [loadingCities, setLoadingCities] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [error, setError] = useState("");
+interface AddAProjectProps {
+  setProjectId: (id: number) => void;
+  projectId: number;
+}
+
+// interface StateOption {
+//   id: number;
+//   label: string;
+// }
+
+interface CityOption {
+  id: number;
+  label: string;
+}
+
+interface FormData {
+  sub_category_1: string[];
+  sub_category_2: string[];
+  sub_category_3: string[];
+  city: string;
+  state: string;
+}
+const AddAProject: React.FC<AddAProjectProps> = ({
+  setProjectId,
+  projectId,
+}) => {
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [cities, setCities] = useState<CityOption[]>([]);
+  const [loadingCities, setLoadingCities] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
+    []
+  );
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [error, setError] = useState<string>("");
 
   const nextStep = () => {
     if (currentStep === 1) {
@@ -40,10 +67,11 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
       }
     }
     setCurrentStep((prevStep) => prevStep + 1);
+    setError("");
   };
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     sub_category_1: [],
     sub_category_2: [],
     sub_category_3: [],
@@ -61,7 +89,33 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
     fetchStates
   );
 
-  const handleStateChange = async (event, value) => {
+  // const handleStateChange = async (
+  //   event: React.ChangeEvent<{}>,
+  //   value: string
+  // ) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     state: value,
+  //     city: "",
+  //   }));
+  //   setCities([]);
+  //   setLoadingCities(true);
+  //   if (value) {
+  //     try {
+  //       const response = await axios.get(
+  //         `${config.apiBaseUrl}/location/cities?state=${value}`
+  //       );
+  //       setCities(response.data.data);
+  //     } catch (error) {
+  //     } finally {
+  //       setLoadingCities(false);
+  //     }
+  //   } else {
+  //     setLoadingCities(false);
+  //   }
+  // };
+
+  const handleStateChange = async (_event: any, value: string) => {
     setFormData((prevData) => ({
       ...prevData,
       state: value,
@@ -84,7 +138,7 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const processedFormData = {
@@ -139,7 +193,6 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
     return (
       <ProjectImages
         subCategories={selectedSubCategories}
-        handleClose={handleClose}
         projectId={projectId}
       />
     );
@@ -232,7 +285,7 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
               >
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
-                  size="small"
+                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
@@ -250,7 +303,7 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
               >
                 <p>Select the spaces (maximum of 7)</p>
                 <MultipleSelect
-                  size="small"
+                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
@@ -267,7 +320,7 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  size="small"
+                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
                   onChange={(selected) => {
@@ -323,10 +376,10 @@ const AddAProject = ({ handleClose, setProjectId, projectId }) => {
                     size="small"
                     id="city-autocomplete"
                     options={cities}
-                    onChange={(event, value) =>
+                    onChange={(_event, value) =>
                       setFormData((prevData) => ({
                         ...prevData,
-                        city: value,
+                        city: value as unknown as string,
                       }))
                     }
                     loading={loadingCities}

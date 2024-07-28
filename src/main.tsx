@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "./index.css";
+import "./App.css";
 import { AuthProvider } from "./context/Login.tsx";
 import { StateProvider } from "./context/State.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";

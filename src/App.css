@@ -1,16 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *{
-  padding: 0;
-  margin: 0;
-}
-input{
-  border: solid 0.5px #e3e3e3;
-}
-.navBar{
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-}
-.filters{
-  border-right: solid 0.5px #e3e3e3;
-}
-.filterOne{
-  border-bottom: solid 0.5px #e3e3e3;
+    padding: 0;
+    margin: 0;
+  }
+  input{
+    border: solid 0.5px #e3e3e3;
+  }
+  .navBar{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  }
+  .filters{
+    border-right: solid 0.5px #e3e3e3;
+  }
+  .filterOne{
+    border-bottom: solid 0.5px #e3e3e3;
+  }
+
+:root {
+    /* --primary-color: #faf6f2;
+    --secondary-color: #ded1bd;
+    --text-color: #683b2b; */
+    --primary-color: #fff;
+    --secondary-color: #31708E;
+    --text-color: #000;
+    --dark-color:#B08401;
+    --light-color:#d49e8d;
+    /* Add more color variables as needed */
 }

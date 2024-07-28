@@ -1,9 +1,14 @@
 import { useState } from "react";
 
-const Checkbox = ({ options, onChange }) => {
+interface CheckboxProps {
+  options: string[];
+  onChange: (selectedOptions: string) => void;
+}
+
+const Checkbox: React.FC<CheckboxProps> = ({ options, onChange }) => {
   const [selectedOptions, setSelectedOptions] = useState("");
 
-  const handleCheckboxChange = (option) => {
+  const handleCheckboxChange = (option: string) => {
     let updatedOptionsArray = selectedOptions ? selectedOptions.split(",") : [];
 
     const formattedOption = option.split(" ").join("_");
@@ -23,7 +28,7 @@ const Checkbox = ({ options, onChange }) => {
 
   return (
     <div className="flex flex-col gap-1">
-      {options.map((option) => (
+      {options.map((option: string) => (
         <label key={option}>
           <input
             type="checkbox"

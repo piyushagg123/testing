@@ -12,12 +12,12 @@ import config from "../config";
 import pickelelogo from "../assets/PickeleLogo.png";
 import { Button as MaterialButton } from "@mui/material";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const [isDivVisible, setIsDivVisible] = useState(false);
-  const divRef = useRef(null);
+  const divRef = useRef<HTMLDivElement | null>(null);
 
-  const handleClickOutside = (event) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (divRef.current && !divRef.current.contains(event.target as Node)) {
       setIsDivVisible(false);
     }
   };
@@ -33,9 +33,12 @@ const Navbar = () => {
     };
   }, [isDivVisible]);
 
-  const { login, setLogin, userDetails } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
 
-  const [toggleMenu, setToggleMenu] = useState(false);
+  if (authContext === undefined) {
+    return;
+  }
+  const { setLogin, userDetails, login } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
 
   const navigate = useNavigate();
@@ -57,7 +60,10 @@ const Navbar = () => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClose = (event, reason) => {
+  const handleClose = (
+    _?: React.SyntheticEvent<Element, Event>,
+    reason?: "backdropClick" | "escapeKeyDown"
+  ) => {
     if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
       return;
     }
@@ -71,24 +77,16 @@ const Navbar = () => {
             <img src={pickelelogo} alt="Pickele" className="h-10 w-auto" />
           </Link>
         </div>
-        <div
-          className={
-            toggleMenu
-              ? "flex flex-col fixed top-16 right-0 left-0 bottom-0 bg-[#00000066] lg:flex-row lg:static lg:bg-none transition-all"
-              : "hidden lg:flex lg:flex-row lg:static"
-          }
-        ></div>
       </div>
       {login ? (
         <div className="flex gap-4 items-center">
-          {userDetails?.data?.is_vendor ? (
+          {userDetails?.is_vendor ? (
             ""
           ) : (
             <div>
               <MaterialButton
                 variant="outlined"
                 style={{ borderColor: "#8c52ff", color: "#8c52ff" }}
-                
                 onClick={() => setOpen(true)}
               >
                 Join as Pro
@@ -106,7 +104,7 @@ const Navbar = () => {
                 }}
               >
                 <Avatar sx={{ bgcolor: grey[400] }}>
-                  {`${userDetails?.data?.first_name[0]}${userDetails?.data?.last_name[0]}`}
+                  {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
                 </Avatar>
               </button>
             </div>
@@ -119,7 +117,7 @@ const Navbar = () => {
               style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
               ref={divRef}
             >
-              <p className=" mt-3">{userDetails?.data?.email}</p>
+              <p className=" mt-3">{userDetails?.email}</p>
               <Avatar
                 sx={{
                   bgcolor: deepOrange[500],
@@ -128,17 +126,17 @@ const Navbar = () => {
                   marginTop: 2,
                 }}
               >
-                {`${userDetails?.data?.first_name[0]}${userDetails?.data?.last_name[0]}`}
+                {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
               </Avatar>
               <p className="text-2xl pb-[16px]">
-                Hi {userDetails?.data?.first_name}!!
+                Hi {userDetails?.first_name}!!
               </p>
 
               <br />
 
               <div className="">
                 <div className="flex flex-col items-center bg-white justify-center w-[370px] rounded-[10px] p-2 mb-2">
-                  {userDetails?.data?.is_vendor ? (
+                  {userDetails?.is_vendor ? (
                     <div className="">
                       <NavLink
                         to={"/profile"}
@@ -173,13 +171,25 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="flex gap-4 pr-5">
-          <MaterialButton variant="outlined" style={{color: "black", borderColor:"black"}} onClick={()=>navigate("/login")}>Log In</MaterialButton>
-          <MaterialButton variant="outlined" style={{backgroundColor:"#8c52ff", color: "white"}} onClick={()=>navigate("/signup")}>Join</MaterialButton>            
+          <MaterialButton
+            variant="outlined"
+            style={{ color: "black", borderColor: "black" }}
+            onClick={() => navigate("/login")}
+          >
+            Log In
+          </MaterialButton>
+          <MaterialButton
+            variant="outlined"
+            style={{ backgroundColor: "#8c52ff", color: "white" }}
+            onClick={() => navigate("/signup")}
+          >
+            Join
+          </MaterialButton>
         </div>
       )}
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose}
         sx={{ width: "590px", margin: "auto" }}
         fullWidth
       >

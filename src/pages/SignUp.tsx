@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
@@ -10,23 +10,31 @@ import JoinAsPro from "./JoinAsPro";
 import { IconButton } from "@mui/material";
 import config from "../config";
 
-const SignUp = () => {
-  const navigate = useNavigate();
-  const { setLogin, setUserDetails } = useContext(AuthContext);
-  const [isChecked, setIsChecked] = useState(false);
-  const [error, setError] = useState("");
-  const [open, setOpen] = useState(false);
+interface FormObject {
+  [key: string]: string;
+}
 
-  const handleSubmit = async (e) => {
+const SignUp: React.FC = () => {
+  const authContext = useContext(AuthContext);
+  if (authContext === undefined) {
+    return;
+  }
+  const { setLogin, setUserDetails } = authContext;
+  const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    const form = e.target;
+    const form = e.currentTarget;
     const formData = new FormData(form);
 
-    const formObject = {};
+    const formObject: FormObject = {};
     formData.forEach((value, key) => {
-      formObject[key] = value;
+      formObject[key] = value.toString();
     });
 
     if (!formObject.first_name) {
@@ -79,7 +87,7 @@ const SignUp = () => {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       });
-      setUserDetails(user_data.data);
+      setUserDetails(user_data.data.data);
 
       setLogin(true);
 
@@ -88,12 +96,12 @@ const SignUp = () => {
       } else {
         navigate("/");
       }
-    } catch (error) {
-      setError(error.response.data.debug_info);
+    } catch (error: any) {
+      setError(error.response?.data?.debug_info ?? "An error occurred");
     }
   };
 
-  const handleClose = (reason) => {
+  const handleClose = (reason?: string) => {
     if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
       return;
     }
@@ -229,14 +237,14 @@ const SignUp = () => {
       </div>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose}
         sx={{ width: "590px", margin: "auto" }}
         fullWidth
       >
         <DialogContent sx={{ height: "max-content", position: "relative" }}>
           <IconButton
             aria-label="close"
-            onClick={handleClose}
+            onClick={() => handleClose()}
             sx={{
               position: "absolute",
               right: 8,

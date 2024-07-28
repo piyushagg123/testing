@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import img from "../assets/background.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import reviewImage from "../assets/noReviewsAdded.png";
@@ -6,23 +6,25 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import XIcon from "@mui/icons-material/X";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  IconButton,
-} from "@mui/material";
+import { Dialog, DialogContent, IconButton } from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import Carousel from "../components/Carousel";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { AuthContext } from "../context/Login";
 import config from "../config";
 
+interface ProjectItem {
+  images: Record<string, string[]>; // Assuming images is an object with arrays of strings
+  title: string;
+  description: string;
+  city: string;
+  sub_category_2: string; // Assuming this represents spaces
+  state: string;
+  sub_category_1: string; // Assuming this represents theme
+}
 const fetchData = async () => {
   const response = await axios.get(`${config.apiBaseUrl}/vendor/auth/details`, {
     headers: {
@@ -48,20 +50,20 @@ const fetchProjects = async () => {
 };
 
 const Profile = () => {
-  const { setLogin, userDetails } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  if (authContext === undefined) {
+    return;
+  }
+  const { setLogin } = authContext;
   const [about, setAbout] = useState(true);
   const [projects, setProjects] = useState(false);
   const [reviews, setReviews] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [review, setReview] = useState("");
-  const [rating, setRating] = useState("");
   const [open, setOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-  const { id } = useParams();
   const navigate = useNavigate();
 
-  const [projectId, setProjectId] = useState();
+  const [projectId, setProjectId] = useState<number>(0);
 
   const { data, error, isLoading } = useQuery("vendorDetails", fetchData, {
     onError: () => {
@@ -72,28 +74,18 @@ const Profile = () => {
 
   const { data: projectsData } = useQuery("vendorProjects", fetchProjects);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setShowModal(false);
-  };
-
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
     setSelectedSubCategories([]);
   };
 
-  const handleFormSubmit = (subCategories) => {
-    setSelectedSubCategories(subCategories);
-    setIsSubmitted(true);
-  };
-
-  const formatCategory = (str) => {
+  const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
     formattedStr = formattedStr
       .toLowerCase()
       .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
     return formattedStr;
   };
@@ -210,13 +202,11 @@ const Profile = () => {
                   <br />
                 </div>
               ) : (
-                projectsData.map((item, ind) => (
+                projectsData.map((item: ProjectItem, ind: number) => (
                   <Carousel
                     imageObj={item.images}
                     title={item.title}
-                    desc={item.description}
                     city={item.city}
-                    spaces={item.sub_category_2}
                     state={item.state}
                     theme={item.sub_category_1}
                     key={ind}
@@ -271,19 +261,25 @@ const Profile = () => {
             <p className="font-bold">Contact Number</p>
             <p className="text-[16px]">{data.mobile}</p>
           </div>
-          {data.social.instagram || data.social.facebook ? (
+          {data.social ? (
             <>
-              <div className=" ">
-                <p className="font-bold">Socials</p>
-                <div className="flex gap-3 text-[16px]">
-                  <a href={data?.social?.facebook}>
-                    <FacebookIcon />
-                  </a>
-                  <a href={data?.social?.instagram}>
-                    <InstagramIcon />
-                  </a>
-                </div>
-              </div>
+              {data.social.instagram || data.social.facebook ? (
+                <>
+                  <div className=" ">
+                    <p className="font-bold">Socials</p>
+                    <div className="flex gap-3 text-[16px]">
+                      <a href={data?.social?.facebook}>
+                        <FacebookIcon />
+                      </a>
+                      <a href={data?.social?.instagram}>
+                        <InstagramIcon />
+                      </a>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </>
           ) : (
             <></>
@@ -297,17 +293,23 @@ const Profile = () => {
               {data.state}
             </p>
           </div>
-          {data.social.website ? (
+          {data.social ? (
             <>
-              <div className=" ">
-                <p className="font-bold">Website</p>
-                <a
-                  href={data?.social?.website}
-                  className="flex items-center gap-1 text-[16px]"
-                >
-                  homezdesigners.com <OpenInNewIcon />
-                </a>
-              </div>
+              {data.social.website ? (
+                <>
+                  <div className=" ">
+                    <p className="font-bold">Website</p>
+                    <a
+                      href={data?.social?.website}
+                      className="flex items-center gap-1 text-[16px]"
+                    >
+                      homezdesigners.com <OpenInNewIcon />
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </>
           ) : (
             <></>
@@ -345,17 +347,12 @@ const Profile = () => {
           </div>
           {!isSubmitted ? (
             <>
-              <AddAProject
-                handleClose={handleClose}
-                setProjectId={setProjectId}
-                projectId={projectId}
-              />{" "}
+              <AddAProject setProjectId={setProjectId} projectId={projectId} />{" "}
             </>
           ) : (
             <>
               <ProjectImages
                 subCategories={selectedSubCategories}
-                handleClose={handleClose}
                 projectId={projectId}
               />
             </>

@@ -15,20 +15,31 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import config from "../config";
 
-function OTP({ separator, length, value, onChange }) {
-  const inputRefs = React.useRef(new Array(length).fill(null));
+interface OTPProps {
+  separator: React.ReactNode;
+  length: number;
+  value: string;
+  onChange: (value: string) => void;
+}
+function OTP({ separator, length, value, onChange }: OTPProps) {
+  const inputRefs = React.useRef<HTMLInputElement[]>(
+    new Array(length).fill(null)
+  );
 
-  const focusInput = (targetIndex) => {
+  const focusInput = (targetIndex: number) => {
     const targetInput = inputRefs.current[targetIndex];
     targetInput.focus();
   };
 
-  const selectInput = (targetIndex) => {
+  const selectInput = (targetIndex: number) => {
     const targetInput = inputRefs.current[targetIndex];
     targetInput.select();
   };
 
-  const handleKeyDown = (event, currentIndex) => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    currentIndex: number
+  ) => {
     switch (event.key) {
       case "ArrowUp":
       case "ArrowDown":
@@ -51,13 +62,9 @@ function OTP({ separator, length, value, onChange }) {
         break;
       case "Delete":
         event.preventDefault();
-        onChange((prevOtp) => {
-          const otp =
-            prevOtp.slice(0, currentIndex) + prevOtp.slice(currentIndex + 1);
-          return otp;
-        });
-
+        onChange(value.slice(0, currentIndex) + value.slice(currentIndex + 1));
         break;
+
       case "Backspace":
         event.preventDefault();
         if (currentIndex > 0) {
@@ -65,11 +72,7 @@ function OTP({ separator, length, value, onChange }) {
           selectInput(currentIndex - 1);
         }
 
-        onChange((prevOtp) => {
-          const otp =
-            prevOtp.slice(0, currentIndex) + prevOtp.slice(currentIndex + 1);
-          return otp;
-        });
+        onChange(value.slice(0, currentIndex) + value.slice(currentIndex + 1));
         break;
 
       default:
@@ -77,13 +80,16 @@ function OTP({ separator, length, value, onChange }) {
     }
   };
 
-  const handleChange = (event, currentIndex) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    currentIndex: number
+  ) => {
     const currentValue = event.target.value;
     let indexToEnter = 0;
 
     while (indexToEnter <= currentIndex) {
       if (
-        inputRefs.current[indexToEnter].value &&
+        inputRefs.current[indexToEnter]?.value &&
         indexToEnter < currentIndex
       ) {
         indexToEnter += 1;
@@ -91,24 +97,30 @@ function OTP({ separator, length, value, onChange }) {
         break;
       }
     }
-    onChange((prev) => {
-      const otpArray = prev.split("");
-      const lastValue = currentValue[currentValue.length - 1];
-      otpArray[indexToEnter] = lastValue;
-      return otpArray.join("");
-    });
-    if (currentValue !== "") {
-      if (currentIndex < length - 1) {
-        focusInput(currentIndex + 1);
-      }
+
+    const otpArray = value.split("");
+    const lastValue = currentValue[currentValue.length - 1];
+    otpArray[indexToEnter] = lastValue;
+
+    // Call onChange with the new OTP value directly
+    onChange(otpArray.join(""));
+
+    if (currentValue !== "" && currentIndex < length - 1) {
+      focusInput(currentIndex + 1);
     }
   };
 
-  const handleClick = (event, currentIndex) => {
+  const handleClick = (
+    _: React.MouseEvent<HTMLInputElement>,
+    currentIndex: number
+  ) => {
     selectInput(currentIndex);
   };
 
-  const handlePaste = (event, currentIndex) => {
+  const handlePaste = (
+    event: React.ClipboardEvent<HTMLInputElement>,
+    currentIndex: number
+  ) => {
     event.preventDefault();
     const clipboardData = event.clipboardData;
 
@@ -157,7 +169,7 @@ function OTP({ separator, length, value, onChange }) {
             aria-label={`Digit ${index + 1} of OTP`}
             slotProps={{
               input: {
-                ref: (ele) => {
+                ref: (ele: HTMLInputElement) => {
                   inputRefs.current[index] = ele;
                 },
                 onKeyDown: (event) => handleKeyDown(event, index),
@@ -298,14 +310,19 @@ const ForgotPassword = () => {
     setOpen(true);
   };
 
-  const handleClose = (event, reason) => {
+  const handleClose = (
+    _:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | undefined = undefined,
+    reason: "backdropClick" | "escapeKeyDown" | string = ""
+  ) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
       return;
     }
     setOpen(false);
     handleReset();
   };
-
   return (
     <div className="text-text">
       <p onClick={handleClickOpen} className="cursor-pointer underline">
@@ -313,12 +330,12 @@ const ForgotPassword = () => {
       </p>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose}
         BackdropProps={{
           onClick: (event) => handleClose(event, "backdropClick"),
         }}
         PaperProps={{
-          onKeyDown: (event) => {
+          onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
             if (event.key === "Escape") {
               handleClose(event, "escapeKeyDown");
             }
@@ -332,7 +349,7 @@ const ForgotPassword = () => {
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => (
-                <Step key={label}>
+                <Step key={index}>
                   <StepLabel>{label}</StepLabel>
                 </Step>
               ))}
@@ -346,7 +363,7 @@ const ForgotPassword = () => {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <div sx={{ mt: 2, mb: 1 }}>
+                <div className="mt-2 mb-1">
                   {activeStep === 0 ? (
                     <Box
                       component="form"

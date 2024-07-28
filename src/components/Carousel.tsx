@@ -1,23 +1,37 @@
+import React from "react";
 import Carousel from "react-material-ui-carousel";
-import { Paper, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { CardActionArea } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Card,
+  CardContent,
+  CardActionArea,
+  Box,
+} from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import Box from "@mui/material/Box";
 import config from "../config";
 
-const ImageCarousel = ({
+interface ImageCarouselProps {
+  title: string;
+  theme: string;
+  city: string;
+  state: string;
+  imageObj: Record<string, string[]>;
+}
+
+interface ItemProps {
+  item: string;
+}
+
+const ImageCarousel: React.FC<ImageCarouselProps> = ({
   title,
-  desc,
   theme,
-  spaces,
   city,
   state,
   imageObj,
 }) => {
   const keysArray = Object.keys(imageObj);
-  const arr = [];
+  const arr: string[] = [];
   keysArray.forEach((key) => {
     imageObj[key].forEach((img) => arr.push(img));
   });
@@ -56,16 +70,9 @@ const ImageCarousel = ({
             </p>
           </Typography>
           <Typography variant="body2">
-            {/* <p>{desc}</p> */}
             <p>
               <span className="font-bold">Theme:</span> {theme}
             </p>
-            {/* <p className="overflow-x-clip">
-              <span className="font-bold">Spaces:</span> {spaces}
-            </p> */}
-            {/* <p>
-              {city},{state}
-            </p> */}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -73,7 +80,7 @@ const ImageCarousel = ({
   );
 };
 
-const Item = ({ item }) => {
+const Item: React.FC<ItemProps> = ({ item }) => {
   return (
     <Paper>
       <img
