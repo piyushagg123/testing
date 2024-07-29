@@ -164,8 +164,6 @@ const JoinAsPro = ({ handleClose }) => {
     }
 
     if (currentStep === 2) {
-      console.log(formData.sub_category_1);
-
       if (formData.sub_category_1.length === 0) {
         setError("please select your theme");
         return;
@@ -357,7 +355,6 @@ const JoinAsPro = ({ handleClose }) => {
                 <p>Select your spaces (maximum of three)</p>
                 <MultipleSelect
                   size="small"
-                  // label="Spaces"
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
@@ -376,7 +373,6 @@ const JoinAsPro = ({ handleClose }) => {
                 <p>Type of execution</p>
                 <MultipleSelect
                   size="small"
-                  // label="Execution Type"
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
@@ -455,7 +451,6 @@ const JoinAsPro = ({ handleClose }) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      // label="Enter your city"
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (
