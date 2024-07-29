@@ -104,7 +104,7 @@ const ProfessionalsInfo = () => {
               )}
             </div>
             <div>
-              <p>{}</p>
+              <p>{ }</p>
               <p>
                 <span className="font-bold">Profession:</span>{" "}
                 {formatCategory(vendorData.category)}
@@ -164,18 +164,16 @@ const ProfessionalsInfo = () => {
             </button>
           </div>
           <div
-            className={`${
-              about ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px] xl:w-[950px]`}
+            className={`${about ? "block" : "hidden"
+              } md:w-[500px] lg:w-[750px] xl:w-[950px]`}
           >
             <br />
             <p>{vendorData.description}</p>
             <br />
           </div>
           <div
-            className={`${
-              projects ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            className={`${projects ? "block" : "hidden"
+              }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="flex w-[100%] flex-wrap gap-10 justify-between">
@@ -212,9 +210,8 @@ const ProfessionalsInfo = () => {
             <br />
           </div>
           <div
-            className={`${
-              reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            className={`${reviews ? "block" : "hidden"
+              }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="">
@@ -234,7 +231,7 @@ const ProfessionalsInfo = () => {
         <br />
         <div className="flex flex-col justify-evenly gap-6">
           <div className=" ">
-            <p className="font-bold">Business Name</p>
+            <p className="font-bold text-darkgrey">Business Name</p>
             <p className="text-[16px]">{vendorData.business_name}</p>
           </div>
           <div className=" ">

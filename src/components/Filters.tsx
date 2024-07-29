@@ -59,10 +59,98 @@ const Filters = ({
   return (
     <div className=" flex flex-col gap-3  text-text w-[225px]">
       <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px]">
-        <p className="font-bold " onClick={() => setFilterMenu(() => true)}>
+        <p className="font-bold text-base text-darkgrey" onClick={() => setFilterMenu(() => true)}>
           FILTERS
         </p>
+        {filterMenu ? (
+          <>
+            <div
+              className={"block absolute bg-white w-screen z-10 lg:hidden p-3"}
+            >
+              <div>
+                <div className="flex items-center justify-between pr-4">
+                  <h1 className="font-bold">FILTERS</h1>
+                  <CloseIcon onClick={() => setFilterMenu(false)} />
+                </div>
+                <div className="flex flex-col gap-2 p-3 ">
+                  <h3 className="font-bold text-[19px]">Themes</h3>
 
+                  {formattedThemes.map((item) => {
+                    return (
+                      <FormControlLabel className="-mb-2.5 -mt-2.5"
+                        control={<Checkbox
+                          sx={{
+                            '&.Mui-checked': {
+                              color: '#ff5757',
+                            },
+                            transform: 'scale(0.75)',
+                          }}
+                          onChange={(event: any) => handleThemeFilter(item)} />
+                        }
+                        label={<span className="text-sm">{item}</span>
+                        }
+                      />
+                    );
+                  })}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-bold text-[19px]">Spaces</h3>
+
+                  {formattedSpaces.map((item) => {
+                    return (
+                      <FormControlLabel className="-mb-2.5 -mt-2.5"
+                        control={<Checkbox
+                          sx={{
+                            '&.Mui-checked': {
+                              color: '#ff5757',
+                            },
+                            transform: 'scale(0.75)',
+                          }}
+                          onChange={(event: any) => handleSpaceFilter(item)} />
+                        }
+                        label={<span className="text-sm">{item}</span>
+                        }
+                      />
+                    );
+                  })}
+                </div>
+                <div className="flex flex-col gap-2 p-3">
+                  <h3 className="font-bold text-[19px]">Execution Type</h3>
+
+                  {formattedExecution.map((item) => {
+                    return (
+                      <FormControlLabel className="-mb-2.5 -mt-2.5"
+                        control={<Checkbox
+                          sx={{
+                            '&.Mui-checked': {
+                              color: '#ff5757',
+                            },
+                            transform: 'scale(0.75)',
+                          }}
+                          onChange={(event: any) => handleExecutionFilter(item)} />
+                        }
+                        label={<span className="text-sm">{item}</span>
+                        }
+                      />
+                    );
+                  })}
+
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => setFilterMenu(false)}
+                    className="bg-[green] text-white p-2 rounded-lg"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
         <p className="hidden lg:block font-bold text-red">
           <button className="text-xs">CLEAR ALL</button>
         </p>
