@@ -259,7 +259,7 @@ const ProfessionalsInfo = () => {
           {vendorData.social ? (
             <>
               <div>
-                <p className="font-bold">Socials</p>
+                <p className="font-bold text-base text-darkgrey">Socials</p>
                 {vendorData.social && vendorData.social.facebook && (
                   <a
                     href={vendorData.social.facebook}
