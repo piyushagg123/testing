@@ -84,16 +84,12 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     fetchStates
   );
 
-<<<<<<< HEAD
   const handleStateChange = async (
     _event: any,
     value: string | null,
     _reason: any,
     _details?: any
   ) => {
-=======
-  const handleStateChange = async (_event: any, value: string | null, reason: any, details?: any) => {
->>>>>>> d1530183cffa9856d3b559b6714f76f5f0f07f9e
     setFormData((prevData) => ({
       ...prevData,
       state: value?.toString() ?? "",
@@ -164,7 +160,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setProjectId(response.data.data.project_id);
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   if (isSubmitted) {
