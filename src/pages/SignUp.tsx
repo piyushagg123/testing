@@ -93,8 +93,8 @@ const SignUp = () => {
     }
   };
 
-  const handleClose = (reason) => {
-    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
+  const handleClose = (event, reason) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
       return;
     }
     setOpen(false);

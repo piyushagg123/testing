@@ -16,6 +16,7 @@ const JoinAsPro = ({ handleClose }) => {
   const [cities, setCities] = useState([]);
   const [loadingCities, setLoadingCities] = useState(false);
   const { state } = useContext(StateContext);
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     business_name: "",
@@ -96,8 +97,6 @@ const JoinAsPro = ({ handleClose }) => {
       sub_category_3: formData.sub_category_3.join(","),
     };
 
-    console.log(processedFormData);
-
     try {
       const response = await axios.post(
         `${config.apiBaseUrl}/vendor/onboard`,
@@ -108,7 +107,6 @@ const JoinAsPro = ({ handleClose }) => {
           },
         }
       );
-      console.log(response);
 
       sessionStorage.removeItem("token");
       sessionStorage.setItem("token", response.data.access_token);
@@ -133,7 +131,71 @@ const JoinAsPro = ({ handleClose }) => {
     handleClose();
   };
 
-  const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
+  const nextStep = () => {
+    if (currentStep === 1) {
+      if (!formData.business_name) {
+        setError("Please enter the business name ");
+        return;
+      }
+      if (!formData.started_in) {
+        setError("Please enter the start date of your business ");
+        return;
+      }
+      if (!formData.address) {
+        setError("Please enter your address ");
+        return;
+      }
+      if (!formData.number_of_employees) {
+        setError("Please enter the number of employees working with you ");
+        return;
+      }
+      if (!formData.average_project_value) {
+        setError("Please enter average value of your projects ");
+        return;
+      }
+      if (!formData.projects_completed) {
+        setError("Please enter the number of cprojects completed so far ");
+        return;
+      }
+      if (!formData.description) {
+        setError("Please enter your business description ");
+        return;
+      }
+    }
+
+    if (currentStep === 2) {
+      console.log(formData.sub_category_1);
+
+      if (formData.sub_category_1.length === 0) {
+        setError("please select your theme");
+        return;
+      }
+      if (formData.sub_category_2.length === 0) {
+        setError("please select your specialized spaces");
+        return;
+      }
+      if (formData.sub_category_3.length === 0) {
+        setError("please select your type of execution");
+        return;
+      }
+    }
+
+    if (currentStep === 3) {
+      if (!formData.city) {
+        setError("Please enter your city ");
+        return;
+      }
+      if (!formData.state) {
+        setError("Please enter your state ");
+        return;
+      }
+    }
+
+    if (currentStep === 4) {
+    }
+    setCurrentStep((prevStep) => prevStep + 1);
+    setError("");
+  };
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
 
   const cityOptions = formData.state
@@ -163,6 +225,7 @@ const JoinAsPro = ({ handleClose }) => {
           <h1 className="text-xl font-bold">
             Let's get started by creating your profile
           </h1>
+          <p className="text-center text-sm text-[red]">{error}</p>
 
           {currentStep === 1 && (
             <>
@@ -457,7 +520,7 @@ const JoinAsPro = ({ handleClose }) => {
               <div className="flex flex-col gap-2">
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    Instagram <InstagramIcon />
+                    <InstagramIcon className="text-pink-500" /> Instagram
                   </p>
                   <input
                     type="url"
@@ -471,7 +534,7 @@ const JoinAsPro = ({ handleClose }) => {
                 <br />
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    Facebook <FacebookIcon />
+                    <FacebookIcon className="text-blue-600" /> Facebook
                   </p>
                   <input
                     type="url"
@@ -485,7 +548,7 @@ const JoinAsPro = ({ handleClose }) => {
                 <br />
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    Website <OpenInNewIcon />
+                    <OpenInNewIcon className="text-gray-600" /> Website
                   </p>
                   <input
                     type="url"
