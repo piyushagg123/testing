@@ -248,7 +248,7 @@ const Profile = () => {
         <br />
         <div className="flex flex-col justify-evenly gap-6">
           <div className=" ">
-            <p className="font-bold text-darkgrey">Business Name 1</p>
+            <p className="font-bold text-darkgrey">Business Name</p>
             <p className="text-[16px]">{data.business_name}</p>
           </div>
           <div className=" ">
