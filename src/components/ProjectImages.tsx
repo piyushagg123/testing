@@ -31,9 +31,9 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
     async (
       spaceIndex: number,
       imageIndex: number,
-      e: ChangeEvent<HTMLInputElement>
+      event: ChangeEvent<HTMLInputElement>
     ) => {
-      const file = e.target.files?.[0];
+      const file = event.target.files?.[0];
       if (!file) {
         return;
       }
@@ -71,9 +71,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
           updatedSpaces[spaceIndex].imageNames[imageIndex] = imageName;
           return updatedSpaces;
         });
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     },
     [subCategories, projectId]
   );
@@ -102,9 +100,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
           updatedSpaces[spaceIndex].imageNames[imageIndex] = null;
           return updatedSpaces;
         });
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     },
     [spaceTypes, subCategories, projectId]
   );
@@ -196,8 +192,8 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                         style={{ display: "none" }}
                         type="file"
                         accept="image/*"
-                        onChange={(e) =>
-                          handleImageChange(spaceIndex, imageIndex, e)
+                        onChange={(event) =>
+                          handleImageChange(spaceIndex, imageIndex, event)
                         }
                       />
                     </div>

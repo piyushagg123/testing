@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -34,14 +33,12 @@ const fetchOptions = async (apiEndpoint: string) => {
 };
 
 interface MultipleSelectProps {
-  label: string;
   apiEndpoint: string;
   maxSelection: number;
   onChange: (selectedValues: string[]) => void;
 }
 
 export default function MultipleSelect({
-  label,
   apiEndpoint,
   maxSelection,
   onChange,
@@ -83,14 +80,11 @@ export default function MultipleSelect({
   return (
     <div>
       <FormControl sx={{ m: 1 }}>
-        <InputLabel id={`multiple-select-label-${label}`}>{label}</InputLabel>
         <Select
-          labelId={`multiple-select-label-${label}`}
-          id={`multiple-select-${label}`}
           multiple
           value={selectedValues}
           onChange={handleChange}
-          input={<OutlinedInput label={label} />}
+          input={<OutlinedInput />}
           MenuProps={MenuProps}
           renderValue={() => sortedSelectedValues.join(", ")}
           sx={{

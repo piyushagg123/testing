@@ -25,11 +25,11 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError("");
 
-    const form = e.currentTarget;
+    const form = event.currentTarget;
     const formData = new FormData(form);
 
     const formObject: FormObject = {};
@@ -101,10 +101,16 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const handleClose = (reason?: string) => {
-    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
-      return;
-    }
+  // const handleClose = (reason?: string) => {
+  //   if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
+  //     return;
+  //   }
+  //   setOpen(false);
+  //   navigate("/");
+  // };
+  const handleClose = (
+    _event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     setOpen(false);
     navigate("/");
   };
@@ -210,7 +216,7 @@ const SignUp: React.FC = () => {
                     name="join_as_pro"
                     id="join_as_pro"
                     checked={isChecked}
-                    onChange={(e) => setIsChecked(e.target.checked)}
+                    onChange={(event) => setIsChecked(event.target.checked)}
                   />
                 </div>{" "}
                 <div>Join as pro</div>
@@ -244,7 +250,7 @@ const SignUp: React.FC = () => {
         <DialogContent sx={{ height: "max-content", position: "relative" }}>
           <IconButton
             aria-label="close"
-            onClick={() => handleClose()}
+            onClick={handleClose}
             sx={{
               position: "absolute",
               right: 8,

@@ -84,10 +84,15 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     fetchStates
   );
 
-  const handleStateChange = async (_event: any, value: string) => {
+  const handleStateChange = async (
+    _event: any,
+    value: string | null,
+    _reason: any,
+    _details?: any
+  ) => {
     setFormData((prevData) => ({
       ...prevData,
-      state: value,
+      state: value?.toString() ?? "",
       city: "",
     }));
     setCities([]);
@@ -107,8 +112,8 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     const processedFormData = {
       ...formData,
@@ -184,7 +189,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   type="text"
                   className="w-full md:w-[250px] h-10 mt-1 px-2"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(event) => setTitle(event.target.value)}
                   required
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 />
@@ -198,7 +203,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   type="date"
                   className="w-full md:w-[250px] h-10 mt-1 px-2"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={(event) => setStartDate(event.target.value)}
                   required
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 />
@@ -209,7 +214,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   type="date"
                   className="w-full md:w-[250px] h-10 mt-1 px-2"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={(event) => setEndDate(event.target.value)}
                   required
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 />
@@ -222,7 +227,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 className="w-full md:w-[548px] mt-1 px-2"
                 rows={5}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(event) => setDescription(event.target.value)}
                 style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 required
               />
@@ -254,7 +259,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
-                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
@@ -272,7 +276,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the spaces (maximum of 7)</p>
                 <MultipleSelect
-                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
@@ -289,7 +292,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
                   onChange={(selected) => {

@@ -101,8 +101,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     }
   };
 
-  const handleSocialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       social: {
@@ -113,17 +113,17 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
   };
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement;
+    const { name, value, type, checked } = event.target as HTMLInputElement;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     const processedFormData = {
       ...formData,
@@ -135,8 +135,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
       sub_category_3: formData.sub_category_3.join(","),
     };
 
-    console.log(processedFormData);
-
     try {
       const response = await axios.post(
         `${config.apiBaseUrl}/vendor/onboard`,
@@ -147,7 +145,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           },
         }
       );
-      console.log(response);
 
       sessionStorage.removeItem("token");
       sessionStorage.setItem("token", response.data.access_token);
@@ -176,8 +173,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     ? cities
     : [{ title: "Select a state first", disabled: true }];
 
-  const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
+  const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
     setLogoFile(file);
 
     if (file) {
@@ -314,7 +311,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your themes (maximum of three)</p>
                 <MultipleSelect
-                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) => {
@@ -329,7 +325,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your spaces (maximum of three)</p>
                 <MultipleSelect
-                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
@@ -347,7 +342,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  label=""
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>

@@ -110,7 +110,7 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
   };
 
   const handleClick = (
-    _: React.MouseEvent<HTMLInputElement>,
+    _event: React.MouseEvent<HTMLInputElement>,
     currentIndex: number
   ) => {
     selectInput(currentIndex);
@@ -309,7 +309,7 @@ const ForgotPassword = () => {
   };
 
   const handleClose = (
-    _:
+    _event:
       | React.MouseEvent<HTMLElement>
       | React.KeyboardEvent<HTMLElement>
       | undefined = undefined,
@@ -374,7 +374,7 @@ const ForgotPassword = () => {
                         label="Enter your registered email ID"
                         variant="standard"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(event) => setEmail(event.target.value)}
                         sx={{ width: "500px" }}
                       />
                     </Box>
@@ -407,7 +407,7 @@ const ForgotPassword = () => {
                         variant="standard"
                         type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(event) => setPassword(event.target.value)}
                       />
                     </Box>
                   )}

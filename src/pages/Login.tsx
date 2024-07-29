@@ -25,11 +25,11 @@ const Login = () => {
     return mobileRegex.test(input);
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError("");
 
-    const form = e.currentTarget;
+    const form = event.currentTarget;
     const formData = new FormData(form);
 
     const emailOrMobile = formData.get("emailOrMobile") as string;

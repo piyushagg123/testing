@@ -56,7 +56,6 @@ const SearchProfessionals: React.FC = () => {
         );
         setCities(response.data.data);
       } catch (error) {
-        console.error("Failed to fetch cities:", error);
       } finally {
         setLoadingCities(false);
       }
@@ -82,7 +81,6 @@ const SearchProfessionals: React.FC = () => {
       });
       setFilteredItems(response.data.data);
     } catch (error) {
-      console.error("Failed to fetch vendors:", error);
     } finally {
       setIsLoading(false);
     }

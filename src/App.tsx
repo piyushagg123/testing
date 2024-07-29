@@ -42,7 +42,6 @@ const App: React.FC = () => {
     onSuccess: (data) => {
       setLogin(true);
       setUserDetails(data.data);
-      console.log(data);
     },
     onError: () => {
       setLogin(false);
