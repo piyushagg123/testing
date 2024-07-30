@@ -11,6 +11,8 @@ import {
 import PlaceIcon from "@mui/icons-material/Place";
 import config from "../config";
 
+import dummyImg from "../assets/background.jpg";
+
 interface ImageCarouselProps {
   title: string;
   theme: string;
@@ -39,21 +41,33 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     <Card sx={{ height: 290, width: "47%" }}>
       <CardActionArea>
         <Box sx={{ width: "100%" }}>
-          <Carousel
-            autoPlay={true}
-            animation="slide"
-            cycleNavigation={true}
-            interval={2000}
-            indicatorIconButtonProps={{
-              style: {
-                display: "none",
-              },
-            }}
-          >
-            {arr.map((item, i) => (
-              <Item key={i} item={item} />
-            ))}
-          </Carousel>
+          {arr.length !== 0 ? (
+            <>
+              <Carousel
+                autoPlay={true}
+                animation="slide"
+                cycleNavigation={true}
+                interval={2000}
+                indicatorIconButtonProps={{
+                  style: {
+                    display: "none",
+                  },
+                }}
+              >
+                {arr.map((item, i) => (
+                  <Item key={i} item={item} />
+                ))}
+              </Carousel>
+            </>
+          ) : (
+            <>
+              <img
+                src={dummyImg}
+                alt=""
+                style={{ width: "100%", height: "200px" }}
+              />
+            </>
+          )}
         </Box>
         <CardContent sx={{ padding: "0px 5px" }}>
           <div className="flex flex-row items-center justify-between">
