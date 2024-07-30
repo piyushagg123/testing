@@ -11,7 +11,7 @@ import {
 import PlaceIcon from "@mui/icons-material/Place";
 import config from "../config";
 
-import dummyImg from "../assets/background.jpg";
+import EmptyProjectImage from "../assets/background.jpg";
 
 interface ImageCarouselProps {
   title: string;
@@ -62,7 +62,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           ) : (
             <>
               <img
-                src={dummyImg}
+                src={EmptyProjectImage}
                 alt=""
                 style={{ width: "100%", height: "200px" }}
               />

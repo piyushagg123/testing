@@ -32,6 +32,11 @@ interface FiltersProps {
   handleSpaceFilter: (selected: string) => void;
   handleExecutionFilter: (selected: string) => void;
 }
+
+interface item {
+  id: number;
+  value: string;
+}
 const Filters: React.FC<FiltersProps> = ({
   handleThemeFilter,
   handleSpaceFilter,
@@ -49,9 +54,9 @@ const Filters: React.FC<FiltersProps> = ({
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
 
-  const formattedThemes = theme.map((item: any) => formatString(item.value));
-  const formattedSpaces = spaces.map((item: any) => formatString(item.value));
-  const formattedExecution = executionType.map((item: any) =>
+  const formattedThemes = theme.map((item: item) => formatString(item.value));
+  const formattedSpaces = spaces.map((item: item) => formatString(item.value));
+  const formattedExecution = executionType.map((item: item) =>
     formatString(item.value)
   );
 
