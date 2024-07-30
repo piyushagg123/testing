@@ -57,18 +57,14 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </Carousel>
         </Box>
         <CardContent sx={{ padding: "0px 5px" }}>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            className="flex items-center justify-between"
-          >
-            <p>{title}</p>
-            <p className="text-sm flex items-center">
-              <PlaceIcon />
-              {city},{state}
-            </p>
-          </Typography>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-bold text-base">{title}</p>
+            <span className=" text-sm flex items-center text-sec" style={{ fontSize: '0.75rem' }}>
+              <PlaceIcon style={{ fontSize: '1rem' }} />
+              {city}
+            </span>
+          </div>
+
           <Typography variant="body2">
             <p>
               <span className="font-bold">Theme:</span> {theme}

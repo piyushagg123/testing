@@ -113,17 +113,20 @@ const Profile = () => {
                 />
               )}
             </div>
-            <div>
-              <p>
-                <span className="font-bold">Profession:</span>{" "}
-                {formatCategory(data.category)}
+            <div className="flex flex-col gap-2">
+              <p className="font-bold text-base text-darkgrey">
+                {formatCategory(data.business_name)}
               </p>
               <p>
-                <span className="font-bold">Themes:</span>{" "}
+                <span className="font-bold text-sm text-darkgrey">
+                  SPECIALIZED THEMES :{" "}
+                </span>{" "}
                 {formatCategory(data.sub_category_1)}
               </p>
               <p>
-                <span className="font-bold">Spaces:</span>{" "}
+                <span className="font-bold text-sm text-darkgrey">
+                  SPECIALIZED SPACES :
+                </span>{" "}
                 {formatCategory(data.sub_category_2)}
               </p>
             </div>
@@ -239,24 +242,30 @@ const Profile = () => {
         <br />
         <div className="flex flex-col justify-evenly gap-6">
           <div className=" ">
-            <p className="font-bold">Business Name</p>
+            <p className="font-bold text-base text-darkgrey">Business Name</p>
             <p className="text-[16px]">{data.business_name}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Typical Job Cost</p>
+            <p className="font-bold text-base text-darkgrey">
+              Typical Job Cost
+            </p>
             <p className="text-[16px]">{data.average_project_value}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Number of employees</p>
+            <p className="font-bold text-base text-darkgrey">
+              Number of employees
+            </p>
             <p className="text-[16px]">{data.number_of_employees}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Projects Completed</p>
+            <p className="font-bold text-base text-darkgrey">
+              Projects Completed
+            </p>
             <p className="text-[16px]">{data.projects_completed}</p>
           </div>
 
           <div className=" ">
-            <p className="font-bold">Contact Number</p>
+            <p className="font-bold text-base text-darkgrey">Contact Number</p>
             <p className="text-[16px]">{data.mobile}</p>
           </div>
           {data.social ? (
@@ -264,7 +273,7 @@ const Profile = () => {
               {data.social.instagram || data.social.facebook ? (
                 <>
                   <div className=" ">
-                    <p className="font-bold">Socials</p>
+                    <p className="font-bold text-base text-darkgrey">Socials</p>
                     <div className="flex gap-3 text-[16px]">
                       <a href={data?.social?.facebook}>
                         <FacebookIcon />
@@ -284,7 +293,7 @@ const Profile = () => {
           )}
 
           <div className=" ">
-            <p className="font-bold">Address</p>
+            <p className="font-bold text-base text-darkgrey">Address</p>
             <p className="text-[16px]">
               {data.address} <br />
               {data.city} <br />
@@ -296,7 +305,7 @@ const Profile = () => {
               {data.social.website ? (
                 <>
                   <div className=" ">
-                    <p className="font-bold">Website</p>
+                    <p className="font-bold text-base text-darkgrey">Website</p>
                     <a
                       href={data?.social?.website}
                       className="flex items-center gap-1 text-[16px]"
@@ -314,7 +323,7 @@ const Profile = () => {
           )}
 
           <div className=" ">
-            <p className="font-bold">Email</p>
+            <p className="font-bold text-base text-darkgrey">Email</p>
             <a
               href={`mailto:${data.email}`}
               className="flex items-center gap-1 text-[16px]"

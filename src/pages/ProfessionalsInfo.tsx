@@ -75,7 +75,7 @@ const ProfessionalsInfo: React.FC = () => {
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
     formattedStr = formattedStr
-      .toLowerCase()
+      .toUpperCase()
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
@@ -90,7 +90,7 @@ const ProfessionalsInfo: React.FC = () => {
         <br />
         <div className="w-[310px] md:w-max">
           <br />
-          <div className="flex items-end gap-3">
+          <div className="flex gap-3">
             <div>
               {vendorData?.logo ? (
                 <img
@@ -106,19 +106,21 @@ const ProfessionalsInfo: React.FC = () => {
                 />
               )}
             </div>
-            <div>
-              <p>{vendorData?.business_name}</p>
-              <p>
-                <span className="font-bold">Profession:</span>{" "}
-                {formatCategory(vendorData?.category || "")}
+            <div className="flex flex-col gap-2">
+              <p className="font-bold text-base text-darkgrey">
+                {formatCategory(vendorData.business_name)}
               </p>
               <p>
-                <span className="font-bold">Themes:</span>{" "}
-                {formatCategory(vendorData?.sub_category_1 || "")}
+                <span className="font-bold text-sm text-darkgrey">
+                  SPECIALIZED THEMES :{" "}
+                </span>{" "}
+                {formatCategory(vendorData.sub_category_1)}
               </p>
               <p>
-                <span className="font-bold">Spaces:</span>{" "}
-                {formatCategory(vendorData?.sub_category_2 || "")}
+                <span className="font-bold text-sm text-darkgrey">
+                  SPECIALIZED SPACES :
+                </span>{" "}
+                {formatCategory(vendorData.sub_category_2)}
               </p>
             </div>
           </div>
@@ -136,7 +138,7 @@ const ProfessionalsInfo: React.FC = () => {
           <br />
           <div className="flex gap-3 text-[18px] border-b-[0.3px] border-black">
             <button
-              className={`${about ? "border-b-[2px] border-black" : ""}`}
+              className={`${about ? "border-b-[2px] border-red" : ""}`}
               onClick={() => {
                 setAbout(true);
                 setProjects(false);
@@ -178,7 +180,7 @@ const ProfessionalsInfo: React.FC = () => {
           <div
             className={`${
               projects ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="flex w-[100%] flex-wrap gap-10 justify-between">
@@ -219,7 +221,7 @@ const ProfessionalsInfo: React.FC = () => {
           <div
             className={`${
               reviews ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="">
@@ -239,38 +241,44 @@ const ProfessionalsInfo: React.FC = () => {
         <br />
         <div className="flex flex-col justify-evenly gap-6">
           <div className=" ">
-            <p className="font-bold">Business Name</p>
-            <p className="text-[16px]">{vendorData?.business_name}</p>
+            <p className="font-bold text-base text-darkgrey">Business Name</p>
+            <p className="text-[16px]">{vendorData.business_name}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Typical Job Cost</p>
-            <p className="text-[16px]">{vendorData?.average_project_value}</p>
+            <p className="font-bold text-base text-darkgrey">
+              Typical Job Cost
+            </p>
+            <p className="text-[16px]">{vendorData.average_project_value}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Number of employees</p>
-            <p className="text-[16px]">{vendorData?.number_of_employees}</p>
+            <p className="font-bold text-base text-darkgrey">
+              Number of employees
+            </p>
+            <p className="text-[16px]">{vendorData.number_of_employees}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Projects Completed</p>
-            <p className="text-[16px]">{vendorData?.projects_completed}</p>
+            <p className="font-bold text-base text-darkgrey">
+              Projects Completed
+            </p>
+            <p className="text-[16px]">{vendorData.projects_completed}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Contact Number</p>
-            <p className="text-[16px]">{vendorData?.mobile}</p>
+            <p className="font-bold text-base text-darkgrey">Contact Number</p>
+            <p className="text-[16px]">{vendorData.mobile}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Email</p>
-            <p className="text-[16px]">{vendorData?.email}</p>
+            <p className="font-bold text-base text-darkgrey">Email</p>
+            <p className="text-[16px]">{vendorData.email}</p>
           </div>
           <div className=" ">
-            <p className="font-bold">Location</p>
-            <p className="text-[16px]">{vendorData?.city}</p>
+            <p className="font-bold text-base text-darkgrey">Location</p>
+            <p className="text-[16px]">{vendorData.city}</p>
           </div>
           {vendorData?.social ? (
             <>
               <div>
-                <p className="font-bold">Socials</p>
-                {vendorData.social.facebook && (
+                <p className="font-bold text-base text-darkgrey">Socials</p>
+                {vendorData.social && vendorData.social.facebook && (
                   <a
                     href={vendorData.social.facebook}
                     target="_blank"
