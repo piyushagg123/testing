@@ -17,7 +17,7 @@ interface FormData {
   sub_category_1: string[];
   sub_category_2: string[];
   sub_category_3: string[];
-  city: string | null;
+  city: string;
   state: string;
 }
 const AddAProject: React.FC<AddAProjectProps> = ({
