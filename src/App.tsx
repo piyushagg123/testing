@@ -1,17 +1,17 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useQuery } from "react-query";
+import axios from "axios";
 import Navbar from "./components/Navbar";
 import SearchProfessionals from "./pages/SearchProfessionals";
 import ProfessionalsInfo from "./pages/ProfessionalsInfo";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
-import axios from "axios";
-import Error from "./pages/Error";
 import config from "./config";
 
 const fetchUserData = async () => {
@@ -20,18 +20,23 @@ const fetchUserData = async () => {
       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
     },
   });
-
-  return data;
+  return data.data;
 };
 
 const fetchStateData = async () => {
   const { data } = await axios.get(`${config.apiBaseUrl}/location/states`);
-  return data;
+  return data.data;
 };
 
-function App() {
-  const { setLogin, setUserDetails } = useContext(AuthContext);
-  const { setState } = useContext(StateContext);
+const App: React.FC = () => {
+  const authContext = useContext(AuthContext);
+  const stateContext = useContext(StateContext);
+
+  if (authContext === undefined || stateContext === undefined) {
+    return;
+  }
+  const { setState } = stateContext;
+  const { setLogin, setUserDetails } = authContext;
 
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {
@@ -45,7 +50,7 @@ function App() {
 
   useQuery("stateData", fetchStateData, {
     onSuccess: (data) => {
-      setState(data.data);
+      setState(data);
     },
     onError: () => {},
   });
@@ -72,6 +77,6 @@ function App() {
       </Router>
     </div>
   );
-}
+};
 
 export default App;

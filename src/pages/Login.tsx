@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { useContext, useState, FormEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
@@ -7,29 +7,33 @@ import ForgotPassword from "../components/ForgotPassword";
 import config from "../config";
 
 const Login = () => {
+  const authContext = useContext(AuthContext);
+  if (authContext === undefined) {
+    return;
+  }
+  const { setLogin, setUserDetails } = authContext;
   const navigate = useNavigate();
-  const { setLogin, setUserDetails } = useContext(AuthContext);
   const [error, setError] = useState("");
 
-  const isEmail = (input) => {
+  const isEmail = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(input);
   };
 
-  const isMobile = (input) => {
+  const isMobile = (input: string): boolean => {
     const mobileRegex = /^[0-9]{10}$/;
     return mobileRegex.test(input);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError("");
 
-    const form = e.target;
+    const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const emailOrMobile = formData.get("emailOrMobile");
-    const password = formData.get("password");
+    const emailOrMobile = formData.get("emailOrMobile") as string;
+    const password = formData.get("password") as string;
 
     if (!emailOrMobile) {
       setError("Please enter your email or mobile number.");
@@ -41,7 +45,9 @@ const Login = () => {
       return;
     }
 
-    let data = {};
+    let data: { email?: string; mobile?: string; password: string } = {
+      password: CryptoJS.SHA1(password).toString(),
+    };
     if (isEmail(emailOrMobile)) {
       data.email = emailOrMobile;
     } else if (isMobile(emailOrMobile)) {
@@ -65,10 +71,10 @@ const Login = () => {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       });
-      setUserDetails(user_data.data);
+      setUserDetails(user_data.data.data);
       setLogin(true);
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       setError(error.response.data.debug_info);
     }
   };

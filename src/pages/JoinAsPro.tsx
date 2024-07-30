@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
 import axios from "axios";
 import MultipleSelect from "../components/MultipleSelect";
 import TextField from "@mui/material/TextField";
@@ -10,14 +10,47 @@ import config from "../config";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import { useNavigate } from "react-router-dom";
 
-const JoinAsPro = ({ handleClose }) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [cities, setCities] = useState([]);
-  const [loadingCities, setLoadingCities] = useState(false);
-  const { state } = useContext(StateContext);
+interface SocialLinks {
+  instagram: string;
+  facebook: string;
+  website: string;
+}
 
-  const [formData, setFormData] = useState({
+interface FormData {
+  business_name: string;
+  address: string;
+  sub_category_1: string[];
+  sub_category_2: string[];
+  sub_category_3: string[];
+  category: string;
+  started_in: string;
+  number_of_employees: string;
+  average_project_value: string;
+  projects_completed: string;
+  city: string;
+  state: string;
+  description: string;
+  social: SocialLinks;
+}
+
+interface JoinAsProProps {
+  handleClose: () => void;
+}
+
+const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [cities, setCities] = useState<string[]>([]);
+  const [loadingCities, setLoadingCities] = useState<boolean>(false);
+  const stateContext = useContext(StateContext);
+
+  if (stateContext === undefined) {
+    return;
+  }
+  const { state } = stateContext;
+
+  const [formData, setFormData] = useState<FormData>({
     business_name: "",
     address: "",
     sub_category_1: [],
@@ -38,10 +71,14 @@ const JoinAsPro = ({ handleClose }) => {
     },
   });
 
-  const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(null);
+  const navigate = useNavigate();
 
-  const handleStateChange = async (event, value) => {
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | ArrayBuffer | null>(
+    null
+  );
+
+  const handleStateChange = async (_event: any, value: string) => {
     setFormData((prevData) => ({
       ...prevData,
       state: value,
@@ -64,8 +101,8 @@ const JoinAsPro = ({ handleClose }) => {
     }
   };
 
-  const handleSocialChange = (e) => {
-    const { name, value } = e.target;
+  const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       social: {
@@ -75,16 +112,18 @@ const JoinAsPro = ({ handleClose }) => {
     }));
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type, checked } = event.target as HTMLInputElement;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     const processedFormData = {
       ...formData,
@@ -96,8 +135,6 @@ const JoinAsPro = ({ handleClose }) => {
       sub_category_3: formData.sub_category_3.join(","),
     };
 
-    console.log(processedFormData);
-
     try {
       const response = await axios.post(
         `${config.apiBaseUrl}/vendor/onboard`,
@@ -108,7 +145,6 @@ const JoinAsPro = ({ handleClose }) => {
           },
         }
       );
-      console.log(response);
 
       sessionStorage.removeItem("token");
       sessionStorage.setItem("token", response.data.access_token);
@@ -117,20 +153,17 @@ const JoinAsPro = ({ handleClose }) => {
         const formData = new FormData();
         formData.append("logo", logoFile);
 
-        const fileUploadResponse = await axios.post(
-          `${config.apiBaseUrl}/image-upload/logo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await axios.post(`${config.apiBaseUrl}/image-upload/logo`, formData, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
     } catch (error) {}
     window.location.reload();
     handleClose();
+    navigate("/");
   };
 
   const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
@@ -140,8 +173,8 @@ const JoinAsPro = ({ handleClose }) => {
     ? cities
     : [{ title: "Select a state first", disabled: true }];
 
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
+  const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
     setLogoFile(file);
 
     if (file) {
@@ -278,7 +311,6 @@ const JoinAsPro = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your themes (maximum of three)</p>
                 <MultipleSelect
-                  size="small"
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) => {
@@ -293,8 +325,6 @@ const JoinAsPro = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your spaces (maximum of three)</p>
                 <MultipleSelect
-                  size="small"
-                  // label="Spaces"
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
@@ -312,8 +342,6 @@ const JoinAsPro = ({ handleClose }) => {
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  size="small"
-                  // label="Execution Type"
                   apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
@@ -379,12 +407,12 @@ const JoinAsPro = ({ handleClose }) => {
                 <Autocomplete
                   disablePortal
                   id="city-autocomplete"
-                  options={cityOptions}
+                  options={cityOptions as string[]}
                   size="small"
-                  onChange={(event, value) =>
+                  onChange={(_event, value) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      city: value,
+                      city: value as string,
                     }))
                   }
                   loading={loadingCities}
@@ -392,7 +420,6 @@ const JoinAsPro = ({ handleClose }) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      // label="Enter your city"
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (
@@ -422,12 +449,14 @@ const JoinAsPro = ({ handleClose }) => {
               </label>
               {logoPreview && (
                 <div className="flex items-center justify-center">
-                  <img
-                    src={logoPreview}
-                    alt="Logo Preview"
-                    className="w-[100px] h-auto mt-2"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  />
+                  {typeof logoPreview === "string" && (
+                    <img
+                      src={logoPreview}
+                      alt="Logo Preview"
+                      className="w-[100px] h-auto mt-2"
+                      style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    />
+                  )}
                 </div>
               )}
               <br />

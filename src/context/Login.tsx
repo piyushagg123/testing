@@ -1,10 +1,39 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, ReactNode } from "react";
 
-const AuthContext = createContext();
+interface UserDetails {
+  email: string;
+  first_name: string;
+  is_vendor: boolean;
+  last_name: string;
+  mobile: string;
+}
 
-const AuthProvider = ({ children }) => {
-  const [login, setLogin] = useState(false);
-  const [userDetails, setUserDetails] = useState();
+interface AuthContextType {
+  login: boolean;
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  userDetails: UserDetails;
+  setUserDetails: React.Dispatch<React.SetStateAction<UserDetails>>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const defaultUserDetails: UserDetails = {
+  email: "",
+  first_name: "",
+  is_vendor: false,
+  last_name: "",
+  mobile: "",
+};
+
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [login, setLogin] = useState<boolean>(false);
+  const [userDetails, setUserDetails] =
+    useState<UserDetails>(defaultUserDetails);
+
   return (
     <AuthContext.Provider
       value={{

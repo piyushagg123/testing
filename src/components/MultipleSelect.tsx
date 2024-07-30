@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -19,7 +18,7 @@ const MenuProps = {
   },
 };
 
-function getStyles(value, selectedValues, theme) {
+function getStyles(value: string, selectedValues: string[], theme: any) {
   return {
     fontWeight:
       selectedValues.indexOf(value) === -1
@@ -28,26 +27,31 @@ function getStyles(value, selectedValues, theme) {
   };
 }
 
-const fetchOptions = async (apiEndpoint) => {
+const fetchOptions = async (apiEndpoint: string) => {
   const response = await axios.get(apiEndpoint);
   return response.data.data.value;
 };
 
+interface MultipleSelectProps {
+  apiEndpoint: string;
+  maxSelection: number;
+  onChange: (selectedValues: string[]) => void;
+}
+
 export default function MultipleSelect({
-  label,
   apiEndpoint,
   maxSelection,
   onChange,
-}) {
+}: MultipleSelectProps) {
   const theme = useTheme();
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   const { data: options = [], isLoading } = useQuery(
     ["options", apiEndpoint],
     () => fetchOptions(apiEndpoint)
   );
 
-  const handleChange = (event) => {
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
@@ -55,14 +59,17 @@ export default function MultipleSelect({
     if (typeof value === "string") {
       newValue = value.split(",");
     } else {
-      newValue = value.length <= maxSelection ? value : selectedValues;
+      newValue =
+        (value as string[]).length <= maxSelection
+          ? (value as string[])
+          : selectedValues;
     }
     setSelectedValues(newValue);
     onChange(newValue);
   };
 
   const selectedValuesWithIds = selectedValues.map((value) => {
-    const option = options.find((option) => option.value === value);
+    const option = options.find((option: any) => option.value === value);
     return { id: option.id, value: option.value };
   });
 
@@ -73,16 +80,13 @@ export default function MultipleSelect({
   return (
     <div>
       <FormControl sx={{ m: 1 }}>
-        <InputLabel id={`multiple-select-label-${label}`}>{label}</InputLabel>
         <Select
-          labelId={`multiple-select-label-${label}`}
-          id={`multiple-select-${label}`}
           multiple
           value={selectedValues}
           onChange={handleChange}
-          input={<OutlinedInput label={label} />}
+          input={<OutlinedInput />}
           MenuProps={MenuProps}
-          renderValue={(selected) => sortedSelectedValues.join(", ")}
+          renderValue={() => sortedSelectedValues.join(", ")}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -98,7 +102,7 @@ export default function MultipleSelect({
               <CircularProgress size={24} />
             </MenuItem>
           ) : (
-            options.map((option) => (
+            options.map((option: any) => (
               <MenuItem
                 key={option.id}
                 value={option.value}

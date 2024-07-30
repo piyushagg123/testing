@@ -1,12 +1,17 @@
+import React from "react";
 import { Rating } from "@mui/material";
 
-const Professional = ({
+interface ProfessionalProps {
+  img: string;
+  rating: number;
+  about: string;
+  profCat: string;
+}
+
+const Professional: React.FC<ProfessionalProps> = ({
   img,
-  name,
   rating,
   about,
-  location,
-  logo,
   profCat,
 }) => {
   return (
@@ -14,8 +19,8 @@ const Professional = ({
       <div>
         <img
           src={img}
-          alt=""
-          className="h-[192px] w-[300px] sm:w-[342px] rounded-[10px] sm:max-w-[342px] "
+          alt="Professional"
+          className="h-[192px] w-[300px] sm:w-[342px] rounded-[10px] sm:max-w-[342px]"
         />
       </div>
 
@@ -23,10 +28,16 @@ const Professional = ({
         <div className="w-[270px] md:w-[375px] xl:w-[600px]">
           <div className="flex flex-col gap-1 items-start">
             <span className="font-bold text-base text-darkgrey">{profCat}</span>
-            <Rating size="small" value={rating} disabled precision={0.5} style={{ color: "#ff5757", marginLeft: "-2px" }} />
+            <Rating
+              size="small"
+              value={rating}
+              disabled
+              precision={0.5}
+              style={{ color: "#ff5757", marginLeft: "-2px" }}
+            />
           </div>
           <br />
-          <p className="">{about}</p>
+          <p>{about}</p>
         </div>
       </div>
     </div>
