@@ -20,12 +20,12 @@ const fetchUserData = async () => {
       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
     },
   });
-  return data;
+  return data.data;
 };
 
 const fetchStateData = async () => {
   const { data } = await axios.get(`${config.apiBaseUrl}/location/states`);
-  return data;
+  return data.data;
 };
 
 const App: React.FC = () => {
@@ -41,7 +41,7 @@ const App: React.FC = () => {
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {
       setLogin(true);
-      setUserDetails(data.data);
+      setUserDetails(data);
     },
     onError: () => {
       setLogin(false);
@@ -50,7 +50,7 @@ const App: React.FC = () => {
 
   useQuery("stateData", fetchStateData, {
     onSuccess: (data) => {
-      setState(data.data);
+      setState(data);
     },
     onError: () => {},
   });
