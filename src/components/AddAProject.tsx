@@ -13,16 +13,11 @@ interface AddAProjectProps {
   projectId: number;
 }
 
-interface CityOption {
-  id: number;
-  label: string;
-}
-
 interface FormData {
   sub_category_1: string[];
   sub_category_2: string[];
   sub_category_3: string[];
-  city: string;
+  city: string | null;
   state: string;
 }
 const AddAProject: React.FC<AddAProjectProps> = ({
@@ -33,7 +28,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   const [description, setDescription] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [cities, setCities] = useState<CityOption[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>(
@@ -85,7 +80,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   );
 
   const handleStateChange = async (
-    _event: any,
+    _event: React.SyntheticEvent,
     value: string | null,
     _reason: any,
     _details?: any
@@ -347,12 +342,12 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                     size="small"
                     id="city-autocomplete"
                     options={cities}
-                    onChange={(_event, value) =>
+                    onChange={(_event, value) => {
                       setFormData((prevData) => ({
                         ...prevData,
-                        city: value as unknown as string,
-                      }))
-                    }
+                        city: value ?? "",
+                      }));
+                    }}
                     loading={loadingCities}
                     sx={{
                       width: 208,
