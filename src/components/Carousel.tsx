@@ -27,7 +27,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   title,
   theme,
   city,
-  state,
   imageObj,
 }) => {
   const keysArray = Object.keys(imageObj);
@@ -59,8 +58,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         <CardContent sx={{ padding: "0px 5px" }}>
           <div className="flex flex-row items-center justify-between">
             <p className="text-bold text-base">{title}</p>
-            <span className=" text-sm flex items-center text-sec" style={{ fontSize: '0.75rem' }}>
-              <PlaceIcon style={{ fontSize: '1rem' }} />
+            <span
+              className=" text-sm flex items-center text-sec"
+              style={{ fontSize: "0.75rem" }}
+            >
+              <PlaceIcon style={{ fontSize: "1rem" }} />
               {city}
             </span>
           </div>

@@ -108,19 +108,21 @@ const ProfessionalsInfo: React.FC = () => {
             </div>
             <div className="flex flex-col gap-2">
               <p className="font-bold text-base text-darkgrey">
-                {formatCategory(vendorData.business_name)}
+                {formatCategory(
+                  vendorData?.business_name ?? "Unknown Business"
+                )}
               </p>
               <p>
                 <span className="font-bold text-sm text-darkgrey">
                   SPECIALIZED THEMES :{" "}
                 </span>{" "}
-                {formatCategory(vendorData.sub_category_1)}
+                {formatCategory(vendorData?.sub_category_1 ?? "N/A")}
               </p>
               <p>
                 <span className="font-bold text-sm text-darkgrey">
                   SPECIALIZED SPACES :
                 </span>{" "}
-                {formatCategory(vendorData.sub_category_2)}
+                {formatCategory(vendorData?.sub_category_2 ?? "N/A")}
               </p>
             </div>
           </div>
@@ -183,10 +185,10 @@ const ProfessionalsInfo: React.FC = () => {
             }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
           >
             <br />
-            <div className="flex w-[100%] flex-wrap gap-10 justify-between">
+            <div className="flex w-[100%] flex-wrap gap-10 justify-center ">
               {!projectsData || projectsData.length === 0 ? (
                 <>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col ">
                     <div>
                       <img
                         src={projectImage}
@@ -242,43 +244,51 @@ const ProfessionalsInfo: React.FC = () => {
         <div className="flex flex-col justify-evenly gap-6">
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Business Name</p>
-            <p className="text-[16px]">{vendorData.business_name}</p>
+            <p className="text-[16px]">
+              {vendorData?.business_name ?? "Unknown"}
+            </p>
           </div>
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">
               Typical Job Cost
             </p>
-            <p className="text-[16px]">{vendorData.average_project_value}</p>
+            <p className="text-[16px]">
+              {vendorData?.average_project_value ?? "N/A"}
+            </p>
           </div>
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">
               Number of employees
             </p>
-            <p className="text-[16px]">{vendorData.number_of_employees}</p>
+            <p className="text-[16px]">
+              {vendorData?.number_of_employees ?? "N/A"}
+            </p>
           </div>
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">
               Projects Completed
             </p>
-            <p className="text-[16px]">{vendorData.projects_completed}</p>
+            <p className="text-[16px]">
+              {vendorData?.projects_completed ?? "N/A"}
+            </p>
           </div>
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
-            <p className="text-[16px]">{vendorData.mobile}</p>
+            <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
           </div>
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Email</p>
-            <p className="text-[16px]">{vendorData.email}</p>
+            <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
           </div>
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Location</p>
-            <p className="text-[16px]">{vendorData.city}</p>
+            <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
           </div>
           {vendorData?.social ? (
             <>
               <div>
                 <p className="font-bold text-base text-darkgrey">Socials</p>
-                {vendorData.social && vendorData.social.facebook && (
+                {vendorData.social.facebook && (
                   <a
                     href={vendorData.social.facebook}
                     target="_blank"
@@ -307,9 +317,7 @@ const ProfessionalsInfo: React.FC = () => {
                 )}
               </div>
             </>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

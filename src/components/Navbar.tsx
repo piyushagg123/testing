@@ -60,7 +60,10 @@ const Navbar: React.FC = () => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClose = (event, reason?: any) => {
+  const handleClose = (
+    _?: React.SyntheticEvent<Element, Event>,
+    reason?: "backdropClick" | "escapeKeyDown"
+  ) => {
     if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
       return;
     }

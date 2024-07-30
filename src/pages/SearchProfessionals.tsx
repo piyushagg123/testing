@@ -10,7 +10,6 @@ import {
   MenuItem,
   Select,
   Button,
-  Icon,
 } from "@mui/material";
 import Professional from "../components/Professional";
 import Filters from "../components/Filters";
@@ -75,13 +74,13 @@ const SearchProfessionals: React.FC = () => {
       const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
         params: {
           category: "INTERIOR_DESIGNER",
-          sub_category_1: Array.from(themeFilters)
+          sub_category_1: Array.from(themeFilters as Set<string>)
             .map((option) => option.toUpperCase())
             .join(","),
-          sub_category_2: Array.from(spaceFilters)
+          sub_category_2: Array.from(spaceFilters as Set<string>)
             .map((option) => option.toUpperCase())
             .join(","),
-          sub_category_3: Array.from(executionFilters)
+          sub_category_3: Array.from(executionFilters as Set<string>)
             .map((option) => option.toUpperCase())
             .join(","),
         },
@@ -93,7 +92,7 @@ const SearchProfessionals: React.FC = () => {
     }
   };
 
-  const onThemeFiltersUpdate = (updatedItem) => {
+  const onThemeFiltersUpdate = (updatedItem: string) => {
     updatedItem = updatedItem.replace(/\s+/g, "_");
     let updatedThemeFilters = new Set(themeFilters);
     if (updatedThemeFilters.has(updatedItem)) {
@@ -104,7 +103,7 @@ const SearchProfessionals: React.FC = () => {
     setThemeFilters(updatedThemeFilters);
   };
 
-  const onSpaceFiltersUpdate = (updatedItem) => {
+  const onSpaceFiltersUpdate = (updatedItem: string) => {
     updatedItem = updatedItem.replace(/\s+/g, "_");
     let updatedSpaceFilters = new Set(spaceFilters);
     if (updatedSpaceFilters.has(updatedItem)) {
@@ -115,7 +114,7 @@ const SearchProfessionals: React.FC = () => {
     setSpaceFilters(updatedSpaceFilters);
   };
 
-  const onExecutionFiltersUpdate = (updatedItem) => {
+  const onExecutionFiltersUpdate = (updatedItem: string) => {
     updatedItem = updatedItem.replace(/\s+/g, "_");
     let updatedExecutionFilters = new Set(executionFilters);
     if (updatedExecutionFilters.has(updatedItem)) {
@@ -268,28 +267,34 @@ const SearchProfessionals: React.FC = () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <CircularProgress color="inherit" />
-          ) : (
+          {filteredItems ? (
             <>
-              {filteredItems.map((item) => (
-                <NavLink
-                  to={`/search-professionals/${item.vendor_id}`}
-                  key={item.vendor_id}
-                >
-                  <div>
-                    <Professional
-                      about={item.description}
-                      rating={item.rating}
-                      img={`${config.apiImageUrl}/${item.logo}`}
-                      profCat={item.business_name}
-                    />
-                    <hr />
-                    <br />
-                  </div>
-                </NavLink>
-              ))}
+              {isLoading ? (
+                <CircularProgress color="inherit" />
+              ) : (
+                <>
+                  {filteredItems.map((item) => (
+                    <NavLink
+                      to={`/search-professionals/${item.vendor_id}`}
+                      key={item.vendor_id}
+                    >
+                      <div>
+                        <Professional
+                          about={item.description}
+                          rating={item.rating}
+                          img={`${config.apiImageUrl}/${item.logo}`}
+                          profCat={item.business_name}
+                        />
+                        <hr />
+                        <br />
+                      </div>
+                    </NavLink>
+                  ))}
+                </>
+              )}
             </>
+          ) : (
+            <></>
           )}
           <br />
         </div>
