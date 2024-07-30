@@ -188,9 +188,6 @@ const JoinAsPro = ({ handleClose }) => {
         return;
       }
     }
-
-    if (currentStep === 4) {
-    }
     setCurrentStep((prevStep) => prevStep + 1);
     setError("");
   };
@@ -515,7 +512,7 @@ const JoinAsPro = ({ handleClose }) => {
               <div className="flex flex-col gap-2">
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    <InstagramIcon className="text-pink-500" /> Instagram
+                    <InstagramIcon className="text-[red]" /> Instagram
                   </p>
                   <input
                     type="url"
@@ -529,7 +526,7 @@ const JoinAsPro = ({ handleClose }) => {
                 <br />
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    <FacebookIcon className="text-blue-600" /> Facebook
+                    <FacebookIcon className="text-[purple]" /> Facebook
                   </p>
                   <input
                     type="url"
