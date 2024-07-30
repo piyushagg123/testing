@@ -100,14 +100,6 @@ const SignUp: React.FC = () => {
       setError(error.response?.data?.debug_info ?? "An error occurred");
     }
   };
-
-  // const handleClose = (reason?: string) => {
-  //   if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
-  //     return;
-  //   }
-  //   setOpen(false);
-  //   navigate("/");
-  // };
   const handleClose = (
     _event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
