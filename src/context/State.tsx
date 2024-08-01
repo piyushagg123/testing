@@ -1,9 +1,23 @@
-import { createContext, useState } from "react";
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
+type StateType = any[];
+interface StateContextType {
+  state: StateType;
+  setState: Dispatch<SetStateAction<StateType>>;
+}
+const StateContext = createContext<StateContextType | undefined>(undefined);
 
-const StateContext = createContext();
+interface StateProviderProps {
+  children: ReactNode;
+}
 
-const StateProvider = ({ children }) => {
-  const [state, setState] = useState([]);
+const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
+  const [state, setState] = useState<StateType>([]);
 
   return (
     <StateContext.Provider

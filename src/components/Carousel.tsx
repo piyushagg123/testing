@@ -1,23 +1,38 @@
+import React from "react";
 import Carousel from "react-material-ui-carousel";
-import { Paper, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { CardActionArea } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Card,
+  CardContent,
+  CardActionArea,
+  Box,
+} from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import Box from "@mui/material/Box";
 import config from "../config";
 
-const ImageCarousel = ({
+import EmptyProjectImage from "../assets/background.jpg";
+
+interface ImageCarouselProps {
+  title: string;
+  theme: string;
+  city: string;
+  state: string;
+  imageObj: Record<string, string[]>;
+}
+
+interface ItemProps {
+  item: string;
+}
+
+const ImageCarousel: React.FC<ImageCarouselProps> = ({
   title,
-  desc,
   theme,
-  spaces,
   city,
-  state,
   imageObj,
 }) => {
   const keysArray = Object.keys(imageObj);
-  const arr = [];
+  const arr: string[] = [];
   keysArray.forEach((key) => {
     imageObj[key].forEach((img) => arr.push(img));
   });
@@ -26,46 +41,50 @@ const ImageCarousel = ({
     <Card sx={{ height: 290, width: "47%" }}>
       <CardActionArea>
         <Box sx={{ width: "100%" }}>
-          <Carousel
-            autoPlay={true}
-            animation="slide"
-            cycleNavigation={true}
-            interval={2000}
-            indicatorIconButtonProps={{
-              style: {
-                display: "none",
-              },
-            }}
-          >
-            {arr.map((item, i) => (
-              <Item key={i} item={item} />
-            ))}
-          </Carousel>
+          {arr.length !== 0 ? (
+            <>
+              <Carousel
+                autoPlay={true}
+                animation="slide"
+                cycleNavigation={true}
+                interval={2000}
+                indicatorIconButtonProps={{
+                  style: {
+                    display: "none",
+                  },
+                }}
+              >
+                {arr.map((item, i) => (
+                  <Item key={i} item={item} />
+                ))}
+              </Carousel>
+            </>
+          ) : (
+            <>
+              <img
+                src={EmptyProjectImage}
+                alt=""
+                style={{ width: "100%", height: "200px" }}
+              />
+            </>
+          )}
         </Box>
         <CardContent sx={{ padding: "0px 5px" }}>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            className="flex items-center justify-between"
-          >
-            <p>{title}</p>
-            <p className="text-sm flex items-center">
-              <PlaceIcon />
-              {city},{state}
-            </p>
-          </Typography>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-bold text-base">{title}</p>
+            <span
+              className=" text-sm flex items-center text-sec"
+              style={{ fontSize: "0.75rem" }}
+            >
+              <PlaceIcon style={{ fontSize: "1rem" }} />
+              {city}
+            </span>
+          </div>
+
           <Typography variant="body2">
-            {/* <p>{desc}</p> */}
             <p>
               <span className="font-bold">Theme:</span> {theme}
             </p>
-            {/* <p className="overflow-x-clip">
-              <span className="font-bold">Spaces:</span> {spaces}
-            </p> */}
-            {/* <p>
-              {city},{state}
-            </p> */}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -73,7 +92,7 @@ const ImageCarousel = ({
   );
 };
 
-const Item = ({ item }) => {
+const Item: React.FC<ItemProps> = ({ item }) => {
   return (
     <Paper>
       <img

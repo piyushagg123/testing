@@ -1,11 +1,24 @@
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, ChangeEvent } from "react";
 import axios from "axios";
-import { AuthContext } from "../context/Login";
 import config from "../config";
 
-const ProjectImages = ({ subCategories, handleClose, projectId }) => {
-  const { accessToken } = useContext(AuthContext);
-  const [spaceTypes, setSpaceTypes] = useState(
+interface ProjectImagesProps {
+  subCategories: string[];
+  projectId: number;
+}
+
+interface SpaceType {
+  subCategory: string;
+  images: (File | null)[];
+  previews: (string | null)[];
+  imageNames: (string | null)[];
+}
+
+const ProjectImages: React.FC<ProjectImagesProps> = ({
+  subCategories,
+  projectId,
+}) => {
+  const [spaceTypes, setSpaceTypes] = useState<SpaceType[]>(
     subCategories.map((subCategory) => ({
       subCategory,
       images: [null, null, null],
@@ -15,8 +28,12 @@ const ProjectImages = ({ subCategories, handleClose, projectId }) => {
   );
 
   const handleImageChange = useCallback(
-    async (spaceIndex, imageIndex, e) => {
-      const file = e.target.files[0];
+    async (
+      spaceIndex: number,
+      imageIndex: number,
+      event: ChangeEvent<HTMLInputElement>
+    ) => {
+      const file = event.target.files?.[0];
       if (!file) {
         return;
       }
@@ -26,7 +43,8 @@ const ProjectImages = ({ subCategories, handleClose, projectId }) => {
         setSpaceTypes((prevSpaceTypes) => {
           const updatedSpaces = [...prevSpaceTypes];
           updatedSpaces[spaceIndex].images[imageIndex] = file;
-          updatedSpaces[spaceIndex].previews[imageIndex] = reader.result;
+          updatedSpaces[spaceIndex].previews[imageIndex] =
+            reader.result as string;
           return updatedSpaces;
         });
       };
@@ -55,11 +73,11 @@ const ProjectImages = ({ subCategories, handleClose, projectId }) => {
         });
       } catch (error) {}
     },
-    [subCategories, projectId, accessToken]
+    [subCategories, projectId]
   );
 
   const handleDeleteImage = useCallback(
-    async (spaceIndex, imageIndex) => {
+    async (spaceIndex: number, imageIndex: number) => {
       const imageName = spaceTypes[spaceIndex].imageNames[imageIndex];
       if (!imageName) {
         return;
@@ -84,7 +102,7 @@ const ProjectImages = ({ subCategories, handleClose, projectId }) => {
         });
       } catch (error) {}
     },
-    [spaceTypes, subCategories, projectId, accessToken]
+    [spaceTypes, subCategories, projectId]
   );
 
   return (
@@ -159,13 +177,12 @@ const ProjectImages = ({ subCategories, handleClose, projectId }) => {
                     >
                       <button
                         type="button"
-                        onClick={() =>
-                          document
-                            .getElementById(
-                              `file-input-${spaceIndex}-${imageIndex}`
-                            )
-                            .click()
-                        }
+                        onClick={() => {
+                          const inputElement = document.getElementById(
+                            `file-input-${spaceIndex}-${imageIndex}`
+                          ) as HTMLInputElement | null;
+                          inputElement?.click();
+                        }}
                         style={{ fontSize: "24px", cursor: "pointer" }}
                       >
                         +
@@ -175,8 +192,8 @@ const ProjectImages = ({ subCategories, handleClose, projectId }) => {
                         style={{ display: "none" }}
                         type="file"
                         accept="image/*"
-                        onChange={(e) =>
-                          handleImageChange(spaceIndex, imageIndex, e)
+                        onChange={(event) =>
+                          handleImageChange(spaceIndex, imageIndex, event)
                         }
                       />
                     </div>
