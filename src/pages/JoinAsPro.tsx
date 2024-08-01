@@ -179,12 +179,12 @@ const JoinAsPro = ({ handleClose }) => {
     }
 
     if (currentStep === 3) {
-      if (!formData.city) {
-        setError("Please enter your city ");
-        return;
-      }
       if (!formData.state) {
         setError("Please enter your state ");
+        return;
+      }
+      if (!formData.city) {
+        setError("Please enter your city ");
         return;
       }
     }
