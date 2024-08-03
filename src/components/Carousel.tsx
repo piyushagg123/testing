@@ -122,6 +122,7 @@ import {
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import WovenImageList from "./Test";
+import config from "../config";
 
 const truncateText = (text: string, wordLimit: number): string => {
   if (text.length > wordLimit) {
@@ -130,18 +131,27 @@ const truncateText = (text: string, wordLimit: number): string => {
   return text;
 };
 
-const ImageCarousel = ({
+interface ImageCarouselProps {
+  title: string;
+  theme: string;
+  city: string;
+  state: string;
+  imageObj: Record<string, string[]>;
+  flag: boolean;
+}
+interface ItemProps {
+  item: string;
+}
+
+const ImageCarousel: React.FC<ImageCarouselProps> = ({
   title,
-  desc,
   theme,
-  spaces,
   city,
-  state,
   imageObj,
   flag = true,
 }) => {
   const keysArray = Object.keys(imageObj);
-  const arr = [];
+  const arr: string[] = [];
   keysArray.forEach((key) => {
     imageObj[key].forEach((img) => arr.push(img));
   });
@@ -150,15 +160,31 @@ const ImageCarousel = ({
 
   const [selectedSpace, setSelectedSpace] = useState(keysArray[0]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setSelectedSpace(newValue);
   };
 
+  const funct = (ar) => {
+    return ar.map((item) => (
+      <img
+        src={`${config.apiImageUrl}/${item}`}
+        className="h-10 ml-2"
+        alt="indicator"
+      />
+    ));
+  };
+
   if (title) title = truncateText(title, 10);
+
+  const anArrayOfNumbers = [
+    <img src="http://random.com/one" />,
+    <img src="http://random.com/two" />,
+    <img src="http://random.com/three" />,
+  ];
   return (
     <>
       {flag ? (
-        <Card sx={{ height: 290, width: "355px" }}>
+        <Card sx={{ height: 340, width: "355px" }}>
           <CardActionArea>
             <Box sx={{ width: "100%" }}>
               {/* <Carousel
@@ -176,16 +202,17 @@ const ImageCarousel = ({
                   <Item key={i} item={item} />
                 ))}
               </Carousel> */}
-              <WovenImageList img={arr} />
+              <WovenImageList items={arr} />
             </Box>
             <CardContent sx={{ padding: "0px 5px" }}>
+              <br />
               <Typography
                 gutterBottom
                 variant="h5"
                 component="div"
                 className="flex items-center justify-between"
               >
-                <p>{title}</p>
+                <p className="font-bold text-base text-darkgrey">{title}</p>
                 <p className="text-[10px] flex items-center text-sec">
                   <PlaceIcon sx={{ fontSize: "15px" }} />
                   {city}
@@ -233,12 +260,26 @@ const ImageCarousel = ({
           </Grid>
           <Grid item xs={10}>
             <Box>
-              {imageObj[selectedSpace].map((img, i) => (
+              {/* {imageObj[selectedSpace]?.map((img, i) => (
                 <>
                   <Item key={i} item={img} />
                   <br />
                 </>
-              ))}
+              ))} */}
+              <Carousel
+                autoPlay={true}
+                animation="slide"
+                cycleNavigation={true}
+                interval={2000}
+                IndicatorIcon={funct(imageObj[selectedSpace])}
+              >
+                {imageObj[selectedSpace]?.map((img, i) => (
+                  <>
+                    <Item key={i} item={img} />
+                    <br />
+                  </>
+                ))}
+              </Carousel>
             </Box>
           </Grid>
         </Grid>
@@ -247,7 +288,7 @@ const ImageCarousel = ({
   );
 };
 
-const Item = ({ item }) => {
+const Item: React.FC<ItemProps> = ({ item }) => {
   return (
     <Paper>
       <img
