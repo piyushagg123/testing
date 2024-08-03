@@ -176,13 +176,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     } else return;
   };
 
-  if (title) title = truncateText(title, 10);
+  if (title) title = truncateText(title, 20);
 
-  const anArrayOfNumbers = [
-    <img src="http://random.com/one" />,
-    <img src="http://random.com/two" />,
-    <img src="http://random.com/three" />,
-  ];
   return (
     <>
       {flag ? (
@@ -244,7 +239,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               onChange={handleChange}
               aria-label="Spaces tabs"
               orientation="vertical"
-              sx={{ width: "100%", textAlign: "center", rotate: "180deg" }}
+              sx={{ textAlign: "center", rotate: "180deg" }}
               TabIndicatorProps={{
                 sx: { display: "none" },
               }}

@@ -1,12 +1,13 @@
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import NoProjectImage from "../assets/noImageinProject.jpg";
 
 interface ItemProps {
   items: string[];
 }
 const WovenImageList: React.FC<ItemProps> = ({ items }) => {
   let numberOfImages: number = 0;
-  if (items.length === 1 || items.length === 2) {
+  if (items.length <= 2) {
     numberOfImages = 1;
   } else {
     numberOfImages = 2;
@@ -14,19 +15,19 @@ const WovenImageList: React.FC<ItemProps> = ({ items }) => {
 
   return (
     <>
-      {items.length > 0 ? (
-        <>
-          <ImageList
-            sx={{
-              width: "100%",
-              height: 250,
-              scrollbarWidth: "none",
-              scrollbarColor: "black",
-            }}
-            variant="standard"
-            cols={numberOfImages}
-            gap={1}
-          >
+      <ImageList
+        sx={{
+          width: "100%",
+          height: 250,
+          scrollbarWidth: "none",
+          scrollbarColor: "black",
+        }}
+        variant="standard"
+        cols={numberOfImages}
+        gap={1}
+      >
+        {items.length !== 0 ? (
+          <>
             {items?.map((item, ind: number) => (
               <ImageListItem key={ind}>
                 <img
@@ -35,11 +36,19 @@ const WovenImageList: React.FC<ItemProps> = ({ items }) => {
                 />
               </ImageListItem>
             ))}
-          </ImageList>
-        </>
-      ) : (
-        <></>
-      )}
+          </>
+        ) : (
+          <>
+            <ImageListItem>
+              <img
+                src={NoProjectImage}
+                loading="lazy"
+                style={{ height: "250px" }}
+              />
+            </ImageListItem>
+          </>
+        )}
+      </ImageList>
     </>
   );
 };

@@ -222,7 +222,7 @@ const ProfessionalsInfo = () => {
           <div
             className={`${
               about ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px] xl:w-[950px]`}
+            } md:w-[500px] lg:w-[750px]`}
           >
             <br />
             <p>{vendorData?.description}</p>
@@ -231,10 +231,10 @@ const ProfessionalsInfo = () => {
           <div
             className={`${
               projects ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px]  flex justify-center flex-col items-center`}
           >
             <br />
-            <div className="flex  flex-wrap gap-10 ">
+            <div className="flex  flex-wrap ">
               {!projectsData ? (
                 <>
                   <div className="flex flex-col items-center justify-center">
@@ -248,7 +248,7 @@ const ProfessionalsInfo = () => {
                 </>
               ) : selectedProject ? (
                 <div className="flex flex-col">
-                  <div className="flex justify-start gap-60">
+                  <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px] ">
                     <button
                       className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
                       onClick={handleBackClick}
@@ -261,7 +261,7 @@ const ProfessionalsInfo = () => {
                   </div>
                   <br />
 
-                  <div className="flex flex-col  gap-3 w-[750px]">
+                  <div className="flex flex-col  gap-3">
                     <Carousel
                       imageObj={selectedProject.images}
                       flag={false}
@@ -330,9 +330,13 @@ const ProfessionalsInfo = () => {
                   <br />
                 </div>
               ) : (
-                <>
+                <div className="flex flex-wrap justify-between">
                   {projectsData.map((item, ind) => (
-                    <div key={ind} onClick={() => handleCarouselClick(item)}>
+                    <div
+                      key={ind}
+                      onClick={() => handleCarouselClick(item)}
+                      className="mb-4"
+                    >
                       <Carousel
                         key={ind}
                         imageObj={item.images}
@@ -344,7 +348,7 @@ const ProfessionalsInfo = () => {
                       />
                     </div>
                   ))}
-                </>
+                </div>
               )}
             </div>
             <br />
