@@ -165,13 +165,15 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   };
 
   const funct = (ar) => {
-    return ar.map((item) => (
-      <img
-        src={`${config.apiImageUrl}/${item}`}
-        className="h-10 ml-2"
-        alt="indicator"
-      />
-    ));
+    if (ar) {
+      return ar.map((item) => (
+        <img
+          src={`${config.apiImageUrl}/${item}`}
+          className="h-10 ml-2"
+          alt="indicator"
+        />
+      ));
+    } else return;
   };
 
   if (title) title = truncateText(title, 10);
