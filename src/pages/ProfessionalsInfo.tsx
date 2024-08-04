@@ -204,6 +204,7 @@ const ProfessionalsInfo = () => {
                 setAbout(false);
                 setProjects(true);
                 setReviews(false);
+                handleBackClick();
               }}
             >
               Projects
@@ -255,9 +256,6 @@ const ProfessionalsInfo = () => {
                     >
                       Back
                     </button>
-                    <h2 className="font-bold text-lg text-darkgrey text-center ">
-                      {selectedProject.title}
-                    </h2>
                   </div>
                   <br />
 
@@ -273,60 +271,6 @@ const ProfessionalsInfo = () => {
                   </div>
                   <br />
 
-                  <p className="mt-4">
-                    {" "}
-                    <span className="font-bold">Description:</span>{" "}
-                    {selectedProject.description}
-                  </p>
-                  <p className="mt-2">
-                    <span className="font-bold">City:</span>{" "}
-                    {selectedProject.city}
-                  </p>
-                  <p className="mt-2">
-                    <span className="font-bold">State:</span>{" "}
-                    {selectedProject.state}
-                  </p>
-                  <p className="mt-2 flex gap-2 items-center">
-                    <span className="font-bold">Spaces:</span>{" "}
-                    {formatCategory(selectedProject.sub_category_2)
-                      .split(",")
-                      .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                            style={{
-                              color: "linear-gradient(#ff5757,#8c52ff)",
-                            }}
-                          />
-                        </>
-                      ))}
-                  </p>
-                  <p className="mt-2 flex gap-2 items-center">
-                    <span className="font-bold">Theme:</span>
-                    {formatCategory(selectedProject.sub_category_1)
-                      .split(",")
-                      .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                          />
-                        </>
-                      ))}
-                  </p>
-                  <p className="mt-2">
-                    <span className="font-bold">Start date:</span>{" "}
-                    {selectedProject.start_date}
-                  </p>
-                  <p className="mt-2">
-                    <span className="font-bold">End date:</span>{" "}
-                    {selectedProject.end_date}
-                  </p>
                   <br />
                 </div>
               ) : (
@@ -358,7 +302,7 @@ const ProfessionalsInfo = () => {
           <div
             className={`${
               reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="">
@@ -373,40 +317,156 @@ const ProfessionalsInfo = () => {
         </div>
       </div>
       <br />
-      <div className="w-[200px] text-lg ml-10">
+      <div className="w-[250px] text-lg ml-10">
         <br />
         <br />
         <div className="flex flex-col justify-evenly gap-6">
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Business Name</p>
-            <p className="text-[16px]">
-              {vendorData?.business_name ?? "Unknown"}
-            </p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">
-              Typical Job Cost
-            </p>
-            <p className="text-[16px]">
-              {vendorData?.average_project_value ?? "N/A"}
-            </p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">
-              Number of employees
-            </p>
-            <p className="text-[16px]">
-              {vendorData?.number_of_employees ?? "N/A"}
-            </p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">
-              Projects Completed
-            </p>
-            <p className="text-[16px]">
-              {vendorData?.projects_completed ?? "N/A"}
-            </p>
-          </div>
+          {selectedProject ? (
+            <>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Title</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.title}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Description</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.description}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">City</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.city}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">State</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.state}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Spaces</p>
+                <p className="text-[16px]">
+                  {formatCategory(selectedProject.sub_category_2)
+                    .split(",")
+                    .map((item, ind) => (
+                      <>
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                          style={{
+                            color: "linear-gradient(#ff5757,#8c52ff)",
+                          }}
+                        />
+                      </>
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Theme</p>
+                <p className="text-[16px]">
+                  {formatCategory(selectedProject.sub_category_1)
+                    .split(",")
+                    .map((item, ind) => (
+                      <>
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                          style={{
+                            color: "linear-gradient(#ff5757,#8c52ff)",
+                          }}
+                        />
+                      </>
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Start Date</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.start_date}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">End date</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.end_date}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <p className="font-bold text-base text-darkgrey">
+                  Typical Job Cost
+                </p>
+                <p className="text-[16px]">
+                  {vendorData?.average_project_value ?? "N/A"}
+                </p>
+              </div>
+              <div className=" ">
+                <p className="font-bold text-base text-darkgrey">
+                  Number of employees
+                </p>
+                <p className="text-[16px]">
+                  {vendorData?.number_of_employees ?? "N/A"}
+                </p>
+              </div>
+              <div className=" ">
+                <p className="font-bold text-base text-darkgrey">
+                  Projects Completed
+                </p>
+                <p className="text-[16px]">
+                  {vendorData?.projects_completed ?? "N/A"}
+                </p>
+              </div>
+
+              <div className=" ">
+                <p className="font-bold text-base text-darkgrey">Location</p>
+                <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
+              </div>
+              {vendorData?.social ? (
+                <>
+                  <div>
+                    <p className="font-bold text-base text-darkgrey">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
+                </>
+              ) : null}
+            </>
+          )}
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
             <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
@@ -415,44 +475,6 @@ const ProfessionalsInfo = () => {
             <p className="font-bold text-base text-darkgrey">Email</p>
             <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
           </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Location</p>
-            <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
-          </div>
-          {vendorData?.social ? (
-            <>
-              <div>
-                <p className="font-bold text-base text-darkgrey">Socials</p>
-                {vendorData.social.facebook && (
-                  <a
-                    href={vendorData.social.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FacebookIcon />
-                  </a>
-                )}
-                {vendorData.social.instagram && (
-                  <a
-                    href={vendorData.social.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <InstagramIcon />
-                  </a>
-                )}
-                {vendorData.social.website && (
-                  <a
-                    href={vendorData.social.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <OpenInNewIcon />
-                  </a>
-                )}
-              </div>
-            </>
-          ) : null}
         </div>
       </div>
     </div>
