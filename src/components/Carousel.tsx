@@ -121,7 +121,7 @@ import {
   Grid,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import WovenImageList from "./Test";
+import WovenImageList from "./ImageList";
 import config from "../config";
 
 const truncateText = (text: string, wordLimit: number): string => {
@@ -164,9 +164,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     setSelectedSpace(newValue);
   };
 
-  const funct = (ar) => {
+  const funct = (ar: any) => {
     if (ar) {
-      return ar.map((item) => (
+      return ar.map((item: any) => (
         <img
           src={`${config.apiImageUrl}/${item}`}
           className="h-10 ml-2"
@@ -239,7 +239,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               onChange={handleChange}
               aria-label="Spaces tabs"
               orientation="vertical"
-              sx={{ textAlign: "center", rotate: "180deg" }}
+              sx={{
+                textAlign: "center",
+                rotate: "180deg",
+                marginRight: "60px",
+              }}
               TabIndicatorProps={{
                 sx: { display: "none" },
               }}
@@ -264,10 +268,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 </>
               ))} */}
               <Carousel
-                autoPlay={true}
                 animation="slide"
                 cycleNavigation={true}
-                interval={2000}
                 IndicatorIcon={funct(imageObj[selectedSpace])}
               >
                 {imageObj[selectedSpace]?.map((img, i) => (
@@ -287,7 +289,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
 const Item: React.FC<ItemProps> = ({ item }) => {
   return (
-    <Paper>
+    <Paper sx={{ display: "flex", justifyContent: "center" }}>
       <img
         src={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${item}`}
         alt="Carousel Item"

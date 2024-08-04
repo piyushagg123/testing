@@ -104,7 +104,7 @@ const ProfessionalsInfo = () => {
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
 
   return (
-    <div className="mt-[70px] text-text h-screen flex  justify-center gap-3">
+    <div className="mt-[70px] text-text flex  justify-center gap-3 h-fit">
       <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-4">
         <br />
         <div className="w-[310px] md:w-max">

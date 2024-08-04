@@ -6,7 +6,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import { Chip, Dialog, DialogContent, IconButton } from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import Carousel from "../components/Carousel";
@@ -92,7 +92,7 @@ const Profile = () => {
   if (error) return <p>Error fetching data</p>;
 
   return (
-    <div className="mt-[70px] text-text h-screen flex  justify-center gap-3">
+    <div className="mt-[70px] text-text h-fit flex  justify-center gap-3">
       <div className="text-[10px] md:text-[16px]  flex flex-col gap-7 md:gap-0 pl-4">
         <br />
         <div className="w-[310px] md:w-max">
@@ -113,21 +113,45 @@ const Profile = () => {
                 />
               )}
             </div>
-            <div className="flex flex-col gap-2">
+            <div>
+              <p>{}</p>
               <p className="font-bold text-base text-darkgrey">
-                {formatCategory(data.business_name)}
+                {formatCategory(data?.business_name ?? "Unknown Business")}
               </p>
-              <p>
+              <p className="mb-2 mt-2 flex gap-2 items-center">
                 <span className="font-bold text-sm text-darkgrey">
-                  SPECIALIZED THEMES :{" "}
+                  SPECIALIZED THEMES :
                 </span>{" "}
-                {formatCategory(data.sub_category_1)}
+                {formatCategory(data?.sub_category_1 ?? "N/A")
+                  .split(",")
+                  .map((item, ind) => (
+                    <>
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
+                    </>
+                  ))}
               </p>
-              <p>
+
+              <p className="flex gap-2 items-center">
                 <span className="font-bold text-sm text-darkgrey">
                   SPECIALIZED SPACES :
                 </span>{" "}
-                {formatCategory(data.sub_category_2)}
+                {formatCategory(data?.sub_category_2 ?? "N/A")
+                  .split(",")
+                  .map((item, ind) => (
+                    <>
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
+                    </>
+                  ))}
               </p>
             </div>
           </div>
@@ -211,6 +235,7 @@ const Profile = () => {
                     state={item.state}
                     theme={item.sub_category_1}
                     key={ind}
+                    flag={true}
                   />
                 ))
               )}
