@@ -13,6 +13,7 @@ import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import config from "./config";
+import Footer from "./components/Footer";
 
 const fetchUserData = async () => {
   const { data } = await axios.get(`${config.apiBaseUrl}/user/details`, {
@@ -74,6 +75,7 @@ const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/*" element={<Error />} />
         </Routes>
+        <Footer />
       </Router>
     </div>
   );
