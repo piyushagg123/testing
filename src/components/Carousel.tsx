@@ -176,6 +176,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     } else return;
   };
 
+  const formatString = (str: string) => {
+    const formattedStr = str.toLowerCase().replace(/_/g, " ");
+    return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
+  };
+
   if (title) title = truncateText(title, 20);
 
   return (
@@ -239,10 +244,18 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               onChange={handleChange}
               aria-label="Spaces tabs"
               orientation="vertical"
+              variant="scrollable"
               sx={{
                 textAlign: "center",
                 rotate: "180deg",
                 marginRight: "60px",
+                height: 520,
+                "& .MuiTabs-indicator": {
+                  transition: "none", // Disable the indicator transition
+                },
+                "& .MuiTab-root": {
+                  transition: "none", // Disable the tab transition
+                },
               }}
               TabIndicatorProps={{
                 sx: { display: "none" },
@@ -251,11 +264,14 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               {keysArray.map((key) => (
                 <Tab
                   label={
-                    <span style={{ writingMode: "vertical-rl" }}>{key}</span>
+                    <span style={{ writingMode: "vertical-rl" }}>
+                      {formatString(key)}
+                    </span>
                   }
                   value={key}
                   key={key}
                   sx={{
+                    transition: "none",
                     color: selectedSpace === key ? "black" : "grey",
                     "&.Mui-selected": {
                       color: "black",
@@ -265,7 +281,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               ))}
             </Tabs>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} sx={{ position: "relative", top: "-78px" }}>
             <Box>
               {/* {imageObj[selectedSpace]?.map((img, i) => (
                 <>
