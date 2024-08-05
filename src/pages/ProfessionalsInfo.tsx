@@ -6,7 +6,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Chip } from "@mui/material";
+import { Chip, Tab, Tabs, Box } from "@mui/material";
 import Carousel from "../components/Carousel";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -61,6 +61,13 @@ const fetchVendorProjects = async (id: string) => {
   return data.data as ProjectData[];
 };
 
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 const ProfessionalsInfo = () => {
   const authContext = useContext(AuthContext);
 
@@ -68,11 +75,9 @@ const ProfessionalsInfo = () => {
     return;
   }
   const { login } = authContext;
-  const [about, setAbout] = useState(true);
-  const [projects, setProjects] = useState(false);
-  const [reviews, setReviews] = useState(false);
   const { id } = useParams();
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
+  const [value, setValue] = useState(0);
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", id],
     () => fetchVendorDetails(id!)
@@ -99,6 +104,11 @@ const ProfessionalsInfo = () => {
 
   const handleBackClick = () => {
     setSelectedProject(undefined);
+  };
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    if (newValue === 1) handleBackClick();
   };
 
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
@@ -187,8 +197,8 @@ const ProfessionalsInfo = () => {
           ) : (
             <></>
           )}
-          <div className="flex gap-3 text-[18px] border-b-[0.3px] border-black">
-            <button
+          <div className="flex gap-3 text-[18px]  ">
+            {/* <button
               className={`${about ? "border-b-[2px] border-red" : ""}`}
               onClick={() => {
                 setAbout(true);
@@ -218,9 +228,35 @@ const ProfessionalsInfo = () => {
               }}
             >
               Reviews
-            </button>
+            </button> */}
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              TabIndicatorProps={{
+                sx: {
+                  backgroundColor: "black", // Change the indicator color here
+                },
+              }}
+              sx={{
+                "& .MuiTab-root": {
+                  color: "grey", // Color for unselected tabs
+                },
+                "& .Mui-selected": {
+                  color: "black", // Color for selected tab
+                },
+              }}
+            >
+              <Tab label="About Us" {...a11yProps(0)} />
+              <Tab
+                label="Projects"
+                {...a11yProps(1)}
+                onClick={handleBackClick}
+              />
+              <Tab label="Reviews" {...a11yProps(2)} />
+            </Tabs>
           </div>
-          <div
+          {/* <div
             className={`${
               about ? "block" : "hidden"
             } md:w-[500px] lg:w-[750px]`}
@@ -228,8 +264,14 @@ const ProfessionalsInfo = () => {
             <br />
             <p>{vendorData?.description}</p>
             <br />
-          </div>
-          <div
+          </div> */}
+          <TabPanel value={value} index={0}>
+            <div className="md:w-[500px] lg:w-[750px]">
+              <p>{vendorData?.description}</p>
+              <br />
+            </div>
+          </TabPanel>
+          {/* <div
             className={`${
               projects ? "block" : "hidden"
             }  md:w-[500px] lg:w-[750px]  flex justify-center flex-col items-center`}
@@ -298,8 +340,70 @@ const ProfessionalsInfo = () => {
             <br />
             <br />
             <br />
-          </div>
-          <div
+          </div> */}
+          <TabPanel value={value} index={1}>
+            <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+              <br />
+              <div className="flex flex-wrap">
+                {!projectsData ? (
+                  <div className="flex flex-col items-center justify-center">
+                    <div>
+                      <img src={projectImage} alt="" className="w-[300px]" />
+                    </div>
+                    <br />
+                    <p className="">No projects added yet by the designer</p>
+                    <br />
+                  </div>
+                ) : selectedProject ? (
+                  <div className="flex flex-col">
+                    <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px]">
+                      <button
+                        className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                        onClick={handleBackClick}
+                      >
+                        Back
+                      </button>
+                    </div>
+                    <br />
+                    <div className="flex flex-col gap-3">
+                      <Carousel
+                        imageObj={selectedProject.images}
+                        flag={false}
+                        city=""
+                        state=""
+                        theme=""
+                        title=""
+                      />
+                    </div>
+                    <br />
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap justify-between">
+                    {projectsData.map((item, ind) => (
+                      <div
+                        key={ind}
+                        onClick={() => handleCarouselClick(item)}
+                        className="mb-4"
+                      >
+                        <Carousel
+                          key={ind}
+                          imageObj={item.images}
+                          title={item.title}
+                          city={item.city}
+                          state={item.state}
+                          theme={item.sub_category_1}
+                          flag={true}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <br />
+              <br />
+            </div>
+          </TabPanel>
+          {/* <div
             className={`${
               reviews ? "block" : "hidden"
             }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
@@ -313,12 +417,39 @@ const ProfessionalsInfo = () => {
             <br />
             <br />
             <br />
-          </div>
+          </div> */}
+          <TabPanel value={value} index={2}>
+            <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+              <br />
+              <div className="flex flex-wrap">
+                <div className="flex flex-col items-center justify-center">
+                  <div>
+                    <img src={reviewImage} alt="" className="w-[300px]" />
+                  </div>
+                  <br />
+                  <p className="">No reviews added yet by the users</p>
+                  <br />
+                </div>
+              </div>
+              <br />
+              <br />
+            </div>
+          </TabPanel>
         </div>
       </div>
       <br />
       <div className="w-[250px] text-lg ml-10">
         <br />
+        <br />
+        <div className=" ">
+          <p className="font-bold text-base text-darkgrey">Contact Number</p>
+          <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
+        </div>
+        <br />
+        <div className=" ">
+          <p className="font-bold text-base text-darkgrey">Email</p>
+          <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
+        </div>
         <br />
         <div className="flex flex-col justify-evenly gap-6">
           {selectedProject ? (
@@ -467,18 +598,32 @@ const ProfessionalsInfo = () => {
               ) : null}
             </>
           )}
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Contact Number</p>
-            <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Email</p>
-            <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
-          </div>
         </div>
       </div>
     </div>
   );
 };
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
 
 export default ProfessionalsInfo;

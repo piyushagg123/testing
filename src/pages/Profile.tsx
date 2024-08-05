@@ -195,7 +195,7 @@ const Profile = () => {
           <div
             className={`${
               about ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px] xl:w-[950px]`}
+            } md:w-[500px] lg:w-[750px]`}
           >
             <br />
             <p>{data.description}</p>
@@ -204,7 +204,7 @@ const Profile = () => {
           <div
             className={`${
               projects ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="flex w-full justify-end">
@@ -247,7 +247,7 @@ const Profile = () => {
           <div
             className={`${
               reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
           >
             <br />
             <div className="">

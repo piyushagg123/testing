@@ -255,6 +255,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                   }
                   value={key}
                   key={key}
+                  sx={{
+                    color: selectedSpace === key ? "black" : "grey",
+                    "&.Mui-selected": {
+                      color: "black",
+                    },
+                  }}
                 />
               ))}
             </Tabs>
