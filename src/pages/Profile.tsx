@@ -6,7 +6,15 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Chip, Dialog, DialogContent, IconButton } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Tab,
+  Tabs,
+} from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import Carousel from "../components/Carousel";
@@ -21,9 +29,11 @@ interface ProjectItem {
   title: string;
   description: string;
   city: string;
-  sub_category_2: string;
   state: string;
   sub_category_1: string;
+  sub_category_2: string;
+  start_date: string;
+  end_date: string;
 }
 const fetchData = async () => {
   const response = await axios.get(`${config.apiBaseUrl}/vendor/auth/details`, {
@@ -44,8 +54,17 @@ const fetchProjects = async () => {
       },
     }
   );
+  console.log(response.data);
+
   return response.data.data;
 };
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 const Profile = () => {
   const authContext = useContext(AuthContext);
@@ -53,9 +72,6 @@ const Profile = () => {
     return;
   }
   const { setLogin } = authContext;
-  const [about, setAbout] = useState(true);
-  const [projects, setProjects] = useState(false);
-  const [reviews, setReviews] = useState(false);
   const [open, setOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
@@ -69,13 +85,17 @@ const Profile = () => {
       navigate("/error");
     },
   });
-
+  const [value, setValue] = useState(0);
   const { data: projectsData } = useQuery("vendorProjects", fetchProjects);
 
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
     setSelectedSubCategories([]);
+  };
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
   };
 
   const formatCategory = (str: string) => {
@@ -99,7 +119,7 @@ const Profile = () => {
           <br />
           <div className="flex items-end gap-3">
             <div>
-              {data.logo ? (
+              {data?.logo ? (
                 <img
                   src={`${config.apiImageUrl}/${data.logo}`}
                   alt=""
@@ -156,109 +176,95 @@ const Profile = () => {
             </div>
           </div>
           <br />
-          <div className="flex gap-3">
-            <div></div>
-          </div>
-          <br />
-          <div className="flex gap-3 text-[18px] border-b-[0.3px] border-black">
-            <button
-              className={`${about ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(true);
-                setProjects(false);
-                setReviews(false);
+          <div className="flex gap-3 text-[18px] ">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              TabIndicatorProps={{
+                sx: {
+                  backgroundColor: "black",
+                },
+              }}
+              sx={{
+                "& .MuiTab-root": {
+                  color: "gray",
+                },
+                "& .Mui-selected": {
+                  color: "black",
+                },
               }}
             >
-              About Us
-            </button>
-            <button
-              className={`${projects ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(false);
-                setProjects(true);
-                setReviews(false);
-              }}
-            >
-              Projects
-            </button>
-            <button
-              className={`${reviews ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(false);
-                setProjects(false);
-                setReviews(true);
-              }}
-            >
-              Reviews
-            </button>
+              <Tab label="About Us" {...a11yProps(0)} />
+              <Tab label="Projects" {...a11yProps(1)} />
+              <Tab label="Reviews" {...a11yProps(2)} />
+            </Tabs>
           </div>
-          <div
-            className={`${
-              about ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px]`}
-          >
-            <br />
-            <p>{data.description}</p>
-            <br />
-          </div>
-          <div
-            className={`${
-              projects ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
-          >
-            <br />
-            <div className="flex w-full justify-end">
-              <button
-                className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
-                onClick={() => setOpen(true)}
-              >
-                <AddCircleIcon /> Add a new project
-              </button>
+          <TabPanel value={value} index={0}>
+            <div className="md:w-[500px] lg:w-[750px]">
+              <p>{data?.description}</p>
+              <br />
             </div>
-            <br />
-            <div className="flex w-[100%] flex-wrap gap-10 justify-between">
-              {!projectsData ? (
-                <div className="flex flex-col">
-                  <div className="">
-                    <img src={projectImage} alt="" className="w-[300px]" />
+          </TabPanel>
+
+          <TabPanel value={value} index={1}>
+            <div
+              className={`md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
+            >
+              <br />
+              <div className="flex w-full justify-end">
+                <button
+                  className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                  onClick={() => setOpen(true)}
+                >
+                  <AddCircleIcon /> Add a new project
+                </button>
+              </div>
+              <br />
+              <div className="flex w-[100%] flex-wrap gap-10 justify-between">
+                {!projectsData ? (
+                  <div className="flex flex-col">
+                    <div className="">
+                      <img src={projectImage} alt="" className="w-[300px]" />
+                    </div>
+                    <br />
+                    <p className="">No projects added yet by the designer</p>
+                    <br />
                   </div>
-                  <br />
-                  <p className="">No projects added yet by the designer</p>
-                  <br />
-                </div>
-              ) : (
-                projectsData.map((item: ProjectItem, ind: number) => (
-                  <Carousel
-                    imageObj={item.images}
-                    title={item.title}
-                    city={item.city}
-                    state={item.state}
-                    theme={item.sub_category_1}
-                    key={ind}
-                    flag={true}
-                  />
-                ))
-              )}
+                ) : (
+                  projectsData.map((item: ProjectItem, ind: number) => (
+                    <Carousel
+                      imageObj={item.images}
+                      title={item.title}
+                      city={item.city}
+                      state={item.state}
+                      theme={item.sub_category_1}
+                      key={ind}
+                      flag={true}
+                    />
+                  ))
+                )}
+              </div>
+              <br />
+              <br />
+              <br />
             </div>
-            <br />
-            <br />
-            <br />
-          </div>
-          <div
-            className={`${
-              reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
-          >
-            <br />
-            <div className="">
-              <img src={reviewImage} alt="" className="w-[300px]" />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <div
+              className={`md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
+            >
+              <br />
+              <div className="">
+                <img src={reviewImage} alt="" className="w-[300px]" />
+              </div>
+              <br />
+              <p>No reviews added yet!!</p>
+              <br />
+              <br />
+              <br />
             </div>
-            <br />
-            <p>No reviews added yet!!</p>
-            <br />
-            <br />
-            <br />
-          </div>
+          </TabPanel>
         </div>
       </div>
       <br />
@@ -394,5 +400,27 @@ const Profile = () => {
     </div>
   );
 };
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ paddingY: 1 }}>{children}</Box>}
+    </div>
+  );
+}
 
 export default Profile;

@@ -1,111 +1,3 @@
-// import React from "react";
-// import Carousel from "react-material-ui-carousel";
-// import {
-//   Paper,
-//   Typography,
-//   Card,
-//   CardContent,
-//   CardActionArea,
-//   Box,
-// } from "@mui/material";
-// import PlaceIcon from "@mui/icons-material/Place";
-// import config from "../config";
-
-// import EmptyProjectImage from "../assets/background.jpg";
-
-// interface ImageCarouselProps {
-//   title: string;
-//   theme: string;
-//   city: string;
-//   state: string;
-//   imageObj: Record<string, string[]>;
-// }
-
-// interface ItemProps {
-//   item: string;
-// }
-
-// const ImageCarousel: React.FC<ImageCarouselProps> = ({
-//   title,
-//   theme,
-//   city,
-//   imageObj,
-// }) => {
-//   const keysArray = Object.keys(imageObj);
-//   const arr: string[] = [];
-//   keysArray.forEach((key) => {
-//     imageObj[key].forEach((img) => arr.push(img));
-//   });
-
-//   return (
-//     <Card sx={{ height: 290, width: "47%" }}>
-//       <CardActionArea>
-//         <Box sx={{ width: "100%" }}>
-//           {arr.length !== 0 ? (
-//             <>
-//               <Carousel
-//                 autoPlay={true}
-//                 animation="slide"
-//                 cycleNavigation={true}
-//                 interval={2000}
-//                 indicatorIconButtonProps={{
-//                   style: {
-//                     display: "none",
-//                   },
-//                 }}
-//               >
-//                 {arr.map((item, i) => (
-//                   <Item key={i} item={item} />
-//                 ))}
-//               </Carousel>
-//             </>
-//           ) : (
-//             <>
-//               <img
-//                 src={EmptyProjectImage}
-//                 alt=""
-//                 style={{ width: "100%", height: "200px" }}
-//               />
-//             </>
-//           )}
-//         </Box>
-//         <CardContent sx={{ padding: "0px 5px" }}>
-//           <div className="flex flex-row items-center justify-between">
-//             <p className="text-bold text-base">{title}</p>
-//             <span
-//               className=" text-sm flex items-center text-sec"
-//               style={{ fontSize: "0.75rem" }}
-//             >
-//               <PlaceIcon style={{ fontSize: "1rem" }} />
-//               {city}
-//             </span>
-//           </div>
-
-//           <Typography variant="body2">
-//             <p>
-//               <span className="font-bold">Theme:</span> {theme}
-//             </p>
-//           </Typography>
-//         </CardContent>
-//       </CardActionArea>
-//     </Card>
-//   );
-// };
-
-// const Item: React.FC<ItemProps> = ({ item }) => {
-//   return (
-//     <Paper>
-//       <img
-//         src={`${config.apiImageUrl}/${item}`}
-//         alt="Carousel Item"
-//         style={{ width: "100%", height: "200px" }}
-//       />
-//     </Paper>
-//   );
-// };
-
-// export default ImageCarousel;
-
 import React, { useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import {
@@ -121,8 +13,10 @@ import {
   Grid,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import WovenImageList from "./ImageList";
 import config from "../config";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import NoProjectImage from "../assets/noImageinProject.jpg";
 
 const truncateText = (text: string, wordLimit: number): string => {
   if (text.length > wordLimit) {
@@ -189,21 +83,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         <Card sx={{ height: 340, width: "355px" }}>
           <CardActionArea>
             <Box sx={{ width: "100%" }}>
-              {/* <Carousel
-                autoPlay={true}
-                animation="slide"
-                cycleNavigation={true}
-                interval={2000}
-                indicatorIconButtonProps={{
-                  style: {
-                    display: "none",
-                  },
-                }}
-              >
-                {arr.map((item, i) => (
-                  <Item key={i} item={item} />
-                ))}
-              </Carousel> */}
               <WovenImageList items={arr} />
             </Box>
             <CardContent sx={{ padding: "0px 5px" }}>
@@ -251,10 +130,10 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 marginRight: "60px",
                 height: 520,
                 "& .MuiTabs-indicator": {
-                  transition: "none", // Disable the indicator transition
+                  transition: "none",
                 },
                 "& .MuiTab-root": {
-                  transition: "none", // Disable the tab transition
+                  transition: "none",
                 },
               }}
               TabIndicatorProps={{
@@ -283,12 +162,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </Grid>
           <Grid item xs={10} sx={{ position: "relative", top: "-78px" }}>
             <Box>
-              {/* {imageObj[selectedSpace]?.map((img, i) => (
-                <>
-                  <Item key={i} item={img} />
-                  <br />
-                </>
-              ))} */}
               <Carousel
                 animation="slide"
                 cycleNavigation={true}
@@ -313,11 +186,59 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   return (
     <Paper sx={{ display: "flex", justifyContent: "center" }}>
       <img
-        src={`https://designmatch-s3-bucket.s3.ap-south-1.amazonaws.com/${item}`}
+        src={`${config.apiImageUrl}/${item}`}
         alt="Carousel Item"
         style={{ height: "400px" }}
       />
     </Paper>
+  );
+};
+
+interface ItemProp {
+  items: string[];
+}
+const WovenImageList: React.FC<ItemProp> = ({ items }) => {
+  let numberOfImages: number = 0;
+  if (items.length <= 2) {
+    numberOfImages = 1;
+  } else {
+    numberOfImages = 2;
+  }
+
+  return (
+    <>
+      <ImageList
+        sx={{
+          width: "100%",
+          height: 250,
+          scrollbarWidth: "none",
+          scrollbarColor: "black",
+        }}
+        variant="standard"
+        cols={numberOfImages}
+        gap={1}
+      >
+        {items.length !== 0 ? (
+          <>
+            {items?.map((item, ind: number) => (
+              <ImageListItem key={ind}>
+                <img src={`${config.apiImageUrl}/${item}`} loading="lazy" />
+              </ImageListItem>
+            ))}
+          </>
+        ) : (
+          <>
+            <ImageListItem>
+              <img
+                src={NoProjectImage}
+                loading="lazy"
+                style={{ height: "250px" }}
+              />
+            </ImageListItem>
+          </>
+        )}
+      </ImageList>
+    </>
   );
 };
 

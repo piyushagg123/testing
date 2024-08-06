@@ -198,52 +198,21 @@ const ProfessionalsInfo = () => {
             <></>
           )}
           <div className="flex gap-3 text-[18px]  ">
-            {/* <button
-              className={`${about ? "border-b-[2px] border-red" : ""}`}
-              onClick={() => {
-                setAbout(true);
-                setProjects(false);
-                setReviews(false);
-              }}
-            >
-              About Us
-            </button>
-            <button
-              className={`${projects ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(false);
-                setProjects(true);
-                setReviews(false);
-                handleBackClick();
-              }}
-            >
-              Projects
-            </button>
-            <button
-              className={`${reviews ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(false);
-                setProjects(false);
-                setReviews(true);
-              }}
-            >
-              Reviews
-            </button> */}
             <Tabs
               value={value}
               onChange={handleChange}
               aria-label="basic tabs example"
               TabIndicatorProps={{
                 sx: {
-                  backgroundColor: "black", // Change the indicator color here
+                  backgroundColor: "black",
                 },
               }}
               sx={{
                 "& .MuiTab-root": {
-                  color: "gray", // Default color for unselected tabs
+                  color: "gray",
                 },
                 "& .Mui-selected": {
-                  color: "black", // Color for selected tab
+                  color: "black",
                 },
               }}
             >
@@ -256,91 +225,13 @@ const ProfessionalsInfo = () => {
               <Tab label="Reviews" {...a11yProps(2)} />
             </Tabs>
           </div>
-          {/* <div
-            className={`${
-              about ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px]`}
-          >
-            <br />
-            <p>{vendorData?.description}</p>
-            <br />
-          </div> */}
           <TabPanel value={value} index={0}>
             <div className="md:w-[500px] lg:w-[750px]">
               <p>{vendorData?.description}</p>
               <br />
             </div>
           </TabPanel>
-          {/* <div
-            className={`${
-              projects ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px]  flex justify-center flex-col items-center`}
-          >
-            <br />
-            <div className="flex  flex-wrap ">
-              {!projectsData ? (
-                <>
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="">
-                      <img src={projectImage} alt="" className="w-[300px]" />
-                    </div>
-                    <br />
-                    <p className="">No projects added yet by the designer</p>
-                    <br />
-                  </div>
-                </>
-              ) : selectedProject ? (
-                <div className="flex flex-col">
-                  <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px] ">
-                    <button
-                      className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-                      onClick={handleBackClick}
-                    >
-                      Back
-                    </button>
-                  </div>
-                  <br />
 
-                  <div className="flex flex-col  gap-3">
-                    <Carousel
-                      imageObj={selectedProject.images}
-                      flag={false}
-                      city=""
-                      state=""
-                      theme=""
-                      title=""
-                    />
-                  </div>
-                  <br />
-
-                  <br />
-                </div>
-              ) : (
-                <div className="flex flex-wrap justify-between">
-                  {projectsData.map((item, ind) => (
-                    <div
-                      key={ind}
-                      onClick={() => handleCarouselClick(item)}
-                      className="mb-4"
-                    >
-                      <Carousel
-                        key={ind}
-                        imageObj={item.images}
-                        title={item.title}
-                        city={item.city}
-                        state={item.state}
-                        theme={item.sub_category_1}
-                        flag={true}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <br />
-            <br />
-            <br />
-          </div> */}
           <TabPanel value={value} index={1}>
             <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
               <br />
@@ -403,21 +294,6 @@ const ProfessionalsInfo = () => {
               <br />
             </div>
           </TabPanel>
-          {/* <div
-            className={`${
-              reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center`}
-          >
-            <br />
-            <div className="">
-              <img src={reviewImage} alt="" className="w-[300px]" />
-            </div>
-            <br />
-            <p>No reviews added yet!!</p>
-            <br />
-            <br />
-            <br />
-          </div> */}
           <TabPanel value={value} index={2}>
             <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
               <br />
