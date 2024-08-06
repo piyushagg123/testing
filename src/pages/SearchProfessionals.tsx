@@ -93,36 +93,45 @@ const SearchProfessionals: React.FC = () => {
   };
 
   const onThemeFiltersUpdate = (updatedItem: string) => {
-    updatedItem = updatedItem.replace(/\s+/g, "_");
-    let updatedThemeFilters = new Set(themeFilters);
-    if (updatedThemeFilters.has(updatedItem)) {
-      updatedThemeFilters.delete(updatedItem);
-    } else {
-      updatedThemeFilters.add(updatedItem);
+    if (updatedItem === "") setThemeFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      let updatedThemeFilters = new Set(themeFilters);
+      if (updatedThemeFilters.has(updatedItem)) {
+        updatedThemeFilters.delete(updatedItem);
+      } else {
+        updatedThemeFilters.add(updatedItem);
+      }
+      setThemeFilters(updatedThemeFilters);
     }
-    setThemeFilters(updatedThemeFilters);
   };
 
   const onSpaceFiltersUpdate = (updatedItem: string) => {
-    updatedItem = updatedItem.replace(/\s+/g, "_");
-    let updatedSpaceFilters = new Set(spaceFilters);
-    if (updatedSpaceFilters.has(updatedItem)) {
-      updatedSpaceFilters.delete(updatedItem);
-    } else {
-      updatedSpaceFilters.add(updatedItem);
+    if (updatedItem === "") setSpaceFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      let updatedSpaceFilters = new Set(spaceFilters);
+      if (updatedSpaceFilters.has(updatedItem)) {
+        updatedSpaceFilters.delete(updatedItem);
+      } else {
+        updatedSpaceFilters.add(updatedItem);
+      }
+      setSpaceFilters(updatedSpaceFilters);
     }
-    setSpaceFilters(updatedSpaceFilters);
   };
 
   const onExecutionFiltersUpdate = (updatedItem: string) => {
-    updatedItem = updatedItem.replace(/\s+/g, "_");
-    let updatedExecutionFilters = new Set(executionFilters);
-    if (updatedExecutionFilters.has(updatedItem)) {
-      updatedExecutionFilters.delete(updatedItem);
-    } else {
-      updatedExecutionFilters.add(updatedItem);
+    if (updatedItem === "") setExecutionFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      let updatedExecutionFilters = new Set(executionFilters);
+      if (updatedExecutionFilters.has(updatedItem)) {
+        updatedExecutionFilters.delete(updatedItem);
+      } else {
+        updatedExecutionFilters.add(updatedItem);
+      }
+      setExecutionFilters(updatedExecutionFilters);
     }
-    setExecutionFilters(updatedExecutionFilters);
   };
 
   return (
