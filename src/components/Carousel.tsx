@@ -76,6 +76,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   };
 
   if (title) title = truncateText(title, 20);
+  const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
 
   return (
     <>
@@ -123,12 +124,13 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               onChange={handleChange}
               aria-label="Spaces tabs"
               orientation="vertical"
-              variant="scrollable"
+              variant={keysArray.length <= 3 ? "standard" : "scrollable"}
               sx={{
                 textAlign: "center",
                 rotate: "180deg",
                 marginRight: "60px",
-                height: 520,
+                height: dynamicHeight,
+
                 "& .MuiTabs-indicator": {
                   transition: "none",
                 },

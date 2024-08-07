@@ -202,16 +202,14 @@ const ProfessionalsInfo = () => {
               value={value}
               onChange={handleChange}
               aria-label="basic tabs example"
-              TabIndicatorProps={{
-                sx: {
+              sx={{
+                "& .MuiTabs-indicator": {
                   backgroundColor: "black",
                 },
-              }}
-              sx={{
-                "& .MuiTab-root": {
-                  color: "gray",
+                "& .MuiTab-root.Mui-selected": {
+                  color: "black",
                 },
-                "& .Mui-selected": {
+                "& .MuiTab-root": {
                   color: "black",
                 },
               }}
