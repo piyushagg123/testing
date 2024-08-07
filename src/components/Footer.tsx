@@ -2,6 +2,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Divider } from "@mui/material";
 import Logo from "../assets/PickeleLogo.png";
+import { NavLink } from "react-router-dom";
+
 const Footer = () => {
   return (
     <div className=" bg-[#0D1216] text-white bottom-0">
@@ -12,8 +14,7 @@ const Footer = () => {
         <div className="flex gap-16">
           <div className="flex flex-col gap-2">
             <p className="font-bold text-[18px]">Company</p>
-            <p>Home</p>
-            <p>Contact</p>
+            <ScrollToTopNavLink to="/">Home</ScrollToTopNavLink>
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-bold text-[18px]">Reach Us</p>
@@ -32,5 +33,13 @@ const Footer = () => {
     </div>
   );
 };
+
+function ScrollToTopNavLink(props: any) {
+  const handleClick = () => {
+    window.scrollTo(0, 0);
+  };
+
+  return <NavLink {...props} onClick={handleClick} />;
+}
 
 export default Footer;
