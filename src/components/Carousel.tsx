@@ -116,7 +116,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             </CardContent>
           </CardActionArea>
         </Card>
-      ) : (
+      ) : keysArray.length > 0 ? (
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <Tabs
@@ -136,6 +136,13 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 },
                 "& .MuiTab-root": {
                   transition: "none",
+                },
+                "& .MuiSvgIcon-root": {
+                  marginLeft: "38px",
+                },
+                "& .MuiButtonBase-root": {
+                  transition: "none",
+                  animation: "none",
                 },
               }}
               TabIndicatorProps={{
@@ -179,6 +186,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             </Box>
           </Grid>
         </Grid>
+      ) : (
+        <>
+          <p className="text-center top-[-78px] relative">
+            No images uploaded by the designer
+          </p>
+        </>
       )}
     </>
   );

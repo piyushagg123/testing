@@ -13,6 +13,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import config from "../config";
 import { AuthContext } from "../context/Login";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface VendorData {
   logo?: string;
@@ -204,23 +205,32 @@ const ProfessionalsInfo = () => {
               aria-label="basic tabs example"
               sx={{
                 "& .MuiTabs-indicator": {
-                  backgroundColor: "black",
+                  backgroundColor: "#8c52ff",
                 },
                 "& .MuiTab-root.Mui-selected": {
-                  color: "black",
+                  color: "#8c52ff",
                 },
                 "& .MuiTab-root": {
-                  color: "black",
+                  color: "#576375",
                 },
               }}
             >
-              <Tab label="About Us" {...a11yProps(0)} />
+              <Tab
+                label="About Us"
+                {...a11yProps(0)}
+                sx={{ fontWeight: "bold", textTransform: "none" }}
+              />
               <Tab
                 label="Projects"
                 {...a11yProps(1)}
                 onClick={handleBackClick}
+                sx={{ fontWeight: "bold", textTransform: "none" }}
               />
-              <Tab label="Reviews" {...a11yProps(2)} />
+              <Tab
+                label="Reviews"
+                {...a11yProps(2)}
+                sx={{ fontWeight: "bold", textTransform: "none" }}
+              />
             </Tabs>
           </div>
           <TabPanel value={value} index={0}>
@@ -250,7 +260,7 @@ const ProfessionalsInfo = () => {
                         className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
                         onClick={handleBackClick}
                       >
-                        Back
+                        <ArrowBackIcon />
                       </button>
                     </div>
                     <br />
@@ -267,7 +277,7 @@ const ProfessionalsInfo = () => {
                     <br />
                   </div>
                 ) : (
-                  <div className="flex flex-wrap justify-between">
+                  <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
                     {projectsData.map((item, ind) => (
                       <div
                         key={ind}
@@ -329,6 +339,9 @@ const ProfessionalsInfo = () => {
           {selectedProject ? (
             <>
               <div>
+                <p className="font-bold text-base text-purple">
+                  Project details
+                </p>
                 <p className="font-bold text-base text-darkgrey">Title</p>
                 <p className="text-[16px] max-w-[300px]">
                   {selectedProject.title}
