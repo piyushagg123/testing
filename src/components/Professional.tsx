@@ -8,6 +8,13 @@ interface ProfessionalProps {
   profCat: string;
 }
 
+const truncateText = (text: string, wordLimit: number): string => {
+  if (text.length > wordLimit) {
+    return text.slice(0, wordLimit) + "...";
+  }
+  return text;
+};
+
 const Professional: React.FC<ProfessionalProps> = ({
   img,
   rating,
@@ -37,7 +44,7 @@ const Professional: React.FC<ProfessionalProps> = ({
             />
           </div>
           <br />
-          <p>{about}</p>
+          <p>{truncateText(about, 80)}</p>
         </div>
       </div>
     </div>
