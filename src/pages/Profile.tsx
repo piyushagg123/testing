@@ -54,7 +54,6 @@ const fetchProjects = async () => {
       },
     }
   );
-  console.log(response.data);
 
   return response.data.data;
 };
