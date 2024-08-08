@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
-import Carousel from "../components/Carousel";
+import Carousel from "../components/ProjectCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -58,13 +58,6 @@ const fetchProjects = async () => {
 
   return response.data.data;
 };
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
 
 const Profile = () => {
   const authContext = useContext(AuthContext);
@@ -180,24 +173,30 @@ const Profile = () => {
             <Tabs
               value={value}
               onChange={handleChange}
-              aria-label="basic tabs example"
-              TabIndicatorProps={{
-                sx: {
-                  backgroundColor: "black",
-                },
-              }}
               sx={{
-                "& .MuiTab-root": {
-                  color: "gray",
+                "& .MuiTabs-indicator": {
+                  backgroundColor: "#8c52ff",
                 },
-                "& .Mui-selected": {
-                  color: "black",
+                "& .MuiTab-root.Mui-selected": {
+                  color: "#8c52ff",
+                },
+                "& .MuiTab-root": {
+                  color: "#576375",
                 },
               }}
             >
-              <Tab label="About Us" {...a11yProps(0)} />
-              <Tab label="Projects" {...a11yProps(1)} />
-              <Tab label="Reviews" {...a11yProps(2)} />
+              <Tab
+                label="About Us"
+                sx={{ fontWeight: "bold", textTransform: "none" }}
+              />
+              <Tab
+                label="Projects"
+                sx={{ fontWeight: "bold", textTransform: "none" }}
+              />
+              <Tab
+                label="Reviews"
+                sx={{ fontWeight: "bold", textTransform: "none" }}
+              />
             </Tabs>
           </div>
           <TabPanel value={value} index={0}>
@@ -240,7 +239,7 @@ const Profile = () => {
                       state={item.state}
                       theme={item.sub_category_1}
                       key={ind}
-                      flag={true}
+                      showProjectDetails={true}
                     />
                   ))
                 )}

@@ -17,13 +17,7 @@ import config from "../config";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import NoProjectImage from "../assets/noImageinProject.jpg";
-
-const truncateText = (text: string, wordLimit: number): string => {
-  if (text.length > wordLimit) {
-    return text.slice(0, wordLimit) + "...";
-  }
-  return text;
-};
+import { truncateText } from "../utils";
 
 interface ImageCarouselProps {
   title: string;
@@ -31,7 +25,7 @@ interface ImageCarouselProps {
   city: string;
   state: string;
   imageObj: Record<string, string[]>;
-  flag: boolean;
+  showProjectDetails: boolean;
 }
 interface ItemProps {
   item: string;
@@ -42,7 +36,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   theme,
   city,
   imageObj,
-  flag = true,
+  showProjectDetails = true,
 }) => {
   const keysArray = Object.keys(imageObj);
   const arr: string[] = [];
@@ -80,7 +74,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
   return (
     <>
-      {flag ? (
+      {showProjectDetails ? (
         <Card sx={{ height: 340, width: "355px" }}>
           <CardActionArea>
             <Box sx={{ width: "100%" }}>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Rating } from "@mui/material";
+import { truncateText } from "../utils";
 
 interface ProfessionalProps {
   img: string;
@@ -7,13 +8,6 @@ interface ProfessionalProps {
   about: string;
   profCat: string;
 }
-
-const truncateText = (text: string, wordLimit: number): string => {
-  if (text.length > wordLimit) {
-    return text.slice(0, wordLimit) + "...";
-  }
-  return text;
-};
 
 const Professional: React.FC<ProfessionalProps> = ({
   img,

@@ -7,7 +7,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Chip, Tab, Tabs, Box } from "@mui/material";
-import Carousel from "../components/Carousel";
+import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -61,13 +61,6 @@ const fetchVendorProjects = async (id: string) => {
   );
   return data.data as ProjectData[];
 };
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
 
 const ProfessionalsInfo = () => {
   const authContext = useContext(AuthContext);
@@ -202,7 +195,6 @@ const ProfessionalsInfo = () => {
             <Tabs
               value={value}
               onChange={handleChange}
-              aria-label="basic tabs example"
               sx={{
                 "& .MuiTabs-indicator": {
                   backgroundColor: "#8c52ff",
@@ -217,18 +209,15 @@ const ProfessionalsInfo = () => {
             >
               <Tab
                 label="About Us"
-                {...a11yProps(0)}
                 sx={{ fontWeight: "bold", textTransform: "none" }}
               />
               <Tab
                 label="Projects"
-                {...a11yProps(1)}
                 onClick={handleBackClick}
                 sx={{ fontWeight: "bold", textTransform: "none" }}
               />
               <Tab
                 label="Reviews"
-                {...a11yProps(2)}
                 sx={{ fontWeight: "bold", textTransform: "none" }}
               />
             </Tabs>
@@ -267,7 +256,7 @@ const ProfessionalsInfo = () => {
                     <div className="flex flex-col gap-3">
                       <Carousel
                         imageObj={selectedProject.images}
-                        flag={false}
+                        showProjectDetails={false}
                         city=""
                         state=""
                         theme=""
@@ -291,7 +280,7 @@ const ProfessionalsInfo = () => {
                           city={item.city}
                           state={item.state}
                           theme={item.sub_category_1}
-                          flag={true}
+                          showProjectDetails={true}
                         />
                       </div>
                     ))}
