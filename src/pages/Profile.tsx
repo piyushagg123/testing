@@ -219,9 +219,9 @@ const Profile = () => {
                 </button>
               </div>
               <br />
-              <div className="flex w-[100%] flex-wrap gap-10 justify-between">
+              <div className="md:w-[500px] lg:w-[750px] flex">
                 {!projectsData ? (
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-center justify-center md:w-[500px] lg:w-[750px]">
                     <div className="">
                       <img src={projectImage} alt="" className="w-[300px]" />
                     </div>
@@ -230,17 +230,19 @@ const Profile = () => {
                     <br />
                   </div>
                 ) : (
-                  projectsData.map((item: ProjectItem, ind: number) => (
-                    <Carousel
-                      imageObj={item.images}
-                      title={item.title}
-                      city={item.city}
-                      state={item.state}
-                      theme={item.sub_category_1}
-                      key={ind}
-                      showProjectDetails={true}
-                    />
-                  ))
+                  <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
+                    {projectsData.map((item: ProjectItem, ind: number) => (
+                      <Carousel
+                        imageObj={item.images}
+                        title={item.title}
+                        city={item.city}
+                        state={item.state}
+                        theme={item.sub_category_1}
+                        key={ind}
+                        showProjectDetails={true}
+                      />
+                    ))}
+                  </div>
                 )}
               </div>
               <br />
