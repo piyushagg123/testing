@@ -6,7 +6,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Chip, Tab, Tabs, Box } from "@mui/material";
+import { Chip, Tab, Box } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -14,6 +14,7 @@ import axios from "axios";
 import config from "../config";
 import { AuthContext } from "../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 interface VendorData {
   logo?: string;
@@ -71,7 +72,7 @@ const ProfessionalsInfo = () => {
   const { login } = authContext;
   const { id } = useParams();
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", id],
     () => fetchVendorDetails(id!)
@@ -100,9 +101,8 @@ const ProfessionalsInfo = () => {
     setSelectedProject(undefined);
   };
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
-    if (newValue === 1) handleBackClick();
   };
 
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
@@ -191,123 +191,127 @@ const ProfessionalsInfo = () => {
           ) : (
             <></>
           )}
-          <div className="flex gap-3 text-[18px]  ">
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              sx={{
-                "& .MuiTabs-indicator": {
-                  backgroundColor: "#8c52ff",
-                },
-                "& .MuiTab-root.Mui-selected": {
-                  color: "#8c52ff",
-                },
-                "& .MuiTab-root": {
-                  color: "#576375",
-                },
-              }}
-            >
-              <Tab
-                label="About Us"
-                sx={{ fontWeight: "bold", textTransform: "none" }}
-              />
-              <Tab
-                label="Projects"
-                onClick={handleBackClick}
-                sx={{ fontWeight: "bold", textTransform: "none" }}
-              />
-              <Tab
-                label="Reviews"
-                sx={{ fontWeight: "bold", textTransform: "none" }}
-              />
-            </Tabs>
-          </div>
-          <TabPanel value={value} index={0}>
-            <div className="md:w-[500px] lg:w-[750px]">
-              <p>{vendorData?.description}</p>
-              <br />
-            </div>
-          </TabPanel>
-
-          <TabPanel value={value} index={1}>
-            <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-              <br />
-              <div className="flex flex-wrap">
-                {!projectsData ? (
-                  <div className="flex flex-col items-center justify-center">
-                    <div>
-                      <img src={projectImage} alt="" className="w-[300px]" />
+          <TabContext value={value}>
+            <Box>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+                sx={{
+                  "& .MuiTabs-indicator": {
+                    backgroundColor: "#8c52ff",
+                  },
+                  "& .MuiTab-root.Mui-selected": {
+                    color: "#8c52ff",
+                  },
+                  "& .MuiTab-root": {
+                    color: "#576375",
+                  },
+                }}
+              >
+                <Tab
+                  label="About us"
+                  value="1"
+                  sx={{ fontWeight: "bold", textTransform: "none" }}
+                />
+                <Tab
+                  label="Projects"
+                  value="2"
+                  sx={{ fontWeight: "bold", textTransform: "none" }}
+                  onClick={handleBackClick}
+                />
+                <Tab
+                  label="Reviews"
+                  value="3"
+                  sx={{ fontWeight: "bold", textTransform: "none" }}
+                />
+              </TabList>
+            </Box>
+            <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div className="md:w-[500px] lg:w-[750px]">
+                <p>{vendorData?.description}</p>
+                <br />
+              </div>
+            </TabPanel>
+            <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <br />
+                <div className="flex flex-wrap">
+                  {!projectsData ? (
+                    <div className="flex flex-col items-center justify-center">
+                      <div>
+                        <img src={projectImage} alt="" className="w-[300px]" />
+                      </div>
+                      <br />
+                      <p className="">No projects added yet by the designer</p>
+                      <br />
                     </div>
-                    <br />
-                    <p className="">No projects added yet by the designer</p>
-                    <br />
-                  </div>
-                ) : selectedProject ? (
-                  <div className="flex flex-col">
-                    <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px]">
-                      <button
-                        className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-                        onClick={handleBackClick}
-                      >
-                        <ArrowBackIcon />
-                      </button>
-                    </div>
-                    <br />
-                    <div className="flex flex-col gap-3">
-                      <Carousel
-                        imageObj={selectedProject.images}
-                        showProjectDetails={false}
-                        city=""
-                        state=""
-                        theme=""
-                        title=""
-                      />
-                    </div>
-                    <br />
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
-                    {projectsData.map((item, ind) => (
-                      <div
-                        key={ind}
-                        onClick={() => handleCarouselClick(item)}
-                        className="mb-4"
-                      >
+                  ) : selectedProject ? (
+                    <div className="flex flex-col">
+                      <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px]">
+                        <button
+                          className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                          onClick={handleBackClick}
+                        >
+                          <ArrowBackIcon />
+                        </button>
+                      </div>
+                      <br />
+                      <div className="flex flex-col gap-3">
                         <Carousel
-                          key={ind}
-                          imageObj={item.images}
-                          title={item.title}
-                          city={item.city}
-                          state={item.state}
-                          theme={item.sub_category_1}
-                          showProjectDetails={true}
+                          imageObj={selectedProject.images}
+                          showProjectDetails={false}
+                          city=""
+                          state=""
+                          theme=""
+                          title=""
                         />
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <br />
-              <br />
-            </div>
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-              <br />
-              <div className="flex flex-wrap">
-                <div className="flex flex-col items-center justify-center">
-                  <div>
-                    <img src={reviewImage} alt="" className="w-[300px]" />
-                  </div>
-                  <br />
-                  <p className="">No reviews added yet by the users</p>
-                  <br />
+                      <br />
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
+                      {projectsData.map((item, ind) => (
+                        <div
+                          key={ind}
+                          onClick={() => handleCarouselClick(item)}
+                          className="mb-4"
+                        >
+                          <Carousel
+                            key={ind}
+                            imageObj={item.images}
+                            title={item.title}
+                            city={item.city}
+                            state={item.state}
+                            theme={item.sub_category_1}
+                            showProjectDetails={true}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+                <br />
+                <br />
               </div>
-              <br />
-              <br />
-            </div>
-          </TabPanel>
+            </TabPanel>
+            <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <br />
+                <div className="flex flex-wrap">
+                  <div className="flex flex-col items-center justify-center">
+                    <div>
+                      <img src={reviewImage} alt="" className="w-[300px]" />
+                    </div>
+                    <br />
+                    <p className="">No reviews added yet by the users</p>
+                    <br />
+                  </div>
+                </div>
+                <br />
+                <br />
+              </div>
+            </TabPanel>
+          </TabContext>
         </div>
       </div>
       <br />
@@ -479,27 +483,5 @@ const ProfessionalsInfo = () => {
     </div>
   );
 };
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ paddingY: 1 }}>{children}</Box>}
-    </div>
-  );
-}
 
 export default ProfessionalsInfo;
