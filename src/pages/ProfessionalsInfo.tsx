@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import config from "../config";
+import Reviews from "../components/Reviews";
 
 interface VendorData {
   logo?: string;
@@ -223,9 +224,9 @@ const ProfessionalsInfo: React.FC = () => {
           <div
             className={`${
               reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
+            }  md:w-[500px] lg:w-[750px] xl:w-[950px]`}
           >
-            <br />
+            {/* <br />
             <div className="">
               <img src={reviewImage} alt="No Reviews" className="w-[300px]" />
             </div>
@@ -233,7 +234,8 @@ const ProfessionalsInfo: React.FC = () => {
             <p>No reviews added yet!!</p>
             <br />
             <br />
-            <br />
+            <br /> */}
+            <Reviews />
           </div>
         </div>
       </div>
