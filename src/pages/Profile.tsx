@@ -198,18 +198,30 @@ const Profile = () => {
                 <Tab
                   label="About us"
                   value="1"
-                  sx={{ fontWeight: "bold", textTransform: "none" }}
+                  sx={{
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
                 />
                 <Tab
                   label="Projects"
                   value="2"
-                  sx={{ fontWeight: "bold", textTransform: "none" }}
+                  sx={{
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
                   onClick={handleBackClick}
                 />
                 <Tab
                   label="Reviews"
                   value="3"
-                  sx={{ fontWeight: "bold", textTransform: "none" }}
+                  sx={{
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
                 />
               </TabList>
             </Box>
