@@ -3,6 +3,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import { Divider } from "@mui/material";
 import Logo from "../assets/PickeleLogo.png";
 import { NavLink } from "react-router-dom";
+import config from "../constants";
 
 const Footer = () => {
   return (
@@ -18,7 +19,7 @@ const Footer = () => {
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-bold text-[18px]">Reach Us</p>
-            <p>communications@pickele.com</p>
+            <p>{config.email}</p>
             <p>
               <FacebookIcon /> <InstagramIcon />
             </p>

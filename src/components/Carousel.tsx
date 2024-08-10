@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import config from "../config";
+import constants from "../constants";
 
 import EmptyProjectImage from "../assets/background.jpg";
 
@@ -96,7 +96,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   return (
     <Paper>
       <img
-        src={`${config.apiImageUrl}/${item}`}
+        src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"
         style={{ width: "100%", height: "200px" }}
       />

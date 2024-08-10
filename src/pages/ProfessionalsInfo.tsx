@@ -10,7 +10,7 @@ import Carousel from "../components/Carousel";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
-import config from "../config";
+import constants from "../constants";
 
 interface VendorData {
   logo?: string;
@@ -44,14 +44,14 @@ interface ProjectData {
 
 const fetchVendorDetails = async (id: string) => {
   const { data } = await axios.get(
-    `${config.apiBaseUrl}/vendor/details?vendor_id=${id}`
+    `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
   );
   return data.data as VendorData;
 };
 
 const fetchVendorProjects = async (id: string) => {
   const { data } = await axios.get(
-    `${config.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
+    `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
   );
   return data.data as ProjectData[];
 };
@@ -94,7 +94,7 @@ const ProfessionalsInfo: React.FC = () => {
             <div>
               {vendorData?.logo ? (
                 <img
-                  src={`${config.apiImageUrl}/${vendorData.logo}`}
+                  src={`${constants.apiImageUrl}/${vendorData.logo}`}
                   alt="Vendor Logo"
                   className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
                 />

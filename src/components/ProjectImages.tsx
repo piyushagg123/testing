@@ -1,6 +1,6 @@
 import { useState, useCallback, ChangeEvent } from "react";
 import axios from "axios";
-import config from "../config";
+import constants from "../constants";
 
 interface ProjectImagesProps {
   subCategories: string[];
@@ -55,7 +55,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
 
       try {
         const response = await axios.post(
-          `${config.apiBaseUrl}/image-upload/project?project_id=${projectId}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
+          `${constants.apiBaseUrl}/image-upload/project?project_id=${projectId}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
           formData,
           {
             headers: {
@@ -85,7 +85,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
 
       try {
         await axios.delete(
-          `${config.apiBaseUrl}/image-upload/project?project_id=${projectId}&key=${imageName}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
+          `${constants.apiBaseUrl}/image-upload/project?project_id=${projectId}&key=${imageName}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,

@@ -8,7 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import JoinAsPro from "./JoinAsPro";
 import { IconButton } from "@mui/material";
-import config from "../config";
+import constants from "../constants";
 
 interface FormObject {
   [key: string]: string;
@@ -77,16 +77,19 @@ const SignUp: React.FC = () => {
     formObject.password = CryptoJS.SHA1(formObject.password).toString();
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/user/register`,
+        `${constants.apiBaseUrl}/user/register`,
         formObject
       );
 
       sessionStorage.setItem("token", response.data.access_token);
-      const user_data = await axios.get(`${config.apiBaseUrl}/user/details`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
+      const user_data = await axios.get(
+        `${constants.apiBaseUrl}/user/details`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
       setUserDetails(user_data.data.data);
 
       setLogin(true);
