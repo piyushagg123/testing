@@ -2,28 +2,38 @@ import { useContext, useState } from "react";
 import img from "../assets/background.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import reviewImage from "../assets/noReviewsAdded.png";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {
+  Box,
+  Chip,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Tab,
+} from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
-import Carousel from "../components/Carousel";
+import Carousel from "../components/ProjectCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { AuthContext } from "../context/Login";
 import config from "../config";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 interface ProjectItem {
   images: Record<string, string[]>;
   title: string;
   description: string;
   city: string;
-  sub_category_2: string;
   state: string;
   sub_category_1: string;
+  sub_category_2: string;
+  start_date: string;
+  end_date: string;
 }
 const fetchData = async () => {
   const response = await axios.get(`${config.apiBaseUrl}/vendor/auth/details`, {
@@ -44,6 +54,7 @@ const fetchProjects = async () => {
       },
     }
   );
+
   return response.data.data;
 };
 
@@ -53,12 +64,10 @@ const Profile = () => {
     return;
   }
   const { setLogin } = authContext;
-  const [about, setAbout] = useState(true);
-  const [projects, setProjects] = useState(false);
-  const [reviews, setReviews] = useState(false);
   const [open, setOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem>();
   const navigate = useNavigate();
 
   const [projectId, setProjectId] = useState<number>(0);
@@ -69,13 +78,26 @@ const Profile = () => {
       navigate("/error");
     },
   });
-
+  const [value, setValue] = useState("1");
   const { data: projectsData } = useQuery("vendorProjects", fetchProjects);
 
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
     setSelectedSubCategories([]);
+  };
+
+  const handleCarouselClick = (project: ProjectItem) => {
+    setSelectedProject(project);
+  };
+
+  const handleBackClick = () => {
+    setSelectedProject(undefined);
+  };
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+    if (newValue === "2") handleBackClick();
   };
 
   const formatCategory = (str: string) => {
@@ -92,14 +114,14 @@ const Profile = () => {
   if (error) return <p>Error fetching data</p>;
 
   return (
-    <div className="mt-[70px] text-text h-screen flex  justify-center gap-3">
+    <div className="mt-[70px] text-text h-fit flex  justify-center gap-3">
       <div className="text-[10px] md:text-[16px]  flex flex-col gap-7 md:gap-0 pl-4">
         <br />
         <div className="w-[310px] md:w-max">
           <br />
           <div className="flex items-end gap-3">
             <div>
-              {data.logo ? (
+              {data?.logo ? (
                 <img
                   src={`${config.apiImageUrl}/${data.logo}`}
                   alt=""
@@ -113,226 +135,348 @@ const Profile = () => {
                 />
               )}
             </div>
-            <div className="flex flex-col gap-2">
+            <div>
+              <p>{}</p>
               <p className="font-bold text-base text-darkgrey">
-                {formatCategory(data.business_name)}
+                {formatCategory(data?.business_name ?? "Unknown Business")}
               </p>
-              <p>
+              <p className="mb-2 mt-2 flex gap-2 items-center">
                 <span className="font-bold text-sm text-darkgrey">
-                  SPECIALIZED THEMES :{" "}
+                  SPECIALIZED THEMES :
                 </span>{" "}
-                {formatCategory(data.sub_category_1)}
+                {formatCategory(data?.sub_category_1 ?? "N/A")
+                  .split(",")
+                  .map((item, ind) => (
+                    <>
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
+                    </>
+                  ))}
               </p>
-              <p>
+
+              <p className="flex gap-2 items-center">
                 <span className="font-bold text-sm text-darkgrey">
                   SPECIALIZED SPACES :
                 </span>{" "}
-                {formatCategory(data.sub_category_2)}
+                {formatCategory(data?.sub_category_2 ?? "N/A")
+                  .split(",")
+                  .map((item, ind) => (
+                    <>
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
+                    </>
+                  ))}
               </p>
             </div>
           </div>
           <br />
-          <div className="flex gap-3">
-            <div></div>
-          </div>
-          <br />
-          <div className="flex gap-3 text-[18px] border-b-[0.3px] border-black">
-            <button
-              className={`${about ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(true);
-                setProjects(false);
-                setReviews(false);
-              }}
-            >
-              About Us
-            </button>
-            <button
-              className={`${projects ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(false);
-                setProjects(true);
-                setReviews(false);
-              }}
-            >
-              Projects
-            </button>
-            <button
-              className={`${reviews ? "border-b-[2px] border-black" : ""}`}
-              onClick={() => {
-                setAbout(false);
-                setProjects(false);
-                setReviews(true);
-              }}
-            >
-              Reviews
-            </button>
-          </div>
-          <div
-            className={`${
-              about ? "block" : "hidden"
-            } md:w-[500px] lg:w-[750px] xl:w-[950px]`}
-          >
-            <br />
-            <p>{data.description}</p>
-            <br />
-          </div>
-          <div
-            className={`${
-              projects ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
-          >
-            <br />
-            <div className="flex w-full justify-end">
-              <button
-                className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
-                onClick={() => setOpen(true)}
+          <TabContext value={value}>
+            <Box>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+                sx={{
+                  "& .MuiTabs-indicator": {
+                    backgroundColor: "#8c52ff",
+                  },
+                  "& .MuiTab-root.Mui-selected": {
+                    color: "#8c52ff",
+                  },
+                  "& .MuiTab-root": {
+                    color: "#576375",
+                  },
+                }}
               >
-                <AddCircleIcon /> Add a new project
-              </button>
-            </div>
-            <br />
-            <div className="flex w-[100%] flex-wrap gap-10 justify-between">
-              {!projectsData ? (
-                <div className="flex flex-col">
-                  <div className="">
-                    <img src={projectImage} alt="" className="w-[300px]" />
-                  </div>
-                  <br />
-                  <p className="">No projects added yet by the designer</p>
-                  <br />
+                <Tab
+                  label="About us"
+                  value="1"
+                  sx={{
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
+                />
+                <Tab
+                  label="Projects"
+                  value="2"
+                  sx={{
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
+                  onClick={handleBackClick}
+                />
+                <Tab
+                  label="Reviews"
+                  value="3"
+                  sx={{
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
+                />
+              </TabList>
+            </Box>
+            <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div className="md:w-[500px] lg:w-[750px]">
+                <p>{data?.description}</p>
+                <br />
+              </div>
+            </TabPanel>
+            <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <br />
+                <div className="flex flex-wrap">
+                  {!projectsData ? (
+                    <div className="flex flex-col items-center justify-center">
+                      <div>
+                        <img src={projectImage} alt="" className="w-[300px]" />
+                      </div>
+                      <br />
+                      <p className="">No projects added yet by the designer</p>
+                      <br />
+                    </div>
+                  ) : selectedProject ? (
+                    <div className="flex flex-col">
+                      <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px]">
+                        <button
+                          className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                          onClick={handleBackClick}
+                        >
+                          <ArrowBackIcon />
+                        </button>
+                      </div>
+                      <br />
+                      <div className="flex flex-col gap-3">
+                        <Carousel
+                          imageObj={selectedProject.images}
+                          showProjectDetails={false}
+                          city=""
+                          state=""
+                          theme=""
+                          title=""
+                        />
+                      </div>
+                      <br />
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
+                      {projectsData.map((item: any, ind: number) => (
+                        <div
+                          key={ind}
+                          onClick={() => handleCarouselClick(item)}
+                          className="mb-4"
+                        >
+                          <Carousel
+                            key={ind}
+                            imageObj={item.images}
+                            title={item.title}
+                            city={item.city}
+                            state={item.state}
+                            theme={item.sub_category_1}
+                            showProjectDetails={true}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ) : (
-                projectsData.map((item: ProjectItem, ind: number) => (
-                  <Carousel
-                    imageObj={item.images}
-                    title={item.title}
-                    city={item.city}
-                    state={item.state}
-                    theme={item.sub_category_1}
-                    key={ind}
-                  />
-                ))
-              )}
-            </div>
-            <br />
-            <br />
-            <br />
-          </div>
-          <div
-            className={`${
-              reviews ? "block" : "hidden"
-            }  md:w-[500px] lg:w-[750px] xl:w-[950px] flex justify-center flex-col items-center`}
-          >
-            <br />
-            <div className="">
-              <img src={reviewImage} alt="" className="w-[300px]" />
-            </div>
-            <br />
-            <p>No reviews added yet!!</p>
-            <br />
-            <br />
-            <br />
-          </div>
+                <br />
+                <br />
+              </div>
+            </TabPanel>
+            <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <br />
+                <div className="flex flex-wrap">
+                  <div className="flex flex-col items-center justify-center">
+                    <div>
+                      <img src={reviewImage} alt="" className="w-[300px]" />
+                    </div>
+                    <br />
+                    <p className="">No reviews added yet by the users</p>
+                    <br />
+                  </div>
+                </div>
+                <br />
+                <br />
+              </div>
+            </TabPanel>
+          </TabContext>
         </div>
       </div>
       <br />
-      <div className="w-[200px] text-lg ml-10">
+      <div className="w-[250px] text-lg ml-10">
         <br />
+        <br />
+        <div className=" ">
+          <p className="font-bold text-base text-darkgrey">Contact Number</p>
+          <p className="text-[16px]">{data?.mobile ?? "N/A"}</p>
+        </div>
+        <br />
+        <div className=" ">
+          <p className="font-bold text-base text-darkgrey">Email</p>
+          <p className="text-[16px]">{data?.email ?? "N/A"}</p>
+        </div>
         <br />
         <div className="flex flex-col justify-evenly gap-6">
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Business Name</p>
-            <p className="text-[16px]">{data.business_name}</p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">
-              Typical Job Cost
-            </p>
-            <p className="text-[16px]">{data.average_project_value}</p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">
-              Number of employees
-            </p>
-            <p className="text-[16px]">{data.number_of_employees}</p>
-          </div>
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">
-              Projects Completed
-            </p>
-            <p className="text-[16px]">{data.projects_completed}</p>
-          </div>
-
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Contact Number</p>
-            <p className="text-[16px]">{data.mobile}</p>
-          </div>
-          {data.social ? (
+          {selectedProject ? (
             <>
-              {data.social.instagram || data.social.facebook ? (
+              <div>
+                <p className="font-bold text-base text-purple">
+                  Project details
+                </p>
+                <p className="font-bold text-base text-darkgrey">Title</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.title}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Description</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.description}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">City</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.city}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">State</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.state}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Spaces</p>
+                <p className="text-[16px]">
+                  {formatCategory(selectedProject.sub_category_2)
+                    .split(",")
+                    .map((item, ind) => (
+                      <>
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                          style={{
+                            color: "linear-gradient(#ff5757,#8c52ff)",
+                          }}
+                        />
+                      </>
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Theme</p>
+                <p className="text-[16px]">
+                  {formatCategory(selectedProject.sub_category_1)
+                    .split(",")
+                    .map((item, ind) => (
+                      <>
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                          style={{
+                            color: "linear-gradient(#ff5757,#8c52ff)",
+                          }}
+                        />
+                      </>
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">Start Date</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.start_date}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold text-base text-darkgrey">End date</p>
+                <p className="text-[16px] max-w-[300px]">
+                  {selectedProject.end_date}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <p className="font-bold text-base text-darkgrey">
+                  Typical Job Cost
+                </p>
+                <p className="text-[16px]">
+                  {data?.average_project_value ?? "N/A"}
+                </p>
+              </div>
+              <div className=" ">
+                <p className="font-bold text-base text-darkgrey">
+                  Number of employees
+                </p>
+                <p className="text-[16px]">
+                  {data?.number_of_employees ?? "N/A"}
+                </p>
+              </div>
+              <div className=" ">
+                <p className="font-bold text-base text-darkgrey">
+                  Projects Completed
+                </p>
+                <p className="text-[16px]">
+                  {data?.projects_completed ?? "N/A"}
+                </p>
+              </div>
+
+              <div className=" ">
+                <p className="font-bold text-base text-darkgrey">Location</p>
+                <p className="text-[16px]">{data?.city ?? "N/A"}</p>
+              </div>
+              {data?.social ? (
                 <>
-                  <div className=" ">
+                  <div>
                     <p className="font-bold text-base text-darkgrey">Socials</p>
-                    <div className="flex gap-3 text-[16px]">
-                      <a href={data?.social?.facebook}>
+                    {data.social.facebook && (
+                      <a
+                        href={data.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <FacebookIcon />
                       </a>
-                      <a href={data?.social?.instagram}>
+                    )}
+                    {data.social.instagram && (
+                      <a
+                        href={data.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <InstagramIcon />
                       </a>
-                    </div>
+                    )}
+                    {data.social.website && (
+                      <a
+                        href={data.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
                   </div>
                 </>
-              ) : (
-                <></>
-              )}
+              ) : null}
             </>
-          ) : (
-            <></>
           )}
-
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Address</p>
-            <p className="text-[16px]">
-              {data.address} <br />
-              {data.city} <br />
-              {data.state}
-            </p>
-          </div>
-          {data.social ? (
-            <>
-              {data.social.website ? (
-                <>
-                  <div className=" ">
-                    <p className="font-bold text-base text-darkgrey">Website</p>
-                    <a
-                      href={data?.social?.website}
-                      className="flex items-center gap-1 text-[16px]"
-                    >
-                      homezdesigners.com <OpenInNewIcon />
-                    </a>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-            </>
-          ) : (
-            <></>
-          )}
-
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Email</p>
-            <a
-              href={`mailto:${data.email}`}
-              className="flex items-center gap-1 text-[16px]"
-            >
-              {data.email} <OpenInNewIcon />
-            </a>
-          </div>
-          <br />
-          <br />
         </div>
       </div>
 
