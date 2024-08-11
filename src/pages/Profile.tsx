@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { AuthContext } from "../context/Login";
-import config from "../config";
+import constants from "../constants";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 interface ProjectItem {
@@ -36,18 +36,21 @@ interface ProjectItem {
   end_date: string;
 }
 const fetchData = async () => {
-  const response = await axios.get(`${config.apiBaseUrl}/vendor/auth/details`, {
-    headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-    },
-  });
+  const response = await axios.get(
+    `${constants.apiBaseUrl}/vendor/auth/details`,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
 
   return response.data.data;
 };
 
 const fetchProjects = async () => {
   const response = await axios.get(
-    `${config.apiBaseUrl}/vendor/auth/project/details`,
+    `${constants.apiBaseUrl}/vendor/auth/project/details`,
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -123,7 +126,7 @@ const Profile = () => {
             <div>
               {data?.logo ? (
                 <img
-                  src={`${config.apiImageUrl}/${data.logo}`}
+                  src={`${constants.apiImageUrl}/${data.logo}`}
                   alt=""
                   className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
                 />

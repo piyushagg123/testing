@@ -11,7 +11,7 @@ import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
-import config from "../config";
+import constants from "../constants";
 import { AuthContext } from "../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -50,7 +50,7 @@ interface ProjectData {
 
 const fetchVendorDetails = async (id: string) => {
   const { data } = await axios.get(
-    `${config.apiBaseUrl}/vendor/details?vendor_id=${id}`
+    `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
   );
 
   return data.data as VendorData;
@@ -58,7 +58,7 @@ const fetchVendorDetails = async (id: string) => {
 
 const fetchVendorProjects = async (id: string) => {
   const { data } = await axios.get(
-    `${config.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
+    `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
   );
   return data.data as ProjectData[];
 };
@@ -117,8 +117,8 @@ const ProfessionalsInfo = () => {
             <div>
               {vendorData?.logo ? (
                 <img
-                  src={`${config.apiImageUrl}/${vendorData.logo}`}
-                  alt=""
+                  src={`${constants.apiImageUrl}/${vendorData.logo}`}
+                  alt="Vendor Logo"
                   className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
                 />
               ) : (
