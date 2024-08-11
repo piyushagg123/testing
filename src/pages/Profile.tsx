@@ -233,7 +233,11 @@ const Profile = () => {
               </div>
             </TabPanel>
             <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-              <div className="flex w-full justify-end">
+              <div
+                className={`${
+                  selectedProject ? "hidden" : "flex w-full justify-end"
+                }`}
+              >
                 <button
                   className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
                   onClick={() => setOpen(true)}

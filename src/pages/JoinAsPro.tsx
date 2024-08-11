@@ -161,9 +161,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         });
       }
     } catch (error) {}
+    navigate("/");
     window.location.reload();
     handleClose();
-    navigate("/");
   };
 
   const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
