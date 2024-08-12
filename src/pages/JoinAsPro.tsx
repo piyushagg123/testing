@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { StateContext } from "../context/State";
-import config from "../config";
+import constants from "../constants";
 
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -43,6 +43,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
+  const [error, setError] = useState("");
   const stateContext = useContext(StateContext);
 
   if (stateContext === undefined) {
@@ -89,7 +90,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     if (value) {
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -137,7 +138,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/vendor/onboard`,
+        `${constants.apiBaseUrl}/vendor/onboard`,
         processedFormData,
         {
           headers: {
@@ -153,12 +154,16 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         const formData = new FormData();
         formData.append("logo", logoFile);
 
-        await axios.post(`${config.apiBaseUrl}/image-upload/logo`, formData, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await axios.post(
+          `${constants.apiBaseUrl}/image-upload/logo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
       }
     } catch (error) {}
     navigate("/");
@@ -166,7 +171,66 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     handleClose();
   };
 
-  const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
+  const nextStep = () => {
+    if (currentStep === 1) {
+      if (!formData.business_name) {
+        setError("Please enter the business name ");
+        return;
+      }
+      if (!formData.started_in) {
+        setError("Please enter the start date of your business ");
+        return;
+      }
+      if (!formData.address) {
+        setError("Please enter your address ");
+        return;
+      }
+      if (!formData.number_of_employees) {
+        setError("Please enter the number of employees working with you ");
+        return;
+      }
+      if (!formData.average_project_value) {
+        setError("Please enter average value of your projects ");
+        return;
+      }
+      if (!formData.projects_completed) {
+        setError("Please enter the number of cprojects completed so far ");
+        return;
+      }
+      if (!formData.description) {
+        setError("Please enter your business description ");
+        return;
+      }
+    }
+
+    if (currentStep === 2) {
+      if (formData.sub_category_1.length === 0) {
+        setError("please select your theme");
+        return;
+      }
+      if (formData.sub_category_2.length === 0) {
+        setError("please select your specialized spaces");
+        return;
+      }
+      if (formData.sub_category_3.length === 0) {
+        setError("please select your type of execution");
+        return;
+      }
+    }
+
+    if (currentStep === 3) {
+      if (!formData.state) {
+        setError("Please enter your state ");
+        return;
+      }
+      if (!formData.city) {
+        setError("Please enter your city ");
+        return;
+      }
+    }
+    setCurrentStep((prevStep) => prevStep + 1);
+    setError("");
+  };
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
 
   const cityOptions = formData.state
@@ -196,6 +260,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           <h1 className="text-xl font-bold">
             Let's get started by creating your profile
           </h1>
+          <p className="text-center text-sm text-[red]">{error}</p>
 
           {currentStep === 1 && (
             <>
@@ -311,7 +376,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your themes (maximum of three)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -325,7 +390,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your spaces (maximum of three)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -342,7 +407,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -486,7 +551,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <div className="flex flex-col gap-2">
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    Instagram <InstagramIcon />
+                    <InstagramIcon className="text-red" /> Instagram
                   </p>
                   <input
                     type="url"
@@ -500,7 +565,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <br />
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    Facebook <FacebookIcon />
+                    <FacebookIcon className="text-purple" /> Facebook
                   </p>
                   <input
                     type="url"
@@ -514,7 +579,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <br />
                 <label className="flex text-[16px] justify-between">
                   <p>
-                    Website <OpenInNewIcon />
+                    <OpenInNewIcon className="text-darkgrey" /> Website
                   </p>
                   <input
                     type="url"

@@ -8,7 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import config from "../config";
+import constants from "../constants";
 import pickelelogo from "../assets/PickeleLogo.png";
 import { Button as MaterialButton } from "@mui/material";
 
@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const result = await axios.delete(`${config.apiBaseUrl}/user/logout`, {
+      const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },

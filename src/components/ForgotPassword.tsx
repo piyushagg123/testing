@@ -13,7 +13,7 @@ import { Input as BaseInput } from "@mui/base/Input";
 import { styled } from "@mui/system";
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import config from "../config";
+import constants from "../constants";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -265,14 +265,14 @@ const ForgotPassword = () => {
     try {
       if (activeStep === 0) {
         const response = await axios.get(
-          `${config.apiBaseUrl}/user/password-reset/otp?email=${email}`
+          `${constants.apiBaseUrl}/user/password-reset/otp?email=${email}`
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
       } else if (activeStep === 1) {
         const response = await axios.get(
-          `${config.apiBaseUrl}/user/password-reset/validate-otp?otp=${otp}&email=${email}`
+          `${constants.apiBaseUrl}/user/password-reset/validate-otp?otp=${otp}&email=${email}`
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -281,7 +281,7 @@ const ForgotPassword = () => {
       } else if (activeStep === 2) {
         const newPass = CryptoJS.SHA1(password).toString();
         const response = await axios.post(
-          `${config.apiBaseUrl}/user/password-reset/update`,
+          `${constants.apiBaseUrl}/user/password-reset/update`,
           { password: newPass },
           {
             headers: {

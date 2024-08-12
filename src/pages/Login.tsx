@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import ForgotPassword from "../components/ForgotPassword";
-import config from "../config";
+import constants from "../constants";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -61,18 +61,21 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/user/login`,
+        `${constants.apiBaseUrl}/user/login`,
         data
       );
 
       console.log(response);
 
       sessionStorage.setItem("token", response.data.access_token);
-      const user_data = await axios.get(`${config.apiBaseUrl}/user/details`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
+      const user_data = await axios.get(
+        `${constants.apiBaseUrl}/user/details`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
       setUserDetails(user_data.data.data);
       setLogin(true);
       navigate("/");
