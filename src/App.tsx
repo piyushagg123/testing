@@ -12,10 +12,11 @@ import Profile from "./pages/Profile";
 import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
-import config from "./config";
+import constants from "./constants";
+import Footer from "./components/Footer";
 
 const fetchUserData = async () => {
-  const { data } = await axios.get(`${config.apiBaseUrl}/user/details`, {
+  const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
     },
@@ -24,7 +25,7 @@ const fetchUserData = async () => {
 };
 
 const fetchStateData = async () => {
-  const { data } = await axios.get(`${config.apiBaseUrl}/location/states`);
+  const { data } = await axios.get(`${constants.apiBaseUrl}/location/states`);
   return data.data;
 };
 
@@ -74,6 +75,7 @@ const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/*" element={<Error />} />
         </Routes>
+        <Footer />
       </Router>
     </div>
   );

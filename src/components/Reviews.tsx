@@ -1,4 +1,3 @@
-import React from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material/styles";
 import LinearProgress, {

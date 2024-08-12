@@ -1,5 +1,6 @@
 import React from "react";
 import { Rating } from "@mui/material";
+import { truncateText } from "../utils";
 
 interface ProfessionalProps {
   img: string;
@@ -37,7 +38,7 @@ const Professional: React.FC<ProfessionalProps> = ({
             />
           </div>
           <br />
-          <p>{about}</p>
+          <p>{truncateText(about, 80)}</p>
         </div>
       </div>
     </div>
