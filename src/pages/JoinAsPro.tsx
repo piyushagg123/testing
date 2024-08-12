@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { StateContext } from "../context/State";
-import config from "../config";
+import constants from "../constants";
 
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -95,7 +95,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     if (value) {
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -142,7 +142,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/vendor/onboard`,
+        `${constants.apiBaseUrl}/vendor/onboard`,
         processedFormData,
         {
           headers: {
@@ -158,12 +158,16 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         const formData = new FormData();
         formData.append("logo", logoFile);
 
-        await axios.post(`${config.apiBaseUrl}/image-upload/logo`, formData, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await axios.post(
+          `${constants.apiBaseUrl}/image-upload/logo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
       }
     } catch (error) {}
     navigate("/");
@@ -371,7 +375,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your themes (maximum of three)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -385,7 +389,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <label htmlFor="" className="flex items-center">
                 <p>Select your spaces (maximum of three)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -402,7 +406,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({

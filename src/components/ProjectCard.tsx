@@ -13,7 +13,7 @@ import {
   Grid,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import config from "../config";
+import constants from "../constants";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import NoProjectImage from "../assets/noImageinProject.jpg";
@@ -56,7 +56,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     if (ar) {
       return ar.map((item: any) => (
         <img
-          src={`${config.apiImageUrl}/${item}`}
+          src={`${constants.apiImageUrl}/${item}`}
           className="h-10 ml-2"
           alt="indicator"
         />
@@ -195,7 +195,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   return (
     <Paper sx={{ display: "flex", justifyContent: "center" }}>
       <img
-        src={`${config.apiImageUrl}/${item}`}
+        src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"
         style={{ height: "400px" }}
       />
@@ -231,7 +231,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
           <>
             {items?.map((item, ind: number) => (
               <ImageListItem key={ind}>
-                <img src={`${config.apiImageUrl}/${item}`} loading="lazy" />
+                <img src={`${constants.apiImageUrl}/${item}`} loading="lazy" />
               </ImageListItem>
             ))}
           </>

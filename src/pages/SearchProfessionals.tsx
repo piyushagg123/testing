@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Professional from "../components/Professional";
 import Filters from "../components/Filters";
-import config from "../config";
+import constants from "../constants";
 import { StateContext } from "../context/State";
 
 interface VendorItem {
@@ -52,7 +52,7 @@ const SearchProfessionals: React.FC = () => {
       setLoadingCities(true);
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -71,7 +71,7 @@ const SearchProfessionals: React.FC = () => {
   ) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
+      const response = await axios.get(`${constants.apiBaseUrl}/vendor/list`, {
         params: {
           category: "INTERIOR_DESIGNER",
           sub_category_1: Array.from(themeFilters as Set<string>)
@@ -282,7 +282,7 @@ const SearchProfessionals: React.FC = () => {
                         <Professional
                           about={item.description}
                           rating={item.rating}
-                          img={`${config.apiImageUrl}/${item.logo}`}
+                          img={`${constants.apiImageUrl}/${item.logo}`}
                           profCat={item.business_name}
                         />
                         <hr />

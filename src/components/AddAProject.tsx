@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
-import config from "../config";
+import constants from "../constants";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -70,7 +70,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   });
 
   const fetchStates = async () => {
-    const response = await axios.get(`${config.apiBaseUrl}/location/states`);
+    const response = await axios.get(`${constants.apiBaseUrl}/location/states`);
     return response.data.data;
   };
 
@@ -95,7 +95,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     if (value) {
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -144,7 +144,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/vendor/project`,
+        `${constants.apiBaseUrl}/vendor/project`,
         processedFormData,
         {
           headers: {
@@ -254,7 +254,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -271,7 +271,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the spaces (maximum of 7)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -287,7 +287,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
