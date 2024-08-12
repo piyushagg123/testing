@@ -176,7 +176,7 @@ const Filters: React.FC<FiltersProps> = ({
       </div>
       <div className="hidden lg:flex flex-col gap-0  h-screen">
         <div className="flex flex-col gap-1 pt-3">
-          <text className="font-bold text-base text-darkgrey">THEMES</text>
+          <p className="font-bold text-base text-darkgrey">THEMES</p>
           {formattedThemes.map((item: string) => {
             return (
               <FormControlLabel
@@ -198,7 +198,7 @@ const Filters: React.FC<FiltersProps> = ({
           })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <text className="font-bold text-base text-darkgrey">SPACES</text>
+          <p className="font-bold text-base text-darkgrey">SPACES</p>
           {formattedSpaces.map((item: string) => {
             return (
               <FormControlLabel
@@ -220,9 +220,7 @@ const Filters: React.FC<FiltersProps> = ({
           })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <text className="font-bold text-base text-darkgrey">
-            EXECUTION TYPE
-          </text>
+          <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
           {formattedExecution.map((item: string) => {
             return (
               <FormControlLabel

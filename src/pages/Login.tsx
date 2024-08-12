@@ -65,6 +65,8 @@ const Login = () => {
         data
       );
 
+      console.log(response);
+
       sessionStorage.setItem("token", response.data.access_token);
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,
@@ -78,7 +80,7 @@ const Login = () => {
       setLogin(true);
       navigate("/");
     } catch (error: any) {
-      setError(error.response.data.debug_info);
+      setError(error.response.data.message);
     }
   };
 
