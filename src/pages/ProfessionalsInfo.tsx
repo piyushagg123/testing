@@ -1,7 +1,6 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import img from "../assets/background.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
-import reviewImage from "../assets/noReviewsAdded.png";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -26,6 +25,7 @@ import constants from "../constants";
 import { AuthContext } from "../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import Reviews from "../components/Reviews";
 
 interface VendorData {
   logo?: string;
@@ -57,6 +57,15 @@ interface ProjectData {
   sub_category_2: string;
   start_date: string;
   end_date: string;
+}
+
+interface FormObject {
+  title?: string;
+  body?: string;
+  rating_quality?: number;
+  rating_execution?: number;
+  rating_behaviour?: number;
+  vendor_id?: number;
 }
 
 const fetchVendorDetails = async (id: string) => {
@@ -123,6 +132,40 @@ const ProfessionalsInfo = () => {
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const formObject: FormObject = { vendor_id: Number(id) };
+    formData.forEach((value, key) => {
+      if (key.startsWith("rating_")) {
+        (formObject[
+          key as "rating_quality" | "rating_execution" | "rating_behaviour"
+        ] as number) = Number(value);
+      } else {
+        formObject[key as "body"] = value.toString();
+      }
+    });
+
+    try {
+      const response = await axios.post(
+        `${constants.apiBaseUrl}/vendor/review`,
+        formObject,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("Review submitted successfully:", response.data);
+      handleReviewDialogClose();
+    } catch (error) {
+      console.error("Error submitting the review:", error);
+    }
   };
 
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
@@ -330,16 +373,7 @@ const ProfessionalsInfo = () => {
             <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
               <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                 <br />
-                <div className="flex flex-wrap">
-                  <div className="flex flex-col items-center justify-center">
-                    <div>
-                      <img src={reviewImage} alt="" className="w-[300px]" />
-                    </div>
-                    <br />
-                    <p className="">No reviews added yet by the users</p>
-                    <br />
-                  </div>
-                </div>
+                <Reviews id={Number(id)} />
                 <br />
                 <br />
               </div>
@@ -513,86 +547,94 @@ const ProfessionalsInfo = () => {
           )}
         </div>
       </div>
-
       <Dialog open={reviewDialogOpen} onClose={handleReviewDialogClose}>
-        <DialogTitle>Write a review</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 justify-center items-center">
-          <TextField
-            id="outlined-basic"
-            label="Title"
-            variant="outlined"
-            size="small"
-            fullWidth
-            sx={{
-              width: "524px",
-              marginTop: "10px",
-              border: "1px solid black",
-              borderRadius: "4px",
-            }}
-          />
-          <TextField
-            id="outlined-multiline-static"
-            label="Your review"
-            multiline
-            rows={4}
-            sx={{
-              width: "524px",
-              border: "1px solid black",
-              borderRadius: "4px",
-            }}
-            fullWidth
-          />
-          <label htmlFor="" className="flex w-[524px] justify-around">
-            <p>Overall rating</p>
-            <Rating name="simple-controlled" />
-          </label>
-
-          <label htmlFor="" className="flex w-[524px] justify-around">
-            <p>Value</p>
-            <Rating name="simple-controlled" />
-          </label>
-
-          <label htmlFor="" className="flex w-[524px] justify-around">
-            <p>Ethics</p>
-            <Rating name="simple-controlled" />
-          </label>
-
-          <label htmlFor="" className="flex w-[524px] justify-around">
-            <p>Rating</p>
-            <Rating name="simple-controlled" />
-          </label>
-
-          <DialogActions
-            sx={{
-              width: "524px",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              onClick={handleReviewDialogClose}
-              variant="contained"
+        <form onSubmit={handleReviewSubmit}>
+          <DialogTitle>Write a review</DialogTitle>
+          <DialogContent className="flex flex-col gap-4 justify-center items-center">
+            <TextField
+              id="outlined-basic"
+              label="Title"
+              variant="outlined"
+              size="small"
+              name="title"
+              fullWidth
               sx={{
-                background: "black",
-                color: "white",
-                "&:hover": {
+                width: "524px",
+                marginTop: "10px",
+                border: "1px solid black",
+                borderRadius: "4px",
+              }}
+            />
+            <TextField
+              id="outlined-multiline-static"
+              label="Your review"
+              name="body"
+              multiline
+              rows={4}
+              sx={{
+                width: "524px",
+                border: "1px solid black",
+                borderRadius: "4px",
+              }}
+              fullWidth
+            />
+            <label
+              htmlFor="rating_quality"
+              className="flex w-[524px] justify-around"
+            >
+              <p>Quality</p>
+              <Rating name="rating_quality" />
+            </label>
+
+            <label
+              htmlFor="rating_execution"
+              className="flex w-[524px] justify-around"
+            >
+              <p>Execution</p>
+              <Rating name="rating_execution" />
+            </label>
+
+            <label
+              htmlFor="rating_behaviour"
+              className="flex w-[524px] justify-around"
+            >
+              <p>Behaviour</p>
+              <Rating name="rating_behaviour" />
+            </label>
+
+            <DialogActions
+              sx={{
+                width: "524px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                onClick={handleReviewDialogClose}
+                variant="contained"
+                sx={{
                   background: "black",
-                },
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                background: "linear-gradient(90deg, #ff5757 0%, #8c52ff 100%)",
-              }}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </DialogContent>
+                  color: "white",
+                  "&:hover": {
+                    background: "black",
+                  },
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  background:
+                    "linear-gradient(90deg, #ff5757 0%, #8c52ff 100%)",
+                }}
+              >
+                Submit
+              </Button>
+            </DialogActions>
+          </DialogContent>
+        </form>
       </Dialog>
     </div>
   );
