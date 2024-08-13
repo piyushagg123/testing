@@ -260,6 +260,7 @@ const ForgotPassword = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [accessToken, setAccessToken] = React.useState("");
+  const [error, setError] = React.useState("");
 
   const handleNext = async () => {
     try {
@@ -269,6 +270,7 @@ const ForgotPassword = () => {
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          setError("");
         }
       } else if (activeStep === 1) {
         const response = await axios.get(
@@ -277,6 +279,7 @@ const ForgotPassword = () => {
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setAccessToken(response.data.otp_access_token);
+          setError("");
         }
       } else if (activeStep === 2) {
         const newPass = CryptoJS.SHA1(password).toString();
@@ -291,10 +294,13 @@ const ForgotPassword = () => {
         );
         if (response.data.success) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          setError("");
         }
         handleClose();
       }
-    } catch (error) {}
+    } catch (error: any) {
+      setError(error.response.data.debug_info);
+    }
   };
 
   const handleReset = () => {
@@ -320,6 +326,7 @@ const ForgotPassword = () => {
     }
     setOpen(false);
     handleReset();
+    setError("");
   };
   return (
     <div className="text-text">
@@ -412,6 +419,7 @@ const ForgotPassword = () => {
                     </Box>
                   )}
                 </div>
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 <Box
                   sx={{
                     display: "flex",
@@ -420,6 +428,11 @@ const ForgotPassword = () => {
                     justifyContent: "flex-end",
                   }}
                 >
+                  <Button onClick={handleClose}>
+                    <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
+                      Close
+                    </p>
+                  </Button>
                   <Button onClick={handleNext}>
                     <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
                       {activeStep === steps.length - 1 ? "Submit" : "Next"}
