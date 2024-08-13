@@ -79,10 +79,15 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     null
   );
 
-  const handleStateChange = async (_event: any, value: string) => {
+  const handleStateChange = async (
+    _event: React.SyntheticEvent,
+    value: string | null,
+    _reason: any,
+    _details?: any
+  ) => {
     setFormData((prevData) => ({
       ...prevData,
-      state: value,
+      state: value?.toString() ?? "",
       city: "",
     }));
     setCities([]);
@@ -101,7 +106,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
       setLoadingCities(false);
     }
   };
-
   const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -166,9 +170,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         );
       }
     } catch (error) {}
+    navigate("/");
     window.location.reload();
     handleClose();
-    navigate("/");
   };
 
   const nextStep = () => {
@@ -232,11 +236,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     setError("");
   };
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
-
-  const cityOptions = formData.state
-    ? cities
-    : [{ title: "Select a state first", disabled: true }];
-
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setLogoFile(file);
@@ -447,18 +446,19 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   id="state-autocomplete"
                   options={state}
                   onChange={handleStateChange}
-                  sx={{ width: 220 }}
                   size="small"
+                  sx={{
+                    width: 208,
+                    borderRadius: "5px",
+                    border: "solid 0.3px",
+                    marginRight: "3px",
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       InputProps={{
                         ...params.InputProps,
-                        endAdornment: (
-                          <React.Fragment>
-                            {params.InputProps.endAdornment}
-                          </React.Fragment>
-                        ),
+                        endAdornment: <>{params.InputProps.endAdornment}</>,
                       }}
                     />
                   )}
@@ -471,29 +471,34 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <p>Select your city</p>
                 <Autocomplete
                   disablePortal
-                  id="city-autocomplete"
-                  options={cityOptions as string[]}
                   size="small"
-                  onChange={(_event, value) =>
+                  id="city-autocomplete"
+                  options={cities}
+                  onChange={(_event, value) => {
                     setFormData((prevData) => ({
                       ...prevData,
-                      city: value as string,
-                    }))
-                  }
+                      city: value ?? "",
+                    }));
+                  }}
                   loading={loadingCities}
-                  sx={{ width: 220 }}
+                  sx={{
+                    width: 208,
+                    borderRadius: "5px",
+                    border: "solid 0.3px",
+                    marginRight: "3px",
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (
-                          <React.Fragment>
+                          <>
                             {loadingCities ? (
                               <CircularProgress color="inherit" size={20} />
                             ) : null}
                             {params.InputProps.endAdornment}
-                          </React.Fragment>
+                          </>
                         ),
                       }}
                     />
