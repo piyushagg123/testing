@@ -76,142 +76,87 @@ const Reviews: React.FC<userid> = ({ id }) => {
     <>
       {reviews?.length > 0 ? (
         <>
-          <p className="mt-5"></p>
-          <div className="flex  justify-around gap-10">
-            <div>
-              <div className="flex flex-col gap-3">
-                <div>
+          <div className="flex w-full gap-3 mt-5 ">
+            <div className="flex  justify-start gap-10 ml-0">
+              <div>
+                <div className="flex flex-col gap-3">
                   <p className="flex items-center gap-2">
-                    <span className="text-[25px]">4 </span>
+                    <span className="text-[25px]">
+                      {(
+                        (averages.behaviour +
+                          averages.execution +
+                          averages.quality) /
+                        3
+                      ).toFixed(1)}
+                    </span>
                     <StarIcon />
                   </p>
-                </div>
-
-                <div>
-                  <p className="flex items-center gap-3">
-                    <p className="flex items-center">
-                      {" "}
-                      5 <StarIcon sx={{ fontSize: "15px" }} />
-                    </p>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={90}
-                      sx={{ width: "200px" }}
-                    />
-                    <p className="text-[10px]">100</p>
-                  </p>
-                  <p className="flex items-center gap-3">
-                    <p className="flex items-center">
-                      {" "}
-                      4 <StarIcon sx={{ fontSize: "15px" }} />
-                    </p>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={90}
-                      sx={{ width: "200px" }}
-                    />
-                    <p className="text-[10px]">100</p>
-                  </p>
-                  <p className="flex items-center gap-3">
-                    <p className="flex items-center">
-                      {" "}
-                      3 <StarIcon sx={{ fontSize: "15px" }} />
-                    </p>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={90}
-                      sx={{ width: "200px" }}
-                    />
-                    <p className="text-[10px]">100</p>
-                  </p>
-                  <p className="flex items-center gap-3">
-                    <p className="flex items-center">
-                      {" "}
-                      2 <StarIcon sx={{ fontSize: "15px" }} />
-                    </p>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={90}
-                      sx={{ width: "200px" }}
-                    />
-                    <p className="text-[10px]">100</p>
-                  </p>
-                  <p className="flex items-center gap-3">
-                    <p className="flex items-center">
-                      {" "}
-                      1 <StarIcon sx={{ fontSize: "15px" }} />
-                    </p>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={90}
-                      sx={{ width: "200px" }}
-                    />
-                    <p className="text-[10px]">100</p>
-                  </p>
+                  <div className="flex flex-col ">
+                    <br />
+                    <p>What our customers said</p>
+                    <br />
+                    <div className="flex items-center gap-3">
+                      <p className="flex items-center gap-3 justify-between w-[293px]">
+                        <p className="flex items-center text-sm">
+                          {" "}
+                          Work Quality
+                        </p>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={averages.quality * 20}
+                          sx={{ width: "200px" }}
+                        />
+                      </p>
+                      <p className="text-[10px]">{averages.quality}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <p className="flex items-center gap-3 justify-between w-[293px]">
+                        <p className="flex items-center text-sm"> Execution</p>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={averages.execution * 20}
+                          sx={{ width: "200px" }}
+                        />
+                      </p>
+                      <p className="text-[10px]">{averages.execution}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <p className="flex items-center gap-3 justify-between w-[293px]">
+                        <p className="flex items-center text-sm">Behaviour</p>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={averages.behaviour * 20}
+                          sx={{ width: "200px" }}
+                        />
+                      </p>
+                      <p className="text-[10px]">{averages.behaviour}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-col w-max">
               <br />
-              <p>What our customers said</p>
-              <br />
-              <div className="flex items-center gap-3">
-                <p className="flex items-center gap-3 justify-between w-[293px]">
-                  <p className="flex items-center text-sm"> Work Quality</p>
-                  <BorderLinearProgress
-                    variant="determinate"
-                    value={averages.quality * 20}
-                    sx={{ width: "200px" }}
-                  />
-                </p>
-                <p className="text-[10px]">{averages.quality}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <p className="flex items-center gap-3 justify-between w-[293px]">
-                  <p className="flex items-center text-sm"> Execution</p>
-                  <BorderLinearProgress
-                    variant="determinate"
-                    value={averages.execution * 20}
-                    sx={{ width: "200px" }}
-                  />
-                </p>
-                <p className="text-[10px]">{averages.execution}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <p className="flex items-center gap-3 justify-between w-[293px]">
-                  <p className="flex items-center text-sm">Behaviour</p>
-                  <BorderLinearProgress
-                    variant="determinate"
-                    value={averages.behaviour * 20}
-                    sx={{ width: "200px" }}
-                  />
-                </p>
-                <p className="text-[10px]">{averages.behaviour}</p>
-              </div>
             </div>
-
             <br />
-          </div>
-          <br />
-          <br />
-          <div className="flex flex-col gap-9 justify-start w-full">
-            {reviews?.map((review: Review) => (
-              <div className="flex items-start gap-2">
-                <p className="flex items-center gap-1 bg-purple p-[2px] text-white">
-                  {(
-                    (review.rating_behaviour +
-                      review.rating_execution +
-                      review.rating_quality) /
-                    3
-                  ).toFixed(2)}
-                  <StarIcon sx={{ fontSize: "13px" }} />
-                </p>
-                <div>
-                  <p>{review.body}</p>
-                  <p className="text-sm text-darkgrey">{review.user_name}</p>
+            <br />
+            <div className="flex flex-col gap-9 justify-start w-full">
+              {reviews?.map((review: Review) => (
+                <div className="flex items-start gap-2">
+                  <p className="flex items-center gap-1 bg-purple p-[2px] text-white">
+                    {(
+                      (review.rating_behaviour +
+                        review.rating_execution +
+                        review.rating_quality) /
+                      3
+                    ).toFixed(2)}
+                    <StarIcon sx={{ fontSize: "13px" }} />
+                  </p>
+                  <div>
+                    <p>{review.body}</p>
+                    <p className="text-sm text-darkgrey">{review.user_name}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </>
       ) : (

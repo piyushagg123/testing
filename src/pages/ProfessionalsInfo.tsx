@@ -119,6 +119,7 @@ const ProfessionalsInfo = () => {
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+
     return formattedStr;
   };
 
@@ -202,7 +203,7 @@ const ProfessionalsInfo = () => {
                   .map((item, ind) => (
                     <>
                       <Chip
-                        label={item}
+                        label={item.charAt(0).toUpperCase() + item.slice(1)}
                         variant="outlined"
                         key={ind}
                         sx={{ height: "25px" }}
@@ -220,7 +221,7 @@ const ProfessionalsInfo = () => {
                   .map((item, ind) => (
                     <>
                       <Chip
-                        label={item}
+                        label={item.charAt(0).toUpperCase() + item.slice(1)}
                         variant="outlined"
                         key={ind}
                         sx={{ height: "25px" }}
@@ -555,7 +556,7 @@ const ProfessionalsInfo = () => {
               sx={{
                 width: "524px",
                 marginTop: "10px",
-                border: "1px solid black",
+                color: "black",
                 borderRadius: "4px",
               }}
             />
@@ -567,7 +568,7 @@ const ProfessionalsInfo = () => {
               rows={4}
               sx={{
                 width: "524px",
-                border: "1px solid black",
+                color: "black",
                 borderRadius: "4px",
               }}
               fullWidth
