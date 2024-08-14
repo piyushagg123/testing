@@ -14,6 +14,8 @@ import { styled } from "@mui/system";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
+import { DialogActions } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -261,8 +263,11 @@ const ForgotPassword = () => {
   const [open, setOpen] = React.useState(false);
   const [accessToken, setAccessToken] = React.useState("");
   const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleNext = async () => {
+    setError("");
+    setLoading(true);
     try {
       if (activeStep === 0) {
         const response = await axios.get(
@@ -301,6 +306,7 @@ const ForgotPassword = () => {
     } catch (error: any) {
       setError(error.response.data.debug_info);
     }
+    setLoading(false);
   };
 
   const handleReset = () => {
@@ -347,8 +353,12 @@ const ForgotPassword = () => {
           },
         }}
       >
-        <DialogTitle className="bg-prim">
+        <DialogTitle className="bg-prim flex items-center justify-between">
           <p className="text-text text-2xl">Forgot your password</p>
+
+          <DialogActions>
+            <button onClick={handleClose}>x</button>
+          </DialogActions>
         </DialogTitle>
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
@@ -392,6 +402,7 @@ const ForgotPassword = () => {
                         flexDirection: "column",
                         justifyContent: "center",
                         gap: 2,
+                        marginTop: 3,
                       }}
                     >
                       <OTP
@@ -426,18 +437,39 @@ const ForgotPassword = () => {
                     flexDirection: "row",
                     pt: 2,
                     justifyContent: "flex-end",
+                    gap: "10px",
                   }}
                 >
-                  <Button onClick={handleClose}>
-                    <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
-                      Close
-                    </p>
-                  </Button>
-                  <Button onClick={handleNext}>
-                    <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
-                      {activeStep === steps.length - 1 ? "Submit" : "Next"}
-                    </p>
-                  </Button>
+                  {activeStep === 1 ? (
+                    <>
+                      <Button
+                        onClick={() => setActiveStep(0)}
+                        sx={{ width: "64.7px", height: "36.5px" }}
+                      >
+                        <p className="text-text border-text border-[2px] px-3 py-1 rounded-[2px] ">
+                          Back
+                        </p>
+                      </Button>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <LoadingButton
+                    onClick={handleNext}
+                    loading={loading}
+                    variant="outlined"
+                    sx={{ width: "64.7px", height: "36.5px" }}
+                  >
+                    {loading ? (
+                      ""
+                    ) : (
+                      <>
+                        <p className="text-text border-text border-[2px] px-3 py-1 rounded-[2px] ">
+                          {activeStep === steps.length - 1 ? "Submit" : "Next"}
+                        </p>
+                      </>
+                    )}
+                  </LoadingButton>
                 </Box>
               </React.Fragment>
             )}
