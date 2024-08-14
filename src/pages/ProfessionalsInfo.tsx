@@ -572,28 +572,25 @@ const ProfessionalsInfo = () => {
               }}
               fullWidth
             />
-            <label
-              htmlFor="rating_quality"
-              className="flex w-[524px] justify-around"
-            >
-              <p>Quality</p>
-              <Rating name="rating_quality" />
+            <label htmlFor="rating_quality" className="flex w-[524px]">
+              <div className="flex w-[250px] justify-between">
+                <p>Quality</p>
+                <Rating name="rating_quality" />
+              </div>
             </label>
 
-            <label
-              htmlFor="rating_execution"
-              className="flex w-[524px] justify-around"
-            >
-              <p>Execution</p>
-              <Rating name="rating_execution" />
+            <label htmlFor="rating_execution" className="flex w-[524px] ">
+              <div className="flex w-[250px] justify-between">
+                <p>Execution</p>
+                <Rating name="rating_execution" />
+              </div>
             </label>
 
-            <label
-              htmlFor="rating_behaviour"
-              className="flex w-[524px] justify-around"
-            >
-              <p>Behaviour</p>
-              <Rating name="rating_behaviour" />
+            <label htmlFor="rating_behaviour" className="flex w-[524px] ">
+              <div className="flex w-[250px] justify-between">
+                <p>Behaviour</p>
+                <Rating name="rating_behaviour" />
+              </div>
             </label>
 
             <DialogActions
@@ -605,13 +602,10 @@ const ProfessionalsInfo = () => {
             >
               <Button
                 onClick={handleReviewDialogClose}
-                variant="contained"
+                variant="outlined"
                 sx={{
-                  background: "black",
-                  color: "white",
-                  "&:hover": {
-                    background: "black",
-                  },
+                  borderColor: "#ff5757",
+                  color: "#ff5757",
                 }}
               >
                 Cancel
@@ -620,8 +614,7 @@ const ProfessionalsInfo = () => {
                 type="submit"
                 variant="contained"
                 sx={{
-                  background:
-                    "linear-gradient(90deg, #ff5757 0%, #8c52ff 100%)",
+                  background: "#8c52ff",
                 }}
               >
                 Submit
