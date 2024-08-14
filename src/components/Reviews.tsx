@@ -26,7 +26,6 @@ const Reviews: React.FC<userid> = ({ id }) => {
     const response = await axios.get(
       `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
     );
-    console.log(response.data);
 
     return response.data.data;
   };

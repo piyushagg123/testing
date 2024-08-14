@@ -152,20 +152,14 @@ const ProfessionalsInfo = () => {
     });
 
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/review`,
-        formObject,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log("Review submitted successfully:", response.data);
+      await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+
       handleReviewDialogClose();
-    } catch (error) {
-      console.error("Error submitting the review:", error);
-    }
+    } catch (error) {}
   };
 
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
