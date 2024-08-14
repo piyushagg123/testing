@@ -270,7 +270,9 @@ const SearchProfessionals: React.FC = () => {
           {filteredItems ? (
             <>
               {isLoading ? (
-                <CircularProgress color="inherit" />
+                <div className="flex justify-center h-screen">
+                  <CircularProgress color="inherit" />
+                </div>
               ) : (
                 <>
                   {filteredItems.map((item) => (

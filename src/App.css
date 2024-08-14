@@ -31,3 +31,8 @@
     --red: #ff5757;
     --purple: #8c52ff;
 }
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
