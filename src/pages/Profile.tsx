@@ -171,7 +171,7 @@ const Profile = () => {
                     .map((item, ind) => (
                       <>
                         <Chip
-                          label={item}
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
                           variant="outlined"
                           key={ind}
                           sx={{ height: "25px" }}
@@ -236,20 +236,6 @@ const Profile = () => {
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div
-                  className={`${
-                    selectedProject ? "hidden" : "flex w-full justify-end"
-                  }`}
-                >
-                  <button
-                    className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
-                    onClick={() => setOpen(true)}
-                  >
-                    <AddCircleIcon /> Add a new project
-                  </button>
-                </div>
-
-                <br />
                 <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                   <br />
                   <div className="flex flex-wrap">

@@ -1,6 +1,8 @@
 import React from "react";
 import { Rating } from "@mui/material";
 import { truncateText } from "../utils";
+import constants from "../constants";
+import NoProjectImage from "../assets/noImageinProject.jpg";
 
 interface ProfessionalProps {
   img: string;
@@ -18,11 +20,23 @@ const Professional: React.FC<ProfessionalProps> = ({
   return (
     <div className="flex gap-8 mb-5  items-start flex-col sm:flex-row mt-3 sm:mt-0 text-text px-4">
       <div>
-        <img
-          src={img}
-          alt="Professional"
-          className="h-[192px] w-[300px] sm:w-[342px] rounded-[10px] sm:max-w-[342px]"
-        />
+        {img ? (
+          <>
+            <img
+              src={`${constants.apiImageUrl}/${img}`}
+              alt="Professional"
+              className="h-[192px] w-[300px] sm:w-[342px] rounded-[10px] sm:max-w-[342px]"
+            />
+          </>
+        ) : (
+          <>
+            <img
+              src={NoProjectImage}
+              alt="Professional"
+              className="h-[192px] w-[300px] sm:w-[342px] rounded-[10px] sm:max-w-[342px]"
+            />
+          </>
+        )}
       </div>
 
       <div className="flex flex-col justify-center xl:flex-row items-start">

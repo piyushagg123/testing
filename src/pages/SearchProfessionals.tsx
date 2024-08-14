@@ -284,7 +284,7 @@ const SearchProfessionals: React.FC = () => {
                         <Professional
                           about={item.description}
                           rating={item.rating}
-                          img={`${constants.apiImageUrl}/${item.logo}`}
+                          img={item.logo}
                           profCat={item.business_name}
                         />
                         <hr />
