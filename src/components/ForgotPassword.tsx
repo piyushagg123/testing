@@ -14,8 +14,9 @@ import { styled } from "@mui/system";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
-import { DialogActions } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -356,9 +357,18 @@ const ForgotPassword = () => {
         <DialogTitle className="bg-prim flex items-center justify-between">
           <p className="text-text text-2xl">Forgot your password</p>
 
-          <DialogActions>
-            <button onClick={handleClose}>x</button>
-          </DialogActions>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
@@ -430,7 +440,12 @@ const ForgotPassword = () => {
                     </Box>
                   )}
                 </div>
-                {error && <p style={{ color: "red" }}>{error}</p>}
+
+                {error && (
+                  <p style={{ color: "red" }} className="ml-[7px]">
+                    {error}
+                  </p>
+                )}
                 <Box
                   sx={{
                     display: "flex",
@@ -444,11 +459,10 @@ const ForgotPassword = () => {
                     <>
                       <Button
                         onClick={() => setActiveStep(0)}
-                        sx={{ width: "64.7px", height: "36.5px" }}
+                        variant="outlined"
+                        style={{ color: "black", borderColor: "black" }}
                       >
-                        <p className="text-text border-text border-[2px] px-3 py-1 rounded-[2px] ">
-                          Back
-                        </p>
+                        Back
                       </Button>
                     </>
                   ) : (
@@ -458,16 +472,16 @@ const ForgotPassword = () => {
                     onClick={handleNext}
                     loading={loading}
                     variant="outlined"
-                    sx={{ width: "64.7px", height: "36.5px" }}
+                    style={{
+                      color: "black",
+                      borderColor: "black",
+                      height: "36px",
+                    }}
                   >
                     {loading ? (
                       ""
                     ) : (
-                      <>
-                        <p className="text-text border-text border-[2px] px-3 py-1 rounded-[2px] ">
-                          {activeStep === steps.length - 1 ? "Submit" : "Next"}
-                        </p>
-                      </>
+                      <>{activeStep === steps.length - 1 ? "Submit" : "Next"}</>
                     )}
                   </LoadingButton>
                 </Box>
