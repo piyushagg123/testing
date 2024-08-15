@@ -599,24 +599,20 @@ const ProfessionalsInfo = () => {
                 width: "524px",
                 display: "flex",
                 justifyContent: "space-between",
+                padding: 0,
               }}
             >
               <Button
                 onClick={handleReviewDialogClose}
                 variant="outlined"
-                sx={{
-                  borderColor: "#ff5757",
-                  color: "#ff5757",
-                }}
+                style={{ borderColor: "#ff5757", color: "#ff5757" }}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 variant="contained"
-                sx={{
-                  background: "#8c52ff",
-                }}
+                style={{ background: "#8c52ff" }}
               >
                 Submit
               </Button>
