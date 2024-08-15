@@ -598,7 +598,8 @@ const ProfessionalsInfo = () => {
               sx={{
                 width: "524px",
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
+                gap: "10px",
                 padding: 0,
               }}
             >
