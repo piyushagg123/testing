@@ -113,12 +113,14 @@ const Profile = () => {
       .join(" ");
     return formattedStr;
   };
-  if (error) return <p>Error fetching data</p>;
+
+  if (isLoading) return <p className="min-h-screen">Loading...</p>;
+  if (error) return <p className="min-h-screen">Error fetching data</p>;
 
   return (
     <>
-      {isLoading ? <p>Loading</p> : ""}
-      <div className="mt-[70px] text-text flex  justify-center gap-3 min-h-screen ">
+      {window.scrollTo(0, 0)}
+      <div className="mt-[70px] text-text min-h-screen flex  justify-center gap-3">
         <div className="text-[10px] md:text-[16px]  flex flex-col gap-7 md:gap-0 pl-4">
           <br />
           <div className="w-[310px] md:w-max">
@@ -153,7 +155,7 @@ const Profile = () => {
                     .map((item, ind) => (
                       <>
                         <Chip
-                          label={item}
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
                           variant="outlined"
                           key={ind}
                           sx={{ height: "25px" }}

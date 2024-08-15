@@ -105,9 +105,12 @@ const ProfessionalsInfo = () => {
     setValue(newValue);
   };
 
+  if (isVendorLoading || isProjectsLoading)
+    return <div className="min-h-screen">Loading...</div>;
+
   return (
     <>
-      {isVendorLoading || isProjectsLoading ? <p>Loading.....</p> : ""}
+      {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex  justify-center gap-3 min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-4">
           <br />
@@ -145,7 +148,7 @@ const ProfessionalsInfo = () => {
                     .map((item, ind) => (
                       <>
                         <Chip
-                          label={item}
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
                           variant="outlined"
                           key={ind}
                           sx={{ height: "25px" }}
@@ -163,7 +166,7 @@ const ProfessionalsInfo = () => {
                     .map((item, ind) => (
                       <>
                         <Chip
-                          label={item}
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
                           variant="outlined"
                           key={ind}
                           sx={{ height: "25px" }}
