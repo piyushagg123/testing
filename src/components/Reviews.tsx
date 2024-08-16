@@ -19,6 +19,7 @@ interface Review {
   body: string;
   user_name: string;
   review_id: number;
+  title: string;
 }
 
 const Reviews: React.FC<userid> = ({ id }) => {
@@ -26,6 +27,8 @@ const Reviews: React.FC<userid> = ({ id }) => {
     const response = await axios.get(
       `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
     );
+
+    console.log(response.data.data);
 
     return response.data.data;
   };
@@ -69,7 +72,7 @@ const Reviews: React.FC<userid> = ({ id }) => {
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 5,
-      backgroundColor: theme.palette.mode === "light" ? "#8c52ff" : "#8c52ff",
+      backgroundColor: theme.palette.mode === "light" ? "#14958F" : "#14958F",
     },
   }));
   return (
@@ -77,18 +80,21 @@ const Reviews: React.FC<userid> = ({ id }) => {
       {reviews?.length > 0 ? (
         <>
           <div className="flex flex-col w-full gap-3 mt-1 ">
-            <div className="flex items-center justify-center gap-7">
-              <p className="flex items-center gap-2">
-                <span className="text-[25px]">
-                  {(
-                    (averages.behaviour +
-                      averages.execution +
-                      averages.quality) /
-                    3
-                  ).toFixed(1)}
-                </span>
-                <StarIcon />
-              </p>
+            <div className="flex items-center justify-start gap-7">
+              <div className="flex flex-col items-center justify-center">
+                <p className="flex items-center gap-2">
+                  <span className="text-[40px]">
+                    {(
+                      (averages.behaviour +
+                        averages.execution +
+                        averages.quality) /
+                      3
+                    ).toFixed(1)}
+                  </span>
+                  <StarIcon className="text-[#14958F]" />
+                </p>
+                <p>{reviews.length} verified customers</p>
+              </div>
               <div className="flex flex-col ">
                 <br />
                 <p>What our customers said</p>
@@ -143,8 +149,13 @@ const Reviews: React.FC<userid> = ({ id }) => {
                     <StarIcon sx={{ fontSize: "13px" }} />
                   </p>
                   <div>
+                    <p className="font-bold">
+                      {review.title}{" "}
+                      <span className="text-sm text-darkgrey ml-5 font-normal">
+                        {review.user_name}
+                      </span>
+                    </p>
                     <p>{review.body}</p>
-                    <p className="text-sm text-darkgrey">{review.user_name}</p>
                   </div>
                 </div>
               ))}

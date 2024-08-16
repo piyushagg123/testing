@@ -24,7 +24,7 @@ import axios from "axios";
 import constants from "../constants";
 import { AuthContext } from "../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
 import Reviews from "../components/Reviews";
 
 interface VendorData {
@@ -104,13 +104,22 @@ const ProfessionalsInfo = () => {
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
   };
 
-  const handleReviewDialogClose = () => {
+  const handleReviewDialogClose = (
+    _?: React.SyntheticEvent<Element, Event>,
+    reason?: "backdropClick" | "escapeKeyDown"
+  ) => {
+    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
+      return;
+    }
     setReviewDialogOpen(false);
+    setReviewError("");
   };
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
@@ -137,7 +146,7 @@ const ProfessionalsInfo = () => {
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setLoading(true);
     const form = event.currentTarget;
     const formData = new FormData(form);
 
@@ -160,7 +169,10 @@ const ProfessionalsInfo = () => {
       });
 
       handleReviewDialogClose();
-    } catch (error) {}
+    } catch (error: any) {
+      setReviewError(error.response.data.debug_info);
+    }
+    setLoading(false);
   };
 
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
@@ -542,10 +554,12 @@ const ProfessionalsInfo = () => {
           )}
         </div>
       </div>
-      <Dialog open={reviewDialogOpen} onClose={handleReviewDialogClose}>
+      <Dialog open={reviewDialogOpen} onClose={() => handleReviewDialogClose}>
         <form onSubmit={handleReviewSubmit}>
           <DialogTitle>Write a review</DialogTitle>
+
           <DialogContent className="flex flex-col gap-4 justify-center items-center">
+            <p className="text-red">{reviewError}</p>
             <TextField
               id="outlined-basic"
               label="Title"
@@ -606,17 +620,18 @@ const ProfessionalsInfo = () => {
               <Button
                 onClick={handleReviewDialogClose}
                 variant="outlined"
-                style={{ borderColor: "#ff5757", color: "#ff5757" }}
+                style={{ borderColor: "#000", color: "#000" }}
               >
                 Cancel
               </Button>
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="contained"
-                style={{ background: "#8c52ff" }}
+                style={{ background: "#8c52ff", height: "36px" }}
+                loading={loading}
               >
-                Submit
-              </Button>
+                {loading ? "" : <>Submit</>}
+              </LoadingButton>
             </DialogActions>
           </DialogContent>
         </form>
