@@ -269,7 +269,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 htmlFor=""
                 className="flex  w-[540px] items-center justify-between"
               >
-                <p>Select the spaces (maximum of 3)</p>
+                <p>Select the spaces</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}

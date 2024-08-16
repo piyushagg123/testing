@@ -125,7 +125,7 @@ const Profile = () => {
           <br />
           <div className="w-[310px] md:w-max">
             <br />
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <div>
                 {data?.logo ? (
                   <img
@@ -164,7 +164,7 @@ const Profile = () => {
                     ))}
                 </p>
 
-                <p className="flex gap-2 items-center">
+                <p className="flex gap-2 items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED SPACES :
                   </span>{" "}
@@ -174,6 +174,29 @@ const Profile = () => {
                       <>
                         <Chip
                           label={item.charAt(0).toUpperCase() + item.slice(1)}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
+                      </>
+                    ))}
+                </p>
+                <p className="flex gap-2 items-center">
+                  <span className="font-bold text-sm text-darkgrey">
+                    EXECUTION TYPE :
+                  </span>{" "}
+                  {(data?.sub_category_3 ?? "N/A")
+                    .split(",")
+                    .map((item: string, ind: number) => (
+                      <>
+                        <Chip
+                          label={
+                            item === "DESIGN"
+                              ? "Design only"
+                              : item === "MATERIAL_SUPPORT"
+                              ? "Design and Material selection support"
+                              : "Design, Material selection support and complete execution"
+                          }
                           variant="outlined"
                           key={ind}
                           sx={{ height: "25px" }}

@@ -387,7 +387,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               </label>
 
               <label htmlFor="" className="flex items-center">
-                <p>Select your spaces (maximum of three)</p>
+                <p>Select your spaces</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
@@ -407,7 +407,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <p>Type of execution</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
-                  maxSelection={3}
+                  maxSelection={1}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,

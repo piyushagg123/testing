@@ -65,8 +65,6 @@ const Login = () => {
         data
       );
 
-      console.log(response);
-
       sessionStorage.setItem("token", response.data.access_token);
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,

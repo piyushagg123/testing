@@ -21,6 +21,7 @@ interface VendorData {
   category: string;
   sub_category_1: string;
   sub_category_2: string;
+  sub_category_3: string;
   description: string;
   business_name: string;
   average_project_value: string;
@@ -116,7 +117,7 @@ const ProfessionalsInfo = () => {
           <br />
           <div className="w-[310px] md:w-max">
             <br />
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <div>
                 {vendorData?.logo ? (
                   <img
@@ -157,7 +158,7 @@ const ProfessionalsInfo = () => {
                     ))}
                 </p>
 
-                <p className="flex gap-2 items-center">
+                <p className="flex gap-2 items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED SPACES :
                   </span>{" "}
@@ -167,6 +168,29 @@ const ProfessionalsInfo = () => {
                       <>
                         <Chip
                           label={item.charAt(0).toUpperCase() + item.slice(1)}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
+                      </>
+                    ))}
+                </p>
+                <p className="flex gap-2 items-center">
+                  <span className="font-bold text-sm text-darkgrey">
+                    EXECUTION TYPE :
+                  </span>{" "}
+                  {(vendorData?.sub_category_3 ?? "N/A")
+                    .split(",")
+                    .map((item, ind) => (
+                      <>
+                        <Chip
+                          label={
+                            item === "DESIGN"
+                              ? "Design only"
+                              : item === "MATERIAL_SUPPORT"
+                              ? "Design and Material selection support"
+                              : "Design, Material selection support and complete execution"
+                          }
                           variant="outlined"
                           key={ind}
                           sx={{ height: "25px" }}
