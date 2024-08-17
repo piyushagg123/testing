@@ -16,6 +16,7 @@ import {
   Rating,
   DialogActions,
   Button,
+  Alert,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -559,7 +560,9 @@ const ProfessionalsInfo = () => {
           <DialogTitle>Write a review</DialogTitle>
 
           <DialogContent className="flex flex-col gap-4 justify-center items-center">
-            <p className="text-red">{reviewError}</p>
+            <Alert severity="error" sx={{ width: "524px" }}>
+              {reviewError}
+            </Alert>
             <TextField
               id="outlined-basic"
               label="Title"
