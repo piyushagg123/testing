@@ -7,6 +7,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
+import { Checkbox } from "@mui/material";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -112,7 +113,9 @@ export default function MultipleSelect({
                   !selectedValues.includes(option.value)
                 }
               >
+                <Checkbox checked={selectedValues.includes(option.value)} />
                 {option.value}
+                {/* <ListItemText primary={option} /> */}
               </MenuItem>
             ))
           )}
