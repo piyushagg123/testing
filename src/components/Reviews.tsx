@@ -103,7 +103,16 @@ const Reviews: React.FC<userid> = ({ id }) => {
                       3
                     ).toFixed(1)}
                   </span>
-                  <StarIcon className="text-[#14958F]" />
+                  <StarIcon
+                    style={{
+                      color: colors(
+                        (averages.behaviour +
+                          averages.execution +
+                          averages.quality) /
+                          3
+                      ),
+                    }}
+                  />
                 </p>
                 <p>{reviews.length} verified customers</p>
               </div>
@@ -167,7 +176,17 @@ const Reviews: React.FC<userid> = ({ id }) => {
             <div className="flex flex-col gap-9 justify-start w-full">
               {reviews?.map((review: Review) => (
                 <div className="flex items-start gap-2">
-                  <p className="flex items-center gap-1 bg-purple p-[2px] text-white">
+                  <p
+                    className={`flex items-center gap-1  p-[2px] text-white`}
+                    style={{
+                      backgroundColor: colors(
+                        (review.rating_behaviour +
+                          review.rating_execution +
+                          review.rating_quality) /
+                          3
+                      ),
+                    }}
+                  >
                     {(
                       (review.rating_behaviour +
                         review.rating_execution +
