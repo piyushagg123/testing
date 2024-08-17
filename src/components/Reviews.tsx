@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../constants";
 import reviewImage from "../assets/noReviewsAdded.png";
+import { Divider } from "@mui/material";
 
 interface userid {
   id: number;
@@ -75,12 +76,25 @@ const Reviews: React.FC<userid> = ({ id }) => {
       backgroundColor: theme.palette.mode === "light" ? "#14958F" : "#14958F",
     },
   }));
+
+  const colors = (rating: number): string => {
+    if (rating === 1) {
+      return "#F16565";
+    }
+    if (rating === 2) {
+      return "#FCB301";
+    }
+    if (rating === 3) {
+      return "#72BFBC";
+    }
+    return "#14958F";
+  };
   return (
     <>
       {reviews?.length > 0 ? (
         <>
           <div className="flex flex-col w-full gap-3 mt-1 ">
-            <div className="flex items-center justify-start gap-7">
+            <div className="flex items-center justify-start gap-10">
               <div className="flex flex-col items-center justify-center">
                 <p className="flex items-center gap-2">
                   <span className="text-[40px]">
@@ -95,6 +109,7 @@ const Reviews: React.FC<userid> = ({ id }) => {
                 </p>
                 <p>{reviews.length} verified customers</p>
               </div>
+              <Divider orientation="vertical" flexItem />
               <div className="flex flex-col ">
                 <br />
                 <p>What our customers said</p>
@@ -105,7 +120,12 @@ const Reviews: React.FC<userid> = ({ id }) => {
                     <BorderLinearProgress
                       variant="determinate"
                       value={averages.quality * 20}
-                      sx={{ width: "200px" }}
+                      sx={{
+                        width: "200px",
+                        "& .MuiLinearProgress-bar": {
+                          backgroundColor: colors(averages.quality),
+                        },
+                      }}
                     />
                   </p>
                   <p className="text-[10px]">{averages.quality}</p>
@@ -116,7 +136,12 @@ const Reviews: React.FC<userid> = ({ id }) => {
                     <BorderLinearProgress
                       variant="determinate"
                       value={averages.execution * 20}
-                      sx={{ width: "200px" }}
+                      sx={{
+                        width: "200px",
+                        "& .MuiLinearProgress-bar": {
+                          backgroundColor: colors(averages.execution),
+                        },
+                      }}
                     />
                   </p>
                   <p className="text-[10px]">{averages.execution}</p>
@@ -127,7 +152,12 @@ const Reviews: React.FC<userid> = ({ id }) => {
                     <BorderLinearProgress
                       variant="determinate"
                       value={averages.behaviour * 20}
-                      sx={{ width: "200px" }}
+                      sx={{
+                        width: "200px",
+                        "& .MuiLinearProgress-bar": {
+                          backgroundColor: colors(averages.behaviour),
+                        },
+                      }}
                     />
                   </p>
                   <p className="text-[10px]">{averages.behaviour}</p>
@@ -149,12 +179,11 @@ const Reviews: React.FC<userid> = ({ id }) => {
                     <StarIcon sx={{ fontSize: "13px" }} />
                   </p>
                   <div>
-                    <p className="font-bold">
-                      {review.title}{" "}
-                      <span className="text-sm text-darkgrey ml-5 font-normal">
-                        {review.user_name}
-                      </span>
-                    </p>
+                    <div className="flex gap-3">
+                      <p>{review.user_name}</p>
+                      <Divider orientation="vertical" flexItem />
+                      <p>{review.title}</p>
+                    </div>
                     <p>{review.body}</p>
                   </div>
                 </div>
