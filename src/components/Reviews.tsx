@@ -29,8 +29,6 @@ const Reviews: React.FC<userid> = ({ id }) => {
       `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
     );
 
-    console.log(response.data.data);
-
     return response.data.data;
   };
 
@@ -78,13 +76,13 @@ const Reviews: React.FC<userid> = ({ id }) => {
   }));
 
   const colors = (rating: number): string => {
-    if (rating === 1) {
+    if (rating <= 1) {
       return "#F16565";
     }
-    if (rating === 2) {
+    if (rating > 1 && rating <= 2) {
       return "#FCB301";
     }
-    if (rating === 3) {
+    if (rating > 2 && rating <= 3) {
       return "#72BFBC";
     }
     return "#14958F";
