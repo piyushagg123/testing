@@ -186,10 +186,10 @@ const ProfessionalsInfo = () => {
                         <Chip
                           label={
                             item === "DESIGN"
-                              ? "Design only"
+                              ? constants.DESIGN
                               : item === "MATERIAL_SUPPORT"
-                              ? "Design and Material selection support"
-                              : "Design, Material selection support and complete execution"
+                              ? constants.MATERIAL_SUPPORT
+                              : constants.COMPLETE
                           }
                           variant="outlined"
                           key={ind}

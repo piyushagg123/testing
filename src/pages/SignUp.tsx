@@ -7,7 +7,7 @@ import CryptoJS from "crypto-js";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import JoinAsPro from "./JoinAsPro";
-import { IconButton } from "@mui/material";
+import { Alert, IconButton } from "@mui/material";
 import constants from "../constants";
 
 interface FormObject {
@@ -149,9 +149,17 @@ const SignUp: React.FC = () => {
             </h1>
             <br />
             {error && (
-              <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
+              <Alert
+                severity="error"
+                sx={{
+                  width: "320px",
+                  padding: "2px",
+                  marginBottom: "5px",
+                }}
+              >
+                {" "}
                 {error}
-              </div>
+              </Alert>
             )}
             <form className="flex flex-col" onSubmit={handleSubmit}>
               <label className="text-sm">

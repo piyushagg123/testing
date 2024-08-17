@@ -5,6 +5,7 @@ import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import ForgotPassword from "../components/ForgotPassword";
 import constants from "../constants";
+import { Alert } from "@mui/material";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -96,9 +97,20 @@ const Login = () => {
             </h1>
             <br />
             {error && (
-              <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
+              // <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
+              //   {error}
+              // </div>
+              <Alert
+                severity="error"
+                sx={{
+                  width: "320px",
+                  padding: "2px",
+                  marginBottom: "5px",
+                }}
+              >
+                {" "}
                 {error}
-              </div>
+              </Alert>
             )}
             <form
               onSubmit={handleSubmit}
