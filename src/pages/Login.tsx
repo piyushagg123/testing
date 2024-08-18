@@ -84,9 +84,10 @@ const Login = () => {
 
   return (
     <div className="mt-16">
+      <br />
       <div className="lg:h-screen h-full flex flex-col">
         <div
-          className="w-fit m-auto p-8"
+          className="w-fit m-auto p-2 md:p-8"
           style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
         >
           <h1 className="text-2xl md:text-3xl text-center">
@@ -94,7 +95,7 @@ const Login = () => {
           </h1>
           <br />
           {error && (
-            <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
+            <div className="text-red-500 w-[270px] md:w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
               {error}
             </div>
           )}
@@ -108,12 +109,12 @@ const Login = () => {
                 type="text"
                 id="emailOrMobile"
                 name="emailOrMobile"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
             </label>
             <br />
             <label>
-              <div className="flex justify-between text-sm w-[320px]">
+              <div className="flex justify-between text-sm w-[270px] md:w-[320px]">
                 <p>Password</p>
                 <p>
                   <ForgotPassword />
@@ -123,7 +124,7 @@ const Login = () => {
                 type="password"
                 id="password"
                 name="password"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
               <br />
               <br />

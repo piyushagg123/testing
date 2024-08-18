@@ -8,11 +8,11 @@ import constants from "../constants";
 const Footer = () => {
   return (
     <div className=" bg-[#0D1216] text-white bottom-0">
-      <div className=" mt-5  flex justify-between p-16">
+      <div className=" mt-5 gap-2  flex flex-col md:flex-row justify-start lg:justify-between p-7 lg:p-16">
         <div>
           <img src={Logo} alt="" width={150} />
         </div>
-        <div className="flex gap-16">
+        <div className="flex gap-6 sm:gap-16 flex-col sm:flex-row">
           <div className="flex flex-col gap-2">
             <p className="font-bold text-[18px]">Company</p>
             <ScrollToTopNavLink to="/">Home</ScrollToTopNavLink>

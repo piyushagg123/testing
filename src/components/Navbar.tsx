@@ -70,10 +70,7 @@ const Navbar: React.FC = () => {
     setOpen(false);
   };
   return (
-    <div
-      className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg"
-      style={{ paddingLeft: "64px", paddingRight: "64px" }}
-    >
+    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg sm:px-[64px]">
       <div className="flex items-center gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
