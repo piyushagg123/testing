@@ -87,11 +87,13 @@ const Reviews: React.FC<userid> = ({ id }) => {
     }
     return "#14958F";
   };
+
+  const s = "rating_red";
   return (
     <>
       {reviews?.length > 0 ? (
         <>
-          <div className="flex flex-col w-full gap-3 mt-1 ">
+          <div className={`flex flex-col w-full gap-3 mt-1 bg[${s}]`}>
             <div className="flex items-center justify-start gap-10">
               <div className="flex flex-col items-center justify-center">
                 <p className="flex items-center gap-2">
