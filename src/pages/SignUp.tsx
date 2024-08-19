@@ -147,7 +147,7 @@ const SignUp: React.FC = () => {
           </h1>
           <br />
           {error && (
-            <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
+            <div className="text-red-500 w-[270px] md:w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
               {error}
             </div>
           )}
@@ -156,7 +156,7 @@ const SignUp: React.FC = () => {
               First name <br />
               <input
                 type="text"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 id="first_name"
                 name="first_name"
               />
@@ -166,7 +166,7 @@ const SignUp: React.FC = () => {
               Last name <br />
               <input
                 type="text"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 id="last_name"
                 name="last_name"
               />
@@ -176,7 +176,7 @@ const SignUp: React.FC = () => {
               Mobile number <br />
               <input
                 type="number"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 id="mobile"
                 name="mobile"
               />
@@ -188,19 +188,19 @@ const SignUp: React.FC = () => {
                 type="text"
                 id="email"
                 name="email"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
             </label>
             <br />
             <label>
-              <div className="flex justify-between text-sm w-[320px] rounded-[5px]">
+              <div className="flex justify-between text-sm w-[270px] md:w-[320px] rounded-[5px]">
                 <p>Password</p>
               </div>{" "}
               <input
                 type="password"
                 id="password"
                 name="password"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
               />
               <br />
               <br />

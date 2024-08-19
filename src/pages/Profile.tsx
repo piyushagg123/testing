@@ -23,6 +23,7 @@ import { useQuery } from "react-query";
 import { AuthContext } from "../context/Login";
 import constants from "../constants";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 interface ProjectItem {
   images: Record<string, string[]>;
@@ -235,6 +236,20 @@ const Profile = () => {
               </div>
             </TabPanel>
             <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+              <div
+                className={`${
+                  selectedProject ? "hidden" : "flex w-full justify-end"
+                }`}
+              >
+                <button
+                  className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                  onClick={() => setOpen(true)}
+                >
+                  <AddCircleIcon /> Add a new project
+                </button>
+              </div>
+
+              <br />
               <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                 <br />
                 <div className="flex flex-wrap">
