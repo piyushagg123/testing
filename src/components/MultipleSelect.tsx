@@ -115,7 +115,6 @@ export default function MultipleSelect({
               >
                 <Checkbox checked={selectedValues.includes(option.value)} />
                 {option.value}
-                {/* <ListItemText primary={option} /> */}
               </MenuItem>
             ))
           )}

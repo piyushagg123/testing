@@ -157,7 +157,6 @@ const SignUp: React.FC = () => {
                   marginBottom: "5px",
                 }}
               >
-                {" "}
                 {error}
               </Alert>
             )}
