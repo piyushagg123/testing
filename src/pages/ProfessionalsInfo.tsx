@@ -1,7 +1,6 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import img from "../assets/background.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
-import reviewImage from "../assets/noReviewsAdded.png";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -15,6 +14,8 @@ import constants from "../constants";
 import { AuthContext } from "../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import Reviews from "../components/Reviews";
+import ReviewDialog from "../components/ReviewDialog";
 
 interface VendorData {
   logo?: string;
@@ -46,6 +47,15 @@ interface ProjectData {
   sub_category_2: string;
   start_date: string;
   end_date: string;
+}
+
+interface ReviewFormObject {
+  title?: string;
+  body?: string;
+  rating_quality?: number;
+  rating_execution?: number;
+  rating_behaviour?: number;
+  vendor_id?: number;
 }
 
 const fetchVendorDetails = async (id: string) => {
@@ -83,6 +93,24 @@ const ProfessionalsInfo = () => {
     () => fetchVendorProjects(id!)
   );
 
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleReviewDialogOpen = () => {
+    setReviewDialogOpen(true);
+  };
+
+  const handleReviewDialogClose = (
+    _?: React.SyntheticEvent<Element, Event>,
+    reason?: "backdropClick" | "escapeKeyDown"
+  ) => {
+    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
+      return;
+    }
+    setReviewDialogOpen(false);
+    setReviewError("");
+  };
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
     formattedStr = formattedStr
@@ -90,6 +118,7 @@ const ProfessionalsInfo = () => {
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+
     return formattedStr;
   };
 
@@ -103,6 +132,37 @@ const ProfessionalsInfo = () => {
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const formObject: ReviewFormObject = { vendor_id: Number(id) };
+    formData.forEach((value, key) => {
+      if (key.startsWith("rating_")) {
+        (formObject[
+          key as "rating_quality" | "rating_execution" | "rating_behaviour"
+        ] as number) = Number(value);
+      } else {
+        formObject[key as "body"] = value.toString();
+      }
+    });
+
+    try {
+      await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+
+      handleReviewDialogClose();
+    } catch (error: any) {
+      setReviewError(error.response.data.debug_info);
+    }
+    setLoading(false);
   };
 
   if (isVendorLoading || isProjectsLoading) return <div>Loading...</div>;
@@ -145,7 +205,7 @@ const ProfessionalsInfo = () => {
                   .map((item, ind) => (
                     <>
                       <Chip
-                        label={item}
+                        label={item.charAt(0).toUpperCase() + item.slice(1)}
                         variant="outlined"
                         key={ind}
                         sx={{ height: "25px" }}
@@ -163,7 +223,7 @@ const ProfessionalsInfo = () => {
                   .map((item, ind) => (
                     <>
                       <Chip
-                        label={item}
+                        label={item.charAt(0).toUpperCase() + item.slice(1)}
                         variant="outlined"
                         key={ind}
                         sx={{ height: "25px" }}
@@ -181,6 +241,7 @@ const ProfessionalsInfo = () => {
                   <button
                     className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
                     style={{ border: "solid 0.5px" }}
+                    onClick={handleReviewDialogOpen}
                   >
                     <StarBorderIcon /> <p>Write a Review</p>
                   </button>
@@ -309,16 +370,7 @@ const ProfessionalsInfo = () => {
             <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
               <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                 <br />
-                <div className="flex flex-wrap">
-                  <div className="flex flex-col items-center justify-center">
-                    <div>
-                      <img src={reviewImage} alt="" className="w-[300px]" />
-                    </div>
-                    <br />
-                    <p className="">No reviews added yet by the users</p>
-                    <br />
-                  </div>
-                </div>
+                <Reviews id={Number(id)} />
                 <br />
                 <br />
               </div>
@@ -492,6 +544,13 @@ const ProfessionalsInfo = () => {
           )}
         </div>
       </div>
+      <ReviewDialog
+        handleReviewDialogClose={handleReviewDialogClose}
+        handleReviewSubmit={handleReviewSubmit}
+        loading={loading}
+        reviewDialogOpen={reviewDialogOpen}
+        reviewError={reviewError}
+      />
     </div>
   );
 };
