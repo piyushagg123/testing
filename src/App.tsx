@@ -75,6 +75,8 @@ const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/*" element={<Error />} />
         </Routes>
+        <br />
+        <br />
         <Footer />
       </Router>
     </div>
