@@ -1,5 +1,5 @@
-import { useContext, useState, FormEvent } from "react";
-import img from "../assets/noImageinProject.jpg";
+import { FormEvent, useContext, useState } from "react";
+import img from "../assets/background.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -93,6 +93,7 @@ const ProfessionalsInfo = () => {
     ["vendorProjects", id],
     () => fetchVendorProjects(id!)
   );
+
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -111,7 +112,6 @@ const ProfessionalsInfo = () => {
     setReviewDialogOpen(false);
     setReviewError("");
   };
-
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
     formattedStr = formattedStr
@@ -119,6 +119,7 @@ const ProfessionalsInfo = () => {
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+
     return formattedStr;
   };
 
@@ -171,13 +172,13 @@ const ProfessionalsInfo = () => {
   return (
     <>
       {window.scrollTo(0, 0)}
-      <div className="mt-[70px] text-text flex  justify-center gap-3 min-h-screen">
-        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-4">
+      <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
+        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
           <br />
-          <div className="w-[310px] md:w-max">
+          <div className=" md:w-max m-auto lg:m-0">
             <br />
-            <div className="flex items-center gap-3">
-              <div>
+            <div className="flex flex-col md:flex-row items-start md:items-end gap-3">
+              <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
                     src={`${constants.apiImageUrl}/${vendorData.logo}`}
@@ -193,33 +194,35 @@ const ProfessionalsInfo = () => {
                 )}
               </div>
               <div>
-                <p className="font-bold text-base text-darkgrey">
+                <p className="font-bold text-base text-darkgrey m-auto">
                   {formatCategory(
                     vendorData?.business_name ?? "Unknown Business"
                   )}
                 </p>
-                <p className="mb-2 mt-2 flex gap-2 items-center">
+                <p className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED THEMES :
                   </span>{" "}
-                  {formatCategory(vendorData?.sub_category_1 ?? "N/A")
-                    .split(",")
-                    .map((item, ind) => (
-                      <>
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      </>
-                    ))}
+                  <div className="flex gap-1">
+                    {formatCategory(vendorData?.sub_category_1 ?? "N/A")
+                      .split(",")
+                      .map((item, ind) => (
+                        <>
+                          <Chip
+                            label={item.charAt(0).toUpperCase() + item.slice(1)}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        </>
+                      ))}
+                  </div>
                 </p>
 
-                <p className="flex gap-2 items-center mb-2">
+                <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED SPACES :
-                  </span>{" "}
+                  </span>
                   {formatCategory(vendorData?.sub_category_2 ?? "N/A")
                     .split(",")
                     .map((item, ind) => (
@@ -261,7 +264,7 @@ const ProfessionalsInfo = () => {
             <br />
             {login ? (
               <>
-                <div className="flex gap-3">
+                <div className=" gap-3 hidden md:flex">
                   <div>
                     <button
                       className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
@@ -325,13 +328,13 @@ const ProfessionalsInfo = () => {
                 </TabList>
               </Box>
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="md:w-[500px] lg:w-[750px]">
-                  <p>{vendorData?.description}</p>
+                <div className="w-[90vw] md:w-[500px] lg:w-[750px]">
+                  <p className="text-base">{vendorData?.description}</p>
                   <br />
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                   <br />
                   <div className="flex flex-wrap">
                     {!projectsData ? (
@@ -399,7 +402,7 @@ const ProfessionalsInfo = () => {
                 </div>
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                   <br />
                   <Reviews id={Number(id)} />
                   <br />
@@ -410,9 +413,7 @@ const ProfessionalsInfo = () => {
           </div>
         </div>
         <br />
-        <div className="w-[250px] text-lg ml-10">
-          <br />
-          <br />
+        <div className="w-[250px] text-lg ml-2 md:ml-10 mt-10">
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
             <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>

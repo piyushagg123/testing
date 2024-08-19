@@ -93,7 +93,7 @@ const Reviews: React.FC<user> = ({ id }) => {
       {reviews?.length > 0 ? (
         <>
           <div className={`flex flex-col w-full gap-3 mt-1`}>
-            <div className="flex items-center justify-start gap-10">
+            <div className="flex items-center justify-start md:gap-10 flex-col md:flex-row">
               <div className="flex flex-col items-center justify-center">
                 <p className="flex items-center gap-2">
                   <span className="text-[40px]">

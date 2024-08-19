@@ -32,7 +32,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
 
         <DialogContent className="flex flex-col gap-4 justify-center items-center">
           {reviewError && (
-            <Alert severity="error" sx={{ width: "524px" }}>
+            <Alert severity="error" sx={{ width: "35vw" }}>
               {reviewError}
             </Alert>
           )}
@@ -44,7 +44,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             name="title"
             fullWidth
             sx={{
-              width: "524px",
+              width: "35vw",
               marginTop: "10px",
               color: "black",
               borderRadius: "4px",
@@ -57,7 +57,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             multiline
             rows={4}
             sx={{
-              width: "524px",
+              width: "35vw",
               color: "black",
               borderRadius: "4px",
             }}
@@ -86,7 +86,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
 
           <DialogActions
             sx={{
-              width: "524px",
+              width: "35vw",
               display: "flex",
               justifyContent: "flex-end",
               gap: "10px",
