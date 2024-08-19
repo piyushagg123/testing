@@ -136,7 +136,7 @@ const SearchProfessionals: React.FC = () => {
             Answer a few questions to get a list of Interior Designers suitable
             for your needs
           </p>
-          <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
+          <div className="flex flex-col md:flex-row gap-2 justify-center items-center md:items-end">
             <label htmlFor="" className="text-text text-sm">
               Select your state
               <Autocomplete
@@ -214,8 +214,8 @@ const SearchProfessionals: React.FC = () => {
         </div>
       </div>
       <br />
-      <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px]">
-        <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
+      <div className="flex  justify-start flex-col lg:flex-row items-start lg:px-[64px]">
+        <div style={{ borderRight: "solid 0.5px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
             <Filters
               handleThemeFilter={onThemeFiltersUpdate}
@@ -225,7 +225,7 @@ const SearchProfessionals: React.FC = () => {
           </div>
         </div>
         <div className="w-full">
-          <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
+          <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-center md:items-start ">
             {filteredItems ? (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <span className="font-bold text-base text-darkgrey">
@@ -243,9 +243,9 @@ const SearchProfessionals: React.FC = () => {
             ) : (
               <p>No home improvement pros for this category</p>
             )}
-            <div className="w-[270px] lg:mr-2 hidden lg:block">
+            <div className="  lg:mr-2 hidden lg:block">
               <FormControl
-                className="w-[270px] px-[14px] py-[10px]"
+                className="w-[200px] md:w-[270px] px-[14px] py-[10px]"
                 sx={{ height: "40px" }}
                 size="small"
               >
@@ -267,9 +267,7 @@ const SearchProfessionals: React.FC = () => {
           {filteredItems ? (
             <>
               {isLoading ? (
-                <div className="flex justify-center h-screen">
-                  <CircularProgress color="inherit" />
-                </div>
+                <CircularProgress color="inherit" />
               ) : (
                 <>
                   {filteredItems.map((item) => (
@@ -281,7 +279,7 @@ const SearchProfessionals: React.FC = () => {
                         <Professional
                           about={item.description}
                           rating={item.rating}
-                          img={item.logo}
+                          img={`${constants.apiImageUrl}/${item.logo}`}
                           profCat={item.business_name}
                         />
                         <hr />

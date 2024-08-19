@@ -74,8 +74,8 @@ const Filters: React.FC<FiltersProps> = ({
   const [filterMenu, setFilterMenu] = useState(false);
   return (
     <div className=" flex flex-col gap-3  text-text w-[225px]">
-      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
-        <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
+      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[90vw] md:w-[95vw] lg:w-auto m-auto md:m-0">
+        <div className="flex gap-5 justify-between items-center w-[90vw] md:w-[95vw] lg:w-auto m-auto lg:m-0   text-[15px]">
           <p
             className="font-bold text-base text-darkgrey"
             onClick={() => setFilterMenu(() => true)}
