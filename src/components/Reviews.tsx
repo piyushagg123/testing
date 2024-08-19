@@ -9,7 +9,7 @@ import constants from "../constants";
 import reviewImage from "../assets/noReviewsAdded.png";
 import { Divider } from "@mui/material";
 
-interface userid {
+interface user {
   id: number;
 }
 
@@ -23,7 +23,7 @@ interface Review {
   title: string;
 }
 
-const Reviews: React.FC<userid> = ({ id }) => {
+const Reviews: React.FC<user> = ({ id }) => {
   const fetchReviews = async () => {
     const response = await axios.get(
       `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
@@ -77,23 +77,22 @@ const Reviews: React.FC<userid> = ({ id }) => {
 
   const colors = (rating: number): string => {
     if (rating <= 1) {
-      return "#F16565";
+      return "rating-red";
     }
     if (rating > 1 && rating <= 2) {
-      return "#FCB301";
+      return "rating-yellow";
     }
     if (rating > 2 && rating <= 3) {
-      return "#72BFBC";
+      return "rating-lightgreen";
     }
-    return "#14958F";
+    return "rating-green";
   };
 
-  const s = "rating_red";
   return (
     <>
       {reviews?.length > 0 ? (
         <>
-          <div className={`flex flex-col w-full gap-3 mt-1 bg[${s}]`}>
+          <div className={`flex flex-col w-full gap-3 mt-1`}>
             <div className="flex items-center justify-start gap-10">
               <div className="flex flex-col items-center justify-center">
                 <p className="flex items-center gap-2">
@@ -132,7 +131,7 @@ const Reviews: React.FC<userid> = ({ id }) => {
                       sx={{
                         width: "200px",
                         "& .MuiLinearProgress-bar": {
-                          backgroundColor: colors(averages.quality),
+                          backgroundColor: `var(--${colors(averages.quality)})`,
                         },
                       }}
                     />
@@ -148,7 +147,9 @@ const Reviews: React.FC<userid> = ({ id }) => {
                       sx={{
                         width: "200px",
                         "& .MuiLinearProgress-bar": {
-                          backgroundColor: colors(averages.execution),
+                          backgroundColor: `var(--${colors(
+                            averages.execution
+                          )})`,
                         },
                       }}
                     />
@@ -164,7 +165,9 @@ const Reviews: React.FC<userid> = ({ id }) => {
                       sx={{
                         width: "200px",
                         "& .MuiLinearProgress-bar": {
-                          backgroundColor: colors(averages.behaviour),
+                          backgroundColor: `var(--${colors(
+                            averages.behaviour
+                          )})`,
                         },
                       }}
                     />
@@ -181,12 +184,12 @@ const Reviews: React.FC<userid> = ({ id }) => {
                   <p
                     className={`flex items-center gap-1  p-[2px] text-white`}
                     style={{
-                      backgroundColor: colors(
+                      backgroundColor: `var(--${colors(
                         (review.rating_behaviour +
                           review.rating_execution +
                           review.rating_quality) /
                           3
-                      ),
+                      )})`,
                     }}
                   >
                     {(

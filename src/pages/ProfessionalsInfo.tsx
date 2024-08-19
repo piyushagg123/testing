@@ -5,19 +5,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import {
-  Chip,
-  Tab,
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Rating,
-  DialogActions,
-  Button,
-  Alert,
-} from "@mui/material";
+import { Chip, Tab, Box } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -25,8 +13,9 @@ import axios from "axios";
 import constants from "../constants";
 import { AuthContext } from "../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Reviews from "../components/Reviews";
+import ReviewDialog from "../components/ReviewDialog";
 
 interface VendorData {
   logo?: string;
@@ -60,7 +49,7 @@ interface ProjectData {
   end_date: string;
 }
 
-interface FormObject {
+interface ReviewFormObject {
   title?: string;
   body?: string;
   rating_quality?: number;
@@ -151,7 +140,7 @@ const ProfessionalsInfo = () => {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: FormObject = { vendor_id: Number(id) };
+    const formObject: ReviewFormObject = { vendor_id: Number(id) };
     formData.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
@@ -555,7 +544,7 @@ const ProfessionalsInfo = () => {
           )}
         </div>
       </div>
-      <Dialog open={reviewDialogOpen} onClose={() => handleReviewDialogClose}>
+      {/* <Dialog open={reviewDialogOpen} onClose={() => handleReviewDialogClose}>
         <form onSubmit={handleReviewSubmit}>
           <DialogTitle>Write a review</DialogTitle>
 
@@ -640,7 +629,14 @@ const ProfessionalsInfo = () => {
             </DialogActions>
           </DialogContent>
         </form>
-      </Dialog>
+      </Dialog> */}
+      <ReviewDialog
+        handleReviewDialogClose={handleReviewDialogClose}
+        handleReviewSubmit={handleReviewSubmit}
+        loading={loading}
+        reviewDialogOpen={reviewDialogOpen}
+        reviewError={reviewError}
+      />
     </div>
   );
 };
