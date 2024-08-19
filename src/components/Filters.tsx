@@ -4,7 +4,14 @@ import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../constants";
-import { FormControlLabel } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const fetchThemes = async () => {
   const response = await axios.get(
@@ -60,17 +67,42 @@ const Filters: React.FC<FiltersProps> = ({
   const formattedSpaces = spaces.map((item: FilterItem) =>
     formatString(item.value)
   );
+  const formattedExecution = executionType.map((item: FilterItem) =>
+    formatString(item.value)
+  );
 
   const [filterMenu, setFilterMenu] = useState(false);
   return (
     <div className=" flex flex-col gap-3  text-text w-[225px]">
-      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px]">
-        <p
-          className="font-bold text-base text-darkgrey"
-          onClick={() => setFilterMenu(() => true)}
-        >
-          FILTERS
-        </p>
+      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
+        <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
+          <p
+            className="font-bold text-base text-darkgrey"
+            onClick={() => setFilterMenu(() => true)}
+          >
+            <FilterAltIcon />
+          </p>
+
+          <div className="lg:hidden">
+            <FormControl
+              className="w-[200px] py-[10px] left-[15px]"
+              sx={{ height: "40px" }}
+              size="small"
+            >
+              <InputLabel id="sort-by-label">Sort by</InputLabel>
+              <Select
+                className="bg-prim"
+                labelId="sort-by-label"
+                id="sort-by-select"
+                label="Sort By"
+              >
+                <MenuItem value={"rating"}>Rating</MenuItem>
+                <MenuItem value={"recommended"}>Recommended</MenuItem>
+                <MenuItem value={"popular"}>Popular</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
         {filterMenu ? (
           <>
             <div
@@ -131,7 +163,7 @@ const Filters: React.FC<FiltersProps> = ({
                 <div className="flex flex-col gap-2 p-3">
                   <h3 className="font-bold text-[19px]">Execution Type</h3>
 
-                  {executionType.map((item: string) => {
+                  {formattedExecution.map((item: string) => {
                     return (
                       <FormControlLabel
                         className="-mb-2.5 -mt-2.5"
@@ -216,23 +248,11 @@ const Filters: React.FC<FiltersProps> = ({
             );
           })}
         </div>
-        <div className="flex flex-col gap-7 pt-5">
+        <div className="flex flex-col gap-1 pt-5">
           <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
-          {executionType.map((item: FilterItem) => {
-            const labelValue =
-              item.value === "DESIGN"
-                ? constants.DESIGN
-                : item.value === "MATERIAL_SUPPORT"
-                ? constants.MATERIAL_SUPPORT
-                : item.value === "COMPLETE"
-                ? constants.COMPLETE
-                : "";
+          {formattedExecution.map((item: string) => {
             return (
               <FormControlLabel
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                }}
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
@@ -240,16 +260,12 @@ const Filters: React.FC<FiltersProps> = ({
                       "&.Mui-checked": {
                         color: "#ff5757",
                       },
-
                       transform: "scale(0.75)",
-                      paddingY: 0,
                     }}
-                    onChange={(_event: any) =>
-                      handleExecutionFilter(item.value)
-                    }
+                    onChange={(_event: any) => handleExecutionFilter(item)}
                   />
                 }
-                label={<span className="text-sm">{labelValue}</span>}
+                label={<span className="text-sm">{item}</span>}
               />
             );
           })}

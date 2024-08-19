@@ -11,6 +11,7 @@ import {
   CardContent,
   CardActionArea,
   Grid,
+  useTheme,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
@@ -52,6 +53,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     setSelectedSpace(newValue);
   };
 
+  const themes = useTheme();
   const funct = (ar: any) => {
     if (ar) {
       return ar.map((item: any) => (
@@ -75,7 +77,21 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   return (
     <>
       {showProjectDetails ? (
-        <Card sx={{ height: 340, width: "355px" }}>
+        <Card
+          sx={{
+            height: 340,
+            width: "355px",
+            [themes.breakpoints.down("md")]: {
+              width: "300px",
+            },
+            [themes.breakpoints.down("sm")]: {
+              width: "250px",
+            },
+            [themes.breakpoints.down("xs")]: {
+              width: "200px",
+            },
+          }}
+        >
           <CardActionArea>
             <Box sx={{ width: "100%" }}>
               <WovenImageList items={arr} />
