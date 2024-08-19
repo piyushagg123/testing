@@ -224,7 +224,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               <p className="">No reviews added yet by the users</p>
               <br />
             </div>
-          </div>{" "}
+          </div>
         </>
       )}
     </>
