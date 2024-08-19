@@ -7,6 +7,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
+import { Alert } from "@mui/material";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -174,9 +175,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       <form onSubmit={handleSubmit} className="flex flex-col mt-6 h-[548]">
         {currentStep === 1 && (
           <div className="h-[385px]">
-            <p className="flex items-center justify-center text-[red]">
-              {error}
-            </p>
+            {error && <Alert severity="error">{error}</Alert>}
             <div className="flex gap-4">
               <label className="text-sm w-full md:w-auto">
                 Title <br />
@@ -244,9 +243,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
         {currentStep === 2 && (
           <>
-            <p className="flex items-center justify-center text-[red]">
-              {error}
-            </p>
+            {error && <Alert severity="error">{error}</Alert>}
             <div className="flex flex-col items-end flex-wrap justify-around w-[540px]">
               <label
                 htmlFor=""
@@ -269,7 +266,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 htmlFor=""
                 className="flex  w-[540px] items-center justify-between"
               >
-                <p>Select the spaces (maximum of 7)</p>
+                <p>Select the spaces</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}

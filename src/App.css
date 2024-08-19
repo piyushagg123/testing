@@ -35,3 +35,9 @@
     --rating-lightgreen:#72BFBC;
     --rating-green:#14958F;
 }
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

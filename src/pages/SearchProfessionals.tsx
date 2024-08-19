@@ -270,7 +270,9 @@ const SearchProfessionals: React.FC = () => {
           {filteredItems ? (
             <>
               {isLoading ? (
-                <CircularProgress color="inherit" />
+                <div className="flex justify-center h-screen">
+                  <CircularProgress color="inherit" />
+                </div>
               ) : (
                 <>
                   {filteredItems.map((item) => (
@@ -282,7 +284,7 @@ const SearchProfessionals: React.FC = () => {
                         <Professional
                           about={item.description}
                           rating={item.rating}
-                          img={`${constants.apiImageUrl}/${item.logo}`}
+                          img={item.logo}
                           profCat={item.business_name}
                         />
                         <hr />
