@@ -136,7 +136,7 @@ const SearchProfessionals: React.FC = () => {
             Answer a few questions to get a list of Interior Designers suitable
             for your needs
           </p>
-          <div className="flex flex-col md:flex-row gap-2 items-end">
+          <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
             <label htmlFor="" className="text-text text-sm">
               Select your state
               <Autocomplete
@@ -214,10 +214,7 @@ const SearchProfessionals: React.FC = () => {
         </div>
       </div>
       <br />
-      <div
-        className="flex  justify-start flex-col lg:flex-row items-start"
-        style={{ paddingLeft: "64px", paddingRight: "64px" }}
-      >
+      <div className="flex  justify-start flex-col lg:flex-row items-start px-3 md:px-[64px]">
         <div className="w-fit" style={{ borderRight: "solid 0.5px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
             <Filters
