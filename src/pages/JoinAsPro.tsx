@@ -11,6 +11,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
 
 interface SocialLinks {
   instagram: string;
@@ -259,8 +260,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           <h1 className="text-xl font-bold">
             Let's get started by creating your profile
           </h1>
-          <p className="text-center text-sm text-[red]">{error}</p>
-
+          {error && <Alert severity="error">{error}</Alert>}
           {currentStep === 1 && (
             <>
               <div className="flex gap-3">
@@ -386,7 +386,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
 
-              <label htmlFor="" className="flex items-center">
+              <label htmlFor="" className="flex items-center justify-between">
                 <p>Select your spaces</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}

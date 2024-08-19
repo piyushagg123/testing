@@ -97,9 +97,6 @@ const Login = () => {
             </h1>
             <br />
             {error && (
-              // <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
-              //   {error}
-              // </div>
               <Alert
                 severity="error"
                 sx={{

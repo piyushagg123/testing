@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import img from "../assets/background.jpg";
+import img from "../assets/noImageinProject.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import reviewImage from "../assets/noReviewsAdded.png";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
