@@ -14,7 +14,7 @@ import { styled } from "@mui/system";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
-import { LoadingButton } from "@mui/lab";
+import { Alert, LoadingButton } from "@mui/lab";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -372,6 +372,8 @@ const ForgotPassword = () => {
         </DialogTitle>
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
+            {error && <Alert severity="error">{error}</Alert>}
+            <br />
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => (
                 <Step key={index}>
@@ -441,11 +443,6 @@ const ForgotPassword = () => {
                   )}
                 </div>
 
-                {error && (
-                  <p style={{ color: "red" }} className="ml-[7px]">
-                    {error}
-                  </p>
-                )}
                 <Box
                   sx={{
                     display: "flex",
