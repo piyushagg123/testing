@@ -67,9 +67,6 @@ const Filters: React.FC<FiltersProps> = ({
   const formattedSpaces = spaces.map((item: FilterItem) =>
     formatString(item.value)
   );
-  const formattedExecution = executionType.map((item: FilterItem) =>
-    formatString(item.value)
-  );
 
   const [filterMenu, setFilterMenu] = useState(false);
   return (
