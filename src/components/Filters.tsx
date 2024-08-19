@@ -160,12 +160,25 @@ const Filters: React.FC<FiltersProps> = ({
                     );
                   })}
                 </div>
-                <div className="flex flex-col gap-2 p-3">
-                  <h3 className="font-bold text-[19px]">Execution Type</h3>
-
-                  {formattedExecution.map((item: string) => {
+                <div className="flex flex-col gap-7 pt-5">
+                  <p className="font-bold text-base text-darkgrey">
+                    EXECUTION TYPE
+                  </p>
+                  {executionType.map((item: FilterItem) => {
+                    const labelValue =
+                      item.value === "DESIGN"
+                        ? constants.DESIGN
+                        : item.value === "MATERIAL_SUPPORT"
+                        ? constants.MATERIAL_SUPPORT
+                        : item.value === "COMPLETE"
+                        ? constants.COMPLETE
+                        : "";
                     return (
                       <FormControlLabel
+                        sx={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                        }}
                         className="-mb-2.5 -mt-2.5"
                         control={
                           <Checkbox
@@ -173,14 +186,16 @@ const Filters: React.FC<FiltersProps> = ({
                               "&.Mui-checked": {
                                 color: "#ff5757",
                               },
+
                               transform: "scale(0.75)",
+                              paddingY: 0,
                             }}
                             onChange={(_event: any) =>
-                              handleExecutionFilter(item)
+                              handleExecutionFilter(item.value)
                             }
                           />
                         }
-                        label={<span className="text-sm">{item}</span>}
+                        label={<span className="text-sm">{labelValue}</span>}
                       />
                     );
                   })}
@@ -248,11 +263,23 @@ const Filters: React.FC<FiltersProps> = ({
             );
           })}
         </div>
-        <div className="flex flex-col gap-1 pt-5">
+        <div className="flex flex-col gap-7 pt-5">
           <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
-          {formattedExecution.map((item: string) => {
+          {executionType.map((item: FilterItem) => {
+            const labelValue =
+              item.value === "DESIGN"
+                ? constants.DESIGN
+                : item.value === "MATERIAL_SUPPORT"
+                ? constants.MATERIAL_SUPPORT
+                : item.value === "COMPLETE"
+                ? constants.COMPLETE
+                : "";
             return (
               <FormControlLabel
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
@@ -260,12 +287,16 @@ const Filters: React.FC<FiltersProps> = ({
                       "&.Mui-checked": {
                         color: "#ff5757",
                       },
+
                       transform: "scale(0.75)",
+                      paddingY: 0,
                     }}
-                    onChange={(_event: any) => handleExecutionFilter(item)}
+                    onChange={(_event: any) =>
+                      handleExecutionFilter(item.value)
+                    }
                   />
                 }
-                label={<span className="text-sm">{item}</span>}
+                label={<span className="text-sm">{labelValue}</span>}
               />
             );
           })}
