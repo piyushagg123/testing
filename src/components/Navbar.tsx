@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
             <div
               className={
                 toggleProfileMenu && isDivVisible
-                  ? "fixed bg-[#f3f1f1] w-[400px] text-text right-1 flex flex-col items-center justify-center top-[76px] rounded-[10px] "
+                  ? "fixed bg-[#f3f1f1] w-[250px] sm:w-[400px] text-text right-1 flex flex-col items-center justify-center top-[76px] rounded-[10px] "
                   : "hidden"
               }
               style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
@@ -135,12 +135,12 @@ const Navbar: React.FC = () => {
               <br />
 
               <div className="">
-                <div className="flex flex-col items-center bg-white justify-center w-[370px] rounded-[10px] p-2 mb-2">
+                <div className="flex flex-col items-center bg-white justify-center sm:w-[370px] rounded-[10px] p-2 mb-2">
                   {userDetails?.is_vendor ? (
                     <div className="">
                       <NavLink
                         to={"/profile"}
-                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[350px] hover:bg-[#f3f1f1] transition-all"
+                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[220px] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                         onClick={() => setToggleProfileMenu(false)}
                       >
                         <AccountCircleIcon /> <p>View Profile</p>
@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
 
                   <div className="flex h-[40px]">
                     <button
-                      className=" text-[red] h-[36px] w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] "
+                      className=" text-[red] h-[36px] w-[220px] sm:w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] "
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
@@ -190,7 +190,7 @@ const Navbar: React.FC = () => {
       <Dialog
         open={open}
         onClose={() => handleClose}
-        sx={{ width: "590px", margin: "auto" }}
+        sx={{ margin: "auto" }}
         fullWidth
       >
         <DialogContent sx={{ height: "max-content", position: "relative" }}>

@@ -10,6 +10,9 @@ import {
   TextField,
 } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 interface ReviewDialogProps {
   reviewDialogOpen: boolean;
   handleReviewDialogClose: () => void;
@@ -25,14 +28,18 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   loading,
   reviewError,
 }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Dialog open={reviewDialogOpen} onClose={() => handleReviewDialogClose}>
       <form onSubmit={handleReviewSubmit}>
-        <DialogTitle>Write a review</DialogTitle>
+        <DialogTitle sx={{ width: matches ? "524px" : "70vw" }}>
+          Write a review
+        </DialogTitle>
 
         <DialogContent className="flex flex-col gap-4 justify-center items-center">
           {reviewError && (
-            <Alert severity="error" sx={{ width: "35vw" }}>
+            <Alert severity="error" sx={{ width: matches ? "524px" : "70vw" }}>
               {reviewError}
             </Alert>
           )}
@@ -44,7 +51,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             name="title"
             fullWidth
             sx={{
-              width: "35vw",
+              width: matches ? "524px" : "70vw",
               marginTop: "10px",
               color: "black",
               borderRadius: "4px",
@@ -57,28 +64,37 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             multiline
             rows={4}
             sx={{
-              width: "35vw",
+              width: matches ? "524px" : "70vw",
               color: "black",
               borderRadius: "4px",
             }}
             fullWidth
           />
-          <label htmlFor="rating_quality" className="flex w-[524px]">
-            <div className="flex w-[250px] justify-between">
+          <label
+            htmlFor="rating_quality"
+            className="flex w-[70vw] md:w-[524px]"
+          >
+            <div className="flex flex-col md:flex-row  w-[250px] justify-between">
               <p>Quality</p>
               <Rating name="rating_quality" />
             </div>
           </label>
 
-          <label htmlFor="rating_execution" className="flex w-[524px] ">
-            <div className="flex w-[250px] justify-between">
+          <label
+            htmlFor="rating_execution"
+            className="flex w-[70vw] md:w-[524px] "
+          >
+            <div className="flex flex-col md:flex-row w-[250px] justify-between">
               <p>Execution</p>
               <Rating name="rating_execution" />
             </div>
           </label>
 
-          <label htmlFor="rating_behaviour" className="flex w-[524px] ">
-            <div className="flex w-[250px] justify-between">
+          <label
+            htmlFor="rating_behaviour"
+            className="flex w-[70vw] md:w-[524px] "
+          >
+            <div className="flex flex-col md:flex-row w-[250px] justify-between">
               <p>Behaviour</p>
               <Rating name="rating_behaviour" />
             </div>
@@ -86,7 +102,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
 
           <DialogActions
             sx={{
-              width: "35vw",
+              width: matches ? "524px" : "70vw",
               display: "flex",
               justifyContent: "flex-end",
               gap: "10px",

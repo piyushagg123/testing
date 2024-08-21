@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useState } from "react";
-import img from "../assets/background.jpg";
+import img from "../assets/noImageinProject.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -203,7 +203,7 @@ const ProfessionalsInfo = () => {
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED THEMES :
                   </span>{" "}
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {formatCategory(vendorData?.sub_category_1 ?? "N/A")
                       .split(",")
                       .map((item, ind) => (
@@ -223,18 +223,20 @@ const ProfessionalsInfo = () => {
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED SPACES :
                   </span>
-                  {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-                    .split(",")
-                    .map((item, ind) => (
-                      <>
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      </>
-                    ))}
+                  <div className="flex flex-wrap gap-1">
+                    {formatCategory(vendorData?.sub_category_2 ?? "N/A")
+                      .split(",")
+                      .map((item, ind) => (
+                        <>
+                          <Chip
+                            label={item.charAt(0).toUpperCase() + item.slice(1)}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        </>
+                      ))}
+                  </div>
                 </p>
                 <p className="flex gap-2 items-center">
                   <span className="font-bold text-sm text-darkgrey">
@@ -264,7 +266,7 @@ const ProfessionalsInfo = () => {
             <br />
             {login ? (
               <>
-                <div className=" gap-3 hidden md:flex">
+                <div className=" gap-3 flex">
                   <div>
                     <button
                       className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"

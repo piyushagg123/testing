@@ -255,7 +255,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
       <div className="flex flex-col gap-4 h-[485px] text-lg">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-4 h-[480px] justify-between w-[455px] text-lg"
+          className="flex flex-col gap-4 h-[480px] justify-between w-[235px] md:w-[495px] text-lg"
         >
           <h1 className="text-xl font-bold">
             Let's get started by creating your profile
@@ -263,14 +263,14 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           {error && <Alert severity="error">{error}</Alert>}
           {currentStep === 1 && (
             <>
-              <div className="flex gap-3">
+              <div className="flex flex-col md:flex-row gap-3">
                 <label className="text-[16px] w-fit">
                   Business Name
                   <br />
                   <input
                     type="text"
                     name="business_name"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.business_name}
                     onChange={handleChange}
                     required
@@ -283,7 +283,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     type="text"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="started_in"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.started_in}
                     onChange={handleChange}
                     required
@@ -291,14 +291,14 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </label>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col md:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
                   Address
                   <input
                     type="text"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="address"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.address}
                     onChange={handleChange}
                     required
@@ -310,14 +310,14 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     type="number"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="number_of_employees"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.number_of_employees}
                     onChange={handleChange}
                     required
                   />
                 </label>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col md:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
                   Average project value
                   <input
@@ -325,7 +325,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     step="0.01"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="average_project_value"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.average_project_value}
                     onChange={handleChange}
                     required
@@ -336,7 +336,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   <input
                     type="number"
                     name="projects_completed"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.projects_completed}
                     onChange={handleChange}
                     required
@@ -349,7 +349,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <br />
                 <textarea
                   name="description"
-                  className="w-full md:w-[452px] mt-1 px-2"
+                  className="w-[235px] md:w-[482px] mt-1 px-2"
                   rows={5}
                   value={formData.description}
                   onChange={handleChange}
@@ -357,7 +357,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   required
                 />
               </label>
-              <div className="flex gap-2 justify-end w-[455px]">
+              <div className="flex gap-2 justify-end w-[235px] md:w-[485px]">
                 <button
                   type="button"
                   onClick={nextStep}
@@ -371,9 +371,13 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
           {currentStep === 2 && (
             <>
-              <br />
-              <label htmlFor="" className="flex items-center">
-                <p>Select your themes (maximum of three)</p>
+              <label
+                htmlFor=""
+                className="flex flex-col md:flex-row items-center md:mt-10"
+              >
+                <p className="text-center md:text-left">
+                  Select your themes (maximum of three)
+                </p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
@@ -386,7 +390,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
 
-              <label htmlFor="" className="flex items-center justify-between">
+              <label
+                htmlFor=""
+                className="flex flex-col md:flex-row  items-center justify-between"
+              >
                 <p>Select your spaces</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
@@ -402,7 +409,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
               <label
                 htmlFor=""
-                className="flex items-center justify-end gap-[89px]"
+                className="flex flex-col md:flex-row items-center justify-between md:gap-[89px]"
               >
                 <p>Type of execution</p>
                 <MultipleSelect
@@ -417,7 +424,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
               <br />
-              <div className="flex gap-2 justify-between w-[455px]">
+              <div className="flex gap-2 justify-between md:w-[490px]">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -438,8 +445,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
           {currentStep === 3 && (
             <>
-              <br />
-              <label htmlFor="" className="flex items-center justify-between">
+              <label
+                htmlFor=""
+                className="flex flex-col md:flex-row items-center justify-between md:mt-10"
+              >
                 <p>Select your state</p>
                 <Autocomplete
                   disablePortal
@@ -448,7 +457,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   onChange={handleStateChange}
                   size="small"
                   sx={{
-                    width: 208,
+                    width: 235,
                     borderRadius: "5px",
                     border: "solid 0.3px",
                     marginRight: "3px",
@@ -466,7 +475,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               </label>
               <label
                 htmlFor=""
-                className="flex items-center justify-between gap-[10px]"
+                className="flex flex-col md:flex-row items-center justify-between gap-[10px]"
               >
                 <p>Select your city</p>
                 <Autocomplete
@@ -482,7 +491,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   }}
                   loading={loadingCities}
                   sx={{
-                    width: 208,
+                    width: 235,
                     borderRadius: "5px",
                     border: "solid 0.3px",
                     marginRight: "3px",
@@ -506,14 +515,14 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
 
-              <label className="flex justify-between mt-4">
+              <label className="flex flex-col md:flex-row justify-between mt-4">
                 <p>Upload Logo</p>
                 <input
                   type="file"
                   name="logo"
                   onChange={handleLogoChange}
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  className="w-[220px] px-2 text-[14px]"
+                  className="w-[235px] px-2 text-[14px]"
                   required
                 />
               </label>
@@ -530,7 +539,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </div>
               )}
               <br />
-              <div className="flex gap-2 w-[455px] justify-between">
+              <div className="flex gap-2 md:w-[455px] justify-between">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -554,7 +563,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               <br />
 
               <div className="flex flex-col gap-2">
-                <label className="flex text-[16px] justify-between">
+                <label className="flex flex-col md:flex-row text-[16px] justify-between">
                   <p>
                     <InstagramIcon className="text-red" /> Instagram
                   </p>
@@ -562,13 +571,13 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="instagram"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.social.instagram}
                     onChange={handleSocialChange}
                   />
                 </label>
                 <br />
-                <label className="flex text-[16px] justify-between">
+                <label className="flex flex-col md:flex-row text-[16px] justify-between">
                   <p>
                     <FacebookIcon className="text-purple" /> Facebook
                   </p>
@@ -576,13 +585,13 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="facebook"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.social.facebook}
                     onChange={handleSocialChange}
                   />
                 </label>
                 <br />
-                <label className="flex text-[16px] justify-between">
+                <label className="flex flex-col md:flex-row text-[16px] justify-between">
                   <p>
                     <OpenInNewIcon className="text-darkgrey" /> Website
                   </p>
@@ -590,7 +599,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="website"
-                    className="w-[220px] px-2"
+                    className="w-[235px] px-2"
                     value={formData.social.website}
                     onChange={handleSocialChange}
                   />
@@ -598,7 +607,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               </div>
 
               <br />
-              <div className="flex gap-2 w-[455px] justify-between">
+              <div className="flex gap-2 md:w-[455px] justify-between">
                 <button
                   type="button"
                   onClick={prevStep}

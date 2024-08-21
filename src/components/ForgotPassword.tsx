@@ -18,6 +18,9 @@ import { Alert, LoadingButton } from "@mui/lab";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 interface OTPProps {
   separator: React.ReactNode;
   length: number;
@@ -156,6 +159,7 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
     <Box
       sx={{
         display: "flex",
+        flexWrap: "wrap",
         gap: 1,
         alignItems: "center",
         justifyContent: "center",
@@ -266,6 +270,9 @@ const ForgotPassword = () => {
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   const handleNext = async () => {
     setError("");
     setLoading(true);
@@ -355,7 +362,7 @@ const ForgotPassword = () => {
         }}
       >
         <DialogTitle className="bg-prim flex items-center justify-between">
-          <p className="text-text text-2xl">Forgot your password</p>
+          <p className="text-text text-xl md:text-2xl">Forgot your password</p>
 
           <IconButton
             aria-label="close"
@@ -372,9 +379,24 @@ const ForgotPassword = () => {
         </DialogTitle>
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
-            {error && <Alert severity="error">{error}</Alert>}
+            {error && (
+              <Alert
+                sx={{ width: matches ? "541px" : "220px" }}
+                severity="error"
+              >
+                {error}
+              </Alert>
+            )}
             <br />
-            <Stepper activeStep={activeStep}>
+            <Stepper
+              activeStep={activeStep}
+              sx={{
+                display: "flex",
+                flexDirection: matches ? "row" : "column",
+                gap: matches ? "" : "10px",
+                alignItems: matches ? "" : "flex-start",
+              }}
+            >
               {steps.map((label, index) => (
                 <Step key={index}>
                   <StepLabel>{label}</StepLabel>
@@ -394,7 +416,12 @@ const ForgotPassword = () => {
                   {activeStep === 0 ? (
                     <Box
                       component="form"
-                      sx={{ "& > :not(style)": { m: 1, width: "500px" } }}
+                      sx={{
+                        "& > :not(style)": {
+                          m: 1,
+                          width: matches ? "500px" : "196px",
+                        },
+                      }}
                       noValidate
                       autoComplete="off"
                     >
@@ -404,7 +431,7 @@ const ForgotPassword = () => {
                         variant="standard"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        sx={{ width: "500px" }}
+                        sx={{ width: matches ? "500px" : "210px" }}
                       />
                     </Box>
                   ) : activeStep === 1 ? (
@@ -415,6 +442,7 @@ const ForgotPassword = () => {
                         justifyContent: "center",
                         gap: 2,
                         marginTop: 3,
+                        width: matches ? "500px" : "196px",
                       }}
                     >
                       <OTP

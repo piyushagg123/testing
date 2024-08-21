@@ -113,14 +113,18 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               <Typography variant="body2">
                 <p className="flex gap-2 items-center">
                   <span className="font-bold">Theme: </span>
-                  {themeArray.map((item, ind) => (
-                    <Chip
-                      label={item}
-                      variant="outlined"
-                      key={ind}
-                      sx={{ height: "25px" }}
-                    />
-                  ))}
+                  {themeArray.map((item, ind) =>
+                    ind < 2 ? (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
+                    ) : (
+                      ""
+                    )
+                  )}
                 </p>
               </Typography>
             </CardContent>
