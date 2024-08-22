@@ -31,6 +31,8 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
   const inputRefs = React.useRef<HTMLInputElement[]>(
     new Array(length).fill(null)
   );
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const focusInput = (targetIndex: number) => {
     const targetInput = inputRefs.current[targetIndex];
@@ -160,7 +162,7 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
       sx={{
         display: "flex",
         flexWrap: "wrap",
-        gap: 1,
+        gap: matches ? 1 : 0,
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -272,6 +274,7 @@ const ForgotPassword = () => {
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const full = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleNext = async () => {
     setError("");
@@ -349,6 +352,7 @@ const ForgotPassword = () => {
       </p>
       <Dialog
         open={open}
+        sx={{ height: matches ? "fit-content" : "340px", margin: "auto" }}
         onClose={() => handleClose}
         BackdropProps={{
           onClick: (event) => handleClose(event, "backdropClick"),
@@ -360,6 +364,7 @@ const ForgotPassword = () => {
             }
           },
         }}
+        fullScreen={full}
       >
         <DialogTitle className="bg-prim flex items-center justify-between">
           <p className="text-text text-xl md:text-2xl">Forgot your password</p>
@@ -381,7 +386,7 @@ const ForgotPassword = () => {
           <Box sx={{ width: "100%" }}>
             {error && (
               <Alert
-                sx={{ width: matches ? "541px" : "220px" }}
+                sx={{ width: matches ? "541px" : "100%" }}
                 severity="error"
               >
                 {error}
@@ -419,7 +424,7 @@ const ForgotPassword = () => {
                       sx={{
                         "& > :not(style)": {
                           m: 1,
-                          width: matches ? "500px" : "196px",
+                          width: matches ? "500px" : "100%",
                         },
                       }}
                       noValidate
@@ -431,7 +436,7 @@ const ForgotPassword = () => {
                         variant="standard"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        sx={{ width: matches ? "500px" : "210px" }}
+                        sx={{ width: matches ? "500px" : "100%" }}
                       />
                     </Box>
                   ) : activeStep === 1 ? (
@@ -442,7 +447,7 @@ const ForgotPassword = () => {
                         justifyContent: "center",
                         gap: 2,
                         marginTop: 3,
-                        width: matches ? "500px" : "196px",
+                        width: matches ? "500px" : "100%",
                       }}
                     >
                       <OTP

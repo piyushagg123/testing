@@ -16,12 +16,14 @@ import constants from "./constants";
 import Footer from "./components/Footer";
 
 const fetchUserData = async () => {
-  const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
-    headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-    },
-  });
-  return data.data;
+  if (sessionStorage.getItem("token")) {
+    const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    return data.data;
+  }
 };
 
 const fetchStateData = async () => {

@@ -13,6 +13,7 @@ import {
   DialogContent,
   IconButton,
   Tab,
+  useMediaQuery,
 } from "@mui/material";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
@@ -24,6 +25,7 @@ import { AuthContext } from "../context/Login";
 import constants from "../constants";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useTheme } from "@mui/material/styles";
 
 interface ProjectItem {
   images: Record<string, string[]>;
@@ -84,6 +86,9 @@ const Profile = () => {
   });
   const [value, setValue] = useState("1");
   const { data: projectsData } = useQuery("vendorProjects", fetchProjects);
+
+  const theme = useTheme();
+  const full = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClose = () => {
     setOpen(false);
@@ -536,7 +541,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <Dialog open={open} fullWidth>
+        <Dialog open={open} fullScreen={full}>
           <DialogContent sx={{ height: "max-content" }}>
             <div className="flex justify-end">
               <IconButton

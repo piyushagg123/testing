@@ -2,7 +2,13 @@ import { useState, useContext, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import JoinAsPro from "../pages/JoinAsPro";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
@@ -40,6 +46,8 @@ const Navbar: React.FC = () => {
   }
   const { setLogin, userDetails, login } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
+  const theme = useTheme();
+  const full = useMediaQuery(theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -191,7 +199,7 @@ const Navbar: React.FC = () => {
         open={open}
         onClose={() => handleClose}
         sx={{ margin: "auto" }}
-        fullWidth
+        fullScreen={full}
       >
         <DialogContent sx={{ height: "max-content", position: "relative" }}>
           <IconButton

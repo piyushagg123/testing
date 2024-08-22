@@ -30,8 +30,13 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
 }) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const full = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Dialog open={reviewDialogOpen} onClose={() => handleReviewDialogClose}>
+    <Dialog
+      open={reviewDialogOpen}
+      onClose={() => handleReviewDialogClose}
+      fullScreen={full}
+    >
       <form onSubmit={handleReviewSubmit}>
         <DialogTitle sx={{ width: matches ? "524px" : "70vw" }}>
           Write a review
