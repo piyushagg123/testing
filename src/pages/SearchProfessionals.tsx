@@ -15,6 +15,8 @@ import Professional from "../components/Professional";
 import Filters from "../components/Filters";
 import constants from "../constants";
 import { StateContext } from "../context/State";
+import { AuthContext } from "../context/Login";
+import Banner from "../components/Banner";
 
 interface VendorItem {
   vendor_id: string;
@@ -26,11 +28,13 @@ interface VendorItem {
 
 const SearchProfessionals: React.FC = () => {
   const stateContext = useContext(StateContext);
-  if (stateContext === undefined) {
+  const authContext = useContext(AuthContext);
+  if (stateContext === undefined || authContext === undefined) {
     throw new Error("StateContext must be used within a StateProvider");
   }
 
   const { state } = stateContext;
+  const { showBanner } = authContext;
   const [cities, setCities] = useState<string[]>([]);
   const [selectedState, setSelectedState] = useState<string>("");
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -214,90 +218,98 @@ const SearchProfessionals: React.FC = () => {
         </div>
       </div>
       <br />
-      <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px]">
-        <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
-          <div className="flex flex-wrap justify-center gap-2 lg:block">
-            <Filters
-              handleThemeFilter={onThemeFiltersUpdate}
-              handleSpaceFilter={onSpaceFiltersUpdate}
-              handleExecutionFilter={onExecutionFiltersUpdate}
-            />
-          </div>
-        </div>
-        <div className="w-full">
-          <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
-            {filteredItems ? (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span className="font-bold text-base text-darkgrey">
-                  INTERIOR DESIGNERS
-                </span>
-                <span
-                  style={{ margin: "0 8px", fontSize: "24px", lineHeight: "1" }}
-                >
-                  •
-                </span>
-                <span className="text-sm text-text">
-                  {filteredItems.length} found
-                </span>
-              </div>
-            ) : (
-              <p>No home improvement pros for this category</p>
-            )}
-            <div className="w-[270px] lg:mr-2 hidden lg:block">
-              <FormControl
-                className="w-[270px] px-[14px] py-[10px]"
-                sx={{ height: "40px" }}
-                size="small"
-              >
-                <InputLabel id="sort-by-label">Sort by</InputLabel>
-                <Select
-                  className="bg-prim"
-                  labelId="sort-by-label"
-                  id="sort-by-select"
-                  label="Sort By"
-                >
-                  <MenuItem value={"rating"}>Rating</MenuItem>
-                  <MenuItem value={"recommended"}>Recommended</MenuItem>
-                  <MenuItem value={"popular"}>Popular</MenuItem>
-                </Select>
-              </FormControl>
+      {showBanner ? (
+        <Banner />
+      ) : (
+        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px]">
+          <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
+            <div className="flex flex-wrap justify-center gap-2 lg:block">
+              <Filters
+                handleThemeFilter={onThemeFiltersUpdate}
+                handleSpaceFilter={onSpaceFiltersUpdate}
+                handleExecutionFilter={onExecutionFiltersUpdate}
+              />
             </div>
           </div>
-
-          {filteredItems ? (
-            <>
-              {isLoading ? (
-                <div className="flex justify-center h-screen">
-                  <CircularProgress color="inherit" />
+          <div className="w-full">
+            <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
+              {filteredItems ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span className="font-bold text-base text-darkgrey">
+                    INTERIOR DESIGNERS
+                  </span>
+                  <span
+                    style={{
+                      margin: "0 8px",
+                      fontSize: "24px",
+                      lineHeight: "1",
+                    }}
+                  >
+                    •
+                  </span>
+                  <span className="text-sm text-text">
+                    {filteredItems.length} found
+                  </span>
                 </div>
               ) : (
-                <>
-                  {filteredItems.map((item) => (
-                    <NavLink
-                      to={`/search-professionals/${item.vendor_id}`}
-                      key={item.vendor_id}
-                    >
-                      <div>
-                        <Professional
-                          about={item.description}
-                          rating={item.rating}
-                          img={item.logo}
-                          profCat={item.business_name}
-                        />
-                        <hr />
-                        <br />
-                      </div>
-                    </NavLink>
-                  ))}
-                </>
+                <p>No home improvement pros for this category</p>
               )}
-            </>
-          ) : (
-            <></>
-          )}
-          <br />
+              <div className="w-[270px] lg:mr-2 hidden lg:block">
+                <FormControl
+                  className="w-[270px] px-[14px] py-[10px]"
+                  sx={{ height: "40px" }}
+                  size="small"
+                >
+                  <InputLabel id="sort-by-label">Sort by</InputLabel>
+                  <Select
+                    className="bg-prim"
+                    labelId="sort-by-label"
+                    id="sort-by-select"
+                    label="Sort By"
+                  >
+                    <MenuItem value={"rating"}>Rating</MenuItem>
+                    <MenuItem value={"recommended"}>Recommended</MenuItem>
+                    <MenuItem value={"popular"}>Popular</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+
+            {filteredItems ? (
+              <>
+                {isLoading ? (
+                  <div className="flex justify-center h-screen">
+                    <CircularProgress color="inherit" />
+                  </div>
+                ) : (
+                  <>
+                    {filteredItems.map((item) => (
+                      <NavLink
+                        to={`/search-professionals/${item.vendor_id}`}
+                        key={item.vendor_id}
+                      >
+                        <div>
+                          <Professional
+                            about={item.description}
+                            rating={item.rating}
+                            img={item.logo}
+                            profCat={item.business_name}
+                          />
+                          <hr />
+                          <br />
+                        </div>
+                      </NavLink>
+                    ))}
+                  </>
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+            <br />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, userDetails, login } = authContext;
+  const { setLogin, userDetails, login, setShowBanner } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
 
   const navigate = useNavigate();
@@ -69,11 +69,15 @@ const Navbar: React.FC = () => {
     }
     setOpen(false);
   };
+
+  const handleBanner = () => {
+    setShowBanner(true);
+  };
   return (
     <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg sm:px-[64px]">
       <div className="flex items-center gap-4">
         <div className="logo">
-          <Link to="/" className="text-[purple]">
+          <Link to="/" className="text-[purple]" onClick={handleBanner}>
             <img src={pickelelogo} alt="Pickele" className="h-10 w-auto" />
           </Link>
         </div>
