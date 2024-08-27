@@ -14,6 +14,7 @@ import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
+import Banner from "./components/Banner";
 
 const fetchUserData = async () => {
   const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
@@ -61,7 +62,7 @@ const App: React.FC = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<SearchProfessionals />} />
+          <Route path="/" element={<Banner />} />
           <Route
             path="/search-professionals"
             element={<SearchProfessionals />}
