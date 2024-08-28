@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
   const { setLogin, userDetails, login } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
   const theme = useTheme();
-  const full = useMediaQuery(theme.breakpoints.down("sm"));
+  const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -199,7 +199,7 @@ const Navbar: React.FC = () => {
         open={open}
         onClose={() => handleClose}
         sx={{ margin: "auto" }}
-        fullScreen={full}
+        fullScreen={isFullScreen}
       >
         <DialogContent sx={{ height: "max-content", position: "relative" }}>
           <IconButton

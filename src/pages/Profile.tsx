@@ -88,7 +88,7 @@ const Profile = () => {
   const { data: projectsData } = useQuery("vendorProjects", fetchProjects);
 
   const theme = useTheme();
-  const full = useMediaQuery(theme.breakpoints.down("sm"));
+  const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClose = () => {
     setOpen(false);
@@ -541,7 +541,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <Dialog open={open} fullScreen={full}>
+        <Dialog open={open} fullScreen={isFullScreen}>
           <DialogContent sx={{ height: "max-content" }}>
             <div className="flex justify-end">
               <IconButton
