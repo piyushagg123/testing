@@ -273,7 +273,7 @@ const Profile = () => {
                   }`}
                 >
                   <button
-                    className="hidden lg:flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                    className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
                     onClick={() => setOpen(true)}
                   >
                     <AddCircleIcon /> Add a new project
