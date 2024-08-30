@@ -337,7 +337,7 @@ const ForgotPassword = () => {
   };
   return (
     <div className="text-text">
-      <p onClick={handleClickOpen} className="cursor-pointer underline">
+      <p onClick={handleClickOpen} className="cursor-pointer text-purple">
         Forget your password
       </p>
       <Dialog
