@@ -25,11 +25,26 @@ interface Review {
 
 const Reviews: React.FC<user> = ({ id }) => {
   const fetchReviews = async () => {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
-    );
+    let data;
 
-    return response.data.data;
+    if (id === -1) {
+      const response = await axios.get(
+        `${constants.apiBaseUrl}/vendor/auth/reviews`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+      data = response.data;
+    } else {
+      const response = await axios.get(
+        `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
+      );
+      data = response.data;
+    }
+
+    return data.data;
   };
 
   const { data: reviews } = useQuery(["reviews", id], fetchReviews);

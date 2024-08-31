@@ -5,15 +5,14 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import SearchProfessionals from "./pages/SearchProfessionals";
-import ProfessionalsInfo from "./pages/ProfessionalsInfo";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
 import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
+import Merged from "./pages/ProfessionalInfo";
 
 const fetchUserData = async () => {
   const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
@@ -68,11 +67,12 @@ const App: React.FC = () => {
           />
           <Route
             path="/search-professionals/:id"
-            element={<ProfessionalsInfo />}
+            element={<Merged flag={false} />}
           />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
+          {/* <Route path="/profile" element={<Profile />} /> */}
+          <Route path="/profile" element={<Merged flag={true} />} />
           <Route path="/*" element={<Error />} />
         </Routes>
         <br />

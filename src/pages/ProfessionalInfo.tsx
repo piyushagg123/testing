@@ -5,7 +5,14 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Chip, Tab, Box } from "@mui/material";
+import {
+  Chip,
+  Tab,
+  Box,
+  Dialog,
+  DialogContent,
+  IconButton,
+} from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -16,6 +23,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Reviews from "../components/Reviews";
 import ReviewDialog from "../components/ReviewDialog";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddAProject from "../components/AddAProject";
+import ProjectImages from "../components/ProjectImages";
 
 interface VendorData {
   logo?: string;
@@ -59,44 +69,88 @@ interface ReviewFormObject {
   vendor_id?: number;
 }
 
-const fetchVendorDetails = async (id: string) => {
-  const { data } = await axios.get(
-    `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
-  );
+interface ProfileorProfessional {
+  flag: boolean;
+}
+
+const fetchVendorDetails = async (id: string, flag: boolean) => {
+  let data;
+  if (flag) {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/auth/details`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    data = response.data;
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
+    );
+    data = response.data;
+  }
 
   return data.data as VendorData;
 };
 
-const fetchVendorProjects = async (id: string) => {
-  const { data } = await axios.get(
-    `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
-  );
+const fetchVendorProjects = async (id: string, flag: boolean) => {
+  let data;
+  if (flag) {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/auth/project/details`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    data = response.data;
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
+    );
+    data = response.data;
+  }
   return data.data as ProjectData[];
 };
-
-const ProfessionalsInfo = () => {
+const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
   const authContext = useContext(AuthContext);
 
   if (authContext === undefined) {
     return;
   }
   const { login } = authContext;
-  const { id } = useParams();
+  let professionId = "-1";
+  if (!flag) {
+    const { id } = useParams();
+    professionId = id!;
+  }
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", id],
-    () => fetchVendorDetails(id!)
+    ["vendorDetails", professionId],
+    () => fetchVendorDetails(professionId!, flag)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
-    ["vendorProjects", id],
-    () => fetchVendorProjects(id!)
+    ["vendorProjects", professionId],
+    () => fetchVendorProjects(professionId!, flag)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const [projectId, setProjectId] = useState<number>(0);
+  const handleClose = () => {
+    setOpen(false);
+    setIsSubmitted(false);
+    setSelectedSubCategories([]);
+  };
 
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
@@ -141,7 +195,7 @@ const ProfessionalsInfo = () => {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: ReviewFormObject = { vendor_id: Number(id) };
+    const formObject: ReviewFormObject = { vendor_id: Number(professionId) };
     formData.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
@@ -168,7 +222,6 @@ const ProfessionalsInfo = () => {
 
   if (isVendorLoading || isProjectsLoading)
     return <div className="min-h-screen">Loading...</div>;
-
   return (
     <>
       {window.scrollTo(0, 0)}
@@ -266,13 +319,15 @@ const ProfessionalsInfo = () => {
               <>
                 <div className=" gap-3 hidden md:flex">
                   <div>
-                    <button
-                      className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
-                      style={{ border: "solid 0.5px" }}
-                      onClick={handleReviewDialogOpen}
-                    >
-                      <StarBorderIcon /> <p>Write a Review</p>
-                    </button>
+                    {!flag && (
+                      <button
+                        className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
+                        style={{ border: "solid 0.5px" }}
+                        onClick={handleReviewDialogOpen}
+                      >
+                        <StarBorderIcon /> <p>Write a Review</p>
+                      </button>
+                    )}
                   </div>
                 </div>
                 <br />
@@ -334,6 +389,20 @@ const ProfessionalsInfo = () => {
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+                {flag && (
+                  <div
+                    className={`${
+                      selectedProject ? "hidden" : "flex w-full justify-end"
+                    }`}
+                  >
+                    <button
+                      className="hidden lg:flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                      onClick={() => setOpen(true)}
+                    >
+                      <AddCircleIcon /> Add a new project
+                    </button>
+                  </div>
+                )}
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                   <br />
                   <div className="flex flex-wrap">
@@ -404,7 +473,7 @@ const ProfessionalsInfo = () => {
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                   <br />
-                  <Reviews id={Number(id)} />
+                  {<Reviews id={Number(professionId)} />}
                   <br />
                   <br />
                 </div>
@@ -591,9 +660,43 @@ const ProfessionalsInfo = () => {
           reviewDialogOpen={reviewDialogOpen}
           reviewError={reviewError}
         />
+
+        <Dialog open={open} fullWidth>
+          <DialogContent sx={{ height: "max-content" }}>
+            <div className="flex justify-end">
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                x
+              </IconButton>
+            </div>
+            {!isSubmitted ? (
+              <>
+                <AddAProject
+                  setProjectId={setProjectId}
+                  projectId={projectId}
+                />{" "}
+              </>
+            ) : (
+              <>
+                <ProjectImages
+                  subCategories={selectedSubCategories}
+                  projectId={projectId}
+                />
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
 };
 
-export default ProfessionalsInfo;
+export default ProfessionalInfo;
