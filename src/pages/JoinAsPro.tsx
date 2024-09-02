@@ -6,7 +6,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { StateContext } from "../context/State";
 import constants from "../constants";
-
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -252,10 +251,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col gap-4 h-[485px] text-lg">
+      <div className="flex flex-col gap-4  text-lg">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-4 h-[480px] justify-between w-[455px] text-lg"
+          className="flex flex-col gap-4 justify-between w-[455px] text-lg"
         >
           <h1 className="text-xl font-bold">
             Let's get started by creating your profile

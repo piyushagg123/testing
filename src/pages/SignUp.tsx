@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
@@ -7,14 +7,14 @@ import CryptoJS from "crypto-js";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import JoinAsPro from "./JoinAsPro";
-import { Alert, IconButton } from "@mui/material";
+import { Alert, IconButton, TextField } from "@mui/material";
 import constants from "../constants";
 
 interface FormObject {
   [key: string]: string;
 }
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     return;
@@ -24,6 +24,7 @@ const SignUp: React.FC = () => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const [flag, setFlag] = useState<boolean>(true);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -95,7 +96,8 @@ const SignUp: React.FC = () => {
       setLogin(true);
 
       if (isChecked) {
-        setOpen(true);
+        // setOpen(true);
+        setFlag(false);
       } else {
         navigate("/");
       }
@@ -109,141 +111,138 @@ const SignUp: React.FC = () => {
     setOpen(false);
     navigate("/");
   };
-
   return (
     <>
       {window.scrollTo(0, 0)}
-      <div className="mt-16">
-        <div className="flex justify-center flex-wrap h-full lg:h-full py-5">
-          <div className="p-3 md:p-6 text-[13px] md:text-xl md:mr-4 gap-2 mb-4 md:mb-0">
-            <br />
-            <br />
-            <br />
-            <br />
-            <h1 className="text-xl md:text-3xl font-bold">
-              Join today to recreate your home
-            </h1>
-            <br />
-            <br />
-            <div className="flex items-center">
-              <LabelImportantIcon className="text-sm" />
-              <p>Explore vast selection of ideas</p>
-            </div>
-            <br />
-            <div className="flex items-center">
-              <LabelImportantIcon className="text-sm" />
-              <p>Get matched with best interior designers near you</p>
-            </div>
-            <br />
-            <div className="flex items-center">
-              <LabelImportantIcon className="text-sm" />
-              <p>Sit back, relax and get your home recreated.</p>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+        <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
+          <br />
+          <br />
+          <br />
+          <br />
+          <h1 className="text-xl md:text-3xl font-bold">
+            Join today to recreate your home
+          </h1>
+          <br />
+          <br />
+          <div className="flex items-center">
+            <LabelImportantIcon className="text-sm" />
+            <p>Explore vast selection of ideas</p>
           </div>
-          <div
-            className="w-fit p-[1rem] md:p-8 flex flex-col"
-            style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
-          >
-            <h1 className="text-2xl md:text-3xl text-center">
-              Sign up for your account
-            </h1>
-            <br />
-            {error && (
-              <Alert
-                severity="error"
-                sx={{
-                  width: "320px",
-                  padding: "2px",
-                  marginBottom: "5px",
-                }}
-              >
-                {error}
-              </Alert>
-            )}
-            <form className="flex flex-col" onSubmit={handleSubmit}>
-              <label className="text-sm">
-                First name <br />
-                <input
-                  type="text"
-                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+          <br />
+          <div className="flex items-center">
+            <LabelImportantIcon className="text-sm" />
+            <p>Get matched with best interior designers near you</p>
+          </div>
+          <br />
+          <div className="flex items-center">
+            <LabelImportantIcon className="text-sm" />
+            <p>Sit back, relax and get your home recreated.</p>
+          </div>
+        </div>
+        <div className="mt-28">
+          <p className=" m-auto w-fit">
+            Already have an account?
+            <span className="ml-3">
+              <Link to={"/login"} className="text-purple">
+                Log in
+              </Link>
+            </span>
+          </p>
+          {flag ? (
+            <div className="w-fit m-auto md:p-8 flex flex-col justify-center items-center ">
+              <h1 className="text-2xl md:text-3xl text-center font-bold text-purple">
+                Sign up for your account
+              </h1>
+              <br />
+              {error && (
+                <Alert
+                  severity="error"
+                  sx={{
+                    width: "300px",
+                    padding: "2px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {error}
+                </Alert>
+              )}
+              <form className="flex flex-col" onSubmit={handleSubmit}>
+                <TextField
+                  label="First name"
                   id="first_name"
                   name="first_name"
+                  size="small"
+                  sx={{ width: "300px" }}
                 />
-              </label>
-              <br />
-              <label className="text-sm">
-                Last name <br />
-                <input
-                  type="text"
-                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                <br />
+
+                <TextField
+                  label="Last name"
                   id="last_name"
                   name="last_name"
+                  size="small"
+                  sx={{ width: "300px" }}
                 />
-              </label>
-              <br />
-              <label className="text-sm">
-                Mobile number <br />
-                <input
-                  type="number"
-                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                <br />
+
+                <TextField
+                  label="Mobile number"
                   id="mobile"
                   name="mobile"
+                  type="number"
+                  size="small"
+                  sx={{ width: "300px" }}
                 />
-              </label>
-              <br />
-              <label className="text-sm">
-                Email <br />
-                <input
-                  type="text"
+                <br />
+
+                <TextField
+                  label="Email"
                   id="email"
                   name="email"
-                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
-                />
-              </label>
-              <br />
-              <label>
-                <div className="flex justify-between text-sm w-[270px] md:w-[320px] rounded-[5px]">
-                  <p>Password</p>
-                </div>{" "}
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                  size="small"
+                  sx={{ width: "300px" }}
                 />
                 <br />
-                <br />
-                <label htmlFor="" className="flex items-start gap-2">
-                  <div>
-                    <input
-                      type="checkbox"
-                      name="join_as_pro"
-                      id="join_as_pro"
-                      checked={isChecked}
-                      onChange={(event) => setIsChecked(event.target.checked)}
-                    />
-                  </div>{" "}
-                  <div>Join as pro</div>
+                <label>
+                  <TextField
+                    label="Password"
+                    type="password"
+                    id="password"
+                    name="password"
+                    size="small"
+                    sx={{ width: "300px" }}
+                  />
+
+                  <br />
+                  <br />
+                  <label htmlFor="" className="flex items-start gap-2">
+                    <div>
+                      <input
+                        type="checkbox"
+                        name="join_as_pro"
+                        id="join_as_pro"
+                        checked={isChecked}
+                        onChange={(event) => setIsChecked(event.target.checked)}
+                      />
+                    </div>{" "}
+                    <div>Join as pro</div>
+                  </label>
+                  <br />
+                  <div className="flex justify-center">
+                    <button
+                      type="submit"
+                      className="p-2 mb-2 w-[250px] rounded-[5px]  text-white bg-purple  "
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </label>
-                <br />
-                <div className="flex justify-center">
-                  <button
-                    type="submit"
-                    className="p-2 w-[250px] rounded-[5px] border-text border-[2px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </label>
-            </form>
-            <br />
-            <p className="text-center">
-              Already have an account{" "}
-              <NavLink to={"/login"} className={"underline"}>
-                Log in
-              </NavLink>
-            </p>
-          </div>
+              </form>
+            </div>
+          ) : (
+            <JoinAsPro handleClose={handleClose} />
+          )}
         </div>
         <Dialog
           open={open}
