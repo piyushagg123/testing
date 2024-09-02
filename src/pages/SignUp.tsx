@@ -4,10 +4,8 @@ import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
 import JoinAsPro from "./JoinAsPro";
-import { Alert, IconButton, TextField } from "@mui/material";
+import { Alert, TextField } from "@mui/material";
 import constants from "../constants";
 
 interface FormObject {
@@ -23,8 +21,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
-  const [flag, setFlag] = useState<boolean>(true);
+  const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(true);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,7 +94,7 @@ const SignUp = () => {
 
       if (isChecked) {
         // setOpen(true);
-        setFlag(false);
+        setOpenJoinasPro(false);
       } else {
         navigate("/");
       }
@@ -108,7 +105,6 @@ const SignUp = () => {
   const handleClose = (
     _event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    setOpen(false);
     navigate("/");
   };
   return (
@@ -149,7 +145,7 @@ const SignUp = () => {
               </Link>
             </span>
           </p>
-          {flag ? (
+          {openJoinasPro ? (
             <div className="w-fit m-auto md:p-8 flex flex-col justify-center items-center ">
               <h1 className="text-2xl md:text-3xl text-center font-bold text-purple">
                 Sign up for your account
@@ -244,28 +240,6 @@ const SignUp = () => {
             <JoinAsPro handleClose={handleClose} />
           )}
         </div>
-        <Dialog
-          open={open}
-          onClose={() => handleClose}
-          sx={{ width: "590px", margin: "auto" }}
-          fullWidth
-        >
-          <DialogContent sx={{ height: "max-content", position: "relative" }}>
-            <IconButton
-              aria-label="close"
-              onClick={handleClose}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              x
-            </IconButton>
-            <JoinAsPro handleClose={handleClose} />
-          </DialogContent>
-        </Dialog>
       </div>
     </>
   );

@@ -16,7 +16,7 @@ const Login = () => {
   const { setLogin, setUserDetails } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [flag, setFlag] = useState(true);
+  const [openForgotPassword, setOpenForgotPassword] = useState(true);
 
   const isEmail = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,7 +88,7 @@ const Login = () => {
     <>
       {window.scrollTo(0, 0)}
       <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
-        {flag ? (
+        {openForgotPassword ? (
           <div className="mt-28">
             <p className=" m-auto w-fit">
               Dont have an account?
@@ -134,8 +134,11 @@ const Login = () => {
                 <br />
                 <label>
                   <div className="flex justify-end text-sm w-[300px]">
-                    <p>
-                      <ForgotPassword />
+                    <p
+                      onClick={() => setOpenForgotPassword(false)}
+                      className="cursor-pointer text-purple"
+                    >
+                      Forgot your password
                     </p>
                   </div>{" "}
                   <TextField
@@ -162,7 +165,9 @@ const Login = () => {
             </div>
           </div>
         ) : (
-          <div>fromgot password</div>
+          <div className="mt-28 p-3 py-16">
+            <ForgotPassword setOpenForgotPassword={setOpenForgotPassword} />
+          </div>
         )}
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
           <br />
