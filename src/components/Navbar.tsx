@@ -132,9 +132,7 @@ const Navbar: React.FC = () => {
                 Hi {userDetails?.first_name}!!
               </p>
 
-              <br />
-
-              <div className="">
+              <div className="mt-[1em]">
                 <div className="flex flex-col items-center bg-white justify-center w-[370px] rounded-[10px] p-2 mb-2">
                   {userDetails?.is_vendor ? (
                     <div className="">
@@ -152,7 +150,7 @@ const Navbar: React.FC = () => {
 
                   <div className="flex h-[40px]">
                     <button
-                      className=" text-[red] h-[36px] w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] "
+                      className=" text-[red] h-[36px] w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] mb-[2em] "
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
@@ -161,8 +159,6 @@ const Navbar: React.FC = () => {
                     >
                       <LogoutIcon /> <p>Log Out</p>
                     </button>
-                    <br />
-                    <br />
                   </div>
                 </div>
               </div>

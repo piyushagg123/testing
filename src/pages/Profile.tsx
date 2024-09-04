@@ -121,11 +121,9 @@ const Profile = () => {
     <>
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
-        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
-          <br />
+        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4 mb-[1em]">
           <div className="md:w-max m-auto lg:m-0">
-            <br />
-            <div className="flex flex-col md:flex-row items-start md:items-end gap-3">
+            <div className="flex flex-col md:flex-row items-start md:items-end gap-3 mt-[1em]">
               <div className="m-auto md:m-0">
                 {data?.logo ? (
                   <img

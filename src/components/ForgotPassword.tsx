@@ -373,8 +373,7 @@ const ForgotPassword = () => {
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
             {error && <Alert severity="error">{error}</Alert>}
-            <br />
-            <Stepper activeStep={activeStep}>
+            <Stepper activeStep={activeStep} sx={{ marginTop: "1em" }}>
               {steps.map((label, index) => (
                 <Step key={index}>
                   <StepLabel>{label}</StepLabel>
