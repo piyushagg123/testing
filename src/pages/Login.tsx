@@ -87,7 +87,7 @@ const Login = () => {
   return (
     <>
       {window.scrollTo(0, 0)}
-      <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
+      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
         {openForgotPassword ? (
           <div className="mt-28">
             <p className=" m-auto w-fit">
@@ -165,7 +165,7 @@ const Login = () => {
             </div>
           </div>
         ) : (
-          <div className="mt-28 p-3 py-16">
+          <div className="mt-28 p-1">
             <ForgotPassword setOpenForgotPassword={setOpenForgotPassword} />
           </div>
         )}
