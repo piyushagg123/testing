@@ -3,10 +3,9 @@ import { Card, CardContent, Typography } from "@mui/material";
 const AboutUs = () => {
   return (
     <div className="min-h-screen mt-18 pt-20 text-lg px-20 bg-[#f7f8fa]">
-      <h1 className="text-center text-4xl  p-3 ">About us</h1>
+      <h1 className="text-center  p-3 ">About us</h1>
       <div>
-        <div className="bg-white">
-          <h2 className="text-center font-bold p-5 text-3xl ">Who we are?</h2>
+        <div className="bg-white  text-darkgrey">
           <p className="text-center">
             At Pickele, we’re creating a unique platform that aims to connect
             interior designers with customers. Why join us?
@@ -14,26 +13,26 @@ const AboutUs = () => {
           <br />
           <ul className="flex flex-wrap gap-14 items-center justify-center p-10">
             <li className="flex flex-col items-center justify-center">
-              <p className="font-bold  text-2xl">Completely Free </p>
+              <p className="font-bold  text-xl">Completely Free </p>
               <p className="text-sm">No cost to join or use the platform.</p>
             </li>
-            <li className="flex flex-col items-center justify-center  text-2xl">
+            <li className="flex flex-col items-center justify-center  text-xl">
               <p className="font-bold ">Showcase Your Work</p>
               <p className="text-sm">A free space to display your portfolio.</p>
             </li>
-            <li className="flex flex-col items-center justify-center text-2xl">
+            <li className="flex flex-col items-center justify-center text-xl">
               <p className="font-bold ">Increased Visibility </p>
               <p className="text-sm">
                 Gain higher visibility and free advertising.
               </p>
             </li>
-            <li className="flex flex-col items-center justify-center text-2xl">
+            <li className="flex flex-col items-center justify-center text-xl">
               <p className="font-bold ">More Business Inquiries </p>
               <p className="text-sm">
                 Attract more potential clients and grow your business.
               </p>
             </li>
-            <li className="flex flex-col items-center justify-center text-2xl">
+            <li className="flex flex-col items-center justify-center text-xl">
               <p className="font-bold ">New features</p>
               <p className="text-sm">
                 Regular updates to the website almost daily.
