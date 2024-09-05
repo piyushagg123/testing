@@ -174,10 +174,8 @@ const ProfessionalsInfo = () => {
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
-          <br />
-          <div className=" md:w-max m-auto lg:m-0">
-            <br />
-            <div className="flex flex-col md:flex-row items-start md:items-end gap-3">
+          <div className=" md:w-max m-auto lg:m-0 my-[1em]">
+            <div className="flex flex-col md:flex-row items-start md:items-end gap-3 my-[1em]">
               <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
@@ -261,10 +259,9 @@ const ProfessionalsInfo = () => {
                 </p>
               </div>
             </div>
-            <br />
             {login ? (
               <>
-                <div className=" gap-3 hidden md:flex">
+                <div className=" gap-3 hidden md:flex mb-[1em]">
                   <div>
                     <button
                       className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
@@ -275,7 +272,6 @@ const ProfessionalsInfo = () => {
                     </button>
                   </div>
                 </div>
-                <br />
               </>
             ) : (
               <></>
@@ -329,14 +325,14 @@ const ProfessionalsInfo = () => {
               </Box>
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px]">
-                  <p className="text-base">{vendorData?.description}</p>
-                  <br />
+                  <p className="text-base mb-[1em]">
+                    {vendorData?.description}
+                  </p>
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-                  <br />
-                  <div className="flex flex-wrap">
+                  <div className="flex flex-wrap mt-[1em] mb-[2em]">
                     {!projectsData ? (
                       <div className="flex flex-col items-center justify-center">
                         <div>
@@ -346,11 +342,9 @@ const ProfessionalsInfo = () => {
                             className="w-[300px]"
                           />
                         </div>
-                        <br />
-                        <p className="">
+                        <p className="my-[1em]">
                           No projects added yet by the designer
                         </p>
-                        <br />
                       </div>
                     ) : selectedProject ? (
                       <div className="flex flex-col">
@@ -362,8 +356,7 @@ const ProfessionalsInfo = () => {
                             <ArrowBackIcon />
                           </button>
                         </div>
-                        <br />
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3 my-[1em]">
                           <Carousel
                             imageObj={selectedProject.images}
                             showProjectDetails={false}
@@ -373,7 +366,6 @@ const ProfessionalsInfo = () => {
                             title=""
                           />
                         </div>
-                        <br />
                       </div>
                     ) : (
                       <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
@@ -397,34 +389,26 @@ const ProfessionalsInfo = () => {
                       </div>
                     )}
                   </div>
-                  <br />
-                  <br />
                 </div>
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-                  <br />
                   <Reviews id={Number(id)} />
-                  <br />
-                  <br />
                 </div>
               </TabPanel>
             </TabContext>
           </div>
         </div>
-        <br />
         <div className="w-[250px] text-lg ml-2 md:ml-10 mt-10">
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
             <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
           </div>
-          <br />
-          <div className=" ">
+          <div className=" mt-[1em]">
             <p className="font-bold text-base text-darkgrey">Email</p>
             <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
           </div>
-          <br />
-          <div className="flex flex-col justify-evenly gap-6">
+          <div className="flex flex-col justify-evenly gap-6 mt-[1em]">
             {selectedProject ? (
               <>
                 <div>

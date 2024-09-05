@@ -18,7 +18,7 @@ const Professional: React.FC<ProfessionalProps> = ({
   profCat,
 }) => {
   return (
-    <div className="flex gap-8 mb-5  items-start flex-col sm:flex-row mt-3 sm:mt-0 text-text px-4">
+    <div className="flex gap-8 mb-7  items-start flex-col sm:flex-row mt-3 sm:mt-0 text-text px-4">
       <div>
         <img
           src={img ? `${constants.apiImageUrl}/${img}` : NoProjectImage}
@@ -39,8 +39,7 @@ const Professional: React.FC<ProfessionalProps> = ({
               style={{ color: "#ff5757", marginLeft: "-2px" }}
             />
           </div>
-          <br />
-          <p>{truncateText(about, 80)}</p>
+          <p className="mt-[1em]">{truncateText(about, 80)}</p>
         </div>
       </div>
     </div>
