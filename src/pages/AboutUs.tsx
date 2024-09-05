@@ -44,8 +44,7 @@ const AboutUs = () => {
             </li>
           </ul>
         </div>
-        <br />
-        <p className="text-center">
+        <p className="text-center mt-[1em]">
           Where to view? The best experience for website is currently on web. We
           are building the mobile experience and shipping it to you soon!
         </p>
