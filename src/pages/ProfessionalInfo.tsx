@@ -227,10 +227,8 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
-          <br />
-          <div className=" md:w-max m-auto lg:m-0">
-            <br />
-            <div className="flex flex-col md:flex-row items-start md:items-end gap-3">
+          <div className=" md:w-max m-auto lg:m-0 my-[2em]">
+            <div className="flex flex-col md:flex-row items-start md:items-end gap-3 mb-[1em]">
               <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
@@ -314,10 +312,10 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                 </p>
               </div>
             </div>
-            <br />
+
             {login ? (
               <>
-                <div className=" gap-3 hidden md:flex">
+                <div className=" gap-3 hidden md:flex mb-[2em]">
                   <div>
                     {!flag && (
                       <button
@@ -330,7 +328,6 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                     )}
                   </div>
                 </div>
-                <br />
               </>
             ) : (
               <></>
@@ -384,8 +381,9 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
               </Box>
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px]">
-                  <p className="text-base">{vendorData?.description}</p>
-                  <br />
+                  <p className="text-base mb-[1em]">
+                    {vendorData?.description}
+                  </p>
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
@@ -403,27 +401,24 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                     </button>
                   </div>
                 )}
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-                  <br />
-                  <div className="flex flex-wrap">
+                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center ">
+                  <div className="flex flex-wrap pt-[1em] mb-[3em]">
                     {!projectsData ? (
                       <div className="flex flex-col items-center justify-center">
-                        <div>
+                        <div className="mb-[1em]">
                           <img
                             src={projectImage}
                             alt=""
                             className="w-[300px]"
                           />
                         </div>
-                        <br />
-                        <p className="">
+                        <p className="mb-[1em]">
                           No projects added yet by the designer
                         </p>
-                        <br />
                       </div>
                     ) : selectedProject ? (
                       <div className="flex flex-col">
-                        <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px]">
+                        <div className="flex mb-[1em] justify-start gap-60 md:w-[500px] lg:w-[750px]">
                           <button
                             className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
                             onClick={handleBackClick}
@@ -431,8 +426,7 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                             <ArrowBackIcon />
                           </button>
                         </div>
-                        <br />
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3 mb-[1em]">
                           <Carousel
                             imageObj={selectedProject.images}
                             showProjectDetails={false}
@@ -442,7 +436,6 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                             title=""
                           />
                         </div>
-                        <br />
                       </div>
                     ) : (
                       <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
@@ -466,34 +459,26 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                       </div>
                     )}
                   </div>
-                  <br />
-                  <br />
                 </div>
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-                  <br />
                   {<Reviews id={Number(professionId)} />}
-                  <br />
-                  <br />
                 </div>
               </TabPanel>
             </TabContext>
           </div>
         </div>
-        <br />
         <div className="w-[250px] text-lg ml-2 md:ml-10 mt-10">
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
             <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
           </div>
-          <br />
-          <div className=" ">
+          <div className="mt-[1em] ">
             <p className="font-bold text-base text-darkgrey">Email</p>
             <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
           </div>
-          <br />
-          <div className="flex flex-col justify-evenly gap-6">
+          <div className="flex flex-col justify-evenly mt-[1em] gap-6">
             {selectedProject ? (
               <>
                 <div>

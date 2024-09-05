@@ -104,7 +104,7 @@ const Reviews: React.FC<user> = ({ id }) => {
   };
 
   return (
-    <>
+    <div className="my-[2em]">
       {reviews?.length > 0 ? (
         <>
           <div className={`flex flex-col w-full gap-3 mt-1`}>
@@ -242,7 +242,7 @@ const Reviews: React.FC<user> = ({ id }) => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 
