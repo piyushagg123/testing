@@ -10,8 +10,7 @@ const AboutUs = () => {
             At Pickele, we’re creating a unique platform that aims to connect
             interior designers with customers. Why join us?
           </p>
-          <br />
-          <ul className="flex flex-wrap gap-14 items-center justify-center p-10">
+          <ul className="flex flex-wrap gap-14 items-center justify-center p-10 mt-[1em]">
             <li className="flex flex-col items-center justify-center">
               <p className="font-bold  text-xl">Completely Free </p>
               <p className="text-sm text-black">
