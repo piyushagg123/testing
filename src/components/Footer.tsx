@@ -16,6 +16,7 @@ const Footer = () => {
           <div className="flex flex-col gap-2">
             <p className="font-bold text-[18px]">Company</p>
             <ScrollToTopNavLink to="/">Home</ScrollToTopNavLink>
+            <ScrollToTopNavLink to="/about">About Us</ScrollToTopNavLink>
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-bold text-[18px]">Reach Us</p>
