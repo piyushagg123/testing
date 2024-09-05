@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import {
@@ -37,14 +37,6 @@ const SearchProfessionals: React.FC = () => {
   const [filteredItems, setFilteredItems] = useState<VendorItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [themeFilters, setThemeFilters] = useState(new Set());
-  const [spaceFilters, setSpaceFilters] = useState(new Set());
-  const [executionFilters, setExecutionFilters] = useState(new Set());
-
-  useEffect(() => {
-    fetchVendorList(themeFilters, spaceFilters, executionFilters);
-  }, [themeFilters, spaceFilters, executionFilters]);
-
   const handleStateChange = async (_event: any, value: string | null) => {
     setSelectedState(value ?? "");
 
@@ -63,77 +55,6 @@ const SearchProfessionals: React.FC = () => {
       setCities([]);
     }
   };
-
-  const fetchVendorList = async (
-    themeFilters = new Set(),
-    spaceFilters = new Set(),
-    executionFilters = new Set()
-  ) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
-        params: {
-          category: "INTERIOR_DESIGNER",
-          sub_category_1: Array.from(themeFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_2: Array.from(spaceFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_3: Array.from(executionFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-        },
-      });
-      setFilteredItems(response.data.data);
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const onThemeFiltersUpdate = (updatedItem: string) => {
-    if (updatedItem === "") setThemeFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      let updatedThemeFilters = new Set(themeFilters);
-      if (updatedThemeFilters.has(updatedItem)) {
-        updatedThemeFilters.delete(updatedItem);
-      } else {
-        updatedThemeFilters.add(updatedItem);
-      }
-      setThemeFilters(updatedThemeFilters);
-    }
-  };
-
-  const onSpaceFiltersUpdate = (updatedItem: string) => {
-    if (updatedItem === "") setSpaceFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      let updatedSpaceFilters = new Set(spaceFilters);
-      if (updatedSpaceFilters.has(updatedItem)) {
-        updatedSpaceFilters.delete(updatedItem);
-      } else {
-        updatedSpaceFilters.add(updatedItem);
-      }
-      setSpaceFilters(updatedSpaceFilters);
-    }
-  };
-
-  const onExecutionFiltersUpdate = (updatedItem: string) => {
-    if (updatedItem === "") setExecutionFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      let updatedExecutionFilters = new Set(executionFilters);
-      if (updatedExecutionFilters.has(updatedItem)) {
-        updatedExecutionFilters.delete(updatedItem);
-      } else {
-        updatedExecutionFilters.add(updatedItem);
-      }
-      setExecutionFilters(updatedExecutionFilters);
-    }
-  };
-
   return (
     <div className="mt-16">
       <div className="flex flex-col">
@@ -230,9 +151,8 @@ const SearchProfessionals: React.FC = () => {
         <div className="w-fit" style={{ borderRight: "solid 0.5px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
             <Filters
-              handleThemeFilter={onThemeFiltersUpdate}
-              handleSpaceFilter={onSpaceFiltersUpdate}
-              handleExecutionFilter={onExecutionFiltersUpdate}
+              setFilteredItems={setFilteredItems}
+              setIsLoading={setIsLoading}
             />
           </div>
         </div>

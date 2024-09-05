@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
@@ -28,9 +28,8 @@ const fetchExecutionTypes = async () => {
 };
 
 interface FiltersProps {
-  handleThemeFilter: (selected: string) => void;
-  handleSpaceFilter: (selected: string) => void;
-  handleExecutionFilter: (selected: string) => void;
+  setIsLoading: (loading: boolean) => void;
+  setFilteredItems: (obj: any) => void;
 }
 
 interface FilterItem {
@@ -39,9 +38,8 @@ interface FilterItem {
 }
 
 const Filters: React.FC<FiltersProps> = ({
-  handleThemeFilter,
-  handleSpaceFilter,
-  handleExecutionFilter,
+  setIsLoading,
+  setFilteredItems,
 }) => {
   const { data: theme = [] } = useQuery("themes", fetchThemes);
   const { data: spaces = [] } = useQuery("spaces", fetchSpaces);
@@ -50,6 +48,83 @@ const Filters: React.FC<FiltersProps> = ({
     fetchExecutionTypes
   );
 
+  const [themeFilters, setThemeFilters] = useState(new Set());
+  const [spaceFilters, setSpaceFilters] = useState(new Set());
+  const [executionFilters, setExecutionFilters] = useState(new Set());
+
+  useEffect(() => {
+    fetchVendorList(themeFilters, spaceFilters, executionFilters);
+  }, [themeFilters, spaceFilters, executionFilters]);
+
+  const fetchVendorList = async (
+    themeFilters = new Set(),
+    spaceFilters = new Set(),
+    executionFilters = new Set()
+  ) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
+        params: {
+          category: "INTERIOR_DESIGNER",
+          sub_category_1: Array.from(themeFilters as Set<string>)
+            .map((option) => option.toUpperCase())
+            .join(","),
+          sub_category_2: Array.from(spaceFilters as Set<string>)
+            .map((option) => option.toUpperCase())
+            .join(","),
+          sub_category_3: Array.from(executionFilters as Set<string>)
+            .map((option) => option.toUpperCase())
+            .join(","),
+        },
+      });
+      setFilteredItems(response.data.data);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleThemeFilter = (updatedItem: string) => {
+    if (updatedItem === "") setThemeFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      let updatedThemeFilters = new Set(themeFilters);
+      if (updatedThemeFilters.has(updatedItem)) {
+        updatedThemeFilters.delete(updatedItem);
+      } else {
+        updatedThemeFilters.add(updatedItem);
+      }
+      setThemeFilters(updatedThemeFilters);
+    }
+  };
+
+  const handleSpaceFilter = (updatedItem: string) => {
+    if (updatedItem === "") setSpaceFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      let updatedSpaceFilters = new Set(spaceFilters);
+      if (updatedSpaceFilters.has(updatedItem)) {
+        updatedSpaceFilters.delete(updatedItem);
+      } else {
+        updatedSpaceFilters.add(updatedItem);
+      }
+      setSpaceFilters(updatedSpaceFilters);
+    }
+  };
+
+  const handleExecutionFilter = (updatedItem: string) => {
+    if (updatedItem === "") setExecutionFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      let updatedExecutionFilters = new Set(executionFilters);
+      if (updatedExecutionFilters.has(updatedItem)) {
+        updatedExecutionFilters.delete(updatedItem);
+      } else {
+        updatedExecutionFilters.add(updatedItem);
+      }
+      setExecutionFilters(updatedExecutionFilters);
+    }
+  };
   const formatString = (str: string) => {
     const formattedStr = str.toLowerCase().replace(/_/g, " ");
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
