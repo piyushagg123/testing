@@ -14,8 +14,8 @@ import CryptoJS from "crypto-js";
 import constants from "../constants";
 import { Alert, LoadingButton } from "@mui/lab";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import { StepContent } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -342,10 +342,12 @@ const ForgotPassword: React.FC<OpenForgotPassword> = ({
           color: (theme) => theme.palette.grey[500],
         }}
       >
-        <CloseIcon />
+        <ArrowBackIcon />
       </IconButton>
       <div className="flex justify-center">
-        <p className="text-purple text-2xl">Forget your password</p>
+        <p className="text-2xl md:text-3xl text-center font-bold text-purple">
+          Forget your password
+        </p>
       </div>
 
       <DialogContent className="bg-prim text-text">
