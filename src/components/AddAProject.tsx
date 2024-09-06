@@ -6,7 +6,8 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
-import config from "../config";
+import constants from "../constants";
+import { Alert } from "@mui/material";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -70,7 +71,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   });
 
   const fetchStates = async () => {
-    const response = await axios.get(`${config.apiBaseUrl}/location/states`);
+    const response = await axios.get(`${constants.apiBaseUrl}/location/states`);
     return response.data.data;
   };
 
@@ -95,7 +96,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     if (value) {
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -144,7 +145,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/vendor/project`,
+        `${constants.apiBaseUrl}/vendor/project`,
         processedFormData,
         {
           headers: {
@@ -174,12 +175,10 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       <form onSubmit={handleSubmit} className="flex flex-col mt-6 h-[548]">
         {currentStep === 1 && (
           <div className="h-[385px]">
-            <p className="flex items-center justify-center text-[red]">
-              {error}
-            </p>
-            <div className="flex gap-4">
-              <label className="text-sm w-full md:w-auto">
-                Title <br />
+            {error && <Alert severity="error">{error}</Alert>}
+            <div className="flex gap-4 mb-[1em]">
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>Title</p>
                 <input
                   type="text"
                   className="w-full md:w-[250px] h-10 mt-1 px-2"
@@ -190,10 +189,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <br />
             <div className="flex gap-6 justify-between">
-              <label className="text-sm w-full md:w-auto">
-                Start Date <br />
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>Start Date </p>
                 <input
                   type="date"
                   className="w-full md:w-[250px] h-10 mt-1 px-2"
@@ -203,8 +201,8 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 />
               </label>
-              <label className="text-sm w-full md:w-auto">
-                End Date <br />
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>End Date </p>
                 <input
                   type="date"
                   className="w-full md:w-[250px] h-10 mt-1 px-2"
@@ -215,9 +213,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <label className="text-sm mt-4">
-              Description
-              <br />
+            <label className="text-sm mt-4 flex flex-col mb-[3em]">
+              <p>Description</p>
+
               <textarea
                 className="w-full md:w-[548px] mt-1 px-2"
                 rows={5}
@@ -227,9 +225,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 required
               />
             </label>
-            <br />
-            <br />
-            <br />
             <div className="flex gap-2 justify-end w-[548px]">
               <button
                 type="button"
@@ -244,9 +239,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
         {currentStep === 2 && (
           <>
-            <p className="flex items-center justify-center text-[red]">
-              {error}
-            </p>
+            {error && <Alert severity="error">{error}</Alert>}
             <div className="flex flex-col items-end flex-wrap justify-around w-[540px]">
               <label
                 htmlFor=""
@@ -254,7 +247,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -269,9 +262,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 htmlFor=""
                 className="flex  w-[540px] items-center justify-between"
               >
-                <p>Select the spaces (maximum of 7)</p>
+                <p>Select the spaces</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -287,7 +280,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -375,8 +368,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 </label>
               </div>
             </div>
-            <br />
-            <div className="flex gap-2 justify-between  items-center">
+            <div className="flex gap-2 justify-between  items-center mt-[1em]">
               <button
                 type="button"
                 onClick={prevStep}

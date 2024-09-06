@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Professional from "../components/Professional";
 import Filters from "../components/Filters";
-import config from "../config";
+import constants from "../constants";
 import { StateContext } from "../context/State";
 
 interface VendorItem {
@@ -44,7 +44,7 @@ const SearchProfessionals: React.FC = () => {
       setLoadingCities(true);
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -63,7 +63,7 @@ const SearchProfessionals: React.FC = () => {
   ) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
+      const response = await axios.get(`${constants.apiBaseUrl}/vendor/list`, {
         params: {
           category: "INTERIOR_DESIGNER",
           sub_category_1: Array.from(themeFilters as Set<string>)
@@ -94,7 +94,7 @@ const SearchProfessionals: React.FC = () => {
             Answer a few questions to get a list of Interior Designers suitable
             for your needs
           </p>
-          <div className="flex flex-col md:flex-row gap-2 items-end">
+          <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
             <label htmlFor="" className="text-text text-sm">
               Select your state
               <Autocomplete
@@ -171,12 +171,8 @@ const SearchProfessionals: React.FC = () => {
           </div>
         </div>
       </div>
-      <br />
-      <div
-        className="flex  justify-start flex-col lg:flex-row items-start"
-        style={{ paddingLeft: "64px", paddingRight: "64px" }}
-      >
-        <div className="w-fit" style={{ borderRight: "solid 0.5px #e3e3e3" }}>
+      <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px] mt-[1em]">
+        <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
             <Filters fetchVendorList={fetchVendorList} />
           </div>
@@ -200,7 +196,7 @@ const SearchProfessionals: React.FC = () => {
             ) : (
               <p>No home improvement pros for this category</p>
             )}
-            <div className="w-[270px] lg:mr-2">
+            <div className="w-[270px] lg:mr-2 hidden lg:block">
               <FormControl
                 className="w-[270px] px-[14px] py-[10px]"
                 sx={{ height: "40px" }}
@@ -224,7 +220,9 @@ const SearchProfessionals: React.FC = () => {
           {filteredItems ? (
             <>
               {isLoading ? (
-                <CircularProgress color="inherit" />
+                <div className="flex justify-center h-screen">
+                  <CircularProgress color="inherit" />
+                </div>
               ) : (
                 <>
                   {filteredItems.map((item) => (
@@ -236,11 +234,10 @@ const SearchProfessionals: React.FC = () => {
                         <Professional
                           about={item.description}
                           rating={item.rating}
-                          img={`${config.apiImageUrl}/${item.logo}`}
+                          img={item.logo}
                           profCat={item.business_name}
                         />
                         <hr />
-                        <br />
                       </div>
                     </NavLink>
                   ))}
@@ -250,7 +247,6 @@ const SearchProfessionals: React.FC = () => {
           ) : (
             <></>
           )}
-          <br />
         </div>
       </div>
     </div>

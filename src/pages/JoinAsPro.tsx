@@ -5,12 +5,13 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { StateContext } from "../context/State";
-import config from "../config";
+import constants from "../constants";
 
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
 
 interface SocialLinks {
   instagram: string;
@@ -79,10 +80,15 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     null
   );
 
-  const handleStateChange = async (_event: any, value: string) => {
+  const handleStateChange = async (
+    _event: React.SyntheticEvent,
+    value: string | null,
+    _reason: any,
+    _details?: any
+  ) => {
     setFormData((prevData) => ({
       ...prevData,
-      state: value,
+      state: value?.toString() ?? "",
       city: "",
     }));
     setCities([]);
@@ -90,7 +96,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     if (value) {
       try {
         const response = await axios.get(
-          `${config.apiBaseUrl}/location/cities?state=${value}`
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
         );
         setCities(response.data.data);
       } catch (error) {
@@ -101,7 +107,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
       setLoadingCities(false);
     }
   };
-
   const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -138,7 +143,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/vendor/onboard`,
+        `${constants.apiBaseUrl}/vendor/onboard`,
         processedFormData,
         {
           headers: {
@@ -154,17 +159,21 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         const formData = new FormData();
         formData.append("logo", logoFile);
 
-        await axios.post(`${config.apiBaseUrl}/image-upload/logo`, formData, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await axios.post(
+          `${constants.apiBaseUrl}/image-upload/logo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
       }
     } catch (error) {}
+    navigate("/");
     window.location.reload();
     handleClose();
-    navigate("/");
   };
 
   const nextStep = () => {
@@ -228,11 +237,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     setError("");
   };
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
-
-  const cityOptions = formData.state
-    ? cities
-    : [{ title: "Select a state first", disabled: true }];
-
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setLogoFile(file);
@@ -256,14 +260,12 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           <h1 className="text-xl font-bold">
             Let's get started by creating your profile
           </h1>
-          <p className="text-center text-sm text-[red]">{error}</p>
-
+          {error && <Alert severity="error">{error}</Alert>}
           {currentStep === 1 && (
             <>
               <div className="flex gap-3">
-                <label className="text-[16px] w-fit">
-                  Business Name
-                  <br />
+                <label className="text-[16px] w-fit flex flex-col">
+                  <p>Business Name</p>
                   <input
                     type="text"
                     name="business_name"
@@ -341,9 +343,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   />
                 </label>
               </div>
-              <label className="text-sm mt-4">
-                Description
-                <br />
+              <label className="text-sm mt-4 flex flex-col">
+                <p>Description</p>
+
                 <textarea
                   name="description"
                   className="w-full md:w-[452px] mt-1 px-2"
@@ -368,11 +370,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
           {currentStep === 2 && (
             <>
-              <br />
-              <label htmlFor="" className="flex items-center">
+              <label htmlFor="" className="flex items-center mt-[1em]">
                 <p>Select your themes (maximum of three)</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -383,10 +384,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
 
-              <label htmlFor="" className="flex items-center">
-                <p>Select your spaces (maximum of three)</p>
+              <label htmlFor="" className="flex items-center justify-between">
+                <p>Select your spaces</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -403,8 +404,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               >
                 <p>Type of execution</p>
                 <MultipleSelect
-                  apiEndpoint={`${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
-                  maxSelection={3}
+                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  maxSelection={1}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -413,8 +414,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   }
                 />
               </label>
-              <br />
-              <div className="flex gap-2 justify-between w-[455px]">
+              <div className="flex gap-2 justify-between w-[455px] mt-[1em]">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -435,26 +435,29 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
           {currentStep === 3 && (
             <>
-              <br />
-              <label htmlFor="" className="flex items-center justify-between">
+              <label
+                htmlFor=""
+                className="flex items-center justify-between mt-[1em]"
+              >
                 <p>Select your state</p>
                 <Autocomplete
                   disablePortal
                   id="state-autocomplete"
                   options={state}
                   onChange={handleStateChange}
-                  sx={{ width: 220 }}
                   size="small"
+                  sx={{
+                    width: 208,
+                    borderRadius: "5px",
+                    border: "solid 0.3px",
+                    marginRight: "3px",
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       InputProps={{
                         ...params.InputProps,
-                        endAdornment: (
-                          <React.Fragment>
-                            {params.InputProps.endAdornment}
-                          </React.Fragment>
-                        ),
+                        endAdornment: <>{params.InputProps.endAdornment}</>,
                       }}
                     />
                   )}
@@ -467,29 +470,34 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <p>Select your city</p>
                 <Autocomplete
                   disablePortal
-                  id="city-autocomplete"
-                  options={cityOptions as string[]}
                   size="small"
-                  onChange={(_event, value) =>
+                  id="city-autocomplete"
+                  options={cities}
+                  onChange={(_event, value) => {
                     setFormData((prevData) => ({
                       ...prevData,
-                      city: value as string,
-                    }))
-                  }
+                      city: value ?? "",
+                    }));
+                  }}
                   loading={loadingCities}
-                  sx={{ width: 220 }}
+                  sx={{
+                    width: 208,
+                    borderRadius: "5px",
+                    border: "solid 0.3px",
+                    marginRight: "3px",
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (
-                          <React.Fragment>
+                          <>
                             {loadingCities ? (
                               <CircularProgress color="inherit" size={20} />
                             ) : null}
                             {params.InputProps.endAdornment}
-                          </React.Fragment>
+                          </>
                         ),
                       }}
                     />
@@ -520,8 +528,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   )}
                 </div>
               )}
-              <br />
-              <div className="flex gap-2 w-[455px] justify-between">
+              <div className="flex gap-2 w-[455px] justify-between mt-[1em]">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -542,9 +549,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           )}
           {currentStep === 4 && (
             <>
-              <br />
-
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-[1em]">
                 <label className="flex text-[16px] justify-between">
                   <p>
                     <InstagramIcon className="text-red" /> Instagram
@@ -558,8 +563,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     onChange={handleSocialChange}
                   />
                 </label>
-                <br />
-                <label className="flex text-[16px] justify-between">
+                <label className="flex text-[16px] justify-between mt-[1em]">
                   <p>
                     <FacebookIcon className="text-purple" /> Facebook
                   </p>
@@ -572,8 +576,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     onChange={handleSocialChange}
                   />
                 </label>
-                <br />
-                <label className="flex text-[16px] justify-between">
+                <label className="flex text-[16px] justify-between mt-[1em]">
                   <p>
                     <OpenInNewIcon className="text-darkgrey" /> Website
                   </p>
@@ -588,8 +591,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </label>
               </div>
 
-              <br />
-              <div className="flex gap-2 w-[455px] justify-between">
+              <div className="flex gap-2 w-[455px] justify-between mt-[1em]">
                 <button
                   type="button"
                   onClick={prevStep}

@@ -4,7 +4,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import ForgotPassword from "../components/ForgotPassword";
-import config from "../config";
+import constants from "../constants";
+import { Alert } from "@mui/material";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -61,89 +62,98 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        `${config.apiBaseUrl}/user/login`,
+        `${constants.apiBaseUrl}/user/login`,
         data
       );
 
       sessionStorage.setItem("token", response.data.access_token);
-      const user_data = await axios.get(`${config.apiBaseUrl}/user/details`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
+      const user_data = await axios.get(
+        `${constants.apiBaseUrl}/user/details`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
       setUserDetails(user_data.data.data);
       setLogin(true);
       navigate("/");
     } catch (error: any) {
-      setError(error.response.data.debug_info);
+      setError(error.response.data.message);
     }
   };
 
   return (
-    <div className="mt-16">
-      <div className="lg:h-screen h-full flex flex-col">
-        <div
-          className="w-fit m-auto p-8"
-          style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
-        >
-          <h1 className="text-2xl md:text-3xl text-center">
-            Log in to your account
-          </h1>
-          <br />
-          {error && (
-            <div className="text-red-500 w-[320px] mb-1 text-center bg-[#ff000020] p-1 border border-[red]">
-              {error}
-            </div>
-          )}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center justify-center"
+    <>
+      {window.scrollTo(0, 0)}
+      <div className="mt-16">
+        <div className="lg:h-screen h-full flex flex-col mt-[1em]">
+          <div
+            className="w-fit m-auto p-2 md:p-8"
+            style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
           >
-            <label className="text-sm">
-              Email or Mobile number <br />
-              <input
-                type="text"
-                id="emailOrMobile"
-                name="emailOrMobile"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
-              />
-            </label>
-            <br />
-            <label>
-              <div className="flex justify-between text-sm w-[320px]">
-                <p>Password</p>
-                <p>
-                  <ForgotPassword />
-                </p>
-              </div>{" "}
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="w-[320px] h-10 mt-1 px-2 rounded-[5px]"
-              />
-              <br />
-              <br />
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  className="p-2 w-[250px] rounded-[5px] border-text border-[2px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text"
-                >
-                  Continue
-                </button>
-              </div>
-            </label>
-          </form>
-          <br />
-          <p className="text-center">
-            Don't have an account{" "}
-            <NavLink to="/signup" className="underline">
-              Sign up
-            </NavLink>
-          </p>
+            <h1 className="text-2xl md:text-3xl text-center mb-[1em]">
+              Log in to your account
+            </h1>
+            {error && (
+              <Alert
+                severity="error"
+                sx={{
+                  width: "320px",
+                  padding: "2px",
+                  marginBottom: "5px",
+                }}
+              >
+                {" "}
+                {error}
+              </Alert>
+            )}
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col items-center justify-center"
+            >
+              <label className="text-sm flex flex-col">
+                <p>Email or Mobile number</p>
+                <input
+                  type="text"
+                  id="emailOrMobile"
+                  name="emailOrMobile"
+                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                />
+              </label>
+              <label className="mt-[1em]">
+                <div className="flex justify-between text-sm w-[270px] md:w-[320px]">
+                  <p>Password</p>
+                  <p>
+                    <ForgotPassword />
+                  </p>
+                </div>{" "}
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
+                />
+                <div className="flex justify-center mt-[2em]">
+                  <button
+                    type="submit"
+                    className="p-2 w-[250px] rounded-[5px] border-text border-[2px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </label>
+            </form>
+            <p className="text-center mt-[1em]">
+              Don't have an account{" "}
+              <NavLink to="/signup" className="underline">
+                Sign up
+              </NavLink>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

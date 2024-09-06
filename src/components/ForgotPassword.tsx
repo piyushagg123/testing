@@ -13,7 +13,10 @@ import { Input as BaseInput } from "@mui/base/Input";
 import { styled } from "@mui/system";
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import config from "../config";
+import constants from "../constants";
+import { Alert, LoadingButton } from "@mui/lab";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -260,28 +263,34 @@ const ForgotPassword = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [accessToken, setAccessToken] = React.useState("");
+  const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleNext = async () => {
+    setError("");
+    setLoading(true);
     try {
       if (activeStep === 0) {
         const response = await axios.get(
-          `${config.apiBaseUrl}/user/password-reset/otp?email=${email}`
+          `${constants.apiBaseUrl}/user/password-reset/otp?email=${email}`
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          setError("");
         }
       } else if (activeStep === 1) {
         const response = await axios.get(
-          `${config.apiBaseUrl}/user/password-reset/validate-otp?otp=${otp}&email=${email}`
+          `${constants.apiBaseUrl}/user/password-reset/validate-otp?otp=${otp}&email=${email}`
         );
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setAccessToken(response.data.otp_access_token);
+          setError("");
         }
       } else if (activeStep === 2) {
         const newPass = CryptoJS.SHA1(password).toString();
         const response = await axios.post(
-          `${config.apiBaseUrl}/user/password-reset/update`,
+          `${constants.apiBaseUrl}/user/password-reset/update`,
           { password: newPass },
           {
             headers: {
@@ -291,10 +300,14 @@ const ForgotPassword = () => {
         );
         if (response.data.success) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          setError("");
         }
         handleClose();
       }
-    } catch (error) {}
+    } catch (error: any) {
+      setError(error.response.data.debug_info);
+    }
+    setLoading(false);
   };
 
   const handleReset = () => {
@@ -320,6 +333,7 @@ const ForgotPassword = () => {
     }
     setOpen(false);
     handleReset();
+    setError("");
   };
   return (
     <div className="text-text">
@@ -340,12 +354,26 @@ const ForgotPassword = () => {
           },
         }}
       >
-        <DialogTitle className="bg-prim">
+        <DialogTitle className="bg-prim flex items-center justify-between">
           <p className="text-text text-2xl">Forgot your password</p>
+
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent className="bg-prim text-text">
           <Box sx={{ width: "100%" }}>
-            <Stepper activeStep={activeStep}>
+            {error && <Alert severity="error">{error}</Alert>}
+            <Stepper activeStep={activeStep} sx={{ marginTop: "1em" }}>
               {steps.map((label, index) => (
                 <Step key={index}>
                   <StepLabel>{label}</StepLabel>
@@ -385,6 +413,7 @@ const ForgotPassword = () => {
                         flexDirection: "column",
                         justifyContent: "center",
                         gap: 2,
+                        marginTop: 3,
                       }}
                     >
                       <OTP
@@ -412,19 +441,45 @@ const ForgotPassword = () => {
                     </Box>
                   )}
                 </div>
+
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     pt: 2,
                     justifyContent: "flex-end",
+                    gap: "10px",
                   }}
                 >
-                  <Button onClick={handleNext}>
-                    <p className="text-text border-text border-[2px] px-3 py-1 rounded-[8px] ">
-                      {activeStep === steps.length - 1 ? "Submit" : "Next"}
-                    </p>
-                  </Button>
+                  {activeStep === 1 ? (
+                    <>
+                      <Button
+                        onClick={() => setActiveStep(0)}
+                        variant="outlined"
+                        style={{ color: "black", borderColor: "black" }}
+                      >
+                        Back
+                      </Button>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <LoadingButton
+                    onClick={handleNext}
+                    loading={loading}
+                    variant="outlined"
+                    style={{
+                      color: "black",
+                      borderColor: "black",
+                      height: "36px",
+                    }}
+                  >
+                    {loading ? (
+                      ""
+                    ) : (
+                      <>{activeStep === steps.length - 1 ? "Submit" : "Next"}</>
+                    )}
+                  </LoadingButton>
                 </Box>
               </React.Fragment>
             )}

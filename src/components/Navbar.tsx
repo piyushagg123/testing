@@ -8,7 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import config from "../config";
+import constants from "../constants";
 import pickelelogo from "../assets/PickeleLogo.png";
 import { Button as MaterialButton } from "@mui/material";
 
@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const result = await axios.delete(`${config.apiBaseUrl}/user/logout`, {
+      const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -70,10 +70,7 @@ const Navbar: React.FC = () => {
     setOpen(false);
   };
   return (
-    <div
-      className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg"
-      style={{ paddingLeft: "64px", paddingRight: "64px" }}
-    >
+    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg sm:px-[64px]">
       <div className="flex items-center gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
@@ -135,9 +132,7 @@ const Navbar: React.FC = () => {
                 Hi {userDetails?.first_name}!!
               </p>
 
-              <br />
-
-              <div className="">
+              <div className="mt-[1em]">
                 <div className="flex flex-col items-center bg-white justify-center w-[370px] rounded-[10px] p-2 mb-2">
                   {userDetails?.is_vendor ? (
                     <div className="">
@@ -155,7 +150,7 @@ const Navbar: React.FC = () => {
 
                   <div className="flex h-[40px]">
                     <button
-                      className=" text-[red] h-[36px] w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] "
+                      className=" text-[red] h-[36px] w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] mb-[2em] "
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
@@ -164,8 +159,6 @@ const Navbar: React.FC = () => {
                     >
                       <LogoutIcon /> <p>Log Out</p>
                     </button>
-                    <br />
-                    <br />
                   </div>
                 </div>
               </div>

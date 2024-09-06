@@ -3,26 +3,33 @@ import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
-import config from "../config";
-import { FormControlLabel } from "@mui/material";
+import constants from "../constants";
+import {
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const fetchThemes = async () => {
   const response = await axios.get(
-    `${config.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
+    `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
   );
   return response.data.data.value;
 };
 
 const fetchSpaces = async () => {
   const response = await axios.get(
-    `${config.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
+    `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
   );
   return response.data.data.value;
 };
 
 const fetchExecutionTypes = async () => {
   const response = await axios.get(
-    `${config.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
+    `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
   );
   return response.data.data.value;
 };
@@ -104,9 +111,6 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const formattedSpaces = spaces.map((item: FilterItem) =>
     formatString(item.value)
   );
-  const formattedExecution = executionType.map((item: FilterItem) =>
-    formatString(item.value)
-  );
 
   const [filterMenu, setFilterMenu] = useState(false);
   const [selectedThemes, setSelectedThemes] = useState(new Set<string>());
@@ -159,13 +163,35 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
 
   return (
     <div className=" flex flex-col gap-3  text-text w-[225px]">
-      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px]">
-        <p
-          className="font-bold text-base text-darkgrey"
-          onClick={() => setFilterMenu(() => true)}
-        >
-          FILTERS
-        </p>
+      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
+        <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
+          <p
+            className="font-bold text-base text-darkgrey"
+            onClick={() => setFilterMenu(() => true)}
+          >
+            <FilterAltIcon />
+          </p>
+
+          <div className="lg:hidden">
+            <FormControl
+              className="w-[200px] py-[10px] left-[15px]"
+              sx={{ height: "40px" }}
+              size="small"
+            >
+              <InputLabel id="sort-by-label">Sort by</InputLabel>
+              <Select
+                className="bg-prim"
+                labelId="sort-by-label"
+                id="sort-by-select"
+                label="Sort By"
+              >
+                <MenuItem value={"rating"}>Rating</MenuItem>
+                <MenuItem value={"recommended"}>Recommended</MenuItem>
+                <MenuItem value={"popular"}>Popular</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
         {filterMenu ? (
           <>
             <div
@@ -227,27 +253,44 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                     );
                   })}
                 </div>
-                <div className="flex flex-col gap-2 p-3">
-                  <h3 className="font-bold text-[19px]">Execution Type</h3>
-
-                  {formattedExecution.map((item: string) => {
+                <div className="flex flex-col gap-7 pt-5">
+                  <p className="font-bold text-base text-darkgrey">
+                    EXECUTION TYPE
+                  </p>
+                  {executionType.map((item: FilterItem) => {
+                    const labelValue =
+                      item.value === "DESIGN"
+                        ? constants.DESIGN
+                        : item.value === "MATERIAL_SUPPORT"
+                        ? constants.MATERIAL_SUPPORT
+                        : item.value === "COMPLETE"
+                        ? constants.COMPLETE
+                        : "";
                     return (
                       <FormControlLabel
-                        key={item}
+                        sx={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                        }}
                         className="-mb-2.5 -mt-2.5"
                         control={
                           <Checkbox
-                            checked={selectedExecutions.has(item)}
+                            checked={selectedExecutions.has(item.value)}
                             sx={{
                               "&.Mui-checked": {
                                 color: "#ff5757",
                               },
+
                               transform: "scale(0.75)",
+                              paddingY: 0,
                             }}
-                            onChange={() => handleExecutionCheckboxChange(item)}
+                            onChange={(_event: any) => {
+                              handleExecutionFilter(item.value);
+                              handleExecutionCheckboxChange(item.value);
+                            }}
                           />
                         }
-                        label={<span className="text-sm">{item}</span>}
+                        label={<span className="text-sm">{labelValue}</span>}
                       />
                     );
                   })}
@@ -274,7 +317,7 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
       </div>
       <div className="hidden lg:flex flex-col gap-0  h-screen">
         <div className="flex flex-col gap-1 pt-3">
-          <text className="font-bold text-base text-darkgrey">THEMES</text>
+          <p className="font-bold text-base text-darkgrey">THEMES</p>
           {formattedThemes.map((item: string) => {
             return (
               <FormControlLabel
@@ -298,7 +341,7 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
           })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <text className="font-bold text-base text-darkgrey">SPACES</text>
+          <p className="font-bold text-base text-darkgrey">SPACES</p>
           {formattedSpaces.map((item: string) => {
             return (
               <FormControlLabel
@@ -321,28 +364,42 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
             );
           })}
         </div>
-        <div className="flex flex-col gap-1 pt-5">
-          <text className="font-bold text-base text-darkgrey">
-            EXECUTION TYPE
-          </text>
-          {formattedExecution.map((item: string) => {
+        <div className="flex flex-col gap-7 pt-5">
+          <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
+          {executionType.map((item: FilterItem) => {
+            const labelValue =
+              item.value === "DESIGN"
+                ? constants.DESIGN
+                : item.value === "MATERIAL_SUPPORT"
+                ? constants.MATERIAL_SUPPORT
+                : item.value === "COMPLETE"
+                ? constants.COMPLETE
+                : "";
             return (
               <FormControlLabel
-                key={item}
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
-                    checked={selectedExecutions.has(item)}
+                    checked={selectedExecutions.has(item.value)}
                     sx={{
                       "&.Mui-checked": {
                         color: "#ff5757",
                       },
+
                       transform: "scale(0.75)",
+                      paddingY: 0,
                     }}
-                    onChange={() => handleExecutionCheckboxChange(item)}
+                    onChange={(_event: any) => {
+                      handleExecutionFilter(item.value);
+                      handleExecutionCheckboxChange(item.value);
+                    }}
                   />
                 }
-                label={<span className="text-sm">{item}</span>}
+                label={<span className="text-sm">{labelValue}</span>}
               />
             );
           })}
