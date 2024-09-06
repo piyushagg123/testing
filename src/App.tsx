@@ -12,6 +12,7 @@ import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
+import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
@@ -62,6 +63,7 @@ const App: React.FC = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<SearchProfessionals />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route
             path="/search-professionals"
             element={<SearchProfessionals />}
