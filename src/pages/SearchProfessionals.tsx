@@ -55,6 +55,34 @@ const SearchProfessionals: React.FC = () => {
       setCities([]);
     }
   };
+
+  const fetchVendorList = async (
+    themeFilters = new Set(),
+    spaceFilters = new Set(),
+    executionFilters = new Set()
+  ) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
+        params: {
+          category: "INTERIOR_DESIGNER",
+          sub_category_1: Array.from(themeFilters as Set<string>)
+            .map((option) => option.toUpperCase())
+            .join(","),
+          sub_category_2: Array.from(spaceFilters as Set<string>)
+            .map((option) => option.toUpperCase())
+            .join(","),
+          sub_category_3: Array.from(executionFilters as Set<string>)
+            .map((option) => option.toUpperCase())
+            .join(","),
+        },
+      });
+      setFilteredItems(response.data.data);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="mt-16">
       <div className="flex flex-col">
@@ -150,10 +178,7 @@ const SearchProfessionals: React.FC = () => {
       >
         <div className="w-fit" style={{ borderRight: "solid 0.5px #e3e3e3" }}>
           <div className="flex flex-wrap justify-center gap-2 lg:block">
-            <Filters
-              setFilteredItems={setFilteredItems}
-              setIsLoading={setIsLoading}
-            />
+            <Filters fetchVendorList={fetchVendorList} />
           </div>
         </div>
         <div className="w-full">

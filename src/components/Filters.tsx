@@ -28,8 +28,7 @@ const fetchExecutionTypes = async () => {
 };
 
 interface FiltersProps {
-  setIsLoading: (loading: boolean) => void;
-  setFilteredItems: (obj: any) => void;
+  fetchVendorList: (themes: any, space: any, execution: any) => void;
 }
 
 interface FilterItem {
@@ -37,10 +36,7 @@ interface FilterItem {
   value: string;
 }
 
-const Filters: React.FC<FiltersProps> = ({
-  setIsLoading,
-  setFilteredItems,
-}) => {
+const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const { data: theme = [] } = useQuery("themes", fetchThemes);
   const { data: spaces = [] } = useQuery("spaces", fetchSpaces);
   const { data: executionType = [] } = useQuery(
@@ -55,34 +51,6 @@ const Filters: React.FC<FiltersProps> = ({
   useEffect(() => {
     fetchVendorList(themeFilters, spaceFilters, executionFilters);
   }, [themeFilters, spaceFilters, executionFilters]);
-
-  const fetchVendorList = async (
-    themeFilters = new Set(),
-    spaceFilters = new Set(),
-    executionFilters = new Set()
-  ) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(`${config.apiBaseUrl}/vendor/list`, {
-        params: {
-          category: "INTERIOR_DESIGNER",
-          sub_category_1: Array.from(themeFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_2: Array.from(spaceFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_3: Array.from(executionFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-        },
-      });
-      setFilteredItems(response.data.data);
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleThemeFilter = (updatedItem: string) => {
     if (updatedItem === "") setThemeFilters(new Set());
