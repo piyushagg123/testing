@@ -134,9 +134,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               </div>
               <Divider orientation="vertical" flexItem />
               <div className="flex flex-col ">
-                <br />
-                <p>What our customers said</p>
-                <br />
+                <p className="my-[1em]">What our customers said</p>
                 <div className="flex items-center gap-3">
                   <p className="flex items-center gap-3 justify-between w-[293px]">
                     <p className="flex items-center text-sm"> Work Quality</p>
@@ -192,8 +190,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               </div>
             </div>
 
-            <br />
-            <div className="flex flex-col gap-9 justify-start w-full">
+            <div className="flex flex-col gap-9 justify-start w-full mt-[1em]">
               {reviews?.map((review: Review) => (
                 <div className="flex items-start gap-2">
                   <p
@@ -235,9 +232,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               <div>
                 <img src={reviewImage} alt="" className="w-[300px]" />
               </div>
-              <br />
-              <p className="">No reviews added yet by the users</p>
-              <br />
+              <p className="my-[1em]">No reviews added yet by the users</p>
             </div>
           </div>
         </>

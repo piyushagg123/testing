@@ -12,6 +12,7 @@ import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
+import AboutUs from "./pages/AboutUs";
 import ProfessionalInfo from "./pages/ProfessionalInfo";
 
 const fetchUserData = async () => {
@@ -61,6 +62,7 @@ const App: React.FC = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<SearchProfessionals />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route
             path="/search-professionals"
             element={<SearchProfessionals />}
@@ -74,8 +76,6 @@ const App: React.FC = () => {
           <Route path="/profile" element={<ProfessionalInfo flag={true} />} />
           <Route path="/*" element={<Error />} />
         </Routes>
-        <br />
-        <br />
         <Footer />
       </Router>
     </div>

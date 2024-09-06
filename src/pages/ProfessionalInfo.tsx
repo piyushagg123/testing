@@ -228,7 +228,7 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
-            <div className="flex flex-col md:flex-row items-start md:items-end gap-3 mb-[1em]">
+            <div className="flex flex-col md:flex-row items-start md:items-end gap-3 mt-[2em] mb-[1em]">
               <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
