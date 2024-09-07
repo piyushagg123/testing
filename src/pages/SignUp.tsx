@@ -222,7 +222,7 @@ const SignUp = () => {
                         onChange={(event) => setIsChecked(event.target.checked)}
                       />
                     </div>{" "}
-                    <div>Join as pro</div>
+                    <div>Join as a professional</div>
                   </label>
                   <br />
                   <div className="flex justify-center">
