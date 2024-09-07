@@ -79,13 +79,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
       {showProjectDetails ? (
         <Card
           sx={{
-            height: 340,
             width: "355px",
             [themes.breakpoints.down("md")]: {
-              width: "300px",
+              width: "350px",
             },
             [themes.breakpoints.down("sm")]: {
-              width: "250px",
+              width: "90vw",
             },
             [themes.breakpoints.down("xs")]: {
               width: "200px",
@@ -112,7 +111,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               </Typography>
               <Typography variant="body2">
                 <p className="flex gap-2 items-center">
-                  <span className="font-bold">Theme: </span>
                   {themeArray.map((item, ind) =>
                     ind < 2 ? (
                       <Chip

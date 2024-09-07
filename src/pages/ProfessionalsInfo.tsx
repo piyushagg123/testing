@@ -173,11 +173,11 @@ const ProfessionalsInfo = () => {
     <>
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
-        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
+        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <br />
           <div className=" md:w-max m-auto lg:m-0">
             <br />
-            <div className="flex flex-col md:flex-row items-start md:items-end gap-3">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
               <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
@@ -238,7 +238,7 @@ const ProfessionalsInfo = () => {
                       ))}
                   </div>
                 </p>
-                <p className="flex gap-2 items-center">
+                <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     EXECUTION TYPE :
                   </span>{" "}
@@ -256,7 +256,11 @@ const ProfessionalsInfo = () => {
                           }
                           variant="outlined"
                           key={ind}
-                          sx={{ height: "25px" }}
+                          sx={{
+                            height: "25px",
+                            maxWidth: "95vw",
+                            overflowWrap: "break-word",
+                          }}
                         />
                       </>
                     ))}
@@ -330,13 +334,15 @@ const ProfessionalsInfo = () => {
                 </TabList>
               </Box>
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px]">
-                  <p className="text-base">{vendorData?.description}</p>
+                <div className="w-[95vw] lg:w-[750px]">
+                  <p className="text-sm md:text-base text-justify">
+                    {vendorData?.description}
+                  </p>
                   <br />
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <div className="w-[95vw]  lg:w-[750px] flex justify-center flex-col items-center m-auto md:m-0">
                   <br />
                   <div className="flex flex-wrap">
                     {!projectsData ? (
@@ -356,7 +362,7 @@ const ProfessionalsInfo = () => {
                       </div>
                     ) : selectedProject ? (
                       <div className="flex flex-col">
-                        <div className="flex justify-start gap-60 md:w-[500px] lg:w-[750px]">
+                        <div className="flex justify-start gap-60 lg:w-[750px]">
                           <button
                             className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
                             onClick={handleBackClick}
@@ -378,7 +384,7 @@ const ProfessionalsInfo = () => {
                         <br />
                       </div>
                     ) : (
-                      <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
+                      <div className="flex flex-wrap  lg:w-[750px] justify-center md:justify-between">
                         {projectsData.map((item, ind) => (
                           <div
                             key={ind}
@@ -404,7 +410,7 @@ const ProfessionalsInfo = () => {
                 </div>
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
                   <br />
                   <Reviews id={Number(id)} />
                   <br />
