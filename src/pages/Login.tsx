@@ -98,15 +98,11 @@ const Login = () => {
                 </Link>
               </span>
             </p>
-            <br />
-            <br />
 
-            <div className="w-fit m-auto p-2 md:p-8 ">
-              <h1 className="text-2xl md:text-3xl text-center font-bold text-purple">
+            <div className="w-fit m-auto p-2 md:p-8 mt-[2em]">
+              <h1 className="text-2xl md:text-3xl text-center font-bold text-purple mb-[2em]">
                 Log in to your account
               </h1>
-              <br />
-              <br />
               {error && (
                 <Alert
                   severity="error"
@@ -131,8 +127,7 @@ const Login = () => {
                   size="small"
                   sx={{ width: "300px" }}
                 />
-                <br />
-                <label>
+                <label className="mt-[1em]">
                   <div className="flex justify-end text-sm w-[300px]">
                     <p
                       onClick={() => setOpenForgotPassword(false)}
@@ -151,9 +146,7 @@ const Login = () => {
                   />
                 </label>
 
-                <br />
-
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-[1em]">
                   <button
                     type="submit"
                     className="p-2 w-[250px] rounded-[5px]  text-white bg-purple  "
@@ -170,26 +163,18 @@ const Login = () => {
           </div>
         )}
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
-          <br />
-          <br />
-          <br />
-          <br />
-          <h1 className="text-xl md:text-3xl font-bold">
+          <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
             Join today to recreate your home
           </h1>
-          <br />
-          <br />
-          <div className="flex items-center">
+          <div className="flex items-center mt-[2em]">
             <LabelImportantIcon className="text-sm" />
             <p>Explore vast selection of ideas</p>
           </div>
-          <br />
-          <div className="flex items-center">
+          <div className="flex items-center mt-[1em]">
             <LabelImportantIcon className="text-sm" />
             <p>Get matched with best interior designers near you</p>
           </div>
-          <br />
-          <div className="flex items-center">
+          <div className="flex items-center mt-[1em]">
             <LabelImportantIcon className="text-sm" />
             <p>Sit back, relax and get your home recreated.</p>
           </div>

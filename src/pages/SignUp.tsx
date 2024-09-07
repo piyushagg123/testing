@@ -112,26 +112,18 @@ const SignUp = () => {
       {window.scrollTo(0, 0)}
       <div className="grid grid-cols-1 md:grid-cols-2 h-full">
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
-          <br />
-          <br />
-          <br />
-          <br />
-          <h1 className="text-xl md:text-3xl font-bold">
+          <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
             Join today to recreate your home
           </h1>
-          <br />
-          <br />
-          <div className="flex items-center">
+          <div className="flex items-center mt-[2em]">
             <LabelImportantIcon className="text-sm" />
             <p>Explore vast selection of ideas</p>
           </div>
-          <br />
-          <div className="flex items-center">
+          <div className="flex items-center mt-[1em]">
             <LabelImportantIcon className="text-sm" />
             <p>Get matched with best interior designers near you</p>
           </div>
-          <br />
-          <div className="flex items-center">
+          <div className="flex items-center mt-[1em]">
             <LabelImportantIcon className="text-sm" />
             <p>Sit back, relax and get your home recreated.</p>
           </div>
@@ -147,10 +139,10 @@ const SignUp = () => {
           </p>
           {openJoinasPro ? (
             <div className="w-fit m-auto md:p-8 flex flex-col justify-center items-center ">
-              <h1 className="text-2xl md:text-3xl text-center font-bold text-purple">
+              <h1 className="text-2xl md:text-3xl text-center font-bold text-purple mb-[1em]">
                 Sign up for your account
               </h1>
-              <br />
+
               {error && (
                 <Alert
                   severity="error"
@@ -171,16 +163,14 @@ const SignUp = () => {
                   size="small"
                   sx={{ width: "300px" }}
                 />
-                <br />
 
                 <TextField
                   label="Last name"
                   id="last_name"
                   name="last_name"
                   size="small"
-                  sx={{ width: "300px" }}
+                  sx={{ width: "300px", marginY: "1em" }}
                 />
-                <br />
 
                 <TextField
                   label="Mobile number"
@@ -190,16 +180,13 @@ const SignUp = () => {
                   size="small"
                   sx={{ width: "300px" }}
                 />
-                <br />
-
                 <TextField
                   label="Email"
                   id="email"
                   name="email"
                   size="small"
-                  sx={{ width: "300px" }}
+                  sx={{ width: "300px", marginY: "1em" }}
                 />
-                <br />
                 <label>
                   <TextField
                     label="Password"
@@ -210,9 +197,7 @@ const SignUp = () => {
                     sx={{ width: "300px" }}
                   />
 
-                  <br />
-                  <br />
-                  <label htmlFor="" className="flex items-start gap-2">
+                  <label htmlFor="" className="flex items-start gap-2 mt-[2em]">
                     <div>
                       <input
                         type="checkbox"
@@ -224,8 +209,7 @@ const SignUp = () => {
                     </div>{" "}
                     <div>Join as a professional</div>
                   </label>
-                  <br />
-                  <div className="flex justify-center">
+                  <div className="flex justify-center mt-[1em]">
                     <button
                       type="submit"
                       className="p-2 mb-2 w-[250px] rounded-[5px]  text-white bg-purple  "
