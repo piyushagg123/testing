@@ -75,9 +75,9 @@ interface ProfessionalInfoProps {
   renderProfessionalInfoView: boolean;
 }
 
-const fetchVendorDetails = async (id: string, flag: boolean) => {
+const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
   let data;
-  if (flag) {
+  if (renderProfileView) {
     const response = await axios.get(
       `${constants.apiBaseUrl}/vendor/auth/details`,
       {
@@ -97,9 +97,9 @@ const fetchVendorDetails = async (id: string, flag: boolean) => {
   return data.data as VendorData;
 };
 
-const fetchVendorProjects = async (id: string, flag: boolean) => {
+const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
   let data;
-  if (flag) {
+  if (renderProfileView) {
     const response = await axios.get(
       `${constants.apiBaseUrl}/vendor/auth/project/details`,
       {
@@ -127,18 +127,18 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return;
   }
   const { login } = authContext;
-  const { professionalid } = useParams();
+  const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", professionalid],
-    () => fetchVendorDetails(professionalid!, renderProfileView)
+    ["vendorDetails", professionalId],
+    () => fetchVendorDetails(professionalId!, renderProfileView)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
-    ["vendorProjects", professionalid],
-    () => fetchVendorProjects(professionalid!, renderProfileView)
+    ["vendorProjects", professionalId],
+    () => fetchVendorProjects(professionalId!, renderProfileView)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -197,7 +197,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: ReviewFormObject = { vendor_id: Number(professionalid) };
+    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
     formData.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
@@ -227,7 +227,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   return (
     <>
       {window.scrollTo(0, 0)}
-      {console.log(professionalid)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
@@ -458,7 +457,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
                   {
                     <Reviews
-                      id={professionalid ? Number(professionalid) : Number(-1)}
+                      id={professionalId ? Number(professionalId) : Number(-1)}
                     />
                   }
                 </div>

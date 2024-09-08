@@ -68,7 +68,7 @@ const App: React.FC = () => {
             element={<SearchProfessionals />}
           />
           <Route
-            path="/search-professionals/:professionalid"
+            path="/search-professionals/:professionalId"
             element={
               <ProfessionalInfo
                 renderProfileView={false}
