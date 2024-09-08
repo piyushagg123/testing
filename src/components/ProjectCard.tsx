@@ -12,6 +12,8 @@ import {
   CardActionArea,
   Grid,
   useTheme,
+  Tooltip,
+  Button,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
@@ -71,7 +73,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
 
-  if (title) title = truncateText(title, 20);
+  // if (title) title = truncateText(title, 20);
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
 
   return (
@@ -103,7 +105,21 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 component="div"
                 className="flex items-center justify-between"
               >
-                <p className="font-bold text-base text-darkgrey">{title}</p>
+                {title && (
+                  <p className="font-bold text-base text-darkgrey">
+                    <Tooltip title={title} placement="top-start">
+                      <Button
+                        sx={{
+                          fontWeight: "700",
+                          color: "grey",
+                          textTransform: "none",
+                        }}
+                      >
+                        {truncateText(title, 20)}
+                      </Button>
+                    </Tooltip>
+                  </p>
+                )}
                 <p className="text-[10px] flex items-center text-sec">
                   <PlaceIcon sx={{ fontSize: "15px" }} />
                   {city}
@@ -122,6 +138,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                     ) : (
                       ""
                     )
+                  )}
+                  {themeArray.length > 2 && (
+                    <span>+{themeArray.length - 2}</span>
                   )}
                 </p>
               </Typography>
