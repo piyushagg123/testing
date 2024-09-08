@@ -127,20 +127,18 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return;
   }
   const { login } = authContext;
-  let professionalId = "-1";
   const { professionalid } = useParams();
-  professionalId = professionalid!;
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!, renderProfileView)
+    ["vendorDetails", professionalid],
+    () => fetchVendorDetails(professionalid!, renderProfileView)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
-    ["vendorProjects", professionalId],
-    () => fetchVendorProjects(professionalId!, renderProfileView)
+    ["vendorProjects", professionalid],
+    () => fetchVendorProjects(professionalid!, renderProfileView)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -199,7 +197,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
+    const formObject: ReviewFormObject = { vendor_id: Number(professionalid) };
     formData.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
@@ -458,7 +456,11 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-                  {<Reviews id={Number(professionalId)} />}
+                  {
+                    <Reviews
+                      id={professionalid ? Number(professionalid) : Number(-1)}
+                    />
+                  }
                 </div>
               </TabPanel>
             </TabContext>
