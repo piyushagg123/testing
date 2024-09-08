@@ -26,6 +26,7 @@ import ReviewDialog from "../components/ReviewDialog";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface VendorData {
   logo?: string;
@@ -69,8 +70,9 @@ interface ReviewFormObject {
   vendor_id?: number;
 }
 
-interface ProfileorProfessional {
-  flag: boolean;
+interface ProfessionalInfoProps {
+  renderProfileView: boolean;
+  renderProfessionalInfoView: boolean;
 }
 
 const fetchVendorDetails = async (id: string, flag: boolean) => {
@@ -115,28 +117,30 @@ const fetchVendorProjects = async (id: string, flag: boolean) => {
   }
   return data.data as ProjectData[];
 };
-const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
+const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
+  renderProfileView,
+  renderProfessionalInfoView,
+}) => {
   const authContext = useContext(AuthContext);
 
   if (authContext === undefined) {
     return;
   }
   const { login } = authContext;
-  let professionId = "-1";
-  if (!flag) {
-    const { id } = useParams();
-    professionId = id!;
-  }
+  let professionalId = "-1";
+  const { professionalid } = useParams();
+  professionalId = professionalid!;
+
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", professionId],
-    () => fetchVendorDetails(professionId!, flag)
+    ["vendorDetails", professionalId],
+    () => fetchVendorDetails(professionalId!, renderProfileView)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
-    ["vendorProjects", professionId],
-    () => fetchVendorProjects(professionId!, flag)
+    ["vendorProjects", professionalId],
+    () => fetchVendorProjects(professionalId!, renderProfileView)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -195,7 +199,7 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: ReviewFormObject = { vendor_id: Number(professionId) };
+    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
     formData.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
@@ -225,6 +229,7 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
   return (
     <>
       {window.scrollTo(0, 0)}
+      {console.log(professionalid)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
@@ -258,14 +263,12 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                     {formatCategory(vendorData?.sub_category_1 ?? "N/A")
                       .split(",")
                       .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item.charAt(0).toUpperCase() + item.slice(1)}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                          />
-                        </>
+                        <Chip
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
                       ))}
                   </div>
                 </p>
@@ -277,14 +280,12 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                   {formatCategory(vendorData?.sub_category_2 ?? "N/A")
                     .split(",")
                     .map((item, ind) => (
-                      <>
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      </>
+                      <Chip
+                        label={item.charAt(0).toUpperCase() + item.slice(1)}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
                     ))}
                 </p>
                 <p className="flex gap-2 items-center">
@@ -294,43 +295,37 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                   {(vendorData?.sub_category_3 ?? "N/A")
                     .split(",")
                     .map((item, ind) => (
-                      <>
-                        <Chip
-                          label={
-                            item === "DESIGN"
-                              ? constants.DESIGN
-                              : item === "MATERIAL_SUPPORT"
-                              ? constants.MATERIAL_SUPPORT
-                              : constants.COMPLETE
-                          }
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      </>
+                      <Chip
+                        label={
+                          item === "DESIGN"
+                            ? constants.DESIGN
+                            : item === "MATERIAL_SUPPORT"
+                            ? constants.MATERIAL_SUPPORT
+                            : constants.COMPLETE
+                        }
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
                     ))}
                 </p>
               </div>
             </div>
 
-            {login ? (
-              <>
-                <div className=" gap-3 hidden md:flex mb-[2em]">
-                  <div>
-                    {!flag && (
-                      <button
-                        className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
-                        style={{ border: "solid 0.5px" }}
-                        onClick={handleReviewDialogOpen}
-                      >
-                        <StarBorderIcon /> <p>Write a Review</p>
-                      </button>
-                    )}
-                  </div>
+            {login && (
+              <div className=" gap-3 hidden md:flex mb-[2em]">
+                <div>
+                  {renderProfessionalInfoView && (
+                    <button
+                      className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
+                      style={{ border: "solid 0.5px" }}
+                      onClick={handleReviewDialogOpen}
+                    >
+                      <StarBorderIcon /> <p>Write a Review</p>
+                    </button>
+                  )}
                 </div>
-              </>
-            ) : (
-              <></>
+              </div>
             )}
             <TabContext value={value}>
               <Box>
@@ -387,7 +382,7 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                {flag && (
+                {renderProfileView && (
                   <div
                     className={`${
                       selectedProject ? "hidden" : "flex w-full justify-end"
@@ -463,7 +458,7 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
-                  {<Reviews id={Number(professionId)} />}
+                  {<Reviews id={Number(professionalId)} />}
                 </div>
               </TabPanel>
             </TabContext>
@@ -599,40 +594,36 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                 {(vendorData?.social?.facebook ||
                   vendorData?.social?.instagram ||
                   vendorData?.social?.website) && (
-                  <>
-                    <div>
-                      <p className="font-bold text-base text-darkgrey">
-                        Socials
-                      </p>
-                      {vendorData.social.facebook && (
-                        <a
-                          href={vendorData.social.facebook}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FacebookIcon />
-                        </a>
-                      )}
-                      {vendorData.social.instagram && (
-                        <a
-                          href={vendorData.social.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <InstagramIcon />
-                        </a>
-                      )}
-                      {vendorData.social.website && (
-                        <a
-                          href={vendorData.social.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <OpenInNewIcon />
-                        </a>
-                      )}
-                    </div>
-                  </>
+                  <div>
+                    <p className="font-bold text-base text-darkgrey">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
                 )}
               </>
             )}
@@ -659,23 +650,16 @@ const ProfessionalInfo: React.FC<ProfileorProfessional> = ({ flag }) => {
                   color: (theme) => theme.palette.grey[500],
                 }}
               >
-                x
+                <CloseIcon />
               </IconButton>
             </div>
             {!isSubmitted ? (
-              <>
-                <AddAProject
-                  setProjectId={setProjectId}
-                  projectId={projectId}
-                />{" "}
-              </>
+              <AddAProject setProjectId={setProjectId} projectId={projectId} />
             ) : (
-              <>
-                <ProjectImages
-                  subCategories={selectedSubCategories}
-                  projectId={projectId}
-                />
-              </>
+              <ProjectImages
+                subCategories={selectedSubCategories}
+                projectId={projectId}
+              />
             )}
           </DialogContent>
         </Dialog>

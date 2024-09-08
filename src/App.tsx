@@ -68,12 +68,25 @@ const App: React.FC = () => {
             element={<SearchProfessionals />}
           />
           <Route
-            path="/search-professionals/:id"
-            element={<ProfessionalInfo flag={false} />}
+            path="/search-professionals/:professionalid"
+            element={
+              <ProfessionalInfo
+                renderProfileView={false}
+                renderProfessionalInfoView={true}
+              />
+            }
           />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<ProfessionalInfo flag={true} />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfessionalInfo
+                renderProfileView={true}
+                renderProfessionalInfoView={false}
+              />
+            }
+          />
           <Route path="/*" element={<Error />} />
         </Routes>
         <Footer />
