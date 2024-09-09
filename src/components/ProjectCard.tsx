@@ -72,8 +72,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     const formattedStr = str.toLowerCase().replace(/_/g, " ");
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
-
-  // if (title) title = truncateText(title, 20);
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
 
   return (

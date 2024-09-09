@@ -226,7 +226,10 @@ const SearchProfessionals: React.FC = () => {
         <div className="w-full">
           <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
             {filteredItems ? (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{ display: "flex", alignItems: "center" }}
+                className="pl-4 md:p-0"
+              >
                 <span className="font-bold text-base text-darkgrey">
                   INTERIOR DESIGNERS
                 </span>
