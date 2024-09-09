@@ -5,16 +5,15 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import SearchProfessionals from "./pages/SearchProfessionals";
-import ProfessionalsInfo from "./pages/ProfessionalsInfo";
-import Profile from "./pages/Profile";
+import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
 import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
 import AboutUs from "./pages/AboutUs";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+import ProfessionalInfo from "./pages/ProfessionalInfo";
 
 const fetchUserData = async () => {
   const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
@@ -69,12 +68,25 @@ const App: React.FC = () => {
             element={<SearchProfessionals />}
           />
           <Route
-            path="/search-professionals/:id"
-            element={<ProfessionalsInfo />}
+            path="/search-professionals/:professionalId"
+            element={
+              <ProfessionalInfo
+                renderProfileView={false}
+                renderProfessionalInfoView={true}
+              />
+            }
           />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfessionalInfo
+                renderProfileView={true}
+                renderProfessionalInfoView={false}
+              />
+            }
+          />
           <Route path="/*" element={<Error />} />
         </Routes>
         <Footer />
