@@ -160,6 +160,13 @@ const Login = () => {
         ) : (
           <div className="mt-28 p-1">
             <ForgotPassword setOpenForgotPassword={setOpenForgotPassword} />
+
+            <p
+              onClick={() => setOpenForgotPassword(true)}
+              className="cursor-pointer text-purple flex justify-center items-center"
+            >
+              Go back to login page
+            </p>
           </div>
         )}
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">

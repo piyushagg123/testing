@@ -215,8 +215,7 @@ const SearchProfessionals: React.FC = () => {
             </div>
           </div>
         </div>
-        <br />
-        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px]">
+        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px] mt-[1em]">
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               <Filters
@@ -283,15 +282,13 @@ const SearchProfessionals: React.FC = () => {
                         to={`/search-professionals/${item.vendor_id}`}
                         key={item.vendor_id}
                       >
-                        <div>
+                        <div className="mb-[2em]">
                           <Professional
                             about={item.description}
                             rating={item.rating}
                             img={item.logo}
                             profCat={item.business_name}
                           />
-                          <hr />
-                          <br />
                         </div>
                       </NavLink>
                     ))}
@@ -301,7 +298,6 @@ const SearchProfessionals: React.FC = () => {
             ) : (
               <></>
             )}
-            <br />
           </div>
         </div>
       </div>
