@@ -116,26 +116,18 @@ const SignUp: React.FC = () => {
       <div className="mt-16">
         <div className="flex justify-center flex-wrap h-full lg:h-full py-5">
           <div className="p-3 md:p-6 text-[13px] md:text-xl md:mr-4 gap-2 mb-4 md:mb-0">
-            <br />
-            <br />
-            <br />
-            <br />
-            <h1 className="text-xl md:text-3xl font-bold">
+            <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
               Join today to recreate your home
             </h1>
-            <br />
-            <br />
-            <div className="flex items-center">
+            <div className="flex items-center mt-[2em]">
               <LabelImportantIcon className="text-sm" />
               <p>Explore vast selection of ideas</p>
             </div>
-            <br />
-            <div className="flex items-center">
+            <div className="flex items-center mt-[1em]">
               <LabelImportantIcon className="text-sm" />
               <p>Get matched with best interior designers near you</p>
             </div>
-            <br />
-            <div className="flex items-center">
+            <div className="flex items-center mt-[1em]">
               <LabelImportantIcon className="text-sm" />
               <p>Sit back, relax and get your home recreated.</p>
             </div>
@@ -144,10 +136,9 @@ const SignUp: React.FC = () => {
             className="w-fit p-[1rem] md:p-8 flex flex-col"
             style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
           >
-            <h1 className="text-2xl md:text-3xl text-center">
+            <h1 className="text-2xl md:text-3xl text-center mb-[1em]">
               Sign up for your account
             </h1>
-            <br />
             {error && (
               <Alert
                 severity="error"
@@ -161,8 +152,8 @@ const SignUp: React.FC = () => {
               </Alert>
             )}
             <form className="flex flex-col" onSubmit={handleSubmit}>
-              <label className="text-sm">
-                First name <br />
+              <label className="text-sm flex flex-col">
+                <p>First name </p>
                 <input
                   type="text"
                   className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
@@ -170,9 +161,8 @@ const SignUp: React.FC = () => {
                   name="first_name"
                 />
               </label>
-              <br />
-              <label className="text-sm">
-                Last name <br />
+              <label className="text-sm mt-[1em] flex flex-col">
+                <p>Last name </p>
                 <input
                   type="text"
                   className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
@@ -180,9 +170,9 @@ const SignUp: React.FC = () => {
                   name="last_name"
                 />
               </label>
-              <br />
-              <label className="text-sm">
-                Mobile number <br />
+
+              <label className="text-sm mt-[1em] flex flex-col">
+                <p> Mobile number </p>
                 <input
                   type="number"
                   className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
@@ -190,9 +180,9 @@ const SignUp: React.FC = () => {
                   name="mobile"
                 />
               </label>
-              <br />
-              <label className="text-sm">
-                Email <br />
+
+              <label className="text-sm mt-[1em] flex flex-col mb-[1em]">
+                <p> Email </p>
                 <input
                   type="text"
                   id="email"
@@ -200,7 +190,6 @@ const SignUp: React.FC = () => {
                   className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 />
               </label>
-              <br />
               <label>
                 <div className="flex justify-between text-sm w-[270px] md:w-[320px] rounded-[5px]">
                   <p>Password</p>
@@ -211,9 +200,7 @@ const SignUp: React.FC = () => {
                   name="password"
                   className="w-[270px] md:w-[320px] h-10 mt-1 px-2 rounded-[5px]"
                 />
-                <br />
-                <br />
-                <label htmlFor="" className="flex items-start gap-2">
+                <label htmlFor="" className="flex items-start gap-2 mt-[2em]">
                   <div>
                     <input
                       type="checkbox"
@@ -225,8 +212,7 @@ const SignUp: React.FC = () => {
                   </div>{" "}
                   <div>Join as pro</div>
                 </label>
-                <br />
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-[1em]">
                   <button
                     type="submit"
                     className="p-2 w-[250px] rounded-[5px] border-text border-[2px] text-text bg-prim hover:bg-text hover:text-prim hover:border-text"
@@ -236,8 +222,7 @@ const SignUp: React.FC = () => {
                 </div>
               </label>
             </form>
-            <br />
-            <p className="text-center">
+            <p className="text-center mt-[1em]">
               Already have an account{" "}
               <NavLink to={"/login"} className={"underline"}>
                 Log in

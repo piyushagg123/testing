@@ -392,7 +392,7 @@ const ForgotPassword = () => {
                 {error}
               </Alert>
             )}
-            <br />
+
             <Stepper
               activeStep={activeStep}
               sx={{
@@ -400,6 +400,7 @@ const ForgotPassword = () => {
                 flexDirection: matches ? "row" : "column",
                 gap: matches ? "" : "10px",
                 alignItems: matches ? "" : "flex-start",
+                marginTop: "1em",
               }}
             >
               {steps.map((label, index) => (

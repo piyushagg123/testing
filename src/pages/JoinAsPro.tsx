@@ -264,9 +264,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           {currentStep === 1 && (
             <>
               <div className="flex flex-col md:flex-row gap-3">
-                <label className="text-[16px] w-fit">
-                  Business Name
-                  <br />
+                <label className="text-[16px] w-fit flex flex-col">
+                  <p>Business Name</p>
                   <input
                     type="text"
                     name="business_name"
@@ -344,9 +343,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   />
                 </label>
               </div>
-              <label className="text-sm mt-4">
-                Description
-                <br />
+              <label className="text-sm mt-4 flex flex-col">
+                <p>Description</p>
+
                 <textarea
                   name="description"
                   className="w-[235px] md:w-[482px] mt-1 px-2"
@@ -423,8 +422,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   }
                 />
               </label>
-              <br />
-              <div className="flex gap-2 justify-between md:w-[490px]">
+              <div className="flex gap-2 justify-between md:w-[490px] mt-[1em]">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -447,7 +445,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
             <>
               <label
                 htmlFor=""
-                className="flex flex-col md:flex-row items-center justify-between md:mt-10"
+                className="flex flex-col md:flex-row items-center justify-between md:mt-10 mt-[1em]"
               >
                 <p>Select your state</p>
                 <Autocomplete
@@ -538,8 +536,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   )}
                 </div>
               )}
-              <br />
-              <div className="flex gap-2 md:w-[455px] justify-between">
+              <div className="flex gap-2 md:w-[455px] justify-between mt-[1em]">
                 <button
                   type="button"
                   onClick={prevStep}
@@ -560,9 +557,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           )}
           {currentStep === 4 && (
             <>
-              <br />
-
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-[1em]">
                 <label className="flex flex-col md:flex-row text-[16px] justify-between">
                   <p>
                     <InstagramIcon className="text-red" /> Instagram
@@ -576,8 +571,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     onChange={handleSocialChange}
                   />
                 </label>
-                <br />
-                <label className="flex flex-col md:flex-row text-[16px] justify-between">
+                <label className="flex flex-col md:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
                     <FacebookIcon className="text-purple" /> Facebook
                   </p>
@@ -590,8 +584,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     onChange={handleSocialChange}
                   />
                 </label>
-                <br />
-                <label className="flex flex-col md:flex-row text-[16px] justify-between">
+                <label className="flex flex-col md:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
                     <OpenInNewIcon className="text-darkgrey" /> Website
                   </p>
@@ -606,8 +599,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </label>
               </div>
 
-              <br />
-              <div className="flex gap-2 md:w-[455px] justify-between">
+              <div className="flex gap-2 md:w-[455px] justify-between mt-[1em]">
                 <button
                   type="button"
                   onClick={prevStep}

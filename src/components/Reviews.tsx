@@ -25,11 +25,26 @@ interface Review {
 
 const Reviews: React.FC<user> = ({ id }) => {
   const fetchReviews = async () => {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
-    );
+    let data;
 
-    return response.data.data;
+    if (id === -1) {
+      const response = await axios.get(
+        `${constants.apiBaseUrl}/vendor/auth/reviews`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+      data = response.data;
+    } else {
+      const response = await axios.get(
+        `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
+      );
+      data = response.data;
+    }
+
+    return data.data;
   };
 
   const { data: reviews } = useQuery(["reviews", id], fetchReviews);
@@ -89,7 +104,7 @@ const Reviews: React.FC<user> = ({ id }) => {
   };
 
   return (
-    <>
+    <div className="my-[2em]">
       {reviews?.length > 0 ? (
         <>
           <div className={`flex flex-col w-full gap-3 mt-1`}>
@@ -119,9 +134,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               </div>
               <Divider orientation="vertical" flexItem />
               <div className="flex flex-col ">
-                <br />
-                <p>What our customers said</p>
-                <br />
+                <p className="my-[1em]">What our customers said</p>
                 <div className="flex items-center gap-3">
                   <p className="flex items-center gap-3 justify-between w-[293px]">
                     <p className="flex items-center text-sm"> Work Quality</p>
@@ -177,8 +190,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               </div>
             </div>
 
-            <br />
-            <div className="flex flex-col gap-9 justify-start w-full">
+            <div className="flex flex-col gap-9 justify-start w-full mt-[1em]">
               {reviews?.map((review: Review) => (
                 <div className="flex items-start gap-2">
                   <p
@@ -220,14 +232,12 @@ const Reviews: React.FC<user> = ({ id }) => {
               <div>
                 <img src={reviewImage} alt="" className="w-[300px]" />
               </div>
-              <br />
-              <p className="">No reviews added yet by the users</p>
-              <br />
+              <p className="my-[1em]">No reviews added yet by the users</p>
             </div>
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

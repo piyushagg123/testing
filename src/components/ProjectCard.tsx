@@ -98,12 +98,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               <WovenImageList items={arr} />
             </Box>
             <CardContent sx={{ padding: "0px 5px" }}>
-              <br />
               <Typography
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="flex items-center justify-between"
+                className="flex items-center justify-between mt-[1em]"
               >
                 {title && (
                   <p className="font-bold text-base text-darkgrey">
@@ -126,7 +125,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className="flex gap-2 items-center">
+                <p className="flex gap-2 items-center pb-1">
                   {themeArray.map((item, ind) =>
                     ind < 2 ? (
                       <Chip
@@ -210,7 +209,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 {imageObj[selectedSpace]?.map((img, i) => (
                   <>
                     <Item key={i} item={img} />
-                    <br />
                   </>
                 ))}
               </Carousel>
@@ -230,7 +228,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
 const Item: React.FC<ItemProps> = ({ item }) => {
   return (
-    <Paper sx={{ display: "flex", justifyContent: "center" }}>
+    <Paper
+      sx={{ display: "flex", justifyContent: "center", marginBottom: "1em" }}
+    >
       <img
         src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"

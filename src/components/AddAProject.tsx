@@ -178,9 +178,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
         {currentStep === 1 && (
           <div className="h-[385px]">
             {error && <Alert severity="error">{error}</Alert>}
-            <div className="flex gap-4">
-              <label className="text-sm  md:w-auto">
-                Title <br />
+            <div className="flex gap-4 mb-[1em]">
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>Title</p>
                 <input
                   type="text"
                   className="w-[220px] h-10 mt-1 px-2"
@@ -191,10 +191,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <br />
             <div className="flex flex-col md:flex-row gap-6 justify-between">
-              <label className="text-sm w-full md:w-auto">
-                Start Date <br />
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>Start Date </p>
                 <input
                   type="date"
                   className="w-[220px] h-10 mt-1 px-2"
@@ -204,8 +203,8 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 />
               </label>
-              <label className="text-sm w-full md:w-auto">
-                End Date <br />
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>End Date </p>
                 <input
                   type="date"
                   className="w-[220px] h-10 mt-1 px-2"
@@ -216,9 +215,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <label className="text-sm mt-4">
-              Description
-              <br />
+            <label className="text-sm mt-4 flex flex-col mb-[3em]">
+              <p>Description</p>
+
               <textarea
                 className="w-[220px] md:w-[548px] mt-1 px-2"
                 rows={5}
@@ -228,9 +227,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 required
               />
             </label>
-            <br />
-            <br />
-            <br />
             <div className="flex gap-2 justify-end w-[220px] md:w-[548px]">
               <button
                 type="button"
@@ -380,8 +376,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 </label>
               </div>
             </div>
-            <br />
-            <div className="flex gap-2 justify-between  items-center">
+            <div className="flex gap-2 justify-between  items-center mt-[1em]">
               <button
                 type="button"
                 onClick={prevStep}

@@ -5,15 +5,15 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import SearchProfessionals from "./pages/SearchProfessionals";
-import ProfessionalsInfo from "./pages/ProfessionalsInfo";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
 import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
+import AboutUs from "./pages/AboutUs";
+import ProfessionalInfo from "./pages/ProfessionalInfo";
 
 const fetchUserData = async () => {
   if (sessionStorage.getItem("token")) {
@@ -64,21 +64,33 @@ const App: React.FC = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<SearchProfessionals />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route
             path="/search-professionals"
             element={<SearchProfessionals />}
           />
           <Route
-            path="/search-professionals/:id"
-            element={<ProfessionalsInfo />}
+            path="/search-professionals/:professionalId"
+            element={
+              <ProfessionalInfo
+                renderProfileView={false}
+                renderProfessionalInfoView={true}
+              />
+            }
           />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfessionalInfo
+                renderProfileView={true}
+                renderProfessionalInfoView={false}
+              />
+            }
+          />
           <Route path="/*" element={<Error />} />
         </Routes>
-        <br />
-        <br />
         <Footer />
       </Router>
     </div>

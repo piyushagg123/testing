@@ -1,11 +1,18 @@
 import { FormEvent, useContext, useState } from "react";
-import img from "../assets/noImageinProject.jpg";
+import img from "../assets/background.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Chip, Tab, Box } from "@mui/material";
+import {
+  Chip,
+  Tab,
+  Box,
+  Dialog,
+  DialogContent,
+  IconButton,
+} from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -16,6 +23,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Reviews from "../components/Reviews";
 import ReviewDialog from "../components/ReviewDialog";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddAProject from "../components/AddAProject";
+import ProjectImages from "../components/ProjectImages";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface VendorData {
   logo?: string;
@@ -59,44 +70,89 @@ interface ReviewFormObject {
   vendor_id?: number;
 }
 
-const fetchVendorDetails = async (id: string) => {
-  const { data } = await axios.get(
-    `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
-  );
+interface ProfessionalInfoProps {
+  renderProfileView: boolean;
+  renderProfessionalInfoView: boolean;
+}
+
+const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
+  let data;
+  if (renderProfileView) {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/auth/details`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    data = response.data;
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
+    );
+    data = response.data;
+  }
 
   return data.data as VendorData;
 };
 
-const fetchVendorProjects = async (id: string) => {
-  const { data } = await axios.get(
-    `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
-  );
+const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
+  let data;
+  if (renderProfileView) {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/auth/project/details`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    data = response.data;
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
+    );
+    data = response.data;
+  }
   return data.data as ProjectData[];
 };
-
-const ProfessionalsInfo = () => {
+const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
+  renderProfileView,
+  renderProfessionalInfoView,
+}) => {
   const authContext = useContext(AuthContext);
 
   if (authContext === undefined) {
     return;
   }
   const { login } = authContext;
-  const { id } = useParams();
+  const { professionalId } = useParams();
+
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", id],
-    () => fetchVendorDetails(id!)
+    ["vendorDetails", professionalId],
+    () => fetchVendorDetails(professionalId!, renderProfileView)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
-    ["vendorProjects", id],
-    () => fetchVendorProjects(id!)
+    ["vendorProjects", professionalId],
+    () => fetchVendorProjects(professionalId!, renderProfileView)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const [projectId, setProjectId] = useState<number>(0);
+  const handleClose = () => {
+    setOpen(false);
+    setIsSubmitted(false);
+    setSelectedSubCategories([]);
+  };
 
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
@@ -141,7 +197,7 @@ const ProfessionalsInfo = () => {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: ReviewFormObject = { vendor_id: Number(id) };
+    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
     formData.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
@@ -168,16 +224,13 @@ const ProfessionalsInfo = () => {
 
   if (isVendorLoading || isProjectsLoading)
     return <div className="min-h-screen">Loading...</div>;
-
   return (
     <>
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
-          <br />
-          <div className=" md:w-max m-auto lg:m-0">
-            <br />
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+          <div className=" md:w-max m-auto lg:m-0 my-[2em]">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mt-[2em] mb-[1em]">
               <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
@@ -207,14 +260,12 @@ const ProfessionalsInfo = () => {
                     {formatCategory(vendorData?.sub_category_1 ?? "N/A")
                       .split(",")
                       .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item.charAt(0).toUpperCase() + item.slice(1)}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                          />
-                        </>
+                        <Chip
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
                       ))}
                   </div>
                 </p>
@@ -227,14 +278,12 @@ const ProfessionalsInfo = () => {
                     {formatCategory(vendorData?.sub_category_2 ?? "N/A")
                       .split(",")
                       .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item.charAt(0).toUpperCase() + item.slice(1)}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                          />
-                        </>
+                        <Chip
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
                       ))}
                   </div>
                 </p>
@@ -245,33 +294,31 @@ const ProfessionalsInfo = () => {
                   {(vendorData?.sub_category_3 ?? "N/A")
                     .split(",")
                     .map((item, ind) => (
-                      <>
-                        <Chip
-                          label={
-                            item === "DESIGN"
-                              ? constants.DESIGN
-                              : item === "MATERIAL_SUPPORT"
-                              ? constants.MATERIAL_SUPPORT
-                              : constants.COMPLETE
-                          }
-                          variant="outlined"
-                          key={ind}
-                          sx={{
-                            height: "25px",
-                            maxWidth: "95vw",
-                            overflowWrap: "break-word",
-                          }}
-                        />
-                      </>
+                      <Chip
+                        label={
+                          item === "DESIGN"
+                            ? constants.DESIGN
+                            : item === "MATERIAL_SUPPORT"
+                            ? constants.MATERIAL_SUPPORT
+                            : constants.COMPLETE
+                        }
+                        variant="outlined"
+                        key={ind}
+                        sx={{
+                          height: "25px",
+                          maxWidth: "95vw",
+                          overflowWrap: "break-word",
+                        }}
+                      />
                     ))}
                 </p>
               </div>
             </div>
-            <br />
-            {login ? (
-              <>
-                <div className=" gap-3 flex">
-                  <div>
+
+            {login && (
+              <div className=" gap-3 hidden md:flex mb-[2em]">
+                <div>
+                  {renderProfessionalInfoView && (
                     <button
                       className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
                       style={{ border: "solid 0.5px" }}
@@ -279,12 +326,9 @@ const ProfessionalsInfo = () => {
                     >
                       <StarBorderIcon /> <p>Write a Review</p>
                     </button>
-                  </div>
+                  )}
                 </div>
-                <br />
-              </>
-            ) : (
-              <></>
+              </div>
             )}
             <TabContext value={value}>
               <Box>
@@ -335,34 +379,44 @@ const ProfessionalsInfo = () => {
               </Box>
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[95vw] lg:w-[750px]">
-                  <p className="text-sm md:text-base text-justify">
+                  <p className="text-sm md:text-base text-justify mb-[1em]">
                     {vendorData?.description}
                   </p>
-                  <br />
                 </div>
               </TabPanel>
               <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[95vw]  lg:w-[750px] flex justify-center flex-col items-center m-auto md:m-0">
-                  <br />
-                  <div className="flex flex-wrap">
+                {renderProfileView && (
+                  <div
+                    className={`${
+                      selectedProject ? "hidden" : "flex w-full justify-end"
+                    }`}
+                  >
+                    <button
+                      className="hidden lg:flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                      onClick={() => setOpen(true)}
+                    >
+                      <AddCircleIcon /> Add a new project
+                    </button>
+                  </div>
+                )}
+                <div className="w-[95vw]  lg:w-[750px] flex justify-center flex-col items-center m-auto md:m-0 ">
+                  <div className="flex flex-wrap pt-[1em] mb-[3em]">
                     {!projectsData ? (
                       <div className="flex flex-col items-center justify-center">
-                        <div>
+                        <div className="mb-[1em]">
                           <img
                             src={projectImage}
                             alt=""
                             className="w-[300px]"
                           />
                         </div>
-                        <br />
-                        <p className="">
+                        <p className="mb-[1em]">
                           No projects added yet by the designer
                         </p>
-                        <br />
                       </div>
                     ) : selectedProject ? (
                       <div className="flex flex-col">
-                        <div className="flex justify-start gap-60 lg:w-[750px]">
+                        <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
                           <button
                             className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
                             onClick={handleBackClick}
@@ -370,8 +424,7 @@ const ProfessionalsInfo = () => {
                             <ArrowBackIcon />
                           </button>
                         </div>
-                        <br />
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3 mb-[1em]">
                           <Carousel
                             imageObj={selectedProject.images}
                             showProjectDetails={false}
@@ -381,10 +434,9 @@ const ProfessionalsInfo = () => {
                             title=""
                           />
                         </div>
-                        <br />
                       </div>
                     ) : (
-                      <div className="flex flex-wrap  lg:w-[750px] justify-center md:justify-between">
+                      <div className="flex flex-wrap lg:w-[750px] justify-center md:justify-between">
                         {projectsData.map((item, ind) => (
                           <div
                             key={ind}
@@ -405,34 +457,30 @@ const ProfessionalsInfo = () => {
                       </div>
                     )}
                   </div>
-                  <br />
-                  <br />
                 </div>
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
-                  <br />
-                  <Reviews id={Number(id)} />
-                  <br />
-                  <br />
+                  {
+                    <Reviews
+                      id={professionalId ? Number(professionalId) : Number(-1)}
+                    />
+                  }
                 </div>
               </TabPanel>
             </TabContext>
           </div>
         </div>
-        <br />
         <div className="w-[250px] text-lg ml-2 md:ml-10 mt-10">
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
             <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
           </div>
-          <br />
-          <div className=" ">
+          <div className="mt-[1em] ">
             <p className="font-bold text-base text-darkgrey">Email</p>
             <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
           </div>
-          <br />
-          <div className="flex flex-col justify-evenly gap-6">
+          <div className="flex flex-col justify-evenly mt-[1em] gap-6">
             {selectedProject ? (
               <>
                 <div>
@@ -553,40 +601,36 @@ const ProfessionalsInfo = () => {
                 {(vendorData?.social?.facebook ||
                   vendorData?.social?.instagram ||
                   vendorData?.social?.website) && (
-                  <>
-                    <div>
-                      <p className="font-bold text-base text-darkgrey">
-                        Socials
-                      </p>
-                      {vendorData.social.facebook && (
-                        <a
-                          href={vendorData.social.facebook}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FacebookIcon />
-                        </a>
-                      )}
-                      {vendorData.social.instagram && (
-                        <a
-                          href={vendorData.social.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <InstagramIcon />
-                        </a>
-                      )}
-                      {vendorData.social.website && (
-                        <a
-                          href={vendorData.social.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <OpenInNewIcon />
-                        </a>
-                      )}
-                    </div>
-                  </>
+                  <div>
+                    <p className="font-bold text-base text-darkgrey">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
                 )}
               </>
             )}
@@ -599,9 +643,36 @@ const ProfessionalsInfo = () => {
           reviewDialogOpen={reviewDialogOpen}
           reviewError={reviewError}
         />
+
+        <Dialog open={open} fullWidth>
+          <DialogContent sx={{ height: "max-content" }}>
+            <div className="flex justify-end">
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+            {!isSubmitted ? (
+              <AddAProject setProjectId={setProjectId} projectId={projectId} />
+            ) : (
+              <ProjectImages
+                subCategories={selectedSubCategories}
+                projectId={projectId}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
 };
 
-export default ProfessionalsInfo;
+export default ProfessionalInfo;
