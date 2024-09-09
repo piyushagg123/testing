@@ -79,7 +79,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
       {showProjectDetails ? (
         <Card
           sx={{
-            height: 340,
             width: "355px",
             [themes.breakpoints.down("md")]: {
               width: "300px",
