@@ -159,7 +159,7 @@ const Login = () => {
           </div>
         ) : (
           <div className="mt-28 p-1">
-            <ForgotPassword setOpenForgotPassword={setOpenForgotPassword} />
+            <ForgotPassword />
 
             <p
               onClick={() => setOpenForgotPassword(true)}

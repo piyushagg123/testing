@@ -93,7 +93,6 @@ const SignUp = () => {
       setLogin(true);
 
       if (isChecked) {
-        // setOpen(true);
         setOpenJoinasPro(false);
       } else {
         navigate("/");

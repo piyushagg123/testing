@@ -13,9 +13,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
 import { Alert, LoadingButton } from "@mui/lab";
-import IconButton from "@mui/material/IconButton";
 import { StepContent } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -250,12 +248,7 @@ OTP.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-interface OpenForgotPassword {
-  setOpenForgotPassword: (val: boolean) => void;
-}
-const ForgotPassword: React.FC<OpenForgotPassword> = ({
-  setOpenForgotPassword,
-}) => {
+const ForgotPassword = () => {
   const [otp, setOtp] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -335,15 +328,6 @@ const ForgotPassword: React.FC<OpenForgotPassword> = ({
   };
   return (
     <div className="text-text">
-      <IconButton
-        aria-label="close"
-        onClick={() => setOpenForgotPassword(true)}
-        sx={{
-          color: (theme) => theme.palette.grey[500],
-        }}
-      >
-        <ArrowBackIcon />
-      </IconButton>
       <div className="flex justify-center">
         <p className="text-2xl md:text-3xl text-center font-bold text-purple">
           Forget your password
