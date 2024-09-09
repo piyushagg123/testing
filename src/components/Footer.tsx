@@ -7,7 +7,7 @@ import constants from "../constants";
 
 const Footer = () => {
   return (
-    <div className=" bg-[#0D1216] text-white bottom-0 mt-[2em]">
+    <div className=" bg-[#0D1216] text-white bottom-0 pt-[2em]">
       <div className=" mt-5 gap-2  flex flex-col md:flex-row justify-start md:justify-between p-7 lg:p-16">
         <div>
           <img src={Logo} alt="" width={150} />
