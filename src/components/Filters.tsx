@@ -35,7 +35,11 @@ const fetchExecutionTypes = async () => {
 };
 
 interface FiltersProps {
-  fetchVendorList: (themes: any, space: any, execution: any) => void;
+  fetchVendorList: (
+    themeFilters: any,
+    spaceFilters: any,
+    executionFilters: any
+  ) => void;
 }
 
 interface FilterItem {
@@ -59,57 +63,16 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     fetchVendorList(themeFilters, spaceFilters, executionFilters);
   }, [themeFilters, spaceFilters, executionFilters]);
 
-  const handleThemeFilter = (updatedItem: string) => {
-    if (updatedItem === "") setThemeFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      let updatedThemeFilters = new Set(themeFilters);
-      if (updatedThemeFilters.has(updatedItem)) {
-        updatedThemeFilters.delete(updatedItem);
-      } else {
-        updatedThemeFilters.add(updatedItem);
-      }
-      setThemeFilters(updatedThemeFilters);
-    }
-  };
-
-  const handleSpaceFilter = (updatedItem: string) => {
-    if (updatedItem === "") setSpaceFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      let updatedSpaceFilters = new Set(spaceFilters);
-      if (updatedSpaceFilters.has(updatedItem)) {
-        updatedSpaceFilters.delete(updatedItem);
-      } else {
-        updatedSpaceFilters.add(updatedItem);
-      }
-      setSpaceFilters(updatedSpaceFilters);
-    }
-  };
-
-  const handleExecutionFilter = (updatedItem: string) => {
-    if (updatedItem === "") setExecutionFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      let updatedExecutionFilters = new Set(executionFilters);
-      if (updatedExecutionFilters.has(updatedItem)) {
-        updatedExecutionFilters.delete(updatedItem);
-      } else {
-        updatedExecutionFilters.add(updatedItem);
-      }
-      setExecutionFilters(updatedExecutionFilters);
-    }
-  };
   const formatString = (str: string) => {
     const formattedStr = str.toLowerCase().replace(/_/g, " ");
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
 
-  const formattedThemes = theme.map((item: FilterItem) =>
-    formatString(item.value)
+  const formattedThemes = theme.map((theme: FilterItem) =>
+    formatString(theme.value)
   );
-  const formattedSpaces = spaces.map((item: FilterItem) =>
-    formatString(item.value)
+  const formattedSpaces = spaces.map((space: FilterItem) =>
+    formatString(space.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);
@@ -119,46 +82,48 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     new Set<string>()
   );
 
-  const handleThemeCheckboxChange = (item: string) => {
-    const updatedThemes = new Set(selectedThemes);
-    if (updatedThemes.has(item)) {
-      updatedThemes.delete(item);
+  const handleCheckboxChange = (
+    item: string,
+    selectedItems: Set<any>,
+    setSelectedItems: React.Dispatch<React.SetStateAction<Set<any>>>,
+    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>,
+    filters: Set<any>
+  ) => {
+    const updatedItems = new Set(selectedItems);
+    if (updatedItems.has(item)) {
+      updatedItems.delete(item);
     } else {
-      updatedThemes.add(item);
+      updatedItems.add(item);
     }
-    setSelectedThemes(updatedThemes);
-    handleThemeFilter(item);
+    setSelectedItems(updatedItems);
+    handleFilterChange(item, filters, setFilters);
   };
 
-  const handleSpaceCheckboxChange = (item: string) => {
-    const updatedSpaces = new Set(selectedSpaces);
-    if (updatedSpaces.has(item)) {
-      updatedSpaces.delete(item);
-    } else {
-      updatedSpaces.add(item);
+  const handleFilterChange = (
+    updatedItem: string,
+    filters: Set<any>,
+    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>
+  ) => {
+    if (updatedItem === "") setFilters(new Set());
+    else {
+      updatedItem = updatedItem.replace(/\s+/g, "_");
+      const updatedFilters = new Set(filters);
+      if (updatedFilters.has(updatedItem)) {
+        updatedFilters.delete(updatedItem);
+      } else {
+        updatedFilters.add(updatedItem);
+      }
+      setFilters(updatedFilters);
     }
-    setSelectedSpaces(updatedSpaces);
-    handleSpaceFilter(item);
-  };
-
-  const handleExecutionCheckboxChange = (item: string) => {
-    const updatedExecutions = new Set(selectedExecutions);
-    if (updatedExecutions.has(item)) {
-      updatedExecutions.delete(item);
-    } else {
-      updatedExecutions.add(item);
-    }
-    setSelectedExecutions(updatedExecutions);
-    handleExecutionFilter(item);
   };
 
   const clearAll = () => {
     setSelectedThemes(new Set());
     setSelectedSpaces(new Set());
     setSelectedExecutions(new Set());
-    handleThemeFilter("");
-    handleSpaceFilter("");
-    handleExecutionFilter("");
+    handleFilterChange("", themeFilters, setThemeFilters);
+    handleFilterChange("", spaceFilters, setSpaceFilters);
+    handleFilterChange("", executionFilters, setExecutionFilters);
   };
 
   return (
@@ -205,24 +170,32 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                 <div className="flex flex-col gap-2 p-3 ">
                   <h3 className="font-bold text-[19px]">Themes</h3>
 
-                  {formattedThemes.map((item: string) => {
+                  {formattedThemes.map((theme: string) => {
                     return (
                       <FormControlLabel
-                        key={item}
+                        key={theme}
                         className="-mb-2.5 -mt-2.5"
                         control={
                           <Checkbox
-                            checked={selectedThemes.has(item)}
+                            checked={selectedThemes.has(theme)}
                             sx={{
                               "&.Mui-checked": {
                                 color: "#ff5757",
                               },
                               transform: "scale(0.75)",
                             }}
-                            onChange={() => handleThemeCheckboxChange(item)}
+                            onChange={() =>
+                              handleCheckboxChange(
+                                theme,
+                                selectedThemes,
+                                setSelectedThemes,
+                                setThemeFilters,
+                                themeFilters
+                              )
+                            }
                           />
                         }
-                        label={<span className="text-sm">{item}</span>}
+                        label={<span className="text-sm">{theme}</span>}
                       />
                     );
                   })}
@@ -231,24 +204,32 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                 <div className="flex flex-col gap-2">
                   <h3 className="font-bold text-[19px]">Spaces</h3>
 
-                  {formattedSpaces.map((item: string) => {
+                  {formattedSpaces.map((space: string) => {
                     return (
                       <FormControlLabel
-                        key={item}
+                        key={space}
                         className="-mb-2.5 -mt-2.5"
                         control={
                           <Checkbox
-                            checked={selectedSpaces.has(item)}
+                            checked={selectedSpaces.has(space)}
                             sx={{
                               "&.Mui-checked": {
                                 color: "#ff5757",
                               },
                               transform: "scale(0.75)",
                             }}
-                            onChange={() => handleSpaceCheckboxChange(item)}
+                            onChange={() =>
+                              handleCheckboxChange(
+                                space,
+                                selectedSpaces,
+                                setSelectedSpaces,
+                                setSpaceFilters,
+                                spaceFilters
+                              )
+                            }
                           />
                         }
-                        label={<span className="text-sm">{item}</span>}
+                        label={<span className="text-sm">{space}</span>}
                       />
                     );
                   })}
@@ -257,13 +238,13 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                   <p className="font-bold text-base text-darkgrey">
                     EXECUTION TYPE
                   </p>
-                  {executionType.map((item: FilterItem) => {
+                  {executionType.map((executionType: FilterItem) => {
                     const labelValue =
-                      item.value === "DESIGN"
+                      executionType.value === "DESIGN"
                         ? constants.DESIGN
-                        : item.value === "MATERIAL_SUPPORT"
+                        : executionType.value === "MATERIAL_SUPPORT"
                         ? constants.MATERIAL_SUPPORT
-                        : item.value === "COMPLETE"
+                        : executionType.value === "COMPLETE"
                         ? constants.COMPLETE
                         : "";
                     return (
@@ -275,7 +256,9 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                         className="-mb-2.5 -mt-2.5"
                         control={
                           <Checkbox
-                            checked={selectedExecutions.has(item.value)}
+                            checked={selectedExecutions.has(
+                              executionType.value
+                            )}
                             sx={{
                               "&.Mui-checked": {
                                 color: "#ff5757",
@@ -285,8 +268,13 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                               paddingY: 0,
                             }}
                             onChange={(_event: any) => {
-                              handleExecutionFilter(item.value);
-                              handleExecutionCheckboxChange(item.value);
+                              handleCheckboxChange(
+                                executionType.value,
+                                selectedExecutions,
+                                setSelectedExecutions,
+                                setExecutionFilters,
+                                executionFilters
+                              );
                             }}
                           />
                         }
@@ -297,8 +285,11 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                 </div>
                 <div className="flex justify-center">
                   <button
-                    onClick={() => setFilterMenu(false)}
-                    className="bg-[green] text-white p-2 rounded-lg"
+                    onClick={() => {
+                      setFilterMenu(false);
+                      window.scrollTo(0, 0);
+                    }}
+                    className="bg-[green] text-white p-2 rounded-lg mt-5"
                   >
                     Apply Filters
                   </button>
@@ -318,61 +309,77 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
       <div className="hidden lg:flex flex-col gap-0  h-screen">
         <div className="flex flex-col gap-1 pt-3">
           <p className="font-bold text-base text-darkgrey">THEMES</p>
-          {formattedThemes.map((item: string) => {
+          {formattedThemes.map((theme: string) => {
             return (
               <FormControlLabel
-                key={item}
+                key={theme}
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
-                    checked={selectedThemes.has(item)}
+                    checked={selectedThemes.has(theme)}
                     sx={{
                       "&.Mui-checked": {
                         color: "#ff5757",
                       },
                       transform: "scale(0.75)",
                     }}
-                    onChange={() => handleThemeCheckboxChange(item)}
+                    onChange={() =>
+                      handleCheckboxChange(
+                        theme,
+                        selectedThemes,
+                        setSelectedThemes,
+                        setThemeFilters,
+                        themeFilters
+                      )
+                    }
                   />
                 }
-                label={<span className="text-sm">{item}</span>}
+                label={<span className="text-sm">{theme}</span>}
               />
             );
           })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
           <p className="font-bold text-base text-darkgrey">SPACES</p>
-          {formattedSpaces.map((item: string) => {
+          {formattedSpaces.map((space: string) => {
             return (
               <FormControlLabel
-                key={item}
+                key={space}
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
-                    checked={selectedSpaces.has(item)}
+                    checked={selectedSpaces.has(space)}
                     sx={{
                       "&.Mui-checked": {
                         color: "#ff5757",
                       },
                       transform: "scale(0.75)",
                     }}
-                    onChange={() => handleSpaceCheckboxChange(item)}
+                    onChange={() =>
+                      handleCheckboxChange(
+                        space,
+                        selectedSpaces,
+                        setSelectedSpaces,
+                        setSpaceFilters,
+                        spaceFilters
+                      )
+                    }
                   />
                 }
-                label={<span className="text-sm">{item}</span>}
+                label={<span className="text-sm">{space}</span>}
               />
             );
           })}
         </div>
         <div className="flex flex-col gap-7 pt-5">
           <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
-          {executionType.map((item: FilterItem) => {
+          {executionType.map((executionType: FilterItem) => {
             const labelValue =
-              item.value === "DESIGN"
+              executionType.value === "DESIGN"
                 ? constants.DESIGN
-                : item.value === "MATERIAL_SUPPORT"
+                : executionType.value === "MATERIAL_SUPPORT"
                 ? constants.MATERIAL_SUPPORT
-                : item.value === "COMPLETE"
+                : executionType.value === "COMPLETE"
                 ? constants.COMPLETE
                 : "";
             return (
@@ -384,7 +391,7 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
-                    checked={selectedExecutions.has(item.value)}
+                    checked={selectedExecutions.has(executionType.value)}
                     sx={{
                       "&.Mui-checked": {
                         color: "#ff5757",
@@ -394,8 +401,13 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                       paddingY: 0,
                     }}
                     onChange={(_event: any) => {
-                      handleExecutionFilter(item.value);
-                      handleExecutionCheckboxChange(item.value);
+                      handleCheckboxChange(
+                        executionType.value,
+                        selectedExecutions,
+                        setSelectedExecutions,
+                        setExecutionFilters,
+                        executionFilters
+                      );
                     }}
                   />
                 }
