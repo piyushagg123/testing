@@ -16,13 +16,17 @@ import AboutUs from "./pages/AboutUs";
 import ProfessionalInfo from "./pages/ProfessionalInfo";
 
 const fetchUserData = async () => {
-  if (sessionStorage.getItem("token")) {
+  const token = sessionStorage.getItem("token");
+
+  if (token) {
     const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return data.data;
+  } else {
+    throw Error();
   }
 };
 

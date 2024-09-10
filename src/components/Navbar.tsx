@@ -3,6 +3,7 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
 import {
+  Button,
   Dialog,
   DialogContent,
   IconButton,
@@ -103,7 +104,7 @@ const Navbar: React.FC = () => {
           )}
           <div className={`p-[6px] mr-2 `}>
             <div>
-              <button
+              <Button
                 onClick={() => {
                   setToggleProfileMenu(
                     (toggleProfileMenu) => !toggleProfileMenu
@@ -114,7 +115,7 @@ const Navbar: React.FC = () => {
                 <Avatar sx={{ bgcolor: grey[400] }}>
                   {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
                 </Avatar>
-              </button>
+              </Button>
             </div>
             <div
               className={
@@ -157,8 +158,9 @@ const Navbar: React.FC = () => {
                   )}
 
                   <div className="flex h-[40px]">
-                    <button
-                      className=" text-[red] h-[36px] w-[220px] sm:w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] mb-[2em] "
+                    <Button
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
@@ -166,7 +168,7 @@ const Navbar: React.FC = () => {
                       }}
                     >
                       <LogoutIcon /> <p>Log Out</p>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

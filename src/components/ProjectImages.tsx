@@ -1,6 +1,7 @@
 import { useState, useCallback, ChangeEvent } from "react";
 import axios from "axios";
 import constants from "../constants";
+import { Button } from "@mui/material";
 
 interface ProjectImagesProps {
   subCategories: string[];
@@ -140,7 +141,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           border: "solid 0.3px",
                         }}
                       />
-                      <button
+                      <Button
                         type="button"
                         onClick={() =>
                           handleDeleteImage(spaceIndex, imageIndex)
@@ -156,11 +157,13 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           height: "20px",
                           border: "none",
                           cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "flex-end",
                         }}
-                        className="flex justify-center items-end"
                       >
                         &times;
-                      </button>
+                      </Button>
                     </>
                   ) : (
                     <div
@@ -176,7 +179,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                         border: "solid 0.3px",
                       }}
                     >
-                      <button
+                      <Button
                         type="button"
                         onClick={() => {
                           const inputElement = document.getElementById(
@@ -187,7 +190,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                         style={{ fontSize: "24px", cursor: "pointer" }}
                       >
                         +
-                      </button>
+                      </Button>
                       <input
                         id={`file-input-${spaceIndex}-${imageIndex}`}
                         style={{ display: "none" }}

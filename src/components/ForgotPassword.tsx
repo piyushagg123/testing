@@ -159,6 +159,7 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
         gap: matches ? 1 : 0,
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
       }}
     >
       {new Array(length).fill(null).map((_, index) => (
@@ -263,14 +264,15 @@ const ForgotPassword = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [accessToken, setAccessToken] = React.useState("");
   const [error, setError] = React.useState("");
+  const [success, setSuccess] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const full = useMediaQuery(theme.breakpoints.down("sm"));
+  const matches = useMediaQuery(theme.breakpoints.up("lg"));
 
   const handleNext = async () => {
     setError("");
+    setSuccess("");
     setLoading(true);
     try {
       if (activeStep === 0) {
@@ -304,8 +306,9 @@ const ForgotPassword = () => {
         if (response.data.success) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setError("");
+          setSuccess("Password updated successfully");
         }
-        handleClose();
+        handleReset();
       }
     } catch (error: any) {
       setError(error.response.data.debug_info);
@@ -314,25 +317,13 @@ const ForgotPassword = () => {
   };
 
   const handleReset = () => {
+    if (activeStep === 2) setSuccess("Password updated successfully");
     setActiveStep(0);
     setEmail("");
     setOtp("");
     setPassword("");
   };
 
-  const handleClose = (
-    _event:
-      | React.MouseEvent<HTMLElement>
-      | React.KeyboardEvent<HTMLElement>
-      | undefined = undefined,
-    reason: "backdropClick" | "escapeKeyDown" | string = ""
-  ) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") {
-      return;
-    }
-    handleReset();
-    setError("");
-  };
   return (
     <div className="text-text">
       <div className="flex justify-center">
@@ -344,12 +335,13 @@ const ForgotPassword = () => {
       <DialogContent className="bg-prim text-text">
         <Box sx={{ width: "100%" }}>
           {error && <Alert severity="error">{error}</Alert>}
+          {success && <Alert severity="success">{success}</Alert>}
           <br />
           <Stepper activeStep={activeStep} orientation="vertical">
             {steps.map((label, index) => (
               <Step key={index}>
                 <StepLabel>{label}</StepLabel>
-                <StepContent>
+                <StepContent sx={{ paddingLeft: "8px", paddingRight: 0 }}>
                   {activeStep === steps.length ? (
                     <React.Fragment>
                       <Box
@@ -361,11 +353,17 @@ const ForgotPassword = () => {
                     </React.Fragment>
                   ) : (
                     <React.Fragment>
-                      <div className="mt-2 mb-1">
+                      <div className="mt-2 mb-1 pl-0">
                         {activeStep === 0 ? (
                           <Box
                             component="form"
-                            sx={{ "& > :not(style)": { m: 1, width: "500px" } }}
+                            sx={{
+                              "& > :not(style)": {
+                                m: 1,
+                                width: matches ? "500px" : "100%",
+                              },
+                              paddingLeft: 0,
+                            }}
                             noValidate
                             autoComplete="off"
                           >
@@ -375,7 +373,7 @@ const ForgotPassword = () => {
                               variant="standard"
                               value={email}
                               onChange={(event) => setEmail(event.target.value)}
-                              sx={{ width: "500px" }}
+                              sx={{ width: matches ? "500px" : "100%" }}
                             />
                           </Box>
                         ) : activeStep === 1 ? (
@@ -389,7 +387,7 @@ const ForgotPassword = () => {
                             }}
                           >
                             <OTP
-                              separator={<span>-</span>}
+                              separator={matches ? <span>-</span> : ""}
                               value={otp}
                               onChange={setOtp}
                               length={6}

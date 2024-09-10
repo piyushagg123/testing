@@ -7,7 +7,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
-import { Alert } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -228,13 +228,13 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               />
             </label>
             <div className="flex gap-2 justify-end w-[220px] md:w-[548px]">
-              <button
-                type="button"
+              <Button
                 onClick={nextStep}
-                className="p-2 w-[100px] bg-sec rounded-[5px] border-[2px] text-white"
+                variant="outlined"
+                style={{ backgroundColor: "#8c52ff", color: "white" }}
               >
                 Next
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -377,20 +377,20 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               </div>
             </div>
             <div className="flex gap-2 justify-between  items-center mt-[1em]">
-              <button
-                type="button"
+              <Button
                 onClick={prevStep}
-                className="p-2 w-[100px]  rounded-[5px] border-text border-[2px] text-text bg-prim"
+                variant="outlined"
+                style={{ backgroundColor: "#8c52ff", color: "white" }}
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                style={{ borderRadius: "5px" }}
-                className="p-2 w-[100px]  rounded-[5px] border-text border-[2px] text-text bg-prim"
+                variant="outlined"
+                style={{ backgroundColor: "#8c52ff", color: "white" }}
               >
                 Next
-              </button>
+              </Button>
             </div>
           </>
         )}

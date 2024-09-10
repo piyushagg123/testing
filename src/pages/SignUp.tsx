@@ -5,7 +5,7 @@ import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import JoinAsPro from "./JoinAsPro";
-import { Alert, TextField } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import constants from "../constants";
 
 interface FormObject {
@@ -209,18 +209,21 @@ const SignUp = () => {
                     <div>Join as a professional</div>
                   </label>
                   <div className="flex justify-center mt-[1em]">
-                    <button
+                    <Button
                       type="submit"
-                      className="p-2 mb-2 w-[250px] rounded-[5px]  text-white bg-purple  "
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                     >
                       Continue
-                    </button>
+                    </Button>
                   </div>
                 </label>
               </form>
             </div>
           ) : (
-            <JoinAsPro handleClose={handleClose} />
+            <div className="py-8">
+              <JoinAsPro handleClose={handleClose} />
+            </div>
           )}
         </div>
       </div>

@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  Button,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -319,13 +320,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
-                    <button
-                      className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
-                      style={{ border: "solid 0.5px" }}
+                    <Button
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={handleReviewDialogOpen}
                     >
                       <StarBorderIcon /> <p>Write a Review</p>
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -391,12 +392,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       selectedProject ? "hidden" : "flex w-full justify-end"
                     }`}
                   >
-                    <button
-                      className="hidden lg:flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                    <Button
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={() => setOpen(true)}
                     >
                       <AddCircleIcon /> Add a new project
-                    </button>
+                    </Button>
                   </div>
                 )}
                 <div className="w-[95vw]  lg:w-[750px] flex justify-center flex-col items-center m-auto md:m-0 ">
@@ -417,12 +419,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                     ) : selectedProject ? (
                       <div className="flex flex-col">
                         <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
-                          <button
-                            className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                          <Button
+                            variant="outlined"
+                            style={{
+                              backgroundColor: "#8c52ff",
+                              color: "white",
+                            }}
                             onClick={handleBackClick}
                           >
                             <ArrowBackIcon />
-                          </button>
+                          </Button>
                         </div>
                         <div className="flex flex-col gap-3 mb-[1em]">
                           <Carousel

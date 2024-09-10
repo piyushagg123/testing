@@ -5,6 +5,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../constants";
 import {
+  Button,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -200,12 +201,13 @@ const Filters: React.FC<FiltersProps> = ({
                   </div>
                 </div>
                 <div className="flex justify-center mt-4">
-                  <button
+                  <Button
                     onClick={() => setFilterMenu(false)}
-                    className="bg-[green] text-white p-2 rounded-lg"
+                    variant="outlined"
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
                   >
                     Apply Filters
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
