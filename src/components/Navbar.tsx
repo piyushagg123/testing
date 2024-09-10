@@ -157,10 +157,10 @@ const Navbar: React.FC = () => {
                     ""
                   )}
 
-                  <div className="flex h-[40px]">
+                  <div className="flex h-[40px] w-full">
                     <Button
-                      variant="outlined"
-                      style={{ backgroundColor: "#8c52ff", color: "white" }}
+                      variant="text"
+                      style={{ color: "red" }}
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
