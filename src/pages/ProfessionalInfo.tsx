@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  Button,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -228,9 +229,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     <>
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
-        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0 pl-2 md:pl-4">
+        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
-            <div className="flex flex-col md:flex-row items-start md:items-end gap-3 mt-[2em] mb-[1em]">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mt-[2em] mb-[1em]">
               <div className="m-auto md:m-0">
                 {vendorData?.logo ? (
                   <img
@@ -256,7 +257,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED THEMES :
                   </span>{" "}
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {formatCategory(vendorData?.sub_category_1 ?? "N/A")
                       .split(",")
                       .map((item, ind) => (
@@ -274,18 +275,20 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED SPACES :
                   </span>
-                  {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-                    .split(",")
-                    .map((item, ind) => (
-                      <Chip
-                        label={item.charAt(0).toUpperCase() + item.slice(1)}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                      />
-                    ))}
+                  <div className="flex flex-wrap gap-1">
+                    {formatCategory(vendorData?.sub_category_2 ?? "N/A")
+                      .split(",")
+                      .map((item, ind) => (
+                        <Chip
+                          label={item.charAt(0).toUpperCase() + item.slice(1)}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
+                      ))}
+                  </div>
                 </p>
-                <p className="flex gap-2 items-center">
+                <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     EXECUTION TYPE :
                   </span>{" "}
@@ -302,7 +305,11 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         }
                         variant="outlined"
                         key={ind}
-                        sx={{ height: "25px" }}
+                        sx={{
+                          height: "25px",
+                          maxWidth: "95vw",
+                          overflowWrap: "break-word",
+                        }}
                       />
                     ))}
                 </p>
@@ -313,13 +320,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
-                    <button
-                      className="flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-md"
-                      style={{ border: "solid 0.5px" }}
+                    <Button
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={handleReviewDialogOpen}
                     >
                       <StarBorderIcon /> <p>Write a Review</p>
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -372,8 +379,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </TabList>
               </Box>
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px]">
-                  <p className="text-base mb-[1em]">
+                <div className="w-[95vw] lg:w-[750px]">
+                  <p className="text-sm md:text-base text-justify mb-[1em]">
                     {vendorData?.description}
                   </p>
                 </div>
@@ -385,15 +392,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       selectedProject ? "hidden" : "flex w-full justify-end"
                     }`}
                   >
-                    <button
-                      className="hidden lg:flex items-center gap-2 p-2 border-text border-[2px] text-text bg-prim hover:bg-sec hover:border-text rounded-[5px]"
+                    <Button
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={() => setOpen(true)}
                     >
                       <AddCircleIcon /> Add a new project
-                    </button>
+                    </Button>
                   </div>
                 )}
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center ">
+                <div className="w-[95vw]  lg:w-[750px] flex justify-center flex-col items-center m-auto md:m-0 ">
                   <div className="flex flex-wrap pt-[1em] mb-[3em]">
                     {!projectsData ? (
                       <div className="flex flex-col items-center justify-center">
@@ -410,13 +418,17 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       </div>
                     ) : selectedProject ? (
                       <div className="flex flex-col">
-                        <div className="flex mb-[1em] justify-start gap-60 md:w-[500px] lg:w-[750px]">
-                          <button
-                            className="self-start mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                        <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
+                          <Button
+                            variant="outlined"
+                            style={{
+                              backgroundColor: "#8c52ff",
+                              color: "white",
+                            }}
                             onClick={handleBackClick}
                           >
                             <ArrowBackIcon />
-                          </button>
+                          </Button>
                         </div>
                         <div className="flex flex-col gap-3 mb-[1em]">
                           <Carousel
@@ -430,7 +442,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         </div>
                       </div>
                     ) : (
-                      <div className="flex flex-wrap md:w-[500px] lg:w-[750px] justify-between">
+                      <div className="flex flex-wrap lg:w-[750px] justify-center md:justify-between">
                         {projectsData.map((item, ind) => (
                           <div
                             key={ind}
@@ -454,7 +466,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
               </TabPanel>
               <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[90vw] md:w-[500px] lg:w-[750px] flex justify-center flex-col items-center">
+                <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
                   {
                     <Reviews
                       id={professionalId ? Number(professionalId) : Number(-1)}

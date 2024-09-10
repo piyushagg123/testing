@@ -80,7 +80,7 @@ export default function MultipleSelect({
 
   return (
     <div>
-      <FormControl sx={{ m: 1 }}>
+      <FormControl>
         <Select
           multiple
           value={selectedValues}
@@ -92,7 +92,7 @@ export default function MultipleSelect({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "210px",
+            width: "235px",
             borderRadius: "5px",
             border: "solid 1px",
           }}

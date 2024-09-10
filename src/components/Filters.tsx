@@ -5,6 +5,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../constants";
 import {
+  Button,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -111,7 +112,7 @@ const Filters: React.FC<FiltersProps> = ({
                   <CloseIcon onClick={() => setFilterMenu(false)} />
                 </div>
                 <div className="flex flex-col gap-2 p-3 ">
-                  <h3 className="font-bold text-[19px]">Themes</h3>
+                  <h3 className="font-bold text-base text-darkgrey">Themes</h3>
 
                   {formattedThemes.map((item: string) => {
                     return (
@@ -135,7 +136,7 @@ const Filters: React.FC<FiltersProps> = ({
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h3 className="font-bold text-[19px]">Spaces</h3>
+                  <h3 className="font-bold text-base text-darkgrey">Spaces</h3>
 
                   {formattedSpaces.map((item: string) => {
                     return (
@@ -157,53 +158,56 @@ const Filters: React.FC<FiltersProps> = ({
                     );
                   })}
                 </div>
-                <div className="flex flex-col gap-7 pt-5">
+                <div className="flex flex-col pt-5 gap-4">
                   <p className="font-bold text-base text-darkgrey">
-                    EXECUTION TYPE
+                    Execution type
                   </p>
-                  {executionType.map((item: FilterItem) => {
-                    const labelValue =
-                      item.value === "DESIGN"
-                        ? constants.DESIGN
-                        : item.value === "MATERIAL_SUPPORT"
-                        ? constants.MATERIAL_SUPPORT
-                        : item.value === "COMPLETE"
-                        ? constants.COMPLETE
-                        : "";
-                    return (
-                      <FormControlLabel
-                        sx={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                        }}
-                        className="-mb-2.5 -mt-2.5"
-                        control={
-                          <Checkbox
-                            sx={{
-                              "&.Mui-checked": {
-                                color: "#ff5757",
-                              },
+                  <div className="flex flex-col gap-7">
+                    {executionType.map((item: FilterItem) => {
+                      const labelValue =
+                        item.value === "DESIGN"
+                          ? constants.DESIGN
+                          : item.value === "MATERIAL_SUPPORT"
+                          ? constants.MATERIAL_SUPPORT
+                          : item.value === "COMPLETE"
+                          ? constants.COMPLETE
+                          : "";
+                      return (
+                        <FormControlLabel
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                          }}
+                          className="-mb-2.5 -mt-2.5"
+                          control={
+                            <Checkbox
+                              sx={{
+                                "&.Mui-checked": {
+                                  color: "#ff5757",
+                                },
 
-                              transform: "scale(0.75)",
-                              paddingY: 0,
-                            }}
-                            onChange={(_event: any) =>
-                              handleExecutionFilter(item.value)
-                            }
-                          />
-                        }
-                        label={<span className="text-sm">{labelValue}</span>}
-                      />
-                    );
-                  })}
+                                transform: "scale(0.75)",
+                                paddingY: 0,
+                              }}
+                              onChange={(_event: any) =>
+                                handleExecutionFilter(item.value)
+                              }
+                            />
+                          }
+                          label={<span className="text-sm">{labelValue}</span>}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="flex justify-center">
-                  <button
+                <div className="flex justify-center mt-4">
+                  <Button
                     onClick={() => setFilterMenu(false)}
-                    className="bg-[green] text-white p-2 rounded-lg"
+                    variant="outlined"
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
                   >
                     Apply Filters
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -260,43 +264,45 @@ const Filters: React.FC<FiltersProps> = ({
             );
           })}
         </div>
-        <div className="flex flex-col gap-7 pt-5">
+        <div className="flex flex-col gap-4  pt-5">
           <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
-          {executionType.map((item: FilterItem) => {
-            const labelValue =
-              item.value === "DESIGN"
-                ? constants.DESIGN
-                : item.value === "MATERIAL_SUPPORT"
-                ? constants.MATERIAL_SUPPORT
-                : item.value === "COMPLETE"
-                ? constants.COMPLETE
-                : "";
-            return (
-              <FormControlLabel
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                }}
-                className="-mb-2.5 -mt-2.5"
-                control={
-                  <Checkbox
-                    sx={{
-                      "&.Mui-checked": {
-                        color: "#ff5757",
-                      },
+          <div className="flex flex-col gap-7">
+            {executionType.map((item: FilterItem) => {
+              const labelValue =
+                item.value === "DESIGN"
+                  ? constants.DESIGN
+                  : item.value === "MATERIAL_SUPPORT"
+                  ? constants.MATERIAL_SUPPORT
+                  : item.value === "COMPLETE"
+                  ? constants.COMPLETE
+                  : "";
+              return (
+                <FormControlLabel
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                  }}
+                  className="-mb-2.5 -mt-2.5"
+                  control={
+                    <Checkbox
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#ff5757",
+                        },
 
-                      transform: "scale(0.75)",
-                      paddingY: 0,
-                    }}
-                    onChange={(_event: any) =>
-                      handleExecutionFilter(item.value)
-                    }
-                  />
-                }
-                label={<span className="text-sm">{labelValue}</span>}
-              />
-            );
-          })}
+                        transform: "scale(0.75)",
+                        paddingY: 0,
+                      }}
+                      onChange={(_event: any) =>
+                        handleExecutionFilter(item.value)
+                      }
+                    />
+                  }
+                  label={<span className="text-sm">{labelValue}</span>}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

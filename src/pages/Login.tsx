@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ForgotPassword from "../components/ForgotPassword";
-import { Alert, TextField } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
@@ -87,9 +87,9 @@ const Login = () => {
   return (
     <>
       {window.scrollTo(0, 0)}
-      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         {openForgotPassword ? (
-          <div className="mt-28">
+          <div className=" mt-28">
             <p className=" m-auto w-fit">
               Dont have an account?
               <span className="ml-3">
@@ -99,23 +99,25 @@ const Login = () => {
               </span>
             </p>
 
-            <div className="w-fit m-auto p-2 md:p-8 mt-[2em]">
+            <div className="w-fit m-auto p-2 md:p-8 mt-[2em] ">
               <h1 className="text-2xl md:text-3xl text-center font-bold text-purple mb-[2em]">
                 Log in to your account
               </h1>
-              {error && (
-                <Alert
-                  severity="error"
-                  sx={{
-                    width: "300px",
-                    padding: "2px",
-                    marginBottom: "5px",
-                  }}
-                >
-                  {" "}
-                  {error}
-                </Alert>
-              )}
+              <div className="flex items-center justify-center">
+                {error && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      width: "300px",
+                      padding: "2px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {" "}
+                    {error}
+                  </Alert>
+                )}
+              </div>
               <form
                 onSubmit={handleSubmit}
                 className="flex flex-col items-center justify-center"
@@ -130,7 +132,10 @@ const Login = () => {
                 <label className="mt-[1em]">
                   <div className="flex justify-end text-sm w-[300px]">
                     <p
-                      onClick={() => setOpenForgotPassword(false)}
+                      onClick={() => {
+                        setOpenForgotPassword(false);
+                        setError("");
+                      }}
                       className="cursor-pointer text-purple"
                     >
                       Forgot your password
@@ -147,12 +152,13 @@ const Login = () => {
                 </label>
 
                 <div className="flex justify-center mt-[1em]">
-                  <button
+                  <Button
                     type="submit"
-                    className="p-2 w-[250px] rounded-[5px]  text-white bg-purple  "
+                    variant="outlined"
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
                   >
                     Continue
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>
