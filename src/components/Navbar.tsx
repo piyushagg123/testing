@@ -2,7 +2,14 @@ import { useState, useContext, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import JoinAsPro from "../pages/JoinAsPro";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
@@ -40,6 +47,8 @@ const Navbar: React.FC = () => {
   }
   const { setLogin, userDetails, login } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
+  const theme = useTheme();
+  const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -95,7 +104,7 @@ const Navbar: React.FC = () => {
           )}
           <div className={`p-[6px] mr-2 `}>
             <div>
-              <button
+              <Button
                 onClick={() => {
                   setToggleProfileMenu(
                     (toggleProfileMenu) => !toggleProfileMenu
@@ -106,12 +115,12 @@ const Navbar: React.FC = () => {
                 <Avatar sx={{ bgcolor: grey[400] }}>
                   {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
                 </Avatar>
-              </button>
+              </Button>
             </div>
             <div
               className={
                 toggleProfileMenu && isDivVisible
-                  ? "fixed bg-[#f3f1f1] w-[400px] text-text right-1 flex flex-col items-center justify-center top-[76px] rounded-[10px] "
+                  ? "fixed bg-[#f3f1f1] w-[250px] sm:w-[400px] text-text right-1 flex flex-col items-center justify-center top-[76px] rounded-[10px] "
                   : "hidden"
               }
               style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
@@ -133,12 +142,12 @@ const Navbar: React.FC = () => {
               </p>
 
               <div className="mt-[1em]">
-                <div className="flex flex-col items-center bg-white justify-center w-[370px] rounded-[10px] p-2 mb-2">
+                <div className="flex flex-col items-center bg-white justify-center sm:w-[370px] rounded-[10px] p-2 mb-2">
                   {userDetails?.is_vendor ? (
                     <div className="">
                       <NavLink
                         to={"/profile"}
-                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[350px] hover:bg-[#f3f1f1] transition-all"
+                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[220px] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                         onClick={() => setToggleProfileMenu(false)}
                       >
                         <AccountCircleIcon /> <p>View Profile</p>
@@ -149,8 +158,9 @@ const Navbar: React.FC = () => {
                   )}
 
                   <div className="flex h-[40px]">
-                    <button
-                      className=" text-[red] h-[36px] w-[350px] p-1  transition-all flex items-center gap-2 hover:bg-[#f3f1f1] rounded-[8px] mb-[2em] "
+                    <Button
+                      variant="outlined"
+                      style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
@@ -158,7 +168,7 @@ const Navbar: React.FC = () => {
                       }}
                     >
                       <LogoutIcon /> <p>Log Out</p>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -186,8 +196,8 @@ const Navbar: React.FC = () => {
       <Dialog
         open={open}
         onClose={() => handleClose}
-        sx={{ width: "590px", margin: "auto" }}
-        fullWidth
+        sx={{ margin: "auto" }}
+        fullScreen={isFullScreen}
       >
         <DialogContent sx={{ height: "max-content", position: "relative" }}>
           <IconButton

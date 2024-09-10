@@ -84,172 +84,178 @@ const SearchProfessionals: React.FC = () => {
     }
   };
   return (
-    <div className="mt-16">
-      <div className="flex flex-col">
-        <div className="bg-[#f0f0f0] w-[100%] m-auto flex flex-col items-center p-10">
-          <h1 className="font-bold text-lg" style={{ color: "#576375" }}>
-            FIND THE MOST SUITABLE INTERIOR DESIGNER NEAR YOU
-          </h1>
-          <p className="text-black text-m pt-2 pb-6">
-            Answer a few questions to get a list of Interior Designers suitable
-            for your needs
-          </p>
-          <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
-            <label htmlFor="" className="text-text text-sm">
-              Select your state
-              <Autocomplete
-                size="small"
-                disablePortal
-                id="state-autocomplete"
-                options={state}
-                onChange={(_event, value) => handleStateChange(_event, value)}
-                sx={{
-                  width: 225,
+    <>
+      {window.scrollTo(0, 0)}
+      <div className="mt-16">
+        <div className="flex flex-col">
+          <div className="bg-[#f0f0f0] w-[100%] m-auto flex flex-col items-center p-10">
+            <h1 className="font-bold text-lg" style={{ color: "#576375" }}>
+              FIND THE MOST SUITABLE INTERIOR DESIGNER NEAR YOU
+            </h1>
+            <p className="text-black text-m pt-2 pb-6">
+              Answer a few questions to get a list of Interior Designers
+              suitable for your needs
+            </p>
+            <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
+              <label htmlFor="" className="text-text text-sm">
+                Select your state
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="state-autocomplete"
+                  options={state}
+                  onChange={(_event, value) => handleStateChange(_event, value)}
+                  sx={{
+                    width: 225,
+                    color: "white",
+                    background: "white",
+                    borderRadius: "4px",
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <React.Fragment>
+                            {params.InputProps.endAdornment}
+                          </React.Fragment>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </label>
+              <label htmlFor="" className="text-text text-sm">
+                Select your city
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="city-autocomplete"
+                  options={selectedState ? cities : ["Select a state first"]}
+                  loading={loadingCities}
+                  disabled={!selectedState}
+                  sx={{
+                    width: 225,
+                    color: "white",
+                    background: "white",
+                    borderRadius: "4px",
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={!selectedState ? "Select a state first" : ""}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <React.Fragment>
+                            {loadingCities ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </React.Fragment>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </label>
+              <Button
+                variant="outlined"
+                style={{
+                  backgroundColor: "#8c52ff",
                   color: "white",
-                  background: "white",
-                  borderRadius: "4px",
+                  height: "40px",
                 }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <React.Fragment>
-                          {params.InputProps.endAdornment}
-                        </React.Fragment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </label>
-            <label htmlFor="" className="text-text text-sm">
-              Select your city
-              <Autocomplete
-                size="small"
-                disablePortal
-                id="city-autocomplete"
-                options={selectedState ? cities : ["Select a state first"]}
-                loading={loadingCities}
-                disabled={!selectedState}
-                sx={{
-                  width: 225,
-                  color: "white",
-                  background: "white",
-                  borderRadius: "4px",
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={!selectedState ? "Select a state first" : ""}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <React.Fragment>
-                          {loadingCities ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </React.Fragment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </label>
-            <Button
-              variant="outlined"
-              style={{
-                backgroundColor: "#8c52ff",
-                color: "white",
-                height: "40px",
-              }}
-            >
-              Get started
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px] mt-[1em]">
-        <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
-          <div className="flex flex-wrap justify-center gap-2 lg:block">
-            <Filters fetchVendorList={fetchVendorList} />
-          </div>
-        </div>
-        <div className="w-full">
-          <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
-            {filteredItems ? (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span className="font-bold text-base text-darkgrey">
-                  INTERIOR DESIGNERS
-                </span>
-                <span
-                  style={{ margin: "0 8px", fontSize: "24px", lineHeight: "1" }}
-                >
-                  •
-                </span>
-                <span className="text-sm text-text">
-                  {filteredItems.length} found
-                </span>
-              </div>
-            ) : (
-              <p>No home improvement pros for this category</p>
-            )}
-            <div className="w-[270px] lg:mr-2 hidden lg:block">
-              <FormControl
-                className="w-[270px] px-[14px] py-[10px]"
-                sx={{ height: "40px" }}
-                size="small"
               >
-                <InputLabel id="sort-by-label">Sort by</InputLabel>
-                <Select
-                  className="bg-prim"
-                  labelId="sort-by-label"
-                  id="sort-by-select"
-                  label="Sort By"
-                >
-                  <MenuItem value={"rating"}>Rating</MenuItem>
-                  <MenuItem value={"recommended"}>Recommended</MenuItem>
-                  <MenuItem value={"popular"}>Popular</MenuItem>
-                </Select>
-              </FormControl>
+                Get started
+              </Button>
             </div>
           </div>
-
-          {filteredItems ? (
-            <>
-              {isLoading ? (
-                <div className="flex justify-center h-screen">
-                  <CircularProgress color="inherit" />
+        </div>
+        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px] mt-[1em]">
+          <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
+            <div className="flex flex-wrap justify-center gap-2 lg:block">
+              <Filters fetchVendorList={fetchVendorList} />
+            </div>
+          </div>
+          <div className="w-full">
+            <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
+              {filteredItems ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span className="font-bold text-base text-darkgrey">
+                    INTERIOR DESIGNERS
+                  </span>
+                  <span
+                    style={{
+                      margin: "0 8px",
+                      fontSize: "24px",
+                      lineHeight: "1",
+                    }}
+                  >
+                    •
+                  </span>
+                  <span className="text-sm text-text">
+                    {filteredItems.length} found
+                  </span>
                 </div>
               ) : (
-                <>
-                  {filteredItems.map((item) => (
-                    <NavLink
-                      to={`/search-professionals/${item.vendor_id}`}
-                      key={item.vendor_id}
-                    >
-                      <div>
-                        <Professional
-                          about={item.description}
-                          rating={item.rating}
-                          img={item.logo}
-                          profCat={item.business_name}
-                        />
-                        <hr />
-                      </div>
-                    </NavLink>
-                  ))}
-                </>
+                <p>No home improvement pros for this category</p>
               )}
-            </>
-          ) : (
-            <></>
-          )}
+              <div className="w-[270px] lg:mr-2 hidden lg:block">
+                <FormControl
+                  className="w-[270px] px-[14px] py-[10px]"
+                  sx={{ height: "40px" }}
+                  size="small"
+                >
+                  <InputLabel id="sort-by-label">Sort by</InputLabel>
+                  <Select
+                    className="bg-prim"
+                    labelId="sort-by-label"
+                    id="sort-by-select"
+                    label="Sort By"
+                  >
+                    <MenuItem value={"rating"}>Rating</MenuItem>
+                    <MenuItem value={"recommended"}>Recommended</MenuItem>
+                    <MenuItem value={"popular"}>Popular</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+
+            {filteredItems ? (
+              <>
+                {isLoading ? (
+                  <div className="flex justify-center h-screen">
+                    <CircularProgress color="inherit" />
+                  </div>
+                ) : (
+                  <>
+                    {filteredItems.map((item) => (
+                      <NavLink
+                        to={`/search-professionals/${item.vendor_id}`}
+                        key={item.vendor_id}
+                      >
+                        <div className="mb-[2em]">
+                          <Professional
+                            about={item.description}
+                            rating={item.rating}
+                            img={item.logo}
+                            profCat={item.business_name}
+                          />
+                        </div>
+                      </NavLink>
+                    ))}
+                  </>
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

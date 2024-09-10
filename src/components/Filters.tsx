@@ -5,6 +5,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../constants";
 import {
+  Button,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -283,16 +284,17 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                   <CloseIcon onClick={() => setFilterMenu(false)} />
                 </div>
                 {showFilters()}
-                <div className="flex justify-center">
-                  <button
+                <div className="flex justify-center mt-4">
+                  <Button
                     onClick={() => {
                       setFilterMenu(false);
                       window.scrollTo(0, 0);
                     }}
-                    className="bg-[green] text-white p-2 rounded-lg mt-5"
+                    variant="outlined"
+                    style={{ borderColor: "#8c52ff", color: "#8c52ff" }}
                   >
                     Apply Filters
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
