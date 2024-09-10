@@ -126,187 +126,9 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     handleFilterChange("", executionFilters, setExecutionFilters);
   };
 
-  return (
-    <div className=" flex flex-col gap-3  text-text w-[225px]">
-      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
-        <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
-          <p
-            className="font-bold text-base text-darkgrey"
-            onClick={() => setFilterMenu(() => true)}
-          >
-            <FilterAltIcon />
-          </p>
-
-          <div className="lg:hidden">
-            <FormControl
-              className="w-[200px] py-[10px] left-[15px]"
-              sx={{ height: "40px" }}
-              size="small"
-            >
-              <InputLabel id="sort-by-label">Sort by</InputLabel>
-              <Select
-                className="bg-prim"
-                labelId="sort-by-label"
-                id="sort-by-select"
-                label="Sort By"
-              >
-                <MenuItem value={"rating"}>Rating</MenuItem>
-                <MenuItem value={"recommended"}>Recommended</MenuItem>
-                <MenuItem value={"popular"}>Popular</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-        </div>
-        {filterMenu ? (
-          <>
-            <div
-              className={"block absolute bg-white w-screen z-10 lg:hidden p-3"}
-            >
-              <div>
-                <div className="flex items-center justify-between pr-4">
-                  <h1 className="font-bold">FILTERS</h1>
-                  <CloseIcon onClick={() => setFilterMenu(false)} />
-                </div>
-                <div className="flex flex-col gap-2 p-3 ">
-                  <h3 className="font-bold text-[19px]">Themes</h3>
-
-                  {formattedThemes.map((theme: string) => {
-                    return (
-                      <FormControlLabel
-                        key={theme}
-                        className="-mb-2.5 -mt-2.5"
-                        control={
-                          <Checkbox
-                            checked={selectedThemes.has(theme)}
-                            sx={{
-                              "&.Mui-checked": {
-                                color: "#ff5757",
-                              },
-                              transform: "scale(0.75)",
-                            }}
-                            onChange={() =>
-                              handleCheckboxChange(
-                                theme,
-                                selectedThemes,
-                                setSelectedThemes,
-                                setThemeFilters,
-                                themeFilters
-                              )
-                            }
-                          />
-                        }
-                        label={<span className="text-sm">{theme}</span>}
-                      />
-                    );
-                  })}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-bold text-[19px]">Spaces</h3>
-
-                  {formattedSpaces.map((space: string) => {
-                    return (
-                      <FormControlLabel
-                        key={space}
-                        className="-mb-2.5 -mt-2.5"
-                        control={
-                          <Checkbox
-                            checked={selectedSpaces.has(space)}
-                            sx={{
-                              "&.Mui-checked": {
-                                color: "#ff5757",
-                              },
-                              transform: "scale(0.75)",
-                            }}
-                            onChange={() =>
-                              handleCheckboxChange(
-                                space,
-                                selectedSpaces,
-                                setSelectedSpaces,
-                                setSpaceFilters,
-                                spaceFilters
-                              )
-                            }
-                          />
-                        }
-                        label={<span className="text-sm">{space}</span>}
-                      />
-                    );
-                  })}
-                </div>
-                <div className="flex flex-col gap-7 pt-5">
-                  <p className="font-bold text-base text-darkgrey">
-                    EXECUTION TYPE
-                  </p>
-                  {executionType.map((executionType: FilterItem) => {
-                    const labelValue =
-                      executionType.value === "DESIGN"
-                        ? constants.DESIGN
-                        : executionType.value === "MATERIAL_SUPPORT"
-                        ? constants.MATERIAL_SUPPORT
-                        : executionType.value === "COMPLETE"
-                        ? constants.COMPLETE
-                        : "";
-                    return (
-                      <FormControlLabel
-                        sx={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                        }}
-                        className="-mb-2.5 -mt-2.5"
-                        control={
-                          <Checkbox
-                            checked={selectedExecutions.has(
-                              executionType.value
-                            )}
-                            sx={{
-                              "&.Mui-checked": {
-                                color: "#ff5757",
-                              },
-
-                              transform: "scale(0.75)",
-                              paddingY: 0,
-                            }}
-                            onChange={(_event: any) => {
-                              handleCheckboxChange(
-                                executionType.value,
-                                selectedExecutions,
-                                setSelectedExecutions,
-                                setExecutionFilters,
-                                executionFilters
-                              );
-                            }}
-                          />
-                        }
-                        label={<span className="text-sm">{labelValue}</span>}
-                      />
-                    );
-                  })}
-                </div>
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => {
-                      setFilterMenu(false);
-                      window.scrollTo(0, 0);
-                    }}
-                    className="bg-[green] text-white p-2 rounded-lg mt-5"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          ""
-        )}
-        <p className="hidden lg:block font-bold text-red">
-          <button className="text-xs" onClick={clearAll}>
-            CLEAR ALL
-          </button>
-        </p>
-      </div>
-      <div className="hidden lg:flex flex-col gap-0  h-screen">
+  const showFilters = () => {
+    return (
+      <>
         <div className="flex flex-col gap-1 pt-3">
           <p className="font-bold text-base text-darkgrey">THEMES</p>
           {formattedThemes.map((theme: string) => {
@@ -416,6 +238,76 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
             );
           })}
         </div>
+      </>
+    );
+  };
+  return (
+    <div className=" flex flex-col gap-3  text-text w-[225px]">
+      <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
+        <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
+          <p
+            className="font-bold text-base text-darkgrey"
+            onClick={() => setFilterMenu(() => true)}
+          >
+            <FilterAltIcon />
+          </p>
+
+          <div className="lg:hidden">
+            <FormControl
+              className="w-[200px] py-[10px] left-[15px]"
+              sx={{ height: "40px" }}
+              size="small"
+            >
+              <InputLabel id="sort-by-label">Sort by</InputLabel>
+              <Select
+                className="bg-prim"
+                labelId="sort-by-label"
+                id="sort-by-select"
+                label="Sort By"
+              >
+                <MenuItem value={"rating"}>Rating</MenuItem>
+                <MenuItem value={"recommended"}>Recommended</MenuItem>
+                <MenuItem value={"popular"}>Popular</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+        {filterMenu ? (
+          <>
+            <div
+              className={"block absolute bg-white w-screen z-10 lg:hidden p-3"}
+            >
+              <div>
+                <div className="flex items-center justify-between pr-4">
+                  <h1 className="font-bold">FILTERS</h1>
+                  <CloseIcon onClick={() => setFilterMenu(false)} />
+                </div>
+                {showFilters()}
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => {
+                      setFilterMenu(false);
+                      window.scrollTo(0, 0);
+                    }}
+                    className="bg-[green] text-white p-2 rounded-lg mt-5"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+        <p className="hidden lg:block font-bold text-red">
+          <button className="text-xs" onClick={clearAll}>
+            CLEAR ALL
+          </button>
+        </p>
+      </div>
+      <div className="hidden lg:flex flex-col gap-0  h-screen">
+        {showFilters()}
       </div>
     </div>
   );
