@@ -21,7 +21,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(true);
+  const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -136,7 +136,11 @@ const SignUp = () => {
               </Link>
             </span>
           </p>
-          {openJoinasPro ? (
+          {openJoinasPro || sessionStorage.getItem("token") ? (
+            <div className="py-8">
+              <JoinAsPro handleClose={handleClose} />
+            </div>
+          ) : (
             <div className="w-fit m-auto md:p-8 flex flex-col justify-center items-center ">
               <h1 className="text-2xl md:text-3xl text-center font-bold text-purple mb-[1em]">
                 Sign up for your account
@@ -219,10 +223,6 @@ const SignUp = () => {
                   </div>
                 </label>
               </form>
-            </div>
-          ) : (
-            <div className="py-8">
-              <JoinAsPro handleClose={handleClose} />
             </div>
           )}
         </div>

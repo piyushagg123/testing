@@ -127,6 +127,11 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     }));
   };
 
+  const handleDeleteLogo = async () => {
+    setLogoPreview(null);
+    setFormData((prevData) => ({ ...prevData, logo: null }));
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -371,7 +376,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
             <>
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row justify-start md:mt-10"
+                className="flex flex-col lg:flex-row justify-start lg:justify-between md:mt-10"
               >
                 <p className="text-base ">
                   Select your themes (maximum of three)
@@ -390,7 +395,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row   justify-start"
+                className="flex flex-col lg:flex-row   justify-start lg:justify-between"
               >
                 <p className="text-base">Select your spaces</p>
                 <MultipleSelect
@@ -407,7 +412,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row justify-start "
+                className="flex flex-col lg:flex-row justify-start lg:justify-between"
               >
                 <p className="text-base">Type of execution</p>
                 <MultipleSelect
@@ -421,9 +426,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   }
                 />
               </label>
-              <div className="flex gap-2 justify-between lg:w-[490px] mt-[1em]">
+              <div className="flex gap-2 justify-end  mt-[1em]">
                 <Button
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{ borderColor: "#000", color: "black" }}
                   onClick={prevStep}
                   variant="outlined"
                 >
@@ -523,22 +528,50 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
               {logoPreview && (
-                <div className="flex items-center justify-center">
+                <div className="relative flex items-center justify-center">
                   {typeof logoPreview === "string" && (
-                    <img
-                      src={logoPreview}
-                      alt="Logo Preview"
-                      className="w-[100px] h-auto mt-2"
-                      style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    />
+                    <div className="relative">
+                      <img
+                        src={logoPreview}
+                        alt="Logo Preview"
+                        className="w-[100px] h-auto mt-2"
+                        style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          background: "red",
+                          color: "white",
+                          borderRadius: "100%",
+                          width: "15px",
+                          height: "15px",
+                          border: "none",
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Button
+                          onClick={handleDeleteLogo}
+                          style={{
+                            color: "white",
+                          }}
+                        >
+                          &times;
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
-              <div className="flex gap-2 lg:w-[455px] justify-between mt-[1em]">
+              <div className="flex gap-2 justify-end mt-[1em]">
                 <Button
                   variant="outlined"
                   onClick={prevStep}
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{ borderColor: "#000", color: "black" }}
                 >
                   Back
                 </Button>
@@ -569,7 +602,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     onChange={handleSocialChange}
                   />
                 </label>
-                <label className="flex flex-col l:flex-row text-[16px] justify-between mt-[1em]">
+                <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
                     <FacebookIcon className="text-purple" /> Facebook
                   </p>
@@ -597,10 +630,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </label>
               </div>
 
-              <div className="flex gap-2 lg:w-[455px] justify-between mt-[1em]">
+              <div className="flex gap-2 justify-end mt-[1em]">
                 <Button
                   variant="outlined"
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{ borderColor: "#000", color: "black" }}
                   onClick={prevStep}
                 >
                   Back

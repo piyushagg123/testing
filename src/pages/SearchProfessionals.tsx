@@ -15,6 +15,7 @@ import Professional from "../components/Professional";
 import Filters from "../components/Filters";
 import constants from "../constants";
 import { StateContext } from "../context/State";
+import maintainenceImg from "../assets/service.jpg";
 
 interface VendorItem {
   vendor_id: string;
@@ -37,6 +38,7 @@ const SearchProfessionals: React.FC = () => {
   const [filteredItems, setFilteredItems] = useState<VendorItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [error, setError] = useState(false);
   const [themeFilters, setThemeFilters] = useState(new Set());
   const [spaceFilters, setSpaceFilters] = useState(new Set());
   const [executionFilters, setExecutionFilters] = useState(new Set());
@@ -87,6 +89,10 @@ const SearchProfessionals: React.FC = () => {
       });
       setFilteredItems(response.data.data);
     } catch (error) {
+      setTimeout(() => {
+        setError(true);
+        setIsLoading(false);
+      }, 3000);
     } finally {
       setIsLoading(false);
     }
@@ -125,6 +131,15 @@ const SearchProfessionals: React.FC = () => {
     setExecutionFilters(updatedExecutionFilters);
   };
 
+  // if (isLoading) return;
+  if (error) {
+    return (
+      <div className="maintenance-container w-[30vw] m-auto min-h-screen mt-20">
+        <img src={maintainenceImg} alt="" />
+        <p className="text-center">Website is under maintainence</p>
+      </div>
+    );
+  }
   return (
     <>
       {window.scrollTo(0, 0)}

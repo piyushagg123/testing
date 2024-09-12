@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Checkbox } from "@mui/material";
+import constants from "../constants";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -104,18 +105,29 @@ export default function MultipleSelect({
             </MenuItem>
           ) : (
             options.map((option: any) => (
-              <MenuItem
-                key={option.id}
-                value={option.value}
-                style={getStyles(option.value, selectedValues, theme)}
-                disabled={
-                  selectedValues.length >= maxSelection &&
-                  !selectedValues.includes(option.value)
-                }
-              >
-                <Checkbox checked={selectedValues.includes(option.value)} />
-                {option.value}
-              </MenuItem>
+              <>
+                {console.log(option)}
+
+                <MenuItem
+                  key={option.id}
+                  value={option.value}
+                  style={getStyles(option.value, selectedValues, theme)}
+                  sx={{
+                    wordWrap: "break-word",
+                  }}
+                  disabled={
+                    selectedValues.length >= maxSelection &&
+                    !selectedValues.includes(option.value)
+                  }
+                >
+                  <Checkbox checked={selectedValues.includes(option.value)} />
+                  {option.value === "DESIGN"
+                    ? constants.DESIGN
+                    : option.value === "MATERIAL_SUPPORT"
+                    ? constants.MATERIAL_SUPPORT
+                    : constants.COMPLETE}
+                </MenuItem>
+              </>
             ))
           )}
         </Select>

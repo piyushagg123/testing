@@ -80,7 +80,7 @@ const Navbar: React.FC = () => {
   };
   return (
     <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg sm:px-[64px]">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
             <img src={pickelelogo} alt="Pickele" className="h-10 w-auto" />
@@ -95,8 +95,12 @@ const Navbar: React.FC = () => {
             <div>
               <MaterialButton
                 variant="outlined"
-                style={{ borderColor: "#8c52ff", color: "#8c52ff" }}
-                onClick={() => setOpen(true)}
+                style={{
+                  borderColor: "#8c52ff",
+                  color: "#8c52ff",
+                  padding: "5px",
+                }}
+                onClick={() => navigate("/signup")}
               >
                 Join as Pro
               </MaterialButton>
@@ -104,7 +108,8 @@ const Navbar: React.FC = () => {
           )}
           <div className={`p-[6px] mr-2 `}>
             <div>
-              <Button
+              <div
+                className="cursor-pointer"
                 onClick={() => {
                   setToggleProfileMenu(
                     (toggleProfileMenu) => !toggleProfileMenu
@@ -115,7 +120,7 @@ const Navbar: React.FC = () => {
                 <Avatar sx={{ bgcolor: grey[400] }}>
                   {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
                 </Avatar>
-              </Button>
+              </div>
             </div>
             <div
               className={
