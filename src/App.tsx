@@ -82,7 +82,8 @@ const App: React.FC = () => {
               />
             }
           />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signup" element={<SignUp joinAsPro={false} />} />
+          <Route path="/join-as-pro" element={<SignUp joinAsPro={true} />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/profile"

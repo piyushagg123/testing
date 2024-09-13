@@ -641,6 +641,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
                 <Button
                   variant="outlined"
+                  type="submit"
                   style={{ backgroundColor: "#8c52ff", color: "white" }}
                 >
                   Submit

@@ -230,7 +230,7 @@ const SearchProfessionals: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px] mt-[1em]">
+        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 lg:pl-[64px] mt-[1em]">
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               <Filters

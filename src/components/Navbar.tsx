@@ -125,13 +125,13 @@ const Navbar: React.FC = () => {
             <div
               className={
                 toggleProfileMenu && isDivVisible
-                  ? "fixed bg-[#f3f1f1] w-[250px] sm:w-[400px] text-text right-1 flex flex-col items-center justify-center top-[76px] rounded-[10px] "
+                  ? "fixed bg-[#f3f1f1] w-screen h-screen sm:h-auto sm:w-[400px] text-text right-1 flex flex-col items-center sm:justify-center top-[76px] sm:rounded-[10px] "
                   : "hidden"
               }
               style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
               ref={divRef}
             >
-              <p className=" mt-3">{userDetails?.email}</p>
+              <p className="mt-16 sm:mt-3">{userDetails?.email}</p>
               <Avatar
                 sx={{
                   bgcolor: deepOrange[500],
@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
                     <div className="">
                       <NavLink
                         to={"/profile"}
-                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[220px] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
+                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                         onClick={() => setToggleProfileMenu(false)}
                       >
                         <AccountCircleIcon /> <p>View Profile</p>
@@ -192,9 +192,9 @@ const Navbar: React.FC = () => {
           <MaterialButton
             variant="outlined"
             style={{ backgroundColor: "#8c52ff", color: "white" }}
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate("/join-as-pro")}
           >
-            Join
+            Join as interior designer
           </MaterialButton>
         </div>
       )}

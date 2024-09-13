@@ -324,16 +324,24 @@ const ForgotPassword = () => {
 
   return (
     <div className="text-text">
-      <div className="flex justify-center">
-        <p className="text-2xl md:text-3xl text-center font-bold text-purple">
-          Forget your password
-        </p>
-      </div>
+      {!success && (
+        <div className="flex justify-center">
+          <p className="text-2xl md:text-3xl text-center font-bold text-purple">
+            Forget your password
+          </p>
+        </div>
+      )}
 
       <DialogContent className="bg-prim text-text" style={{ padding: "15px" }}>
         <Box sx={{ width: "100%" }}>
-          {error && <Alert severity="error">{error}</Alert>}
-          {success && <Alert severity="success">{success}</Alert>}
+          <div className="w-full flex justify-center">
+            {error && <Alert severity="error">{error}</Alert>}
+            {success && (
+              <Alert severity="success" sx={{ textAlign: "center" }}>
+                {success}
+              </Alert>
+            )}
+          </div>
           <br />
           {!success && (
             <Stepper activeStep={activeStep} orientation="vertical">
