@@ -14,6 +14,7 @@ import constants from "./constants";
 import Footer from "./components/Footer";
 import AboutUs from "./pages/AboutUs";
 import ProfessionalInfo from "./pages/ProfessionalInfo";
+import ProfileForMobile from "./pages/ProfileForMobile";
 
 const fetchUserData = async () => {
   const token = sessionStorage.getItem("token");
@@ -85,6 +86,7 @@ const App: React.FC = () => {
           <Route path="/signup" element={<SignUp joinAsPro={false} />} />
           <Route path="/join-as-pro" element={<SignUp joinAsPro={true} />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile-options" element={<ProfileForMobile />} />
           <Route
             path="/profile"
             element={

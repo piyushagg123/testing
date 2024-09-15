@@ -112,11 +112,11 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   return (
     <>
       {window.scrollTo(0, 0)}
-      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
           <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
             {joinAsPro
-              ? "Sign up today for recreating homes"
+              ? "Join today for recreating homes"
               : "Sign up today to recreate your home"}
           </h1>
           <div className="flex items-center mt-[2em]">
@@ -143,7 +143,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
               </span>
             </p>
           )}
-          {openJoinasPro ? (
+          {openJoinasPro || sessionStorage.getItem("token") ? (
             <div className="py-8">
               <JoinAsPro handleClose={handleClose} />
             </div>

@@ -134,7 +134,7 @@
 //   );
 // }
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
@@ -173,12 +173,14 @@ const fetchOptions = async (apiEndpoint: string) => {
 interface MultipleSelectProps {
   apiEndpoint: string;
   maxSelection: number;
+  selectedValue?: string[];
   onChange: (selectedValues: string[]) => void;
 }
 
 export default function MultipleSelect({
   apiEndpoint,
   maxSelection,
+  selectedValue: initialSelectedValues = [],
   onChange,
 }: MultipleSelectProps) {
   const theme = useTheme();
@@ -188,6 +190,10 @@ export default function MultipleSelect({
     ["options", apiEndpoint],
     () => fetchOptions(apiEndpoint)
   );
+
+  useEffect(() => {
+    setSelectedValues(initialSelectedValues);
+  }, []);
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -229,11 +235,9 @@ export default function MultipleSelect({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "100%", // Use 100% width for responsiveness
-            minWidth: "235px", // Ensure a minimum width
+            width: "235px", // Ensure a minimum width
             borderRadius: "5px",
             border: "solid 1px",
-            maxWidth: "400px", // Ensure it doesn't get too wide
           }}
           size="small"
         >

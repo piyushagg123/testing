@@ -322,8 +322,22 @@ const ForgotPassword = () => {
     setPassword("");
   };
 
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+
+        handleNext();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeStep, handleNext]);
+
   return (
-    <div className="text-text">
+    <div className="text-text lg:w-[70%] m-auto">
       {!success && (
         <div className="flex justify-center">
           <p className="text-2xl md:text-3xl text-center font-bold text-purple">
@@ -365,9 +379,7 @@ const ForgotPassword = () => {
                             <Box
                               component="form"
                               sx={{
-                                "& > :not(style)": {
-                                  width: matches ? "500px" : "100%",
-                                },
+                                "& > :not(style)": {},
                                 paddingLeft: 0,
                               }}
                               noValidate
@@ -381,7 +393,7 @@ const ForgotPassword = () => {
                                 onChange={(event) =>
                                   setEmail(event.target.value)
                                 }
-                                sx={{ width: matches ? "500px" : "100%" }}
+                                sx={{ width: "100%" }}
                               />
                             </Box>
                           ) : activeStep === 1 ? (
@@ -392,10 +404,11 @@ const ForgotPassword = () => {
                                 justifyContent: "center",
                                 gap: 2,
                                 marginTop: 3,
+                                width: "100%",
                               }}
                             >
                               <OTP
-                                separator={matches ? <span>-</span> : ""}
+                                separator={matches ? <span> - </span> : ""}
                                 value={otp}
                                 onChange={setOtp}
                                 length={6}
@@ -405,7 +418,7 @@ const ForgotPassword = () => {
                             <Box
                               component="form"
                               sx={{
-                                "& > :not(style)": { m: 1, width: "300px" },
+                                "& > :not(style)": { width: "100%" },
                               }}
                               noValidate
                               autoComplete="off"
@@ -431,6 +444,7 @@ const ForgotPassword = () => {
                             pt: 2,
                             justifyContent: "flex-end",
                             gap: "10px",
+                            width: "100%",
                           }}
                         >
                           {activeStep === 1 ? (

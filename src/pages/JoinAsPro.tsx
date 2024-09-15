@@ -262,7 +262,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           className="flex flex-col gap-4 justify-between w-[235px] lg:w-[495px] text-lg"
         >
           <h1 className="text-xl font-bold">
-            Let's get started by creating your profile
+            {currentStep === 1
+              ? "Let's get started by creating your profile"
+              : "Few more details needed"}
           </h1>
           {error && <Alert severity="error">{error}</Alert>}
           {currentStep === 1 && (
@@ -384,6 +386,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
+                  selectedValue={
+                    formData.sub_category_1 ? formData.sub_category_1 : []
+                  }
                   onChange={(selected) => {
                     setFormData((prevData) => ({
                       ...prevData,
@@ -401,6 +406,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
+                  selectedValue={
+                    formData.sub_category_2 ? formData.sub_category_2 : []
+                  }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -418,6 +426,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
+                  selectedValue={
+                    formData.sub_category_3 ? formData.sub_category_3 : []
+                  }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -452,6 +463,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               >
                 <p className="text-base">Select your state</p>
                 <Autocomplete
+                  value={formData.state ? formData.state : ""}
                   disablePortal
                   id="state-autocomplete"
                   options={state}
@@ -461,7 +473,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     width: 235,
                     borderRadius: "5px",
                     border: "solid 0.3px",
-                    marginRight: "3px",
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -481,6 +492,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <p className="text-base">Select your city</p>
                 <Autocomplete
                   disablePortal
+                  value={formData.city ? formData.city : ""}
                   size="small"
                   id="city-autocomplete"
                   options={cities}
@@ -495,7 +507,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     width: 235,
                     borderRadius: "5px",
                     border: "solid 0.3px",
-                    marginRight: "3px",
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -516,7 +527,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
 
-              <label className="flex flex-col lg:flex-row justify-between mt-4">
+              <label className="flex flex-col lg:flex-row justify-between mt-1">
                 <p className="text-base">Upload Logo</p>
                 <input
                   type="file"
