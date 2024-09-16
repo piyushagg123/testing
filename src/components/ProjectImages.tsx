@@ -1,7 +1,6 @@
 import { useState, useCallback, ChangeEvent } from "react";
 import axios from "axios";
 import constants from "../constants";
-import { Button } from "@mui/material";
 
 interface ProjectImagesProps {
   subCategories: string[];
@@ -141,7 +140,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           border: "solid 0.3px",
                         }}
                       />
-                      <Button
+                      <button
                         type="button"
                         onClick={() =>
                           handleDeleteImage(spaceIndex, imageIndex)
@@ -163,7 +162,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                         }}
                       >
                         &times;
-                      </Button>
+                      </button>
                     </>
                   ) : (
                     <div
@@ -179,7 +178,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                         border: "solid 0.3px",
                       }}
                     >
-                      <Button
+                      <button
                         type="button"
                         onClick={() => {
                           const inputElement = document.getElementById(
@@ -190,7 +189,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                         style={{ fontSize: "24px", cursor: "pointer" }}
                       >
                         +
-                      </Button>
+                      </button>
                       <input
                         id={`file-input-${spaceIndex}-${imageIndex}`}
                         style={{ display: "none" }}

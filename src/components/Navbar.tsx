@@ -26,7 +26,6 @@ import constants from "../constants";
 import pickelelogo from "../assets/PickeleLogo.png";
 import { Button as MaterialButton } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import MenuIcon from "@mui/icons-material/Menu";
 
 const Navbar: React.FC = () => {
   const [isDivVisible, setIsDivVisible] = useState(false);
@@ -45,17 +44,17 @@ const Navbar: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleClick = (index: number) => {
-    console.info(`You selected ${options[index]}`);
     if (index === 0) {
       navigate("/signup");
     } else navigate("/join-as-pro");
+    setOpenDrop(false);
+    setSelectedIndex(0);
   };
 
   const handleMenuItemClick = (
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    _event: React.MouseEvent<HTMLLIElement, MouseEvent>,
     index: number
   ) => {
-    // setSelectedIndex(index);
     setOpen(false);
     handleClick(index);
   };
@@ -93,7 +92,6 @@ const Navbar: React.FC = () => {
   }
   const { setLogin, userDetails, login } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
-  const [toggleMenu, setToggleMenu] = useState(false);
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -126,7 +124,7 @@ const Navbar: React.FC = () => {
     setOpen(false);
   };
   return (
-    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg sm:px-[64px]">
+    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg lg:px-[64px]">
       <div className="flex items-center gap-2 md:gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
