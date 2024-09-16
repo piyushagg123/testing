@@ -85,10 +85,7 @@ const SearchProfessionals: React.FC = () => {
       });
       setFilteredItems(response.data.data);
     } catch (error) {
-      setTimeout(() => {
-        setIsLoading(false);
-        setErrorInApi(true);
-      }, 1500);
+      setErrorInApi(true);
     } finally {
       setIsLoading(false);
     }
