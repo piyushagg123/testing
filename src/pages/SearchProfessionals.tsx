@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import {
@@ -15,7 +15,6 @@ import Professional from "../components/Professional";
 import Filters from "../components/Filters";
 import constants from "../constants";
 import { StateContext } from "../context/State";
-import maintainenceImg from "../assets/service.jpg";
 
 interface VendorItem {
   vendor_id: string;
@@ -37,16 +36,6 @@ const SearchProfessionals: React.FC = () => {
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
   const [filteredItems, setFilteredItems] = useState<VendorItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const [error, setError] = useState(false);
-  const [themeFilters, setThemeFilters] = useState(new Set());
-  const [spaceFilters, setSpaceFilters] = useState(new Set());
-  const [executionFilters, setExecutionFilters] = useState(new Set());
-
-  useEffect(() => {
-    fetchVendorList(themeFilters, spaceFilters, executionFilters);
-  }, [themeFilters, spaceFilters, executionFilters]);
-
   const handleStateChange = async (_event: any, value: string | null) => {
     setSelectedState(value ?? "");
 
@@ -90,56 +79,12 @@ const SearchProfessionals: React.FC = () => {
       setFilteredItems(response.data.data);
     } catch (error) {
       setTimeout(() => {
-        setError(true);
         setIsLoading(false);
       }, 3000);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const onThemeFiltersUpdate = (updatedItem: string) => {
-    updatedItem = updatedItem.replace(/\s+/g, "_");
-    let updatedThemeFilters = new Set(themeFilters);
-    if (updatedThemeFilters.has(updatedItem)) {
-      updatedThemeFilters.delete(updatedItem);
-    } else {
-      updatedThemeFilters.add(updatedItem);
-    }
-    setThemeFilters(updatedThemeFilters);
-  };
-
-  const onSpaceFiltersUpdate = (updatedItem: string) => {
-    updatedItem = updatedItem.replace(/\s+/g, "_");
-    let updatedSpaceFilters = new Set(spaceFilters);
-    if (updatedSpaceFilters.has(updatedItem)) {
-      updatedSpaceFilters.delete(updatedItem);
-    } else {
-      updatedSpaceFilters.add(updatedItem);
-    }
-    setSpaceFilters(updatedSpaceFilters);
-  };
-
-  const onExecutionFiltersUpdate = (updatedItem: string) => {
-    updatedItem = updatedItem.replace(/\s+/g, "_");
-    let updatedExecutionFilters = new Set(executionFilters);
-    if (updatedExecutionFilters.has(updatedItem)) {
-      updatedExecutionFilters.delete(updatedItem);
-    } else {
-      updatedExecutionFilters.add(updatedItem);
-    }
-    setExecutionFilters(updatedExecutionFilters);
-  };
-
-  // if (isLoading) return;
-  if (error) {
-    return (
-      <div className="maintenance-container w-[30vw] m-auto min-h-screen mt-20">
-        <img src={maintainenceImg} alt="" />
-        <p className="text-center">Website is under maintainence</p>
-      </div>
-    );
-  }
   return (
     <>
       {window.scrollTo(0, 0)}
@@ -233,11 +178,7 @@ const SearchProfessionals: React.FC = () => {
         <div className="flex  justify-start flex-col lg:flex-row items-start p-1 lg:px-[64px] mt-[1em]">
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
-              <Filters
-                handleThemeFilter={onThemeFiltersUpdate}
-                handleSpaceFilter={onSpaceFiltersUpdate}
-                handleExecutionFilter={onExecutionFiltersUpdate}
-              />
+              <Filters fetchVendorList={fetchVendorList} />
             </div>
           </div>
           <div className="w-full">

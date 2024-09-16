@@ -348,7 +348,7 @@ const ForgotPassword = () => {
 
       <DialogContent className="bg-prim text-text" style={{ padding: "15px" }}>
         <Box sx={{ width: "100%" }}>
-          <div className="w-full flex justify-center">
+          <div className="w-full flex justify-center mb-[1em]">
             {error && <Alert severity="error">{error}</Alert>}
             {success && (
               <Alert severity="success" sx={{ textAlign: "center" }}>
@@ -356,7 +356,6 @@ const ForgotPassword = () => {
               </Alert>
             )}
           </div>
-          <br />
           {!success && (
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => (

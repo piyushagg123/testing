@@ -211,17 +211,22 @@ const Navbar: React.FC = () => {
                     ""
                   )}
 
-                  <div className="flex h-[40px]">
+                  <div className="flex h-[40px] w-[350px] justify-start items-start">
                     <Button
-                      variant="outlined"
-                      style={{ backgroundColor: "#8c52ff", color: "white" }}
+                      variant="text"
+                      style={{
+                        color: "red",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-start",
+                      }}
                       onClick={() => {
                         setToggleProfileMenu(false);
                         setLogin(false);
                         handleLogout();
                       }}
                     >
-                      <LogoutIcon /> <p>Log Out</p>
+                      <LogoutIcon /> <p className="text-left">Log Out</p>
                     </Button>
                   </div>
                 </div>
