@@ -26,8 +26,14 @@ import constants from "../constants";
 import pickelelogo from "../assets/PickeleLogo.png";
 import { Button as MaterialButton } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ApiContext } from "../context/Api";
 
 const Navbar: React.FC = () => {
+  const apiContext = useContext(ApiContext);
+  if (apiContext === undefined) {
+    throw new Error("ApiContext must be used within a ApiProvider");
+  }
+  const { errorInApi } = apiContext;
   const [isDivVisible, setIsDivVisible] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
 
@@ -132,205 +138,213 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
       </div>
-      {login ? (
-        <div className="flex gap-4 items-center">
-          {userDetails?.is_vendor ? (
-            ""
-          ) : (
-            <div>
-              <MaterialButton
-                variant="outlined"
-                style={{
-                  borderColor: "#8c52ff",
-                  color: "#8c52ff",
-                  padding: "5px",
-                }}
-                onClick={() => navigate("/join-as-pro")}
-              >
-                Join as Pro
-              </MaterialButton>
-            </div>
-          )}
-          <div className={`p-[6px] mr-2 `}>
-            <div>
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  if (isFullScreen) {
-                    navigate("/profile-options");
-                  } else {
-                    setToggleProfileMenu(
-                      (toggleProfileMenu) => !toggleProfileMenu
-                    );
-                    setIsDivVisible(true);
+      {!errorInApi && (
+        <>
+          {login ? (
+            <div className="flex gap-4 items-center">
+              {userDetails?.is_vendor ? (
+                ""
+              ) : (
+                <div>
+                  <MaterialButton
+                    variant="outlined"
+                    style={{
+                      borderColor: "#8c52ff",
+                      color: "#8c52ff",
+                      padding: "5px",
+                    }}
+                    onClick={() => navigate("/join-as-pro")}
+                  >
+                    Join as Pro
+                  </MaterialButton>
+                </div>
+              )}
+              <div className={`p-[6px] mr-2 `}>
+                <div>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      if (isFullScreen) {
+                        navigate("/profile-options");
+                      } else {
+                        setToggleProfileMenu(
+                          (toggleProfileMenu) => !toggleProfileMenu
+                        );
+                        setIsDivVisible(true);
+                      }
+                    }}
+                  >
+                    <Avatar sx={{ bgcolor: grey[400] }}>
+                      {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
+                    </Avatar>
+                  </div>
+                </div>
+                <div
+                  className={
+                    toggleProfileMenu && isDivVisible
+                      ? "fixed bg-[#f3f1f1] w-screen h-screen sm:h-auto sm:w-[400px] text-text right-1 flex flex-col items-center sm:justify-center top-[76px] sm:rounded-[10px] "
+                      : "hidden"
                   }
-                }}
-              >
-                <Avatar sx={{ bgcolor: grey[400] }}>
-                  {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
-                </Avatar>
-              </div>
-            </div>
-            <div
-              className={
-                toggleProfileMenu && isDivVisible
-                  ? "fixed bg-[#f3f1f1] w-screen h-screen sm:h-auto sm:w-[400px] text-text right-1 flex flex-col items-center sm:justify-center top-[76px] sm:rounded-[10px] "
-                  : "hidden"
-              }
-              style={{ boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
-              ref={divRef}
-            >
-              <p className="mt-16 sm:mt-3">{userDetails?.email}</p>
-              <Avatar
-                sx={{
-                  bgcolor: deepOrange[500],
-                  height: 80,
-                  width: 80,
-                  marginTop: 2,
-                }}
-              >
-                {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
-              </Avatar>
-              <p className="text-2xl pb-[16px]">
-                Hi {userDetails?.first_name}!!
-              </p>
+                  style={{
+                    boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+                  }}
+                  ref={divRef}
+                >
+                  <p className="mt-16 sm:mt-3">{userDetails?.email}</p>
+                  <Avatar
+                    sx={{
+                      bgcolor: deepOrange[500],
+                      height: 80,
+                      width: 80,
+                      marginTop: 2,
+                    }}
+                  >
+                    {`${userDetails?.first_name[0]}${userDetails?.last_name[0]}`}
+                  </Avatar>
+                  <p className="text-2xl pb-[16px]">
+                    Hi {userDetails?.first_name}!!
+                  </p>
 
-              <div className="mt-[1em]">
-                <div className="flex flex-col items-center bg-white justify-center sm:w-[370px] rounded-[10px] p-2 mb-2">
-                  {userDetails?.is_vendor ? (
-                    <div className="">
-                      <NavLink
-                        to={"/profile"}
-                        className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
-                        onClick={() => setToggleProfileMenu(false)}
-                      >
-                        <AccountCircleIcon /> <p>View Profile</p>
-                      </NavLink>
+                  <div className="mt-[1em]">
+                    <div className="flex flex-col items-center bg-white justify-center sm:w-[370px] rounded-[10px] p-2 mb-2">
+                      {userDetails?.is_vendor ? (
+                        <div className="">
+                          <NavLink
+                            to={"/profile"}
+                            className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
+                            onClick={() => setToggleProfileMenu(false)}
+                          >
+                            <AccountCircleIcon /> <p>View Profile</p>
+                          </NavLink>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+
+                      <div className="flex h-[40px] w-[350px] justify-start items-start">
+                        <Button
+                          variant="text"
+                          style={{
+                            color: "red",
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "flex-start",
+                          }}
+                          onClick={() => {
+                            setToggleProfileMenu(false);
+                            setLogin(false);
+                            handleLogout();
+                          }}
+                        >
+                          <LogoutIcon /> <p className="text-left">Log Out</p>
+                        </Button>
+                      </div>
                     </div>
-                  ) : (
-                    ""
-                  )}
-
-                  <div className="flex h-[40px] w-[350px] justify-start items-start">
-                    <Button
-                      variant="text"
-                      style={{
-                        color: "red",
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "flex-start",
-                      }}
-                      onClick={() => {
-                        setToggleProfileMenu(false);
-                        setLogin(false);
-                        handleLogout();
-                      }}
-                    >
-                      <LogoutIcon /> <p className="text-left">Log Out</p>
-                    </Button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="md:flex hidden  gap-4 pr-5">
-            <div className="hidden md:block">
-              <MaterialButton
-                variant="outlined"
-                style={{ color: "black", borderColor: "black" }}
-                onClick={() => navigate("/login")}
-              >
-                Log In
-              </MaterialButton>
-            </div>
-            <div>
-              <MaterialButton
-                variant="outlined"
-                style={{ backgroundColor: "#8c52ff", color: "white" }}
-                onClick={() => navigate("/join-as-pro")}
-              >
-                Join as interior designer
-              </MaterialButton>
-            </div>
-          </div>
+          ) : (
+            <>
+              <div className="md:flex hidden  gap-4 pr-5">
+                <div className="hidden md:block">
+                  <MaterialButton
+                    variant="outlined"
+                    style={{ color: "black", borderColor: "black" }}
+                    onClick={() => navigate("/login")}
+                  >
+                    Log In
+                  </MaterialButton>
+                </div>
+                <div>
+                  <MaterialButton
+                    variant="outlined"
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
+                    onClick={() => navigate("/join-as-pro")}
+                  >
+                    Join as interior designer
+                  </MaterialButton>
+                </div>
+              </div>
 
-          <div className=" md:hidden flex gap-3">
-            <Button
-              variant="outlined"
-              style={{ color: "black", borderColor: "black" }}
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </Button>
-            <ButtonGroup
-              variant="contained"
-              ref={anchorRef}
-              aria-label="Button group with a nested menu"
-              style={{ backgroundColor: "#8c52ff", color: "white" }}
-            >
-              <Button
-                onClick={() => handleClick(selectedIndex)}
-                sx={{ padding: "5px" }}
-                style={{ backgroundColor: "#8c52ff", color: "white" }}
-              >
-                {options[selectedIndex]}
-              </Button>
-              <Button
-                size="small"
-                aria-controls={open ? "split-button-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-label="select merge strategy"
-                aria-haspopup="menu"
-                onClick={handleToggle}
-                sx={{ padding: "5px" }}
-                style={{ backgroundColor: "#8c52ff", color: "white" }}
-              >
-                <ArrowDropDownIcon />
-              </Button>
-            </ButtonGroup>
-            <Popper
-              sx={{ zIndex: 1 }}
-              open={openDrop}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin:
-                      placement === "bottom" ? "center top" : "center bottom",
-                  }}
+              <div className=" md:hidden flex gap-3">
+                <Button
+                  variant="outlined"
+                  style={{ color: "black", borderColor: "black" }}
+                  onClick={() => navigate("/login")}
                 >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleDropClose}>
-                      <MenuList id="split-button-menu" autoFocusItem>
-                        {options.map(
-                          (option, index) =>
-                            index === 1 && (
-                              <MenuItem
-                                key={option}
-                                selected={index === selectedIndex}
-                                onClick={(event) =>
-                                  handleMenuItemClick(event, index)
-                                }
-                              >
-                                {option}
-                              </MenuItem>
-                            )
-                        )}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-          </div>
+                  Login
+                </Button>
+                <ButtonGroup
+                  variant="contained"
+                  ref={anchorRef}
+                  aria-label="Button group with a nested menu"
+                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                >
+                  <Button
+                    onClick={() => handleClick(selectedIndex)}
+                    sx={{ padding: "5px" }}
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  >
+                    {options[selectedIndex]}
+                  </Button>
+                  <Button
+                    size="small"
+                    aria-controls={open ? "split-button-menu" : undefined}
+                    aria-expanded={open ? "true" : undefined}
+                    aria-label="select merge strategy"
+                    aria-haspopup="menu"
+                    onClick={handleToggle}
+                    sx={{ padding: "5px" }}
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  >
+                    <ArrowDropDownIcon />
+                  </Button>
+                </ButtonGroup>
+                <Popper
+                  sx={{ zIndex: 1 }}
+                  open={openDrop}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  transition
+                  disablePortal
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleDropClose}>
+                          <MenuList id="split-button-menu" autoFocusItem>
+                            {options.map(
+                              (option, index) =>
+                                index === 1 && (
+                                  <MenuItem
+                                    key={option}
+                                    selected={index === selectedIndex}
+                                    onClick={(event) =>
+                                      handleMenuItemClick(event, index)
+                                    }
+                                  >
+                                    {option}
+                                  </MenuItem>
+                                )
+                            )}
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </div>
+            </>
+          )}
         </>
       )}
       <Dialog

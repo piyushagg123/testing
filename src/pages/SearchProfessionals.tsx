@@ -15,6 +15,8 @@ import Professional from "../components/Professional";
 import Filters from "../components/Filters";
 import constants from "../constants";
 import { StateContext } from "../context/State";
+import service from "../assets/service.png";
+import { ApiContext } from "../context/Api";
 
 interface VendorItem {
   vendor_id: string;
@@ -25,6 +27,11 @@ interface VendorItem {
 }
 
 const SearchProfessionals: React.FC = () => {
+  const apiContext = useContext(ApiContext);
+  if (apiContext === undefined) {
+    throw new Error("ApiContext must be used within a ApiProvider");
+  }
+  const { errorInApi, setErrorInApi } = apiContext;
   const stateContext = useContext(StateContext);
   if (stateContext === undefined) {
     throw new Error("StateContext must be used within a StateProvider");
@@ -80,11 +87,27 @@ const SearchProfessionals: React.FC = () => {
     } catch (error) {
       setTimeout(() => {
         setIsLoading(false);
-      }, 3000);
+        setErrorInApi(true);
+      }, 1500);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (errorInApi) {
+    return (
+      <div className="maintenance-container flex flex-col justify-center items-center min-h-screen">
+        <img
+          src={service}
+          alt=""
+          className="w-[30vw]"
+          style={{ mixBlendMode: "multiply" }}
+        />{" "}
+        {/* Display the maintenance image */}
+        <p>We are currently undergoing maintenance. Please check back later.</p>
+      </div>
+    );
+  }
   return (
     <>
       {window.scrollTo(0, 0)}
