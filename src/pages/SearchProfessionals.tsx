@@ -99,8 +99,7 @@ const SearchProfessionals: React.FC = () => {
           alt=""
           className="w-[30vw]"
           style={{ mixBlendMode: "multiply" }}
-        />{" "}
-        {/* Display the maintenance image */}
+        />
         <p>We are currently undergoing maintenance. Please check back later.</p>
       </div>
     );
@@ -205,7 +204,7 @@ const SearchProfessionals: React.FC = () => {
             <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
               {filteredItems ? (
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <span className="font-bold text-base text-darkgrey">
+                  <span className="font-bold text-base text-darkgrey pl-3 md:pl-0">
                     INTERIOR DESIGNERS
                   </span>
                   <span
