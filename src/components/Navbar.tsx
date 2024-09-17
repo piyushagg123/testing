@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, userDetails, login } = authContext;
+  const { setLogin, userDetails, login, setDecodedJWT } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -63,6 +63,7 @@ const Navbar: React.FC = () => {
         setLogin(false);
         sessionStorage.removeItem("token");
         navigate("/");
+        setDecodedJWT(undefined);
       }
     } catch (error) {}
   };

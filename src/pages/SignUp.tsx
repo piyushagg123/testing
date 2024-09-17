@@ -7,6 +7,7 @@ import CryptoJS from "crypto-js";
 import JoinAsPro from "./JoinAsPro";
 import { Alert, Button, TextField } from "@mui/material";
 import constants from "../constants";
+import { jwtDecode } from "jwt-decode";
 
 interface FormObject {
   [key: string]: string;
@@ -17,7 +18,7 @@ const SignUp = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails } = authContext;
+  const { setLogin, setUserDetails, setDecodedJWT } = authContext;
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -88,6 +89,7 @@ const SignUp = () => {
           },
         }
       );
+      setDecodedJWT(jwtDecode(sessionStorage.getItem("token")!));
       setUserDetails(user_data.data.data);
 
       setLogin(true);

@@ -7,13 +7,14 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails } = authContext;
+  const { setLogin, setUserDetails, setDecodedJWT } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [openForgotPassword, setOpenForgotPassword] = useState(true);
@@ -77,6 +78,8 @@ const Login = () => {
           },
         }
       );
+      setDecodedJWT(jwtDecode(sessionStorage.getItem("token")!));
+
       setUserDetails(user_data.data.data);
       setLogin(true);
       navigate("/");
