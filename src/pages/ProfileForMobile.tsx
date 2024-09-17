@@ -61,10 +61,15 @@ const ProfileForMobile = () => {
               ""
             )}
 
-            <div className="flex h-[40px]">
+            <div className="flex h-[40px] w-[95vw] justify-start items-start">
               <Button
-                variant="outlined"
-                style={{ backgroundColor: "#8c52ff", color: "white" }}
+                variant="text"
+                style={{
+                  color: "red",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                }}
                 onClick={handleLogout}
               >
                 <LogoutIcon /> <p>Log Out</p>

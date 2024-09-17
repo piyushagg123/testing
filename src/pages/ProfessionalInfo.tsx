@@ -317,7 +317,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             </div>
 
             {login && (
-              <div className=" gap-3 hidden md:flex mb-[2em]">
+              <div className=" gap-3 flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
                     <Button
