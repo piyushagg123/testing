@@ -127,6 +127,11 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     }));
   };
 
+  const handleDeleteLogo = async () => {
+    setLogoPreview(null);
+    setFormData((prevData) => ({ ...prevData, logo: null }));
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -257,7 +262,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           className="flex flex-col gap-4 justify-between w-[235px] lg:w-[495px] text-lg"
         >
           <h1 className="text-xl font-bold">
-            Let's get started by creating your profile
+            {currentStep === 1
+              ? "Let's get started by creating your profile"
+              : "Few more details needed"}
           </h1>
           {error && <Alert severity="error">{error}</Alert>}
           {currentStep === 1 && (
@@ -371,7 +378,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
             <>
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row justify-start md:mt-10"
+                className="flex flex-col lg:flex-row justify-start lg:justify-between md:mt-10"
               >
                 <p className="text-base ">
                   Select your themes (maximum of three)
@@ -379,6 +386,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
+                  selectedValue={
+                    formData.sub_category_1 ? formData.sub_category_1 : []
+                  }
                   onChange={(selected) => {
                     setFormData((prevData) => ({
                       ...prevData,
@@ -390,12 +400,15 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row   justify-start"
+                className="flex flex-col lg:flex-row   justify-start lg:justify-between"
               >
                 <p className="text-base">Select your spaces</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
+                  selectedValue={
+                    formData.sub_category_2 ? formData.sub_category_2 : []
+                  }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -407,12 +420,15 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row justify-start "
+                className="flex flex-col lg:flex-row justify-start lg:justify-between"
               >
                 <p className="text-base">Type of execution</p>
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
+                  selectedValue={
+                    formData.sub_category_3 ? formData.sub_category_3 : []
+                  }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -421,9 +437,9 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   }
                 />
               </label>
-              <div className="flex gap-2 justify-between lg:w-[490px] mt-[1em]">
+              <div className="flex gap-2 justify-end  mt-[1em]">
                 <Button
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{ borderColor: "#000", color: "black" }}
                   onClick={prevStep}
                   variant="outlined"
                 >
@@ -447,6 +463,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
               >
                 <p className="text-base">Select your state</p>
                 <Autocomplete
+                  value={formData.state ? formData.state : ""}
                   disablePortal
                   id="state-autocomplete"
                   options={state}
@@ -456,7 +473,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     width: 235,
                     borderRadius: "5px",
                     border: "solid 0.3px",
-                    marginRight: "3px",
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -476,6 +492,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 <p className="text-base">Select your city</p>
                 <Autocomplete
                   disablePortal
+                  value={formData.city ? formData.city : ""}
                   size="small"
                   id="city-autocomplete"
                   options={cities}
@@ -490,7 +507,6 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     width: 235,
                     borderRadius: "5px",
                     border: "solid 0.3px",
-                    marginRight: "3px",
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -511,7 +527,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
 
-              <label className="flex flex-col lg:flex-row justify-between mt-4">
+              <label className="flex flex-col lg:flex-row justify-between mt-1">
                 <p className="text-base">Upload Logo</p>
                 <input
                   type="file"
@@ -523,22 +539,50 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 />
               </label>
               {logoPreview && (
-                <div className="flex items-center justify-center">
+                <div className="relative flex items-center justify-center">
                   {typeof logoPreview === "string" && (
-                    <img
-                      src={logoPreview}
-                      alt="Logo Preview"
-                      className="w-[100px] h-auto mt-2"
-                      style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    />
+                    <div className="relative">
+                      <img
+                        src={logoPreview}
+                        alt="Logo Preview"
+                        className="w-[100px] h-auto mt-2"
+                        style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          background: "red",
+                          color: "white",
+                          borderRadius: "100%",
+                          width: "15px",
+                          height: "15px",
+                          border: "none",
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Button
+                          onClick={handleDeleteLogo}
+                          style={{
+                            color: "white",
+                          }}
+                        >
+                          &times;
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
-              <div className="flex gap-2 lg:w-[455px] justify-between mt-[1em]">
+              <div className="flex gap-2 justify-end mt-[1em]">
                 <Button
                   variant="outlined"
                   onClick={prevStep}
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{ borderColor: "#000", color: "black" }}
                 >
                   Back
                 </Button>
@@ -569,7 +613,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                     onChange={handleSocialChange}
                   />
                 </label>
-                <label className="flex flex-col l:flex-row text-[16px] justify-between mt-[1em]">
+                <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
                     <FacebookIcon className="text-purple" /> Facebook
                   </p>
@@ -597,10 +641,10 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </label>
               </div>
 
-              <div className="flex gap-2 lg:w-[455px] justify-between mt-[1em]">
+              <div className="flex gap-2 justify-end mt-[1em]">
                 <Button
                   variant="outlined"
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{ borderColor: "#000", color: "black" }}
                   onClick={prevStep}
                 >
                   Back
@@ -608,6 +652,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
                 <Button
                   variant="outlined"
+                  type="submit"
                   style={{ backgroundColor: "#8c52ff", color: "white" }}
                 >
                   Submit

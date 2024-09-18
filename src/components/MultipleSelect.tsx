@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Checkbox } from "@mui/material";
+import constants from "../constants";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -36,12 +37,14 @@ const fetchOptions = async (apiEndpoint: string) => {
 interface MultipleSelectProps {
   apiEndpoint: string;
   maxSelection: number;
+  selectedValue?: string[];
   onChange: (selectedValues: string[]) => void;
 }
 
 export default function MultipleSelect({
   apiEndpoint,
   maxSelection,
+  selectedValue: initialSelectedValues = [],
   onChange,
 }: MultipleSelectProps) {
   const theme = useTheme();
@@ -51,6 +54,10 @@ export default function MultipleSelect({
     ["options", apiEndpoint],
     () => fetchOptions(apiEndpoint)
   );
+
+  useEffect(() => {
+    setSelectedValues(initialSelectedValues);
+  }, []);
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -79,7 +86,7 @@ export default function MultipleSelect({
   const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
 
   return (
-    <div>
+    <div className="w-[226px] h-[57px] flex justify-center">
       <FormControl>
         <Select
           multiple
@@ -92,7 +99,7 @@ export default function MultipleSelect({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "235px",
+            width: "208px",
             borderRadius: "5px",
             border: "solid 1px",
           }}
@@ -108,13 +115,25 @@ export default function MultipleSelect({
                 key={option.id}
                 value={option.value}
                 style={getStyles(option.value, selectedValues, theme)}
+                sx={{
+                  wordWrap: "break-word",
+                  whiteSpace: "normal", // Ensure words wrap to the next line
+                  overflow: "hidden", // Prevent overflow
+                  textOverflow: "ellipsis", // Adds "..." for clipped text
+                }}
                 disabled={
                   selectedValues.length >= maxSelection &&
                   !selectedValues.includes(option.value)
                 }
               >
                 <Checkbox checked={selectedValues.includes(option.value)} />
-                {option.value}
+                {option.value === "DESIGN"
+                  ? constants.DESIGN
+                  : option.value === "MATERIAL_SUPPORT"
+                  ? constants.MATERIAL_SUPPORT
+                  : option.value === "COMPLETE"
+                  ? constants.COMPLETE
+                  : option.value}
               </MenuItem>
             ))
           )}

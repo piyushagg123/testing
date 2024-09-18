@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useState } from "react";
-import img from "../assets/background.jpg";
+import img from "../assets/noImageinProject.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -317,7 +317,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             </div>
 
             {login && (
-              <div className=" gap-3 hidden md:flex mb-[2em]">
+              <div className=" gap-3 flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
                     <Button
