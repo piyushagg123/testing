@@ -18,7 +18,7 @@ const SignUp = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails, setDecodedJWT } = authContext;
+  const { setLogin, setUserDetails } = authContext;
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -89,8 +89,12 @@ const SignUp = () => {
           },
         }
       );
-      setDecodedJWT(jwtDecode(sessionStorage.getItem("token")!));
-      setUserDetails(user_data.data.data);
+      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const combinedData = {
+        ...user_data.data.data,
+        ...decodedJWT,
+      };
+      setUserDetails(combinedData);
 
       setLogin(true);
 

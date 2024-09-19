@@ -14,7 +14,7 @@ const Login = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails, setDecodedJWT } = authContext;
+  const { setLogin, setUserDetails, userDetails } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [openForgotPassword, setOpenForgotPassword] = useState(true);
@@ -78,9 +78,13 @@ const Login = () => {
           },
         }
       );
-      setDecodedJWT(jwtDecode(sessionStorage.getItem("token")!));
 
-      setUserDetails(user_data.data.data);
+      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const combinedData = {
+        ...user_data.data.data,
+        ...decodedJWT,
+      };
+      setUserDetails(combinedData);
       setLogin(true);
       navigate("/");
     } catch (error: any) {

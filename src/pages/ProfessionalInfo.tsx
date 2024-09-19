@@ -127,7 +127,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   if (authContext === undefined) {
     return;
   }
-  const { login, decodeJWT } = authContext;
+  const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
@@ -316,7 +316,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </div>
             </div>
 
-            {login && decodeJWT?.vendor_id !== Number(professionalId) && (
+            {login && userDetails?.vendor_id !== Number(professionalId) && (
               <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (

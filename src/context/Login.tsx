@@ -6,9 +6,6 @@ interface UserDetails {
   is_vendor: boolean;
   last_name: string;
   mobile: string;
-}
-
-interface DecodedJWT {
   user_id: number;
   vendor_id: number;
   exp: number;
@@ -19,8 +16,6 @@ interface AuthContextType {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   userDetails: UserDetails;
   setUserDetails: React.Dispatch<React.SetStateAction<UserDetails>>;
-  decodeJWT: DecodedJWT | undefined;
-  setDecodedJWT: React.Dispatch<React.SetStateAction<DecodedJWT | undefined>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,14 +30,15 @@ const defaultUserDetails: UserDetails = {
   is_vendor: false,
   last_name: "",
   mobile: "",
+  user_id: 0,
+  vendor_id: 0,
+  exp: 0,
 };
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [login, setLogin] = useState<boolean>(false);
   const [userDetails, setUserDetails] =
     useState<UserDetails>(defaultUserDetails);
-
-  const [decodeJWT, setDecodedJWT] = useState<DecodedJWT>();
 
   return (
     <AuthContext.Provider
@@ -51,8 +47,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLogin,
         userDetails,
         setUserDetails,
-        decodeJWT,
-        setDecodedJWT,
       }}
     >
       {children}
