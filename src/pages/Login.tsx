@@ -14,7 +14,7 @@ const Login = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails, userDetails } = authContext;
+  const { setLogin, setUserDetails } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [openForgotPassword, setOpenForgotPassword] = useState(true);
