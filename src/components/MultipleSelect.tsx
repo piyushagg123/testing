@@ -78,7 +78,7 @@ export default function MultipleSelect({
 
   const selectedValuesWithIds = selectedValues.map((value) => {
     const option = options.find((option: any) => option.value === value);
-    return { id: option.id, value: option.value };
+    return { id: option?.id, value: option?.value };
   });
 
   selectedValuesWithIds.sort((a, b) => a.id - b.id);

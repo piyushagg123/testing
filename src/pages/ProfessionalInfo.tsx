@@ -28,6 +28,8 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
+import MultipleSelect from "../components/MultipleSelect";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 interface VendorData {
   logo?: string;
@@ -37,7 +39,7 @@ interface VendorData {
   sub_category_3: string;
   description: string;
   business_name: string;
-  average_project_value: string;
+  average_project_value: number;
   number_of_employees: number;
   projects_completed: number;
   mobile: string;
@@ -129,13 +131,99 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   }
   const { login } = authContext;
   const { professionalId } = useParams();
+  const [formData, setFormData] = useState<VendorData>({
+    logo: "",
+    business_name: "",
+    sub_category_1: "",
+    sub_category_2: "",
+    sub_category_3: "",
+    description: "",
+    mobile: "",
+    email: "",
+    category: "",
+    average_project_value: 0,
+    number_of_employees: 0,
+    projects_completed: 0,
+    city: "",
+    social: {
+      facebook: "",
+      instagram: "",
+      website: "",
+    },
+  });
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
-  const { data: vendorData, isLoading: isVendorLoading } = useQuery(
+
+  // const { data: vendorData, isLoading: isVendorLoading } = useQuery(
+  //   ["vendorDetails", professionalId],
+  //   () => fetchVendorDetails(professionalId!, renderProfileView)
+  // );
+
+  const { isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!, renderProfileView)
+    () => fetchVendorDetails(professionalId!, renderProfileView),
+    {
+      onSuccess: (data) => {
+        setFormData({
+          business_name: data.business_name,
+          sub_category_1: data.sub_category_1 || "",
+          sub_category_2: data.sub_category_2 || "",
+          sub_category_3: data.sub_category_3 || "",
+          description: data.description,
+          mobile: data.mobile,
+          email: data.email,
+          category: data.category,
+          average_project_value: data.average_project_value,
+          number_of_employees: data.number_of_employees,
+          projects_completed: data.projects_completed,
+          city: data.city,
+          social: {
+            facebook: data.social?.facebook ?? "",
+            instagram: data.social?.instagram ?? "",
+            website: data.social?.website ?? "",
+          },
+          logo: data.logo,
+        });
+      },
+    }
   );
+
+  const [editMode, setEditMode] = useState(false);
+
+  const handleEditClick = () => {
+    setEditMode(!editMode);
+  };
+
+  const handleInputChange = (e: any) => {
+    console.log(e.target);
+
+    const { name, value } = e.target;
+
+    if (["facebook", "instagram", "website"].includes(name)) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        social: {
+          ...prevFormData.social,
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSave = async () => {
+    console.log(formData);
+    setEditMode(false);
+  };
+
+  // const handleCancel = () => {
+  //   setFormData(formData!);
+  // };
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
     ["vendorProjects", professionalId],
@@ -196,10 +284,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     event.preventDefault();
     setLoading(true);
     const form = event.currentTarget;
-    const formData = new FormData(form);
+    const formdata = new FormData(form);
 
     const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
-    formData.forEach((value, key) => {
+    formdata.forEach((value, key) => {
       if (key.startsWith("rating_")) {
         (formObject[
           key as "rating_quality" | "rating_execution" | "rating_behaviour"
@@ -233,9 +321,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mt-[2em] mb-[1em]">
               <div className="m-auto md:m-0">
-                {vendorData?.logo ? (
+                {formData?.logo ? (
                   <img
-                    src={`${constants.apiImageUrl}/${vendorData.logo}`}
+                    src={`${constants.apiImageUrl}/${formData.logo}`}
                     alt="Vendor Logo"
                     className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
                   />
@@ -249,69 +337,144 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </div>
               <div>
                 <p className="font-bold text-base text-darkgrey m-auto">
-                  {formatCategory(
-                    vendorData?.business_name ?? "Unknown Business"
+                  {editMode ? (
+                    <input
+                      type="text"
+                      name="business_name"
+                      value={formData.business_name}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    formatCategory(
+                      formData?.business_name ?? "Unknown Business"
+                    )
+                  )}
+
+                  {renderProfileView && (
+                    <button
+                      onClick={!editMode ? handleEditClick : handleSave}
+                      className="ml-4"
+                    >
+                      {editMode ? "Save" : <BorderColorIcon />}
+                    </button>
                   )}
                 </p>
                 <p className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED THEMES :
                   </span>{" "}
-                  <div className="flex flex-wrap gap-1">
-                    {formatCategory(vendorData?.sub_category_1 ?? "N/A")
-                      .split(",")
-                      .map((item, ind) => (
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ))}
-                  </div>
+                  {editMode ? (
+                    <MultipleSelect
+                      selectedValue={
+                        formData.sub_category_1
+                          ? formData.sub_category_1.split(",")
+                          : []
+                      }
+                      onChange={(selected) => {
+                        console.log("Selected Themes:", selected);
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          sub_category_1: selected.join(","),
+                        }));
+                      }}
+                      maxSelection={3}
+                      apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                    />
+                  ) : (
+                    <div className="flex flex-wrap gap-1">
+                      {formatCategory(formData?.sub_category_1 ?? "N/A")
+                        .split(",")
+                        .map((item, ind) => (
+                          <Chip
+                            label={item.charAt(0).toUpperCase() + item.slice(1)}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        ))}
+                    </div>
+                  )}
                 </p>
 
                 <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     SPECIALIZED SPACES :
                   </span>
-                  <div className="flex flex-wrap gap-1">
-                    {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-                      .split(",")
-                      .map((item, ind) => (
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ))}
-                  </div>
+                  {editMode ? (
+                    <MultipleSelect
+                      selectedValue={
+                        formData.sub_category_2
+                          ? formData.sub_category_2.split(",")
+                          : []
+                      }
+                      onChange={(selected) => {
+                        console.log("Selected Spaces:", selected);
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          sub_category_2: selected.join(","),
+                        }));
+                      }}
+                      maxSelection={3}
+                      apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                    />
+                  ) : (
+                    <div className="flex flex-wrap gap-1">
+                      {formatCategory(formData?.sub_category_2 ?? "N/A")
+                        .split(",")
+                        .map((item, ind) => (
+                          <Chip
+                            label={item.charAt(0).toUpperCase() + item.slice(1)}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        ))}
+                    </div>
+                  )}
                 </p>
                 <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
                     EXECUTION TYPE :
                   </span>{" "}
-                  {(vendorData?.sub_category_3 ?? "N/A")
-                    .split(",")
-                    .map((item, ind) => (
-                      <Chip
-                        label={
-                          item === "DESIGN"
-                            ? constants.DESIGN
-                            : item === "MATERIAL_SUPPORT"
-                            ? constants.MATERIAL_SUPPORT
-                            : constants.COMPLETE
-                        }
-                        variant="outlined"
-                        key={ind}
-                        sx={{
-                          height: "25px",
-                          maxWidth: "95vw",
-                          overflowWrap: "break-word",
-                        }}
-                      />
-                    ))}
+                  {editMode ? (
+                    <MultipleSelect
+                      selectedValue={
+                        formData.sub_category_3
+                          ? formData.sub_category_3.split(",")
+                          : []
+                      }
+                      onChange={(selected) => {
+                        console.log("Selected Spaces:", selected);
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          sub_category_3: selected.join(","),
+                        }));
+                      }}
+                      maxSelection={1}
+                      apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                    />
+                  ) : (
+                    (formData?.sub_category_3 ?? "N/A")
+                      .split(",")
+                      .map((item, ind) => (
+                        <Chip
+                          label={
+                            item === "DESIGN"
+                              ? constants.DESIGN
+                              : item === "MATERIAL_SUPPORT"
+                              ? constants.MATERIAL_SUPPORT
+                              : constants.COMPLETE
+                          }
+                          variant="outlined"
+                          key={ind}
+                          sx={{
+                            height: "25px",
+                            maxWidth: "95vw",
+                            overflowWrap: "break-word",
+                          }}
+                        />
+                      ))
+                  )}
                 </p>
               </div>
             </div>
@@ -381,7 +544,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[95vw] lg:w-[750px]">
                   <p className="text-sm md:text-base text-justify mb-[1em]">
-                    {vendorData?.description}
+                    {formData?.description}
                   </p>
                 </div>
               </TabPanel>
@@ -480,11 +643,11 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         <div className="w-[250px] text-lg ml-2 md:ml-10 mt-10">
           <div className=" ">
             <p className="font-bold text-base text-darkgrey">Contact Number</p>
-            <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
+            <p className="text-[16px]">{formData?.mobile ?? "N/A"}</p>
           </div>
           <div className="mt-[1em] ">
             <p className="font-bold text-base text-darkgrey">Email</p>
-            <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
+            <p className="text-[16px]">{formData?.email ?? "N/A"}</p>
           </div>
           <div className="flex flex-col justify-evenly mt-[1em] gap-6">
             {selectedProject ? (
@@ -579,64 +742,139 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <p className="font-bold text-base text-darkgrey">
                     Typical Job Cost
                   </p>
-                  <p className="text-[16px]">
-                    {vendorData?.average_project_value ?? "N/A"}
-                  </p>
+                  {editMode ? (
+                    <input
+                      type="text"
+                      name="average_project_value"
+                      value={formData.average_project_value}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <p className="text-[16px]">
+                      {formData?.average_project_value ?? "N/A"}
+                    </p>
+                  )}
                 </div>
                 <div className=" ">
                   <p className="font-bold text-base text-darkgrey">
                     Number of employees
                   </p>
-                  <p className="text-[16px]">
-                    {vendorData?.number_of_employees ?? "N/A"}
-                  </p>
+                  {editMode ? (
+                    <input
+                      type="number"
+                      name="number_of_employees"
+                      value={formData.number_of_employees}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <p className="text-[16px]">
+                      {formData?.number_of_employees ?? "N/A"}
+                    </p>
+                  )}
                 </div>
                 <div className=" ">
                   <p className="font-bold text-base text-darkgrey">
                     Projects Completed
                   </p>
-                  <p className="text-[16px]">
-                    {vendorData?.projects_completed ?? "N/A"}
-                  </p>
+                  {editMode ? (
+                    <input
+                      type="number"
+                      name="projects_completed"
+                      value={formData.projects_completed}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <p className="text-[16px]">
+                      {formData?.projects_completed ?? "N/A"}
+                    </p>
+                  )}
                 </div>
 
                 <div className=" ">
                   <p className="font-bold text-base text-darkgrey">Location</p>
-                  <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
+                  <p className="text-[16px]">{formData?.city ?? "N/A"}</p>
                 </div>
-                {(vendorData?.social?.facebook ||
-                  vendorData?.social?.instagram ||
-                  vendorData?.social?.website) && (
+                {editMode ? (
                   <div>
                     <p className="font-bold text-base text-darkgrey">Socials</p>
-                    {vendorData.social.facebook && (
-                      <a
-                        href={vendorData.social.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FacebookIcon />
-                      </a>
+                    {editMode ? (
+                      <>
+                        <label>Facebook:</label>
+                        <input
+                          type="text"
+                          name="facebook"
+                          value={formData?.social?.facebook}
+                          onChange={handleInputChange}
+                        />
+                      </>
+                    ) : (
+                      ""
                     )}
-                    {vendorData.social.instagram && (
-                      <a
-                        href={vendorData.social.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <InstagramIcon />
-                      </a>
+                    {editMode ? (
+                      <>
+                        {" "}
+                        <label>Instagram:</label>
+                        <input
+                          type="text"
+                          name="instagram"
+                          value={formData?.social?.instagram}
+                          onChange={handleInputChange}
+                        />
+                      </>
+                    ) : (
+                      ""
                     )}
-                    {vendorData.social.website && (
-                      <a
-                        href={vendorData.social.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <OpenInNewIcon />
-                      </a>
+                    {editMode ? (
+                      <>
+                        <label>Website:</label>
+                        <input
+                          type="text"
+                          name="website"
+                          value={formData?.social?.website}
+                          onChange={handleInputChange}
+                        />
+                      </>
+                    ) : (
+                      ""
                     )}
                   </div>
+                ) : (
+                  (formData?.social?.facebook ||
+                    formData?.social?.instagram ||
+                    formData?.social?.website) && (
+                    <div>
+                      <p className="font-bold text-base text-darkgrey">
+                        Socials
+                      </p>
+                      {formData.social.facebook && (
+                        <a
+                          href={formData.social.facebook}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <FacebookIcon />
+                        </a>
+                      )}
+                      {formData.social.instagram && (
+                        <a
+                          href={formData.social.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <InstagramIcon />
+                        </a>
+                      )}
+                      {formData.social.website && (
+                        <a
+                          href={formData.social.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <OpenInNewIcon />
+                        </a>
+                      )}
+                    </div>
+                  )
                 )}
               </>
             )}
