@@ -7,8 +7,8 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../constants";
 import reviewImage from "../assets/noReviewsAdded.png";
-import { Divider } from "@mui/material";
-import { useContext } from "react";
+import { Divider, Snackbar } from "@mui/material";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -33,6 +33,11 @@ const Reviews: React.FC<user> = ({ id }) => {
     return;
   }
   const { userDetails } = authContext;
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const fetchReviews = async () => {
     let data;
 
@@ -93,6 +98,7 @@ const Reviews: React.FC<user> = ({ id }) => {
         }
       );
       refetch();
+      setSnackbarOpen(true);
     } catch (error) {}
   };
 
@@ -276,6 +282,15 @@ const Reviews: React.FC<user> = ({ id }) => {
           </>
         )}
       </div>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message="Review deleted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
     </>
   );
 };
