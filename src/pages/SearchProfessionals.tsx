@@ -16,6 +16,8 @@ import Professional from "../components/Professional";
 import Filters from "../components/Filters";
 import constants from "../constants";
 import { StateContext } from "../context/State";
+import service from "../assets/service.png";
+import { ApiContext } from "../context/Api";
 
 interface VendorItem {
   vendor_id: string;
@@ -26,6 +28,11 @@ interface VendorItem {
 }
 
 const SearchProfessionals: React.FC = () => {
+  const apiContext = useContext(ApiContext);
+  if (apiContext === undefined) {
+    throw new Error("ApiContext must be used within a ApiProvider");
+  }
+  const { errorInApi, setErrorInApi } = apiContext;
   const stateContext = useContext(StateContext);
   if (stateContext === undefined) {
     throw new Error("StateContext must be used within a StateProvider");
@@ -37,7 +44,6 @@ const SearchProfessionals: React.FC = () => {
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
   const [filteredItems, setFilteredItems] = useState<VendorItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const handleStateChange = async (_event: any, value: string | null) => {
     setSelectedState(value ?? "");
 
@@ -80,10 +86,25 @@ const SearchProfessionals: React.FC = () => {
       });
       setFilteredItems(response.data.data);
     } catch (error) {
+      setErrorInApi(true);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (errorInApi) {
+    return (
+      <div className="maintenance-container flex flex-col justify-center items-center min-h-screen">
+        <img
+          src={service}
+          alt=""
+          className="w-[30vw]"
+          style={{ mixBlendMode: "multiply" }}
+        />
+        <p>We are currently undergoing maintenance. Please check back later.</p>
+      </div>
+    );
+  }
   return (
     <>
       {window.scrollTo(0, 0)}
@@ -174,7 +195,7 @@ const SearchProfessionals: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 xl:px-[64px] mt-[1em]">
+        <div className="flex  justify-start flex-col lg:flex-row items-start p-1 lg:px-[64px] mt-[1em]">
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               <Filters fetchVendorList={fetchVendorList} />
@@ -184,7 +205,7 @@ const SearchProfessionals: React.FC = () => {
             <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
               {filteredItems ? (
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <span className="font-bold text-base text-darkgrey">
+                  <span className="font-bold text-base text-darkgrey pl-3 md:pl-0">
                     INTERIOR DESIGNERS
                   </span>
                   <span

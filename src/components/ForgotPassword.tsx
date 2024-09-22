@@ -25,8 +25,6 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
   const inputRefs = React.useRef<HTMLInputElement[]>(
     new Array(length).fill(null)
   );
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const focusInput = (targetIndex: number) => {
     const targetInput = inputRefs.current[targetIndex];
@@ -156,7 +154,7 @@ function OTP({ separator, length, value, onChange }: OTPProps) {
       sx={{
         display: "flex",
         flexWrap: "wrap",
-        gap: matches ? 1 : 0,
+        gap: "4px",
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
@@ -324,145 +322,171 @@ const ForgotPassword = () => {
     setPassword("");
   };
 
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+
+        handleNext();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeStep, handleNext]);
+
   return (
-    <div className="text-text">
-      <div className="flex justify-center">
-        <p className="text-2xl md:text-3xl text-center font-bold text-purple">
-          Forget your password
-        </p>
-      </div>
+    <div className="text-text lg:w-[70%] m-auto">
+      {!success && (
+        <div className="flex justify-center">
+          <p className="text-2xl md:text-3xl text-center font-bold text-purple">
+            Forget your password
+          </p>
+        </div>
+      )}
 
-      <DialogContent className="bg-prim text-text">
+      <DialogContent className="bg-prim text-text" style={{ padding: "15px" }}>
         <Box sx={{ width: "100%" }}>
-          {error && <Alert severity="error">{error}</Alert>}
-          {success && <Alert severity="success">{success}</Alert>}
-          <br />
-          <Stepper activeStep={activeStep} orientation="vertical">
-            {steps.map((label, index) => (
-              <Step key={index}>
-                <StepLabel>{label}</StepLabel>
-                <StepContent sx={{ paddingLeft: "8px", paddingRight: 0 }}>
-                  {activeStep === steps.length ? (
-                    <React.Fragment>
-                      <Box
-                        sx={{ display: "flex", flexDirection: "row", pt: 2 }}
-                      >
-                        <Box sx={{ flex: "1 1 auto" }} />
-                        <Button onClick={handleReset}>Reset</Button>
-                      </Box>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <div className="mt-2 mb-1 pl-0">
-                        {activeStep === 0 ? (
-                          <Box
-                            component="form"
-                            sx={{
-                              "& > :not(style)": {
-                                m: 1,
-                                width: matches ? "500px" : "100%",
-                              },
-                              paddingLeft: 0,
-                            }}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <TextField
-                              id="standard-basic"
-                              label="Enter your registered email ID"
-                              variant="standard"
-                              value={email}
-                              onChange={(event) => setEmail(event.target.value)}
-                              sx={{ width: matches ? "500px" : "100%" }}
-                            />
-                          </Box>
-                        ) : activeStep === 1 ? (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              gap: 2,
-                              marginTop: 3,
-                            }}
-                          >
-                            <OTP
-                              separator={matches ? <span>-</span> : ""}
-                              value={otp}
-                              onChange={setOtp}
-                              length={6}
-                            />
-                          </Box>
-                        ) : (
-                          <Box
-                            component="form"
-                            sx={{ "& > :not(style)": { m: 1, width: "300px" } }}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <TextField
-                              id="standard-basic"
-                              label="Enter your new password"
-                              variant="standard"
-                              type="password"
-                              value={password}
-                              onChange={(event) =>
-                                setPassword(event.target.value)
-                              }
-                            />
-                          </Box>
-                        )}
-                      </div>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          pt: 2,
-                          justifyContent: "flex-end",
-                          gap: "10px",
-                        }}
-                      >
-                        {activeStep === 1 ? (
-                          <>
-                            <Button
-                              onClick={() => setActiveStep(0)}
-                              variant="outlined"
-                              style={{ color: "black", borderColor: "black" }}
+          <div className="w-full flex justify-center mb-[1em]">
+            {error && <Alert severity="error">{error}</Alert>}
+            {success && (
+              <Alert severity="success" sx={{ textAlign: "center" }}>
+                {success}
+              </Alert>
+            )}
+          </div>
+          {!success && (
+            <Stepper activeStep={activeStep} orientation="vertical">
+              {steps.map((label, index) => (
+                <Step key={index}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent sx={{ paddingLeft: "8px", paddingRight: 0 }}>
+                    {activeStep === steps.length ? (
+                      <React.Fragment>
+                        <Box
+                          sx={{ display: "flex", flexDirection: "row", pt: 2 }}
+                        >
+                          <Box sx={{ flex: "1 1 auto" }} />
+                          <Button onClick={handleReset}>Reset</Button>
+                        </Box>
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <div className="mt-2 mb-1 pl-0">
+                          {activeStep === 0 ? (
+                            <Box
+                              component="form"
+                              sx={{
+                                "& > :not(style)": {},
+                                paddingLeft: 0,
+                              }}
+                              noValidate
+                              autoComplete="off"
                             >
-                              Back
-                            </Button>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        <LoadingButton
-                          onClick={handleNext}
-                          loading={loading}
-                          variant="outlined"
-                          style={{
-                            color: "black",
-                            borderColor: "black",
-                            height: "36px",
+                              <TextField
+                                id="standard-basic"
+                                label="Enter your registered email ID"
+                                variant="standard"
+                                value={email}
+                                onChange={(event) =>
+                                  setEmail(event.target.value)
+                                }
+                                sx={{ width: "100%" }}
+                              />
+                            </Box>
+                          ) : activeStep === 1 ? (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                gap: 2,
+                                marginTop: 3,
+                                width: "100%",
+                              }}
+                            >
+                              <OTP
+                                separator={matches ? <span> - </span> : ""}
+                                value={otp}
+                                onChange={setOtp}
+                                length={6}
+                              />
+                            </Box>
+                          ) : (
+                            <Box
+                              component="form"
+                              sx={{
+                                "& > :not(style)": { width: "100%" },
+                              }}
+                              noValidate
+                              autoComplete="off"
+                            >
+                              <TextField
+                                id="standard-basic"
+                                label="Enter your new password"
+                                variant="standard"
+                                type="password"
+                                value={password}
+                                onChange={(event) =>
+                                  setPassword(event.target.value)
+                                }
+                              />
+                            </Box>
+                          )}
+                        </div>
+
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            pt: 2,
+                            justifyContent: "flex-end",
+                            gap: "10px",
+                            width: "100%",
                           }}
                         >
-                          {loading ? (
-                            ""
-                          ) : (
+                          {activeStep === 1 ? (
                             <>
-                              {activeStep === steps.length - 1
-                                ? "Submit"
-                                : "Next"}
+                              <Button
+                                onClick={() => setActiveStep(0)}
+                                variant="outlined"
+                                style={{ color: "black", borderColor: "black" }}
+                              >
+                                Back
+                              </Button>
                             </>
+                          ) : (
+                            <></>
                           )}
-                        </LoadingButton>
-                      </Box>
-                    </React.Fragment>
-                  )}
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
+                          <LoadingButton
+                            onClick={handleNext}
+                            loading={loading}
+                            variant="outlined"
+                            style={{
+                              color: "black",
+                              borderColor: "black",
+                              height: "36px",
+                            }}
+                          >
+                            {loading ? (
+                              ""
+                            ) : (
+                              <>
+                                {activeStep === steps.length - 1
+                                  ? "Submit"
+                                  : "Next"}
+                              </>
+                            )}
+                          </LoadingButton>
+                        </Box>
+                      </React.Fragment>
+                    )}
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+          )}
         </Box>
       </DialogContent>
     </div>

@@ -101,7 +101,7 @@ const Login = () => {
               Dont have an account?
               <span className="ml-3">
                 <Link to={"/signup"} className="text-purple">
-                  Sign in
+                  Sign up
                 </Link>
               </span>
             </p>
@@ -184,7 +184,7 @@ const Login = () => {
         )}
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
           <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
-            Join today to recreate your home
+            Sign in today to recreate your home
           </h1>
           <div className="flex items-center mt-[2em]">
             <LabelImportantIcon className="text-sm" />

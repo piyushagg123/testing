@@ -13,16 +13,19 @@ interface FormObject {
   [key: string]: string;
 }
 
-const SignUp = () => {
+interface SignupProps {
+  joinAsPro: boolean;
+}
+
+const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     return;
   }
   const { setLogin, setUserDetails } = authContext;
   const navigate = useNavigate();
-  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(true);
+  const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -98,8 +101,8 @@ const SignUp = () => {
 
       setLogin(true);
 
-      if (isChecked) {
-        setOpenJoinasPro(false);
+      if (joinAsPro) {
+        setOpenJoinasPro(true);
       } else {
         navigate("/");
       }
@@ -115,10 +118,12 @@ const SignUp = () => {
   return (
     <>
       {window.scrollTo(0, 0)}
-      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
           <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
-            Join today to recreate your home
+            {joinAsPro
+              ? "Join today for recreating homes"
+              : "Sign up today to recreate your home"}
           </h1>
           <div className="flex items-center mt-[2em]">
             <LabelImportantIcon className="text-sm" />
@@ -134,15 +139,21 @@ const SignUp = () => {
           </div>
         </div>
         <div className="mt-28">
-          <p className=" m-auto w-fit">
-            Already have an account?
-            <span className="ml-3">
-              <Link to={"/login"} className="text-purple">
-                Log in
-              </Link>
-            </span>
-          </p>
-          {openJoinasPro ? (
+          {!sessionStorage.getItem("token") && (
+            <p className=" m-auto w-fit">
+              Already have an account?
+              <span className="ml-3">
+                <Link to={"/login"} className="text-purple">
+                  Log in
+                </Link>
+              </span>
+            </p>
+          )}
+          {openJoinasPro || sessionStorage.getItem("token") ? (
+            <div className="py-8">
+              <JoinAsPro handleClose={handleClose} />
+            </div>
+          ) : (
             <div className="w-fit m-auto md:p-8 flex flex-col justify-center items-center ">
               <h1 className="text-2xl md:text-3xl text-center font-bold text-purple mb-[1em]">
                 Sign up for your account
@@ -201,20 +212,7 @@ const SignUp = () => {
                     size="small"
                     sx={{ width: "300px" }}
                   />
-
-                  <label htmlFor="" className="flex items-start gap-2 mt-[2em]">
-                    <div>
-                      <input
-                        type="checkbox"
-                        name="join_as_pro"
-                        id="join_as_pro"
-                        checked={isChecked}
-                        onChange={(event) => setIsChecked(event.target.checked)}
-                      />
-                    </div>{" "}
-                    <div>Join as a professional</div>
-                  </label>
-                  <div className="flex justify-center mt-[1em]">
+                  <div className="flex justify-center my-[1em]">
                     <Button
                       type="submit"
                       variant="outlined"
@@ -225,10 +223,6 @@ const SignUp = () => {
                   </div>
                 </label>
               </form>
-            </div>
-          ) : (
-            <div className="py-8">
-              <JoinAsPro handleClose={handleClose} />
             </div>
           )}
         </div>
