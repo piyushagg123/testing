@@ -434,7 +434,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </p>
                 <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
-                    EXECUTION TYPE :
+                    EXECUTION TYPE:
                   </span>{" "}
                   {editMode ? (
                     <MultipleSelect
