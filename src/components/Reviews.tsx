@@ -256,7 +256,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                                 <button
                                   onClick={() => handleDelete(review.review_id)}
                                 >
-                                  <DeleteIcon sx={{ color: "red" }} />
+                                  <DeleteIcon sx={{ color: "#ff5757" }} />
                                 </button>
                               )}
                           </div>
