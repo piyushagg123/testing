@@ -28,6 +28,11 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
+import Collapse from "@mui/material/Collapse";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { styled } from "@mui/material/styles";
+import ProfessionalHeader from "../components/ProfessionalHeader";
+import Section from "../components/Section";
 
 interface VendorData {
   logo?: string;
@@ -76,6 +81,15 @@ interface ProfessionalInfoProps {
   renderProfessionalInfoView: boolean;
 }
 
+const ExpandMore = styled((props: { expand: boolean; onClick: () => void }) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+}));
 const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
   let data;
   if (renderProfileView) {
@@ -169,16 +183,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setReviewDialogOpen(false);
     setReviewError("");
   };
-  const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
-    formattedStr = formattedStr
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
-    return formattedStr;
-  };
 
   const handleCarouselClick = (project: ProjectData) => {
     setSelectedProject(project);
@@ -223,6 +227,21 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setLoading(false);
   };
 
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+  const [expandedDetails, setExpandedDetails] = useState(false);
+
+  const isMobile = window.innerWidth <= 500;
+  const maxVisibleLength = 100;
+
+  const contentPreview =
+    isMobile && !expanded
+      ? vendorData?.description.slice(0, maxVisibleLength) + "..."
+      : vendorData?.description;
+
   if (isVendorLoading || isProjectsLoading)
     return <div className="min-h-screen">Loading...</div>;
   return (
@@ -230,90 +249,14 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       {window.scrollTo(0, 0)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
-          <div className=" md:w-max m-auto lg:m-0 my-[2em]">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mt-[2em] mb-[1em]">
-              <div className="m-auto md:m-0">
-                {vendorData?.logo ? (
-                  <img
-                    src={`${constants.apiImageUrl}/${vendorData.logo}`}
-                    alt="Vendor Logo"
-                    className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
-                  />
-                ) : (
-                  <img
-                    src={img}
-                    alt=""
-                    className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
-                  />
-                )}
-              </div>
-              <div>
-                <p className="font-bold text-base text-darkgrey m-auto">
-                  {formatCategory(
-                    vendorData?.business_name ?? "Unknown Business"
-                  )}
-                </p>
-                <p className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
-                  <span className="font-bold text-sm text-darkgrey">
-                    SPECIALIZED THEMES :
-                  </span>{" "}
-                  <div className="flex flex-wrap gap-1">
-                    {formatCategory(vendorData?.sub_category_1 ?? "N/A")
-                      .split(",")
-                      .map((item, ind) => (
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ))}
-                  </div>
-                </p>
+          <div className=" md:w-max m-auto lg:m-0 mt-[2em]">
+            <ProfessionalHeader vendorData={vendorData} />
 
-                <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-                  <span className="font-bold text-sm text-darkgrey">
-                    SPECIALIZED SPACES :
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-                      .split(",")
-                      .map((item, ind) => (
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ))}
-                  </div>
-                </p>
-                <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-                  <span className="font-bold text-sm text-darkgrey">
-                    EXECUTION TYPE :
-                  </span>{" "}
-                  {(vendorData?.sub_category_3 ?? "N/A")
-                    .split(",")
-                    .map((item, ind) => (
-                      <Chip
-                        label={
-                          item === "DESIGN"
-                            ? constants.DESIGN
-                            : item === "MATERIAL_SUPPORT"
-                            ? constants.MATERIAL_SUPPORT
-                            : constants.COMPLETE
-                        }
-                        variant="outlined"
-                        key={ind}
-                        sx={{
-                          height: "25px",
-                          maxWidth: "95vw",
-                          overflowWrap: "break-word",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
+            <div className="md:hidden">
+              <Section
+                selectedProject={selectedProject}
+                vendorData={vendorData}
+              />
             </div>
 
             {login && (
@@ -381,7 +324,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
                 <div className="w-[95vw] lg:w-[750px]">
                   <p className="text-sm md:text-base text-justify mb-[1em]">
-                    {vendorData?.description}
+                    {contentPreview}
+                    {isMobile &&
+                      vendorData?.description.length! > maxVisibleLength && (
+                        <button
+                          onClick={handleExpandClick}
+                          className="text-blue-500 hover:text-blue-700 font-medium"
+                        >
+                          {expanded ? "Read Less" : "Read More"}
+                        </button>
+                      )}
                   </p>
                 </div>
               </TabPanel>
@@ -417,7 +369,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         </p>
                       </div>
                     ) : selectedProject ? (
-                      <div className="flex flex-col">
+                      <div className="flex flex-col mt-2">
                         <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
                           <Button
                             variant="outlined"
@@ -477,170 +429,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             </TabContext>
           </div>
         </div>
-        <div className="w-[250px] text-lg ml-2 md:ml-10 mt-10">
-          <div className=" ">
-            <p className="font-bold text-base text-darkgrey">Contact Number</p>
-            <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
-          </div>
-          <div className="mt-[1em] ">
-            <p className="font-bold text-base text-darkgrey">Email</p>
-            <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
-          </div>
-          <div className="flex flex-col justify-evenly mt-[1em] gap-6">
-            {selectedProject ? (
-              <>
-                <div>
-                  <p className="font-bold text-base text-purple">
-                    Project details
-                  </p>
-                  <p className="font-bold text-base text-darkgrey">Title</p>
-                  <p className="text-[16px] max-w-[300px]">
-                    {selectedProject.title}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">
-                    Description
-                  </p>
-                  <p className="text-[16px] max-w-[300px]">
-                    {selectedProject.description}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">City</p>
-                  <p className="text-[16px] max-w-[300px]">
-                    {selectedProject.city}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">State</p>
-                  <p className="text-[16px] max-w-[300px]">
-                    {selectedProject.state}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">Spaces</p>
-                  <p className="text-[16px]">
-                    {formatCategory(selectedProject.sub_category_2)
-                      .split(",")
-                      .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                            style={{
-                              color: "linear-gradient(#ff5757,#8c52ff)",
-                            }}
-                          />
-                        </>
-                      ))}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">Theme</p>
-                  <p className="text-[16px]">
-                    {formatCategory(selectedProject.sub_category_1)
-                      .split(",")
-                      .map((item, ind) => (
-                        <>
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                            style={{
-                              color: "linear-gradient(#ff5757,#8c52ff)",
-                            }}
-                          />
-                        </>
-                      ))}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">
-                    Start Date
-                  </p>
-                  <p className="text-[16px] max-w-[300px]">
-                    {selectedProject.start_date}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">End date</p>
-                  <p className="text-[16px] max-w-[300px]">
-                    {selectedProject.end_date}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div>
-                  <p className="font-bold text-base text-darkgrey">
-                    Typical Job Cost
-                  </p>
-                  <p className="text-[16px]">
-                    {vendorData?.average_project_value ?? "N/A"}
-                  </p>
-                </div>
-                <div className=" ">
-                  <p className="font-bold text-base text-darkgrey">
-                    Number of employees
-                  </p>
-                  <p className="text-[16px]">
-                    {vendorData?.number_of_employees ?? "N/A"}
-                  </p>
-                </div>
-                <div className=" ">
-                  <p className="font-bold text-base text-darkgrey">
-                    Projects Completed
-                  </p>
-                  <p className="text-[16px]">
-                    {vendorData?.projects_completed ?? "N/A"}
-                  </p>
-                </div>
-
-                <div className=" ">
-                  <p className="font-bold text-base text-darkgrey">Location</p>
-                  <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
-                </div>
-                {(vendorData?.social?.facebook ||
-                  vendorData?.social?.instagram ||
-                  vendorData?.social?.website) && (
-                  <div>
-                    <p className="font-bold text-base text-darkgrey">Socials</p>
-                    {vendorData.social.facebook && (
-                      <a
-                        href={vendorData.social.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FacebookIcon />
-                      </a>
-                    )}
-                    {vendorData.social.instagram && (
-                      <a
-                        href={vendorData.social.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <InstagramIcon />
-                      </a>
-                    )}
-                    {vendorData.social.website && (
-                      <a
-                        href={vendorData.social.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <OpenInNewIcon />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+        <div className="hidden md:block">
+          <Section selectedProject={selectedProject} vendorData={vendorData} />
         </div>
         <ReviewDialog
           handleReviewDialogClose={handleReviewDialogClose}
