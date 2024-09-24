@@ -228,6 +228,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       setReviewError(error.response.data.debug_info);
     }
     setLoading(false);
+    setValue("1");
   };
 
   if (isVendorLoading || isProjectsLoading)
