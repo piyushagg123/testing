@@ -197,7 +197,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               ))}
             </Tabs>
           </Grid>
-          <Grid item xs={10} sx={{ position: "relative", top: "-78px" }}>
+          <Grid item xs={10} sx={{ position: "relative", top: "-60px" }}>
             <Box>
               <Carousel
                 animation="slide"

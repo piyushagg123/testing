@@ -86,7 +86,7 @@ export default function MultipleSelect({
   const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
 
   return (
-    <div className="w-[226px] h-[57px] flex justify-center">
+    <div className="w-[226px]  flex justify-center">
       <FormControl>
         <Select
           multiple
