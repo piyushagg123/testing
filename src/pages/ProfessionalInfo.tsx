@@ -108,6 +108,7 @@ const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
     );
     data = response.data;
   }
+  window.scrollTo(0, 0);
 
   return data.data as VendorData;
 };

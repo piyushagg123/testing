@@ -108,7 +108,7 @@ const Reviews: React.FC<user> = ({ id }) => {
       {reviews?.length > 0 ? (
         <>
           <div className={`flex flex-col w-full gap-3 mt-1`}>
-            <div className="flex items-center justify-start md:gap-10 flex-col md:flex-row">
+            <div className=" flex items-center justify-start md:gap-10 flex-col md:flex-row">
               <div className="flex flex-col items-center justify-center">
                 <p className="flex items-center gap-2">
                   <span className="text-[40px]">
@@ -190,7 +190,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-9 justify-start w-full mt-[1em]">
+            <div className="flex flex-col gap-9 justify-start w-full mt-[1em] pl-4 md:p-0">
               {reviews?.map((review: Review) => (
                 <div className="flex items-start gap-2">
                   <p

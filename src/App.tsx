@@ -53,6 +53,7 @@ const App: React.FC = () => {
     },
     onError: () => {
       setLogin(false);
+      sessionStorage.removeItem("token");
     },
   });
 

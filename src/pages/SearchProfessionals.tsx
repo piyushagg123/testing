@@ -93,7 +93,7 @@ const SearchProfessionals: React.FC = () => {
 
   if (errorInApi) {
     return (
-      <div className="maintenance-container flex flex-col justify-center items-center min-h-screen">
+      <div className="maintenance-container flex flex-col justify-center items-center">
         <img
           src={service}
           alt=""
@@ -106,8 +106,7 @@ const SearchProfessionals: React.FC = () => {
   }
   return (
     <>
-      {window.scrollTo(0, 0)}
-      <div className="mt-16">
+      <div className="mt-16 ">
         <div className="flex flex-col">
           <div className="bg-[#f0f0f0] w-[100%] m-auto flex flex-col items-center p-10">
             <h1 className="font-bold text-lg" style={{ color: "#576375" }}>
