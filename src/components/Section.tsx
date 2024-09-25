@@ -228,7 +228,45 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useMediaQuery } from "@mui/material";
 
-const Section = ({ vendorData, selectedProject }) => {
+interface VendorData {
+  logo?: string;
+  category: string;
+  sub_category_1: string;
+  sub_category_2: string;
+  sub_category_3: string;
+  description: string;
+  business_name: string;
+  average_project_value: string;
+  number_of_employees: number;
+  projects_completed: number;
+  mobile: string;
+  email: string;
+  city: string;
+  social?: {
+    facebook?: string;
+    instagram?: string;
+    website?: string;
+  };
+}
+
+interface ProjectData {
+  images: Record<string, string[]>;
+  title: string;
+  description: string;
+  city: string;
+  state: string;
+  sub_category_1: string;
+  sub_category_2: string;
+  start_date: string;
+  end_date: string;
+}
+
+interface SectionProps {
+  vendorData: VendorData | undefined;
+  selectedProject: ProjectData | undefined;
+}
+
+const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const [expandedDetails, setExpandedDetails] = useState(false);
   const [openInfo, setOpenInfo] = useState(true);
@@ -237,7 +275,7 @@ const Section = ({ vendorData, selectedProject }) => {
     setExpandedDetails(!expandedDetails);
   };
 
-  const formatCategory = (str) => {
+  const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
     return formattedStr
       .toLowerCase()
@@ -309,7 +347,7 @@ const Section = ({ vendorData, selectedProject }) => {
                     <p className="text-[16px]">
                       {formatCategory(selectedProject.sub_category_2)
                         .split(",")
-                        .map((item, ind) => (
+                        .map((item: any, ind: number) => (
                           <Chip
                             label={item}
                             variant="outlined"
@@ -327,7 +365,7 @@ const Section = ({ vendorData, selectedProject }) => {
                     <p className="text-[16px]">
                       {formatCategory(selectedProject.sub_category_1)
                         .split(",")
-                        .map((item, ind) => (
+                        .map((item: any, ind: number) => (
                           <Chip
                             label={item}
                             variant="outlined"

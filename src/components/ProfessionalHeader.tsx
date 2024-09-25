@@ -2,7 +2,34 @@ import { Chip } from "@mui/material";
 import constants from "../constants";
 import img from "../assets/noImageinProject.jpg";
 
-const ProfessionalHeader = ({ vendorData }) => {
+interface VendorData {
+  logo?: string;
+  category: string;
+  sub_category_1: string;
+  sub_category_2: string;
+  sub_category_3: string;
+  description: string;
+  business_name: string;
+  average_project_value: string;
+  number_of_employees: number;
+  projects_completed: number;
+  mobile: string;
+  email: string;
+  city: string;
+  social?: {
+    facebook?: string;
+    instagram?: string;
+    website?: string;
+  };
+}
+
+interface ProfessionalHeaderProps {
+  vendorData: VendorData | undefined;
+}
+
+const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
+  vendorData,
+}) => {
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
     formattedStr = formattedStr

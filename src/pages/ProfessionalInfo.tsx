@@ -1,12 +1,7 @@
 import { FormEvent, useContext, useState } from "react";
-import img from "../assets/noImageinProject.jpg";
 import projectImage from "../assets/noProjectAdded.jpg";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
 import {
-  Chip,
   Tab,
   Box,
   Dialog,
@@ -28,9 +23,6 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
-import Collapse from "@mui/material/Collapse";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { styled } from "@mui/material/styles";
 import ProfessionalHeader from "../components/ProfessionalHeader";
 import Section from "../components/Section";
 
@@ -81,15 +73,6 @@ interface ProfessionalInfoProps {
   renderProfessionalInfoView: boolean;
 }
 
-const ExpandMore = styled((props: { expand: boolean; onClick: () => void }) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-}));
 const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
   let data;
   if (renderProfileView) {
@@ -233,7 +216,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const [expandedDetails, setExpandedDetails] = useState(false);
 
   const isMobile = window.innerWidth <= 500;
   const maxVisibleLength = 100;
@@ -262,7 +244,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
             {login && (
               <div className=" gap-3 flex mb-[2em]">
-                <div>
+                <div className="mt-3 mt:mt-0">
                   {renderProfessionalInfoView && (
                     <Button
                       variant="outlined"
