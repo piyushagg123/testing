@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import constants from "../constants";
 import reviewImage from "../assets/noReviewsAdded.png";
@@ -38,9 +38,9 @@ const Reviews: React.FC<user> = ({ id }) => {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+
   const fetchReviews = async () => {
     let data;
-
     if (id === -1) {
       const response = await axios.get(
         `${constants.apiBaseUrl}/vendor/auth/reviews`,
@@ -57,11 +57,11 @@ const Reviews: React.FC<user> = ({ id }) => {
       );
       data = response.data;
     }
-
     return data.data;
   };
 
-  const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
+  const { data: reviews } = useQuery(["reviews", id], fetchReviews);
+  const queryClient = useQueryClient();
 
   const calculateAverages = (reviews: Review[]) => {
     if (reviews.length === 0) return { quality: 0, execution: 0, behaviour: 0 };
@@ -97,7 +97,11 @@ const Reviews: React.FC<user> = ({ id }) => {
           },
         }
       );
-      refetch();
+
+      queryClient.setQueryData<Review[]>(["reviews", id], (oldData) =>
+        oldData ? oldData.filter((review) => review.review_id !== reviewId) : []
+      );
+
       setSnackbarOpen(true);
     } catch (error) {}
   };
@@ -284,12 +288,12 @@ const Reviews: React.FC<user> = ({ id }) => {
       </div>
 
       <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={snackbarOpen}
+        autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        message="Review deleted successfully!"
+        message="Review deleted successfully"
         key="bottom-center"
-        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </>
   );
