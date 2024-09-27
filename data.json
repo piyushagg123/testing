@@ -4,16 +4,22 @@
         "value": [
             {
                 "id": 1,
-                "value": "123"
+                "value": "Bedroom"
             },
             {
                 "id": 2,
-                "value": "234"
+                "value": "Living Room"
             },
             {
                 "id": 3,
-                "value": "456"
+                "value": "Kitchen"
+            },
+            {
+                "id": 4,
+                "value": "Bathroom"
             }
+            
+            
         ]
     }
 }

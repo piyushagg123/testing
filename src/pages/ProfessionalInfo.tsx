@@ -170,9 +170,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setReviewError("");
   };
   const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
+    let formattedStr = str?.replace(/_/g, " ");
     formattedStr = formattedStr
-      .toLowerCase()
+      ?.toLowerCase()
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
@@ -522,7 +522,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <p className="font-bold text-base text-darkgrey">Spaces</p>
                   <p className="text-[16px]">
                     {formatCategory(selectedProject.sub_category_2)
-                      .split(",")
+                      ?.split(",")
                       .map((item, ind) => (
                         <>
                           <Chip
