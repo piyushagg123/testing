@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../constants";
 import reviewImage from "../assets/noReviewsAdded.png";
@@ -60,8 +60,7 @@ const Reviews: React.FC<user> = ({ id }) => {
     return data.data;
   };
 
-  const { data: reviews } = useQuery(["reviews", id], fetchReviews);
-  const queryClient = useQueryClient();
+  const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
 
   const calculateAverages = (reviews: Review[]) => {
     if (reviews.length === 0) return { quality: 0, execution: 0, behaviour: 0 };
@@ -98,9 +97,7 @@ const Reviews: React.FC<user> = ({ id }) => {
         }
       );
 
-      queryClient.setQueryData<Review[]>(["reviews", id], (oldData) =>
-        oldData ? oldData.filter((review) => review.review_id !== reviewId) : []
-      );
+      refetch();
 
       setSnackbarOpen(true);
     } catch (error) {}

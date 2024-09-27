@@ -117,9 +117,9 @@ export default function MultipleSelect({
                 style={getStyles(option.value, selectedValues, theme)}
                 sx={{
                   wordWrap: "break-word",
-                  whiteSpace: "normal", // Ensure words wrap to the next line
-                  overflow: "hidden", // Prevent overflow
-                  textOverflow: "ellipsis", // Adds "..." for clipped text
+                  whiteSpace: "normal",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
                 disabled={
                   selectedValues.length >= maxSelection &&
