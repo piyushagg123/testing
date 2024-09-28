@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   Button,
+  Divider,
 } from "@mui/material";
 import Professional from "../components/Professional";
 import Filters from "../components/Filters";
@@ -253,19 +254,22 @@ const SearchProfessionals: React.FC = () => {
                 ) : (
                   <>
                     {filteredItems.map((item) => (
-                      <NavLink
-                        to={`/search-professionals/${item.vendor_id}`}
-                        key={item.vendor_id}
-                      >
-                        <div className="mb-[2em]">
-                          <Professional
-                            about={item.description}
-                            rating={item.rating}
-                            img={item.logo}
-                            profCat={item.business_name}
-                          />
-                        </div>
-                      </NavLink>
+                      <>
+                        <NavLink
+                          to={`/search-professionals/${item.vendor_id}`}
+                          key={item.vendor_id}
+                        >
+                          <div className="mb-[2em] mt-1">
+                            <Professional
+                              about={item.description}
+                              rating={item.rating}
+                              img={item.logo}
+                              profCat={item.business_name}
+                            />
+                          </div>
+                        </NavLink>
+                        <Divider />
+                      </>
                     ))}
                   </>
                 )}

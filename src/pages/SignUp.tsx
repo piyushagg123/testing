@@ -7,6 +7,7 @@ import CryptoJS from "crypto-js";
 import JoinAsPro from "./JoinAsPro";
 import { Alert, Button, TextField } from "@mui/material";
 import constants from "../constants";
+import { jwtDecode } from "jwt-decode";
 
 interface FormObject {
   [key: string]: string;
@@ -99,7 +100,12 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
           },
         }
       );
-      setUserDetails(user_data.data.data);
+      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const combinedData = {
+        ...user_data.data.data,
+        ...decodedJWT,
+      };
+      setUserDetails(combinedData);
 
       setLogin(true);
 

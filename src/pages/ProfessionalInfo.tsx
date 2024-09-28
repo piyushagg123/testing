@@ -13,6 +13,7 @@ import {
   DialogContent,
   IconButton,
   Button,
+  Snackbar,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -127,7 +128,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   if (authContext === undefined) {
     return;
   }
-  const { login } = authContext;
+  const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
@@ -149,6 +150,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [projectId, setProjectId] = useState<number>(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
@@ -192,6 +194,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setValue(newValue);
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -217,10 +223,12 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       });
 
       handleReviewDialogClose();
+      setSnackbarOpen(true);
     } catch (error: any) {
       setReviewError(error.response.data.debug_info);
     }
     setLoading(false);
+    setValue("1");
   };
 
   if (isVendorLoading || isProjectsLoading)
@@ -316,8 +324,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </div>
             </div>
 
-            {login && (
-              <div className=" gap-3 flex mb-[2em]">
+            {login && userDetails?.vendor_id !== Number(professionalId) && (
+              <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
                     <Button
@@ -677,6 +685,15 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           </DialogContent>
         </Dialog>
       </div>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message="Review submitted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
     </>
   );
 };
