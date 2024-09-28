@@ -61,7 +61,6 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const [executionFilters, setExecutionFilters] = useState(new Set());
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     fetchVendorList(themeFilters, spaceFilters, executionFilters);
   }, [themeFilters, spaceFilters, executionFilters]);
 
