@@ -227,7 +227,6 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useMediaQuery } from "@mui/material";
-import Test from "./Test";
 
 interface VendorData {
   logo?: string;
