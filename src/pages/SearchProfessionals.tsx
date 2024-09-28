@@ -72,7 +72,7 @@ const SearchProfessionals: React.FC = () => {
     try {
       const response = await axios.get(`${constants.apiBaseUrl}/vendor/list`, {
         params: {
-          category: "INTERIOR_DESIGNER",
+          category: "INTERIOR_DESIGNER ",
           sub_category_1: Array.from(themeFilters as Set<string>)
             .map((option) => option.toUpperCase())
             .join(","),
