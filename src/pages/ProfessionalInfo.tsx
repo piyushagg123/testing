@@ -232,10 +232,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       {/* {window.scrollTo(0, 0)} */}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
-          <div className=" md:w-max m-auto lg:m-0 mt-[2em]">
+          <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
             <ProfessionalHeader vendorData={vendorData} />
 
-            <div className="md:hidden">
+            <div className="md:hidden flex justify-center">
               <Section
                 selectedProject={selectedProject}
                 vendorData={vendorData}

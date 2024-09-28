@@ -26,44 +26,44 @@
 //   return (
 //     <div className="w-[250px] text-lg  md:ml-10 md:mt-10">
 //       <div className=" ">
-//         <p className="font-bold text-base text-darkgrey">Contact Number</p>
-//         <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
+//         <p className="font-bold  text-darkgrey">Contact Number</p>
+//         <p className="">{vendorData?.mobile ?? "N/A"}</p>
 //       </div>
 //       <div className="mt-[1em] ">
-//         <p className="font-bold text-base text-darkgrey">Email</p>
-//         <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
+//         <p className="font-bold  text-darkgrey">Email</p>
+//         <p className="">{vendorData?.email ?? "N/A"}</p>
 //       </div>
 //       <div className="flex flex-col justify-evenly mt-[1em] gap-6">
 //         {selectedProject ? (
 //           <>
 //             <div>
-//               <p className="font-bold text-base text-purple">Project details</p>
-//               <p className="font-bold text-base text-darkgrey">Title</p>
-//               <p className="text-[16px] max-w-[300px]">
+//               <p className="font-bold  text-purple">Project details</p>
+//               <p className="font-bold  text-darkgrey">Title</p>
+//               <p className=" max-w-[300px]">
 //                 {selectedProject.title}
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">Description</p>
-//               <p className="text-[16px] max-w-[300px]">
+//               <p className="font-bold  text-darkgrey">Description</p>
+//               <p className=" max-w-[300px]">
 //                 {selectedProject.description}
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">City</p>
-//               <p className="text-[16px] max-w-[300px]">
+//               <p className="font-bold  text-darkgrey">City</p>
+//               <p className=" max-w-[300px]">
 //                 {selectedProject.city}
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">State</p>
-//               <p className="text-[16px] max-w-[300px]">
+//               <p className="font-bold  text-darkgrey">State</p>
+//               <p className=" max-w-[300px]">
 //                 {selectedProject.state}
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">Spaces</p>
-//               <p className="text-[16px]">
+//               <p className="font-bold  text-darkgrey">Spaces</p>
+//               <p className="">
 //                 {formatCategory(selectedProject.sub_category_2)
 //                   .split(",")
 //                   .map((item, ind) => (
@@ -82,8 +82,8 @@
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">Theme</p>
-//               <p className="text-[16px]">
+//               <p className="font-bold  text-darkgrey">Theme</p>
+//               <p className="">
 //                 {formatCategory(selectedProject.sub_category_1)
 //                   .split(",")
 //                   .map((item, ind) => (
@@ -102,14 +102,14 @@
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">Start Date</p>
-//               <p className="text-[16px] max-w-[300px]">
+//               <p className="font-bold  text-darkgrey">Start Date</p>
+//               <p className=" max-w-[300px]">
 //                 {selectedProject.start_date}
 //               </p>
 //             </div>
 //             <div>
-//               <p className="font-bold text-base text-darkgrey">End date</p>
-//               <p className="text-[16px] max-w-[300px]">
+//               <p className="font-bold  text-darkgrey">End date</p>
+//               <p className=" max-w-[300px]">
 //                 {selectedProject.end_date}
 //               </p>
 //             </div>
@@ -119,35 +119,35 @@
 //             {expandedDetails || !isMobile ? (
 //               <>
 //                 <div>
-//                   <p className="font-bold text-base text-darkgrey">
+//                   <p className="font-bold  text-darkgrey">
 //                     Typical Job Cost
 //                   </p>
-//                   <p className="text-[16px]">
+//                   <p className="">
 //                     {vendorData?.average_project_value ?? "N/A"}
 //                   </p>
 //                 </div>
 
 //                 <div>
-//                   <p className="font-bold text-base text-darkgrey">
+//                   <p className="font-bold  text-darkgrey">
 //                     Number of Employees
 //                   </p>
-//                   <p className="text-[16px]">
+//                   <p className="">
 //                     {vendorData?.number_of_employees ?? "N/A"}
 //                   </p>
 //                 </div>
 
 //                 <div>
-//                   <p className="font-bold text-base text-darkgrey">
+//                   <p className="font-bold  text-darkgrey">
 //                     Projects Completed
 //                   </p>
-//                   <p className="text-[16px]">
+//                   <p className="">
 //                     {vendorData?.projects_completed ?? "N/A"}
 //                   </p>
 //                 </div>
 
 //                 <div>
-//                   <p className="font-bold text-base text-darkgrey">Location</p>
-//                   <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
+//                   <p className="font-bold  text-darkgrey">Location</p>
+//                   <p className="">{vendorData?.city ?? "N/A"}</p>
 //                 </div>
 
 //                 {/* Social Links */}
@@ -155,7 +155,7 @@
 //                   vendorData?.social?.instagram ||
 //                   vendorData?.social?.website) && (
 //                   <div>
-//                     <p className="font-bold text-base text-darkgrey">Socials</p>
+//                     <p className="font-bold  text-darkgrey">Socials</p>
 //                     {vendorData.social.facebook && (
 //                       <a
 //                         href={vendorData.social.facebook}
@@ -227,6 +227,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useMediaQuery } from "@mui/material";
+import Test from "./Test";
 
 interface VendorData {
   logo?: string;
@@ -285,213 +286,150 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
   };
 
   const content = (
-    <div className=" text-lg  md:ml-10 md:mt-10">
-      {/* Contact Number */}
-      <div className="flex justify-between md:hidden">
-        <p>Contact Information</p>
+    <div className=" text-[12px]  md:ml-10 md:mt-10 flex  flex-wrap md:block gap-4 items-center p-2">
+      <>
         <div>
-          <button onClick={() => setOpenInfo((pre) => !pre)}>
-            {openInfo ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
-          </button>
+          <p className="font-bold text-darkgrey">Contact Number</p>
+          <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
-      </div>
-      {openInfo && (
+
+        {/* Email */}
+        <div className="">
+          <p className="font-bold  text-darkgrey">Email</p>
+          <p className="">{vendorData?.email ?? "N/A"}</p>
+        </div>
+
         <>
-          <div>
-            <p className="font-bold text-base text-darkgrey">Contact Number</p>
-            <p className="text-[16px]">{vendorData?.mobile ?? "N/A"}</p>
-          </div>
-
-          {/* Email */}
-          <div className="mt-[1em]">
-            <p className="font-bold text-base text-darkgrey">Email</p>
-            <p className="text-[16px]">{vendorData?.email ?? "N/A"}</p>
-          </div>
-
-          {expandedDetails || !isMobile ? (
+          {selectedProject ? (
             <>
-              {selectedProject ? (
-                <>
-                  {/* Project Details */}
-                  <div>
-                    <p className="font-bold text-base text-purple">
-                      Project Details
-                    </p>
-                    <p className="font-bold text-base text-darkgrey">Title</p>
-                    <p className="text-[16px] max-w-[300px]">
-                      {selectedProject.title}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-base text-darkgrey">
-                      Description
-                    </p>
-                    <p className="text-[16px] max-w-[300px]">
-                      {selectedProject.description}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-base text-darkgrey">City</p>
-                    <p className="text-[16px] max-w-[300px]">
-                      {selectedProject.city}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-base text-darkgrey">State</p>
-                    <p className="text-[16px] max-w-[300px]">
-                      {selectedProject.state}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-base text-darkgrey">Spaces</p>
-                    <p className="text-[16px]">
-                      {formatCategory(selectedProject.sub_category_2)
-                        .split(",")
-                        .map((item: any, ind: number) => (
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                            style={{
-                              color: "linear-gradient(#ff5757,#8c52ff)",
-                            }}
-                          />
-                        ))}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-base text-darkgrey">Theme</p>
-                    <p className="text-[16px]">
-                      {formatCategory(selectedProject.sub_category_1)
-                        .split(",")
-                        .map((item: any, ind: number) => (
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                            style={{
-                              color: "linear-gradient(#ff5757,#8c52ff)",
-                            }}
-                          />
-                        ))}
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Vendor Details */}
-                  <div className="mt-[1em]">
-                    <p className="font-bold text-base text-darkgrey">
-                      Typical Job Cost
-                    </p>
-                    <p className="text-[16px]">
-                      {vendorData?.average_project_value ?? "N/A"}
-                    </p>
-                  </div>
-                  <div className="mt-[1em]">
-                    <p className="font-bold text-base text-darkgrey">
-                      Number of Employees
-                    </p>
-                    <p className="text-[16px]">
-                      {vendorData?.number_of_employees ?? "N/A"}
-                    </p>
-                  </div>
-                  <div className="mt-[1em]">
-                    <p className="font-bold text-base text-darkgrey">
-                      Projects Completed
-                    </p>
-                    <p className="text-[16px]">
-                      {vendorData?.projects_completed ?? "N/A"}
-                    </p>
-                  </div>
-                  <div className="mt-[1em]">
-                    <p className="font-bold text-base text-darkgrey">
-                      Location
-                    </p>
-                    <p className="text-[16px]">{vendorData?.city ?? "N/A"}</p>
-                  </div>
-
-                  {/* Social Links */}
-                  {(vendorData?.social?.facebook ||
-                    vendorData?.social?.instagram ||
-                    vendorData?.social?.website) && (
-                    <div className="mt-[1em]">
-                      <p className="font-bold text-base text-darkgrey">
-                        Socials
-                      </p>
-                      {vendorData.social.facebook && (
-                        <a
-                          href={vendorData.social.facebook}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FacebookIcon />
-                        </a>
-                      )}
-                      {vendorData.social.instagram && (
-                        <a
-                          href={vendorData.social.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <InstagramIcon />
-                        </a>
-                      )}
-                      {vendorData.social.website && (
-                        <a
-                          href={vendorData.social.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <OpenInNewIcon />
-                        </a>
-                      )}
-                    </div>
-                  )}
-                </>
-              )}
-
-              {/* Collapse Button */}
-              {expandedDetails && (
-                <Button
-                  variant="text"
-                  onClick={handleExpandDetailsClick}
-                  sx={{
-                    fontWeight: "medium",
-                    textTransform: "none",
-                    padding: 0,
-                  }}
-                >
-                  Show Less
-                </Button>
-              )}
+              {/* Project Details */}
+              <div>
+                <p className="font-bold  text-purple">Project Details</p>
+                <p className="font-bold  text-darkgrey">Title</p>
+                <p className=" max-w-[300px]">{selectedProject.title}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-darkgrey">Description</p>
+                <p className=" max-w-[300px]">{selectedProject.description}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-darkgrey">City</p>
+                <p className=" max-w-[300px]">{selectedProject.city}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-darkgrey">State</p>
+                <p className=" max-w-[300px]">{selectedProject.state}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-darkgrey">Spaces</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_2)
+                    .split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold  text-darkgrey">Theme</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_1)
+                    .split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
             </>
           ) : (
-            /* Expand Button */
-            <Button
-              variant="text"
-              onClick={handleExpandDetailsClick}
-              sx={{
-                fontWeight: "medium",
-                textTransform: "none",
-                padding: 0,
-              }}
-            >
-              Show More
-            </Button>
+            <>
+              {/* Vendor Details */}
+              <div className="mt-[1em]">
+                <p className="font-bold  text-darkgrey">Typical Job Cost</p>
+                <p className="">{vendorData?.average_project_value ?? "N/A"}</p>
+              </div>
+              <div className="mt-[1em]">
+                <p className="font-bold  text-darkgrey">Number of Employees</p>
+                <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+              </div>
+              <div className="mt-[1em]">
+                <p className="font-bold  text-darkgrey">Projects Completed</p>
+                <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
+              </div>
+              <div className="mt-[1em]">
+                <p className="font-bold  text-darkgrey">Location</p>
+                <p className="">{vendorData?.city ?? "N/A"}</p>
+              </div>
+
+              {/* Social Links */}
+              {(vendorData?.social?.facebook ||
+                vendorData?.social?.instagram ||
+                vendorData?.social?.website) && (
+                <div className="mt-[1em]">
+                  <p className="font-bold  text-darkgrey">Socials</p>
+                  {vendorData.social.facebook && (
+                    <a
+                      href={vendorData.social.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FacebookIcon />
+                    </a>
+                  )}
+                  {vendorData.social.instagram && (
+                    <a
+                      href={vendorData.social.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <InstagramIcon />
+                    </a>
+                  )}
+                  {vendorData.social.website && (
+                    <a
+                      href={vendorData.social.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <OpenInNewIcon />
+                    </a>
+                  )}
+                </div>
+              )}
+            </>
           )}
+
+          {/* Collapse Button */}
         </>
-      )}
+      </>
     </div>
   );
 
   return isMobile ? (
-    <Card sx={{ maxWidth: "90vw", mt: 2, mx: "auto", background: "#8080800a" }}>
-      <CardContent>{content}</CardContent>
-    </Card>
+    // <Card sx={{ maxWidth: "90vw", mt: 2, mx: "auto", background: "#8080800a" }}>
+    //   <CardContent>{content}</CardContent>
+    // </Card>
+    <div className="border border-1 m-3 rounded-md border-black w-[295px]">
+      {content}
+    </div>
   ) : (
+    // <Test />
     <div>{content}</div>
   );
 };

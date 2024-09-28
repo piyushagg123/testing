@@ -41,7 +41,7 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
     return formattedStr;
   };
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 mt-[2em] mb-[1em]">
+    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:mt-[2em] mb-[1em]">
       <div className="m-auto md:m-0">
         {vendorData?.logo ? (
           <img
@@ -57,12 +57,12 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
           />
         )}
       </div>
-      <div>
-        <p className="font-bold text-base text-darkgrey m-auto">
+      <div className="mx-3">
+        <p className="font-bold text-base text-darkgrey m-auto text-center md:text-left">
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
-        <p className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
-          <span className="font-bold text-sm text-darkgrey">
+        <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
+          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
             SPECIALIZED THEMES :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
@@ -73,14 +73,14 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"
                   key={ind}
-                  sx={{ height: "25px" }}
+                  sx={{ height: "20px", fontSize: "11px" }}
                 />
               ))}
           </div>
-        </p>
+        </div>
 
-        <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-          <span className="font-bold text-sm text-darkgrey">
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
+          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
@@ -91,13 +91,14 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"
                   key={ind}
-                  sx={{ height: "25px" }}
+                  // sx={{ height: "25px" }}
+                  sx={{ height: "20px", fontSize: "11px" }}
                 />
               ))}
           </div>
-        </p>
-        <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-          <span className="font-bold text-sm text-darkgrey">
+        </div>
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
+          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
             EXECUTION TYPE :
           </span>{" "}
           {(vendorData?.sub_category_3 ?? "N/A")
@@ -113,14 +114,20 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
                 }
                 variant="outlined"
                 key={ind}
+                // sx={{
+                //   height: "25px",
+                //   maxWidth: "95vw",
+                //   overflowWrap: "break-word",
+                // }}
                 sx={{
-                  height: "25px",
-                  maxWidth: "95vw",
+                  height: "20px",
+                  fontSize: "11px",
+                  maxWidth: "90vw",
                   overflowWrap: "break-word",
                 }}
               />
             ))}
-        </p>
+        </div>
       </div>
     </div>
   );
