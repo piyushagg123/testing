@@ -22,7 +22,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails } = authContext;
+  const { setLogin, setUserDetails, userDetails } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
@@ -38,6 +38,9 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
     formData.forEach((value, key) => {
       formObject[key] = value.toString();
     });
+
+    const confirmPassword = formObject.confirm_password;
+    delete formObject.confirm_password;
 
     if (!formObject.first_name) {
       setError("Please enter your first name.");
@@ -73,6 +76,11 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
 
     if (!formObject.password) {
       setError("Please enter your password.");
+      return;
+    }
+
+    if (formObject.password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
@@ -149,7 +157,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
               </span>
             </p>
           )}
-          {openJoinasPro || sessionStorage.getItem("token") ? (
+          {openJoinasPro || userDetails.first_name ? (
             <div className="py-8">
               <JoinAsPro handleClose={handleClose} />
             </div>
@@ -203,14 +211,22 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                   size="small"
                   sx={{ width: "300px", marginY: "1em" }}
                 />
+                <TextField
+                  label="Password"
+                  type="password"
+                  id="password"
+                  name="password"
+                  size="small"
+                  sx={{ width: "300px" }}
+                />
                 <label>
                   <TextField
-                    label="Password"
+                    label="Confirm Password"
                     type="password"
-                    id="password"
-                    name="password"
+                    id="confirm_password"
+                    name="confirm_password"
                     size="small"
-                    sx={{ width: "300px" }}
+                    sx={{ width: "300px", marginY: "1em" }}
                   />
                   <div className="flex justify-center my-[1em]">
                     <Button
