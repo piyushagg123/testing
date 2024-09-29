@@ -176,6 +176,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setSelectedProject(undefined);
   };
 
+  const [activeSection, setActiveSection] = useState("about");
+
+  // Scroll functionality for mobile buttons
+  const handleScrollToSection = (section) => {
+    document.getElementById(section).scrollIntoView({ behavior: "smooth" });
+    setActiveSection(section);
+  };
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -257,159 +264,307 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
               </div>
             )}
-            <TabContext value={value}>
-              <Box>
-                <TabList
-                  onChange={handleChange}
-                  aria-label="lab API tabs example"
-                  sx={{
-                    "& .MuiTabs-indicator": {
-                      backgroundColor: "#8c52ff",
-                    },
-                    "& .MuiTab-root.Mui-selected": {
-                      color: "#8c52ff",
-                    },
-                    "& .MuiTab-root": {
-                      color: "#576375",
-                    },
-                  }}
-                >
-                  <Tab
-                    label="About us"
-                    value="1"
-                    sx={{
-                      fontWeight: "bold",
-                      textTransform: "none",
-                      fontSize: "1rem",
-                    }}
-                  />
-                  <Tab
-                    label="Projects"
-                    value="2"
-                    sx={{
-                      fontWeight: "bold",
-                      textTransform: "none",
-                      fontSize: "1rem",
-                    }}
-                    onClick={handleBackClick}
-                  />
-                  <Tab
-                    label="Reviews"
-                    value="3"
-                    sx={{
-                      fontWeight: "bold",
-                      textTransform: "none",
-                      fontSize: "1rem",
-                    }}
-                  />
-                </TabList>
-              </Box>
-              <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[95vw] lg:w-[750px]">
-                  <p className="text-sm md:text-base text-justify mb-[1em]">
-                    {contentPreview}
-                    {isMobile &&
-                      vendorData?.description.length! > maxVisibleLength && (
-                        <button
-                          onClick={handleExpandClick}
-                          className="text-blue-500 hover:text-blue-700 font-medium"
-                        >
-                          {expanded ? "Read Less" : "Read More"}
-                        </button>
-                      )}
-                  </p>
-                </div>
-              </TabPanel>
-              <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                {renderProfileView && (
-                  <div
-                    className={`${
-                      selectedProject ? "hidden" : "flex w-full justify-end"
-                    }`}
-                  >
-                    <Button
-                      variant="outlined"
-                      style={{ backgroundColor: "#8c52ff", color: "white" }}
-                      onClick={() => setOpen(true)}
+            {!isMobile ? (
+              <>
+                <TabContext value={value}>
+                  <Box>
+                    <TabList
+                      onChange={handleChange}
+                      aria-label="lab API tabs example"
+                      sx={{
+                        "& .MuiTabs-indicator": {
+                          backgroundColor: "#8c52ff",
+                        },
+                        "& .MuiTab-root.Mui-selected": {
+                          color: "#8c52ff",
+                        },
+                        "& .MuiTab-root": {
+                          color: "#576375",
+                        },
+                      }}
                     >
-                      <AddCircleIcon /> Add a new project
-                    </Button>
-                  </div>
-                )}
-                <div className="w-[95vw]  lg:w-[750px] flex justify-center flex-col items-center m-auto md:m-0 ">
-                  <div className="flex flex-wrap pt-[1em] mb-[3em]">
-                    {!projectsData ? (
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="mb-[1em]">
-                          <img
-                            src={projectImage}
-                            alt=""
-                            className="w-[300px]"
-                          />
-                        </div>
-                        <p className="mb-[1em]">
-                          No projects added yet by the designer
-                        </p>
-                      </div>
-                    ) : selectedProject ? (
-                      <div className="flex flex-col mt-2">
-                        <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
-                          <Button
-                            variant="outlined"
-                            style={{
-                              backgroundColor: "#8c52ff",
-                              color: "white",
-                            }}
-                            onClick={handleBackClick}
-                          >
-                            <ArrowBackIcon />
-                          </Button>
-                        </div>
-                        <div className="flex flex-col gap-3 mb-[1em]">
-                          <Carousel
-                            imageObj={selectedProject.images}
-                            showProjectDetails={false}
-                            city=""
-                            state=""
-                            theme=""
-                            title=""
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap lg:w-[750px] justify-center md:justify-between">
-                        {projectsData.map((item, ind) => (
-                          <div
-                            key={ind}
-                            onClick={() => handleCarouselClick(item)}
-                            className="mb-4"
-                          >
-                            <Carousel
-                              key={ind}
-                              imageObj={item.images}
-                              title={item.title}
-                              city={item.city}
-                              state={item.state}
-                              theme={item.sub_category_1}
-                              showProjectDetails={true}
-                            />
-                          </div>
-                        ))}
+                      <Tab
+                        label="About us"
+                        value="1"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "none",
+                          fontSize: "1rem",
+                        }}
+                      />
+                      <Tab
+                        label="Projects"
+                        value="2"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "none",
+                          fontSize: "1rem",
+                        }}
+                        onClick={handleBackClick}
+                      />
+                      <Tab
+                        label="Reviews"
+                        value="3"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "none",
+                          fontSize: "1rem",
+                        }}
+                      />
+                    </TabList>
+                  </Box>
+                  <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
+                    <div className="w-[95vw] lg:w-[750px]">
+                      <p className="text-sm md:text-base text-justify mb-[1em]">
+                        {contentPreview}
+                        {isMobile &&
+                          vendorData?.description.length! >
+                            maxVisibleLength && (
+                            <button
+                              onClick={handleExpandClick}
+                              className="text-blue-500 hover:text-blue-700 font-medium"
+                            >
+                              {expanded ? "Read Less" : "Read More"}
+                            </button>
+                          )}
+                      </p>
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+                    {renderProfileView && (
+                      <div
+                        className={`${
+                          selectedProject ? "hidden" : "flex w-full justify-end"
+                        }`}
+                      >
+                        <Button
+                          variant="outlined"
+                          style={{ backgroundColor: "#8c52ff", color: "white" }}
+                          onClick={() => setOpen(true)}
+                        >
+                          <AddCircleIcon /> Add a new project
+                        </Button>
                       </div>
                     )}
+                    <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2 items-center  md:m-0 ">
+                      <div className="flex flex-wrap pt-[1em] mb-[3em]">
+                        {!projectsData ? (
+                          <div className="flex flex-col items-center justify-center">
+                            <div className="mb-[1em]">
+                              <img
+                                src={projectImage}
+                                alt=""
+                                className="w-[300px]"
+                              />
+                            </div>
+                            <p className="mb-[1em]">
+                              No projects added yet by the designer
+                            </p>
+                          </div>
+                        ) : selectedProject ? (
+                          <div className="flex flex-col mt-2">
+                            <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
+                              <Button
+                                variant="outlined"
+                                style={{
+                                  backgroundColor: "#8c52ff",
+                                  color: "white",
+                                }}
+                                onClick={handleBackClick}
+                              >
+                                <ArrowBackIcon />
+                              </Button>
+                            </div>
+                            <div className="flex flex-col gap-3 mb-[1em]">
+                              <Carousel
+                                imageObj={selectedProject.images}
+                                showProjectDetails={false}
+                                city=""
+                                state=""
+                                theme=""
+                                title=""
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[750px] justify-center   md:justify-between ml-2">
+                            {projectsData.map((item, ind) => (
+                              <div
+                                key={ind}
+                                onClick={() => handleCarouselClick(item)}
+                                className="mb-4 mr-4"
+                              >
+                                <Carousel
+                                  key={ind}
+                                  imageObj={item.images}
+                                  title={item.title}
+                                  city={item.city}
+                                  state={item.state}
+                                  theme={item.sub_category_1}
+                                  showProjectDetails={true}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
+                    <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
+                      {
+                        <Reviews
+                          id={
+                            professionalId ? Number(professionalId) : Number(-1)
+                          }
+                        />
+                      }
+                    </div>
+                  </TabPanel>
+                </TabContext>
+              </>
+            ) : (
+              <>
+                <div className="button-container">
+                  <button
+                    className={`scroll-btn ${
+                      activeSection === "" ? " text-[#8c52ff]" : ""
+                    }`}
+                    onClick={() => handleScrollToSection("about")}
+                  >
+                    About Us
+                  </button>
+                  <button
+                    className={`scroll-btn ${
+                      activeSection === "" ? " text-[#8c52ff]" : ""
+                    }`}
+                    onClick={() => handleScrollToSection("projects")}
+                  >
+                    Projects
+                  </button>
+                  <button
+                    className={`scroll-btn ${
+                      activeSection === "" ? " text-[#8c52ff]" : ""
+                    }`}
+                    onClick={() => handleScrollToSection("reviews")}
+                  >
+                    Reviews
+                  </button>
+                </div>
+
+                {/* Sections for mobile */}
+                <div id="about" className="section">
+                  <h2>About Us</h2>
+                  <div className="w-[95vw] lg:w-[750px]">
+                    <p className="text-sm md:text-base text-justify mb-[1em]">
+                      {contentPreview}
+                      {isMobile &&
+                        vendorData?.description.length! > maxVisibleLength && (
+                          <button
+                            onClick={handleExpandClick}
+                            className="text-blue-500 hover:text-blue-700 font-medium"
+                          >
+                            {expanded ? "Read Less" : "Read More"}
+                          </button>
+                        )}
+                    </p>
                   </div>
                 </div>
-              </TabPanel>
-              <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
-                <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
-                  {
-                    <Reviews
-                      id={professionalId ? Number(professionalId) : Number(-1)}
-                    />
-                  }
+                <div id="projects" className="section">
+                  <h2>Projects</h2>
+                  {renderProfileView && (
+                    <div
+                      className={`${
+                        selectedProject ? "hidden" : "flex w-full justify-end"
+                      }`}
+                    >
+                      <Button
+                        variant="outlined"
+                        style={{ backgroundColor: "#8c52ff", color: "white" }}
+                        onClick={() => setOpen(true)}
+                      >
+                        <AddCircleIcon /> Add a new project
+                      </Button>
+                    </div>
+                  )}
+                  <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2 items-center  md:m-0 ">
+                    <div className="flex flex-wrap pt-[1em] mb-[3em]">
+                      {!projectsData ? (
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="mb-[1em]">
+                            <img
+                              src={projectImage}
+                              alt=""
+                              className="w-[300px]"
+                            />
+                          </div>
+                          <p className="mb-[1em]">
+                            No projects added yet by the designer
+                          </p>
+                        </div>
+                      ) : selectedProject ? (
+                        <div className="flex flex-col mt-2">
+                          <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
+                            <Button
+                              variant="outlined"
+                              style={{
+                                backgroundColor: "#8c52ff",
+                                color: "white",
+                              }}
+                              onClick={handleBackClick}
+                            >
+                              <ArrowBackIcon />
+                            </Button>
+                          </div>
+                          <div className="flex flex-col gap-3 mb-[1em]">
+                            <Carousel
+                              imageObj={selectedProject.images}
+                              showProjectDetails={false}
+                              city=""
+                              state=""
+                              theme=""
+                              title=""
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[750px] justify-center   md:justify-between ml-2">
+                          {projectsData.map((item, ind) => (
+                            <div
+                              key={ind}
+                              onClick={() => handleCarouselClick(item)}
+                              className="mb-4 mr-4"
+                            >
+                              <Carousel
+                                key={ind}
+                                imageObj={item.images}
+                                title={item.title}
+                                city={item.city}
+                                state={item.state}
+                                theme={item.sub_category_1}
+                                showProjectDetails={true}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </TabPanel>
-            </TabContext>
+                <div id="reviews" className="section">
+                  <h2>Reviews</h2>
+                  <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
+                    {
+                      <Reviews
+                        id={
+                          professionalId ? Number(professionalId) : Number(-1)
+                        }
+                      />
+                    }
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <div className="hidden md:block">

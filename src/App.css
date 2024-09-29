@@ -42,3 +42,31 @@
   min-height: 100vh;
 }
 
+
+/* Mobile button styling */
+.button-container {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.scroll-btn {
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.scroll-btn.active {
+  background-color: lightblue; /* Active state styling */
+}
+
+/* Section styling */
+.section {
+  margin-bottom: 10px;
+}
+

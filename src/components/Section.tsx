@@ -285,18 +285,18 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
   };
 
   const content = (
-    <div className=" text-[12px]  md:ml-10 md:mt-10 flex  flex-wrap md:block gap-4 items-center p-2">
+    <div className=" text-[12px]  md:ml-10 md:mt-10 flex-col flex md:block gap-4 items-center p-2">
       <>
-        <div>
+        {/* <div>
           <p className="font-bold text-darkgrey">Contact Number</p>
           <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
 
-        {/* Email */}
+       
         <div className="">
           <p className="font-bold  text-darkgrey">Email</p>
           <p className="">{vendorData?.email ?? "N/A"}</p>
-        </div>
+        </div> */}
 
         <>
           {selectedProject ? (
@@ -359,58 +359,75 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
           ) : (
             <>
               {/* Vendor Details */}
-              <div className="mt-[1em]">
-                <p className="font-bold  text-darkgrey">Typical Job Cost</p>
-                <p className="">{vendorData?.average_project_value ?? "N/A"}</p>
+
+              <div className="flex w-full">
+                <div className="mt-[1em] w-1/2">
+                  <p className="font-bold  text-black">Typical Job Cost</p>
+                  <p className="">
+                    {vendorData?.average_project_value ?? "N/A"}
+                  </p>
+                </div>
+                <div className="mt-[1em] w-1/2">
+                  <p className="font-bold  text-black">Number of Employees</p>
+                  <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+                </div>
               </div>
-              <div className="mt-[1em]">
-                <p className="font-bold  text-darkgrey">Number of Employees</p>
-                <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
-              </div>
-              <div className="mt-[1em]">
-                <p className="font-bold  text-darkgrey">Projects Completed</p>
-                <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
-              </div>
-              <div className="mt-[1em]">
-                <p className="font-bold  text-darkgrey">Location</p>
-                <p className="">{vendorData?.city ?? "N/A"}</p>
+              <div className="flex  w-full">
+                <div className="w-1/2">
+                  <p className="font-bold  text-black">Projects Completed</p>
+                  <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
+                </div>
+                <div className=" w-1/2">
+                  <p className="font-bold  text-black">Location</p>
+                  <p className="">{vendorData?.city ?? "N/A"}</p>
+                </div>
               </div>
 
               {/* Social Links */}
-              {(vendorData?.social?.facebook ||
-                vendorData?.social?.instagram ||
-                vendorData?.social?.website) && (
-                <div className="mt-[1em]">
-                  <p className="font-bold  text-darkgrey">Socials</p>
-                  {vendorData.social.facebook && (
-                    <a
-                      href={vendorData.social.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FacebookIcon />
-                    </a>
-                  )}
-                  {vendorData.social.instagram && (
-                    <a
-                      href={vendorData.social.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <InstagramIcon />
-                    </a>
-                  )}
-                  {vendorData.social.website && (
-                    <a
-                      href={vendorData.social.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <OpenInNewIcon />
-                    </a>
-                  )}
+              <div className="flex  w-full">
+                {(vendorData?.social?.facebook ||
+                  vendorData?.social?.instagram ||
+                  vendorData?.social?.website) && (
+                  <div className="w-1/2">
+                    <p className="font-bold  text-black">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
+                )}
+                <div className="w-1/2">
+                  <p className="font-bold text-black">Contact Number</p>
+                  <p className="">{vendorData?.mobile ?? "N/A"}</p>
                 </div>
-              )}
+              </div>
+              <div className="w-full">
+                <p className="font-bold  text-black">Email</p>
+                <p className="">{vendorData?.email ?? "N/A"}</p>
+              </div>
             </>
           )}
 
@@ -424,7 +441,7 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
     // <Card sx={{ maxWidth: "90vw", mt: 2, mx: "auto", background: "#8080800a" }}>
     //   <CardContent>{content}</CardContent>
     // </Card>
-    <div className="border border-1 m-3 rounded-md border-black w-[295px]">
+    <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[295px]">
       {content}
     </div>
   ) : (
