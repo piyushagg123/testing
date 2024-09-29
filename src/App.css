@@ -61,9 +61,6 @@
   flex-grow: 1;
 }
 
-.scroll-btn.active {
-  background-color: lightblue; /* Active state styling */
-}
 
 /* Section styling */
 .section {
