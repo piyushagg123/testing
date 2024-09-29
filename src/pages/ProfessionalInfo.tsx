@@ -179,9 +179,14 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const [activeSection, setActiveSection] = useState("about");
 
   // Scroll functionality for mobile buttons
-  const handleScrollToSection = (section) => {
-    document.getElementById(section).scrollIntoView({ behavior: "smooth" });
-    setActiveSection(section);
+  const handleScrollToSection = (section: string) => {
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setActiveSection(section);
+    } else {
+      console.warn(`Element with id ${section} not found.`);
+    }
   };
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);

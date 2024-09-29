@@ -219,13 +219,10 @@
 // };
 
 // export default Section;
-import { Button, Card, CardContent, Chip } from "@mui/material";
-import { useState } from "react";
+import { Chip } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useMediaQuery } from "@mui/material";
 
 interface VendorData {
@@ -268,12 +265,6 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  const [expandedDetails, setExpandedDetails] = useState(false);
-  const [openInfo, setOpenInfo] = useState(true);
-
-  const handleExpandDetailsClick = () => {
-    setExpandedDetails(!expandedDetails);
-  };
 
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
