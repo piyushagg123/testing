@@ -84,7 +84,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               width: "350px",
             },
             [themes.breakpoints.down("sm")]: {
-              width: "90vw",
+              width: "70vw",
             },
             [themes.breakpoints.down("xs")]: {
               width: "200px",
@@ -248,27 +248,35 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
   } else {
     numberOfImages = 2;
   }
+  numberOfImages = 1;
 
   return (
     <>
+      {console.log(numberOfImages)}
       <ImageList
         sx={{
           width: "100%",
-          height: 250,
+          height: 150,
           scrollbarWidth: "none",
           scrollbarColor: "black",
         }}
         variant="standard"
-        cols={numberOfImages}
+        cols={1}
         gap={1}
       >
         {items.length !== 0 ? (
           <>
-            {items?.map((item, ind: number) => (
-              <ImageListItem key={ind}>
-                <img src={`${constants.apiImageUrl}/${item}`} loading="lazy" />
-              </ImageListItem>
-            ))}
+            {items?.map(
+              (item, ind: number) =>
+                ind < 1 && (
+                  <ImageListItem key={ind}>
+                    <img
+                      src={`${constants.apiImageUrl}/${item}`}
+                      loading="lazy"
+                    />
+                  </ImageListItem>
+                )
+            )}
           </>
         ) : (
           <>

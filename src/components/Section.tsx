@@ -432,7 +432,7 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
     // <Card sx={{ maxWidth: "90vw", mt: 2, mx: "auto", background: "#8080800a" }}>
     //   <CardContent>{content}</CardContent>
     // </Card>
-    <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[295px]">
+    <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
       {content}
     </div>
   ) : (

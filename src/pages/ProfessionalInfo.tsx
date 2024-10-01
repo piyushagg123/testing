@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import projectImage from "../assets/noProjectAdded.jpg";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -8,6 +8,7 @@ import {
   DialogContent,
   IconButton,
   Button,
+  Divider,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -188,6 +189,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       console.warn(`Element with id ${section} not found.`);
     }
   };
+
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [activeSection]);
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -222,7 +230,35 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     }
     setLoading(false);
   };
+  const handleScroll = () => {
+    const aboutSection = document.getElementById("about");
+    const projectsSection = document.getElementById("projects");
+    const reviewsSection = document.getElementById("reviews");
 
+    const sections = [
+      { id: "about", ref: aboutSection },
+      { id: "projects", ref: projectsSection },
+      { id: "reviews", ref: reviewsSection },
+    ];
+
+    sections.forEach((section) => {
+      const rect = section.ref?.getBoundingClientRect();
+      if (
+        rect &&
+        rect.top <= window.innerHeight / 2 &&
+        rect.bottom >= window.innerHeight / 2
+      ) {
+        setActiveSection(section.id);
+      }
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -241,7 +277,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      {window.scrollTo(0, 0)}
+      {/* {window.scrollTo(0, 0)} */}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
@@ -433,7 +469,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 <div className="button-container">
                   <button
                     className={`scroll-btn ${
-                      activeSection === "" ? " text-[#8c52ff]" : ""
+                      activeSection === "about" ? " text-[#8c52ff] abc" : ""
                     }`}
                     onClick={() => handleScrollToSection("about")}
                   >
@@ -441,7 +477,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   </button>
                   <button
                     className={`scroll-btn ${
-                      activeSection === "" ? " text-[#8c52ff]" : ""
+                      activeSection === "projects" ? " text-[#8c52ff] abc" : ""
                     }`}
                     onClick={() => handleScrollToSection("projects")}
                   >
@@ -449,7 +485,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   </button>
                   <button
                     className={`scroll-btn ${
-                      activeSection === "" ? " text-[#8c52ff]" : ""
+                      activeSection === "reviews" ? " text-[#8c52ff] abc" : ""
                     }`}
                     onClick={() => handleScrollToSection("reviews")}
                   >
@@ -459,7 +495,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
                 {/* Sections for mobile */}
                 <div id="about" className="section">
-                  <h2>About Us</h2>
                   <div className="w-[95vw] lg:w-[750px]">
                     <p className="text-sm md:text-base text-justify mb-[1em]">
                       {contentPreview}
@@ -474,9 +509,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         )}
                     </p>
                   </div>
+                  <Divider />
                 </div>
+
                 <div id="projects" className="section">
-                  <h2>Projects</h2>
                   {renderProfileView && (
                     <div
                       className={`${
@@ -555,9 +591,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       )}
                     </div>
                   </div>
+                  <Divider />
                 </div>
                 <div id="reviews" className="section">
-                  <h2>Reviews</h2>
                   <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
                     {
                       <Reviews
@@ -567,6 +603,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       />
                     }
                   </div>
+                  <Divider />
                 </div>
               </>
             )}

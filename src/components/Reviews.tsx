@@ -135,7 +135,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               <Divider orientation="vertical" flexItem />
               <div className="flex flex-col ">
                 <p className="my-[1em]">What our customers said</p>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center md:gap-3">
                   <p className="flex items-center gap-3 justify-between w-[293px]">
                     <p className="flex items-center text-sm"> Work Quality</p>
                     <BorderLinearProgress
@@ -151,7 +151,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                   </p>
                   <p className="text-[10px]">{averages.quality}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center md:gap-3">
                   <p className="flex items-center gap-3 justify-between w-[293px]">
                     <p className="flex items-center text-sm"> Execution</p>
                     <BorderLinearProgress
@@ -169,7 +169,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                   </p>
                   <p className="text-[10px]">{averages.execution}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center md:gap-3">
                   <p className="flex items-center gap-3 justify-between w-[293px]">
                     <p className="flex items-center text-sm">Behaviour</p>
                     <BorderLinearProgress

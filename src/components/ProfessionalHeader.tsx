@@ -42,7 +42,7 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
   };
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:mt-[2em] mb-[1em]">
-      <div className="m-auto md:m-0">
+      <div className="m-auto md:m-0 flex flex-col justify-center items-center">
         {vendorData?.logo ? (
           <img
             src={`${constants.apiImageUrl}/${vendorData.logo}`}
@@ -56,11 +56,11 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
         )}
-      </div>
-      <div className="mx-3">
-        <p className="font-bold text-base text-darkgrey m-auto text-center md:text-left">
+        <p className="font-bold text-base text-darkgrey text-center md:text-left">
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
+      </div>
+      <div className="mx-3">
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-darkgrey">
             SPECIALIZED THEMES :
