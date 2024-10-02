@@ -17,6 +17,18 @@
             {
                 "id": 4,
                 "value": "Bathroom"
+            },
+            {
+                "id": 5,
+                "value": "Pooja Room"
+            },
+            {
+                "id": 6,
+                "value": "Dining Room"
+            },
+            {
+                "id": 7,
+                "value": "Others"
             }
             
             
