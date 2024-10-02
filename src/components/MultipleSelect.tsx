@@ -35,10 +35,11 @@ const fetchOptions = async (apiEndpoint: string) => {
 };
 
 interface MultipleSelectProps {
-  apiEndpoint: string;
+  apiEndpoint?: string;
   maxSelection: number;
   selectedValue?: string[];
   onChange: (selectedValues: string[]) => void;
+  staticData?: any;
 }
 
 export default function MultipleSelect({
@@ -46,13 +47,20 @@ export default function MultipleSelect({
   maxSelection,
   selectedValue: initialSelectedValues = [],
   onChange,
+  staticData,
 }: MultipleSelectProps) {
   const theme = useTheme();
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>(
+    initialSelectedValues
+  );
 
   const { data: options = [], isLoading } = useQuery(
     ["options", apiEndpoint],
-    () => fetchOptions(apiEndpoint)
+    () => fetchOptions(apiEndpoint!),
+    {
+      enabled: !!apiEndpoint,
+      initialData: staticData,
+    }
   );
 
   useEffect(() => {
@@ -84,9 +92,8 @@ export default function MultipleSelect({
   selectedValuesWithIds.sort((a, b) => a.id - b.id);
 
   const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
-
   return (
-    <div className="w-[226px]  flex justify-center">
+    <div className="w-[226px] flex justify-center">
       <FormControl>
         <Select
           multiple
@@ -117,9 +124,9 @@ export default function MultipleSelect({
                 style={getStyles(option.value, selectedValues, theme)}
                 sx={{
                   wordWrap: "break-word",
-                  whiteSpace: "normal", // Ensure words wrap to the next line
-                  overflow: "hidden", // Prevent overflow
-                  textOverflow: "ellipsis", // Adds "..." for clipped text
+                  whiteSpace: "normal",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
                 disabled={
                   selectedValues.length >= maxSelection &&

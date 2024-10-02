@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
+import spacesData from "./spaces.ts";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -266,7 +267,8 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
-                  apiEndpoint={`/data.json`}
+                  // apiEndpoint={`/data.json`}
+                  staticData={spacesData}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
