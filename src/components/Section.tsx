@@ -276,7 +276,7 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
   };
 
   const content = (
-    <div className=" text-[12px]  md:ml-10 md:mt-10 flex-col flex md:block gap-4 items-center p-2">
+    <div className=" text-[12px] md:text-[16px]  md:ml-10 md:mt-10 flex-col flex md:block gap-4 items-center p-2">
       <>
         {/* <div>
           <p className="font-bold text-darkgrey">Contact Number</p>
@@ -351,31 +351,31 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
             <>
               {/* Vendor Details */}
 
-              <div className="flex w-full">
-                <div className="mt-[1em] w-1/2">
+              <div className="flex flex-row md:flex-col w-full">
+                <div className="mt-[1em] w-1/2 md:w-fit">
                   <p className="font-bold  text-black">Typical Job Cost</p>
                   <p className="">
                     {vendorData?.average_project_value ?? "N/A"}
                   </p>
                 </div>
-                <div className="mt-[1em] w-1/2">
+                <div className="mt-[1em] w-1/2 md:w-fit">
                   <p className="font-bold  text-black">Number of Employees</p>
                   <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
                 </div>
               </div>
-              <div className="flex  w-full">
-                <div className="w-1/2">
+              <div className="flex  w-full flex-row md:flex-col mt-[1em]">
+                <div className="w-1/2 md:w-fit">
                   <p className="font-bold  text-black">Projects Completed</p>
                   <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
                 </div>
-                <div className=" w-1/2">
+                <div className=" w-1/2 md:w-fit">
                   <p className="font-bold  text-black">Location</p>
                   <p className="">{vendorData?.city ?? "N/A"}</p>
                 </div>
               </div>
 
               {/* Social Links */}
-              <div className="flex  w-full">
+              <div className="flex  w-full mt-[1em]">
                 {(vendorData?.social?.facebook ||
                   vendorData?.social?.instagram ||
                   vendorData?.social?.website) && (
@@ -410,12 +410,12 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
                     )}
                   </div>
                 )}
-                <div className="w-1/2">
+                <div className="w-1/2 md:w-fit">
                   <p className="font-bold text-black">Contact Number</p>
                   <p className="">{vendorData?.mobile ?? "N/A"}</p>
                 </div>
               </div>
-              <div className="w-full">
+              <div className="w-full mt-[1em]">
                 <p className="font-bold  text-black">Email</p>
                 <p className="">{vendorData?.email ?? "N/A"}</p>
               </div>

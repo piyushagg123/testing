@@ -14,6 +14,7 @@ import {
   useTheme,
   Tooltip,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
@@ -112,7 +113,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                           textTransform: "none",
                         }}
                       >
-                        {truncateText(title, 20)}
+                        {truncateText(title, 15)}
                       </Button>
                     </Tooltip>
                   </p>
@@ -242,41 +243,55 @@ interface ItemProp {
   items: string[];
 }
 const WovenImageList: React.FC<ItemProp> = ({ items }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
   let numberOfImages: number = 0;
   if (items.length <= 2) {
     numberOfImages = 1;
   } else {
     numberOfImages = 2;
   }
-  numberOfImages = 1;
 
   return (
     <>
-      {console.log(numberOfImages)}
       <ImageList
         sx={{
           width: "100%",
-          height: 150,
+          height: matches ? 300 : 150,
           scrollbarWidth: "none",
           scrollbarColor: "black",
         }}
         variant="standard"
-        cols={1}
+        cols={matches ? numberOfImages : 1}
         gap={1}
       >
         {items.length !== 0 ? (
           <>
-            {items?.map(
-              (item, ind: number) =>
-                ind < 1 && (
+            {items?.map((item, ind: number) => (
+              <>
+                {matches ? (
                   <ImageListItem key={ind}>
                     <img
                       src={`${constants.apiImageUrl}/${item}`}
                       loading="lazy"
+                      // className="h-2"
                     />
                   </ImageListItem>
-                )
-            )}
+                ) : (
+                  <>
+                    {ind < 1 && (
+                      <ImageListItem key={ind}>
+                        <img
+                          src={`${constants.apiImageUrl}/${item}`}
+                          loading="lazy"
+                          className="h-[150px]"
+                        />
+                      </ImageListItem>
+                    )}
+                  </>
+                )}
+              </>
+            ))}
           </>
         ) : (
           <>

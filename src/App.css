@@ -52,7 +52,7 @@
   display: flex;
   gap: 10px;
   /* padding: 10px; */
-  height: 76px;
+  height: 52px;
   font-size: 16px;
 }
 
@@ -71,5 +71,6 @@
 /* Section styling */
 .section {
   margin-bottom: 10px;
+  min-height: 50vh;
 }
 

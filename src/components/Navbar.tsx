@@ -130,7 +130,7 @@ const Navbar: React.FC = () => {
     setOpen(false);
   };
   return (
-    <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg lg:px-[64px]">
+    <div className="navBar flex justify-between py-[6px] px-3 fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg lg:px-[64px]">
       <div className="flex items-center gap-2 md:gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
@@ -159,7 +159,7 @@ const Navbar: React.FC = () => {
                   </MaterialButton>
                 </div>
               )}
-              <div className={`p-[6px] mr-2 `}>
+              <div className={` mr-2 `}>
                 <div>
                   <div
                     className="cursor-pointer"

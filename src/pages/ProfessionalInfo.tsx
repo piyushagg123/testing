@@ -184,10 +184,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     const element = document.getElementById(section);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
-      setActiveSection(section);
     } else {
       console.warn(`Element with id ${section} not found.`);
     }
+    setActiveSection(section);
   };
 
   // useEffect(() => {
@@ -433,7 +433,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                               <div
                                 key={ind}
                                 onClick={() => handleCarouselClick(item)}
-                                className="mb-4 mr-4"
+                                className="mb-4 mr-2"
                               >
                                 <Carousel
                                   key={ind}
@@ -495,8 +495,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
                 {/* Sections for mobile */}
                 <div id="about" className="section">
-                  <div className="w-[95vw] lg:w-[750px]">
-                    <p className="text-sm md:text-base text-justify mb-[1em]">
+                  <div className="w-[95vw] lg:w-[750px] pt-20 ">
+                    <p className="text-sm md:text-base text-justify mb-[1em] border-[#d3d8e0] border-[1px] w-[90vw] m-3 p-2 rounded-md">
                       {contentPreview}
                       {isMobile &&
                         vendorData?.description.length! > maxVisibleLength && (
@@ -512,7 +512,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <Divider />
                 </div>
 
-                <div id="projects" className="section">
+                <div id="projects" className="section ">
                   {renderProfileView && (
                     <div
                       className={`${
@@ -528,8 +528,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       </Button>
                     </div>
                   )}
-                  <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2 items-center  md:m-0 ">
-                    <div className="flex flex-wrap pt-[1em] mb-[3em]">
+                  <div className="max-w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2 items-center justify-center  pt-20  md:m-0  ">
+                    <div className="md:flex md:flex-wrap mb-[3em] ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center">
                           <div className="mb-[1em]">
@@ -574,7 +574,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                             <div
                               key={ind}
                               onClick={() => handleCarouselClick(item)}
-                              className="mb-4 mr-4"
+                              className="mb-4 mr-2"
                             >
                               <Carousel
                                 key={ind}
@@ -593,8 +593,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   </div>
                   <Divider />
                 </div>
-                <div id="reviews" className="section">
-                  <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
+                <div id="reviews" className="section pt-20 w-[90vw] m-auto">
+                  <div className=" lg:w-[750px] border-[#d3d8e0] border-[1px] rounded-md   flex justify-center flex-col items-center p-2">
                     {
                       <Reviews
                         id={

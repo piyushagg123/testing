@@ -136,13 +136,13 @@ const Reviews: React.FC<user> = ({ id }) => {
               <div className="flex flex-col ">
                 <p className="my-[1em]">What our customers said</p>
                 <div className="flex items-center md:gap-3">
-                  <p className="flex items-center gap-3 justify-between w-[293px]">
+                  <p className="flex items-center gap-3 justify-between w-[253px]">
                     <p className="flex items-center text-sm"> Work Quality</p>
                     <BorderLinearProgress
                       variant="determinate"
                       value={averages.quality * 20}
                       sx={{
-                        width: "200px",
+                        width: "160px",
                         "& .MuiLinearProgress-bar": {
                           backgroundColor: `var(--${colors(averages.quality)})`,
                         },
@@ -152,13 +152,13 @@ const Reviews: React.FC<user> = ({ id }) => {
                   <p className="text-[10px]">{averages.quality}</p>
                 </div>
                 <div className="flex items-center md:gap-3">
-                  <p className="flex items-center gap-3 justify-between w-[293px]">
+                  <p className="flex items-center gap-3 justify-between w-[253px]">
                     <p className="flex items-center text-sm"> Execution</p>
                     <BorderLinearProgress
                       variant="determinate"
                       value={averages.execution * 20}
                       sx={{
-                        width: "200px",
+                        width: "160px",
                         "& .MuiLinearProgress-bar": {
                           backgroundColor: `var(--${colors(
                             averages.execution
@@ -170,13 +170,13 @@ const Reviews: React.FC<user> = ({ id }) => {
                   <p className="text-[10px]">{averages.execution}</p>
                 </div>
                 <div className="flex items-center md:gap-3">
-                  <p className="flex items-center gap-3 justify-between w-[293px]">
+                  <p className="flex items-center gap-3 justify-between w-[253px]">
                     <p className="flex items-center text-sm">Behaviour</p>
                     <BorderLinearProgress
                       variant="determinate"
                       value={averages.behaviour * 20}
                       sx={{
-                        width: "200px",
+                        width: "160px",
                         "& .MuiLinearProgress-bar": {
                           backgroundColor: `var(--${colors(
                             averages.behaviour
@@ -190,7 +190,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-9 justify-start w-full mt-[1em] pl-4 md:p-0">
+            <div className="flex flex-col gap-9 justify-start w-full mt-[1em] md:pl-4 md:p-0">
               {reviews?.map((review: Review) => (
                 <div className="flex items-start gap-2">
                   <p
