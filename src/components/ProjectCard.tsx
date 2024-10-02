@@ -284,7 +284,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
                         <img
                           src={`${constants.apiImageUrl}/${item}`}
                           loading="lazy"
-                          className="h-[150px]"
+                          height={1}
                         />
                       </ImageListItem>
                     )}

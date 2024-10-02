@@ -56,7 +56,7 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
         )}
-        <p className="font-bold text-base text-darkgrey text-center md:text-left">
+        <p className="font-semibold text-base text-black text-center md:text-left mx-3">
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
       </div>
