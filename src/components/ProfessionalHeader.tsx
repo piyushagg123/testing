@@ -56,11 +56,14 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
         )}
-        <p className="font-semibold text-base text-black text-center md:text-left mx-3">
+        <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
       </div>
       <div className="mx-3">
+        <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
+          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+        </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-darkgrey">
             SPECIALIZED THEMES :
@@ -91,7 +94,6 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"
                   key={ind}
-                  // sx={{ height: "25px" }}
                   sx={{ height: "20px", fontSize: "11px" }}
                 />
               ))}
@@ -114,11 +116,6 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
                 }
                 variant="outlined"
                 key={ind}
-                // sx={{
-                //   height: "25px",
-                //   maxWidth: "95vw",
-                //   overflowWrap: "break-word",
-                // }}
                 sx={{
                   height: "20px",
                   fontSize: "11px",

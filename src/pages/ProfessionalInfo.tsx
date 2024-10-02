@@ -179,7 +179,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
   const [activeSection, setActiveSection] = useState("about");
 
-  // Scroll functionality for mobile buttons
   const handleScrollToSection = (section: string) => {
     const element = document.getElementById(section);
     if (element) {
@@ -189,13 +188,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     }
     setActiveSection(section);
   };
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [activeSection]);
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -387,7 +379,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         </Button>
                       </div>
                     )}
-                    <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2 items-center  md:m-0 ">
+                    <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-1 items-center  md:m-0 ">
                       <div className="flex flex-wrap pt-[1em] mb-[3em]">
                         {!projectsData ? (
                           <div className="flex flex-col items-center justify-center">
@@ -428,12 +420,12 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                             </div>
                           </div>
                         ) : (
-                          <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[750px] justify-center   md:justify-between ml-2">
+                          <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[740px] justify-center   md:justify-between">
                             {projectsData.map((item, ind) => (
                               <div
                                 key={ind}
                                 onClick={() => handleCarouselClick(item)}
-                                className="mb-4 mr-2"
+                                className="mb-4 mr-2 md:mr-0"
                               >
                                 <Carousel
                                   key={ind}
@@ -469,14 +461,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 <div className="button-container">
                   <button
                     className={`scroll-btn ${
-                      activeSection === "about" ? " text-[#8c52ff] abc" : ""
-                    }`}
-                    onClick={() => handleScrollToSection("about")}
-                  >
-                    About Us
-                  </button>
-                  <button
-                    className={`scroll-btn ${
                       activeSection === "projects" ? " text-[#8c52ff] abc" : ""
                     }`}
                     onClick={() => handleScrollToSection("projects")}
@@ -491,25 +475,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   >
                     Reviews
                   </button>
-                </div>
-
-                {/* Sections for mobile */}
-                <div id="about" className="section">
-                  <div className="w-[95vw] lg:w-[750px] pt-20 ">
-                    <p className="text-sm md:text-base text-justify mb-[1em] border-[#d3d8e0] border-[1px] w-[90vw] m-3 p-2 rounded-md">
-                      {contentPreview}
-                      {isMobile &&
-                        vendorData?.description.length! > maxVisibleLength && (
-                          <button
-                            onClick={handleExpandClick}
-                            className="text-blue-500 hover:text-blue-700 font-medium"
-                          >
-                            {expanded ? "Read Less" : "Read More"}
-                          </button>
-                        )}
-                    </p>
-                  </div>
-                  <Divider />
                 </div>
 
                 <div id="projects" className="section ">
@@ -528,8 +493,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       </Button>
                     </div>
                   )}
-                  <div className="max-w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2 items-center justify-center  pt-20  md:m-0  ">
-                    <div className="md:flex md:flex-wrap mb-[3em] ">
+                  <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-20  md:m-0  ">
+                    <div className="flex md:flex-wrap mb-[3em] ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center">
                           <div className="mb-[1em]">
@@ -569,7 +534,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                           </div>
                         </div>
                       ) : (
-                        <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[750px] justify-center   md:justify-between ml-2">
+                        <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[750px]    md:justify-between ">
                           {projectsData.map((item, ind) => (
                             <div
                               key={ind}

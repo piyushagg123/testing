@@ -111,6 +111,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                           fontWeight: "700",
                           color: "grey",
                           textTransform: "none",
+                          justifyContent: "flex-start",
                         }}
                       >
                         {truncateText(title, 15)}
@@ -124,7 +125,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className="flex gap-2 items-center pb-1">
+                <p className="flex gap-2 pb-1">
                   {themeArray.map((item, ind) =>
                     ind < 2 ? (
                       <Chip
@@ -257,7 +258,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
       <ImageList
         sx={{
           width: "100%",
-          height: matches ? 300 : 150,
+          height: matches ? 250 : 150,
           scrollbarWidth: "none",
           scrollbarColor: "black",
         }}
@@ -274,7 +275,6 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
                     <img
                       src={`${constants.apiImageUrl}/${item}`}
                       loading="lazy"
-                      // className="h-2"
                     />
                   </ImageListItem>
                 ) : (
@@ -299,7 +299,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
               <img
                 src={NoProjectImage}
                 loading="lazy"
-                style={{ height: "250px" }}
+                style={{ height: matches ? "250px" : "150px" }}
               />
             </ImageListItem>
           </>
