@@ -1,14 +1,14 @@
 [
     {
         "name":"Interior Designers",
-        "image":"https://www.sbid.org/wp-content/uploads/2022/07/Value-of-Networking-Interior-Designers.jpg",
+        "image":"https://cdni.iconscout.com/illustration/premium/thumb/interior-designer-illustration-download-in-svg-png-gif-file-formats--sketch-logo-house-improvement-room-decorating-architecture-plan-artistic-jobs-pack-art-abstract-illustrations-7786345.png?f=webp",
         "route":"/search-professionals"
         
 
     },
     {
         "name":"Finance Planners",
-        "image":"https://www.andromedaloans.com/wp-content/uploads/2023/06/map-lying-wooden-table-1024x669.webp",
+        "image":"https://cdni.iconscout.com/illustration/premium/thumb/financial-advisor-giving-investment-advice-illustration-download-in-svg-png-gif-file-formats--pack-business-illustrations-4668387.png?f=webp",
           "route":"/search-professionals"
     }
 ]

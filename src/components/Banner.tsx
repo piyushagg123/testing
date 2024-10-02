@@ -151,7 +151,10 @@ const Banner = () => {
               }}
               key={ind}
             >
-              <CardMedia sx={{ height: 140 }} image={item.image} />
+              <CardMedia
+                sx={{ height: 120, marginBottom: 2 }}
+                image={item.image}
+              />
               <CardContent sx={{ marginBottom: 0, paddingBottom: 0 }}>
                 <Typography gutterBottom variant="h5">
                   {item.name}
