@@ -3,6 +3,7 @@ import { Rating } from "@mui/material";
 import { truncateText } from "../utils";
 import constants from "../constants";
 import NoProjectImage from "../assets/noImageinProject.jpg";
+import AspectRatio from "@mui/joy/AspectRatio";
 
 interface ProfessionalProps {
   img: string;
