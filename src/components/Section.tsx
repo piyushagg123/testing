@@ -44,7 +44,7 @@ interface SectionProps {
 }
 
 const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery("(max-width:1020px)");
 
   const formatCategory = (str: string) => {
     let formattedStr = str.replace(/_/g, " ");
@@ -59,14 +59,14 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const ismobile = window.innerWidth <= 500;
+  const ismobile = window.innerWidth < 1024;
   const maxVisibleLength = 100;
   const contentPreview =
     isMobile && !expanded
       ? vendorData?.description.slice(0, maxVisibleLength) + "..."
       : vendorData?.description;
   const content = (
-    <div className=" text-[12px] md:text-[16px]  md:ml-10 md:mt-10 flex-col flex md:block gap-4 items-center p-2">
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
       <>
         <>
           {selectedProject ? (
@@ -137,33 +137,33 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
             </>
           ) : (
             <>
-              <div className="flex flex-row md:flex-col w-full">
-                <div className="mt-[1em] w-1/2 md:w-fit">
+              <div className="flex flex-row lg:flex-col w-full">
+                <div className="mt-[1em] w-1/2 lg:w-fit">
                   <p className="font-bold  text-black">Typical Job Cost</p>
                   <p className="">
                     {vendorData?.average_project_value ?? "N/A"}
                   </p>
                 </div>
-                <div className="mt-[1em] w-1/2 md:w-fit">
+                <div className="mt-[1em] w-1/2 lg:w-fit">
                   <p className="font-bold  text-black">Number of Employees</p>
                   <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
                 </div>
               </div>
-              <div className="flex  w-full flex-row md:flex-col mt-[1em]">
-                <div className="w-1/2 md:w-fit">
+              <div className="flex  w-full flex-row lg:flex-col mt-[1em]">
+                <div className="w-1/2 lg:w-fit mt-[1em]">
                   <p className="font-bold  text-black">Projects Completed</p>
                   <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
                 </div>
-                <div className=" w-1/2 md:w-fit mt-[1em]">
+                <div className=" w-1/2 lg:w-fit mt-[1em]">
                   <p className="font-bold  text-black">Location</p>
                   <p className="">{vendorData?.city ?? "N/A"}</p>
                 </div>
               </div>
-              <div className="flex  w-full mt-[1em]">
+              <div className="flex flex-row lg:flex-col  w-full">
                 {(vendorData?.social?.facebook ||
                   vendorData?.social?.instagram ||
                   vendorData?.social?.website) && (
-                  <div className="w-1/2">
+                  <div className="w-1/2 mt-[1em]">
                     <p className="font-bold  text-black">Socials</p>
                     {vendorData.social.facebook && (
                       <a
@@ -194,8 +194,10 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
                     )}
                   </div>
                 )}
-                <div className="w-1/2 md:w-fit">
-                  <p className="font-bold text-black">Contact Number</p>
+                <div className="w-1/2 lg:w-fit">
+                  <p className="font-bold text-black mt-[1em]">
+                    Contact Number
+                  </p>
                   <p className="">{vendorData?.mobile ?? "N/A"}</p>
                 </div>
               </div>
@@ -203,7 +205,7 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
                 <p className="font-bold  text-black">Email</p>
                 <p className="">{vendorData?.email ?? "N/A"}</p>
               </div>
-              <div className="md:hidden w-full ">
+              <div className="lg:hidden w-full ">
                 <p className="font-bold  text-black">About</p>
                 <p className=" text-justify mb-[1em] rounded-md">
                   {contentPreview}
@@ -230,7 +232,7 @@ const Section: React.FC<SectionProps> = ({ vendorData, selectedProject }) => {
       {content}
     </div>
   ) : (
-    <div>{content}</div>
+    <div className="">{content}</div>
   );
 };
 

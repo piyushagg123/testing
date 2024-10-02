@@ -41,8 +41,8 @@ const ProfessionalHeader: React.FC<ProfessionalHeaderProps> = ({
     return formattedStr;
   };
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:mt-[2em] mb-[1em]">
-      <div className="m-auto md:m-0 flex flex-col justify-center items-center">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em]">
+      <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
             src={`${constants.apiImageUrl}/${vendorData.logo}`}

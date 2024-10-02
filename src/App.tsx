@@ -15,6 +15,7 @@ import Footer from "./components/Footer";
 import AboutUs from "./pages/AboutUs";
 import ProfessionalInfo from "./pages/ProfessionalInfo";
 import ProfileForMobile from "./pages/ProfileForMobile";
+import { jwtDecode } from "jwt-decode";
 
 const fetchUserData = async () => {
   const token = sessionStorage.getItem("token");
@@ -45,11 +46,19 @@ const App: React.FC = () => {
   }
   const { setState } = stateContext;
   const { setLogin, setUserDetails } = authContext;
-
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {
       setLogin(true);
-      setUserDetails(data);
+      const token = sessionStorage.getItem("token");
+      if (token) {
+        const decodedJWT = jwtDecode(token);
+
+        const combinedData = {
+          ...data,
+          ...decodedJWT,
+        };
+        setUserDetails(combinedData);
+      }
     },
     onError: () => {
       setLogin(false);

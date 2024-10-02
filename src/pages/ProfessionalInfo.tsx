@@ -9,6 +9,7 @@ import {
   IconButton,
   Button,
   Divider,
+  Snackbar,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -92,7 +93,6 @@ const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
     );
     data = response.data;
   }
-  window.scrollTo(0, 0);
 
   return data.data as VendorData;
 };
@@ -126,7 +126,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   if (authContext === undefined) {
     return;
   }
-  const { login } = authContext;
+  const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
@@ -148,6 +148,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [projectId, setProjectId] = useState<number>(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
@@ -184,12 +185,15 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     } else {
-      console.warn(`Element with id ${section} not found.`);
     }
     setActiveSection(section);
   };
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -217,10 +221,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       });
 
       handleReviewDialogClose();
+      setSnackbarOpen(true);
     } catch (error: any) {
       setReviewError(error.response.data.debug_info);
     }
     setLoading(false);
+    setValue("1");
+    window.location.reload();
   };
   const handleScroll = () => {
     const aboutSection = document.getElementById("about");
@@ -251,13 +258,17 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const isMobile = window.innerWidth <= 500;
+  const isMobile = window.innerWidth < 1024;
   const maxVisibleLength = 100;
 
   const contentPreview =
@@ -269,21 +280,20 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      {/* {window.scrollTo(0, 0)} */}
-      <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
+      <div className="mt-[50px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
             <ProfessionalHeader vendorData={vendorData} />
 
-            <div className="md:hidden flex justify-center">
+            <div className="lg:hidden flex justify-center">
               <Section
                 selectedProject={selectedProject}
                 vendorData={vendorData}
               />
             </div>
 
-            {login && (
-              <div className=" gap-3 flex mb-[2em]">
+            {login && userDetails?.vendor_id !== Number(professionalId) && (
+              <div className=" gap-3 md:flex mb-[2em]">
                 <div className="mt-3 mt:mt-0">
                   {renderProfessionalInfoView && (
                     <Button
@@ -364,25 +374,31 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                     </div>
                   </TabPanel>
                   <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                    {renderProfileView && (
-                      <div
-                        className={`${
-                          selectedProject ? "hidden" : "flex w-full justify-end"
-                        }`}
-                      >
-                        <Button
-                          variant="outlined"
-                          style={{ backgroundColor: "#8c52ff", color: "white" }}
-                          onClick={() => setOpen(true)}
+                    {renderProfileView ||
+                      (Number(professionalId) == userDetails.vendor_id && (
+                        <div
+                          className={`${
+                            selectedProject
+                              ? "hidden"
+                              : "flex w-full justify-end"
+                          }`}
                         >
-                          <AddCircleIcon /> Add a new project
-                        </Button>
-                      </div>
-                    )}
-                    <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-1 items-center  md:m-0 ">
+                          <Button
+                            variant="outlined"
+                            style={{
+                              backgroundColor: "#8c52ff",
+                              color: "white",
+                            }}
+                            onClick={() => setOpen(true)}
+                          >
+                            <AddCircleIcon /> Add a new project
+                          </Button>
+                        </div>
+                      ))}
+                    <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex justify-center  gap-1 items-center  md:m-0 ">
                       <div className="flex flex-wrap pt-[1em] mb-[3em]">
                         {!projectsData ? (
-                          <div className="flex flex-col items-center justify-center">
+                          <div className="flex flex-col items-center justify-center ">
                             <div className="mb-[1em]">
                               <img
                                 src={projectImage}
@@ -458,7 +474,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </>
             ) : (
               <>
-                <div className="button-container">
+                <div className="button-container w-screen">
                   <button
                     className={`scroll-btn ${
                       activeSection === "projects" ? " text-[#8c52ff] abc" : ""
@@ -481,7 +497,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   {renderProfileView && (
                     <div
                       className={`${
-                        selectedProject ? "hidden" : "flex w-full justify-end"
+                        selectedProject
+                          ? "hidden"
+                          : "flex mt-3 mx-3 justify-end"
                       }`}
                     >
                       <Button
@@ -493,10 +511,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       </Button>
                     </div>
                   )}
-                  <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-20  md:m-0  ">
-                    <div className="flex md:flex-wrap mb-[3em] ">
+                  <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[2rem] ">
+                    <div className="flex  mb-[3em] ">
                       {!projectsData ? (
-                        <div className="flex flex-col items-center justify-center">
+                        <div className="flex flex-col items-center justify-center w-[90vw]">
                           <div className="mb-[1em]">
                             <img
                               src={projectImage}
@@ -534,7 +552,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                           </div>
                         </div>
                       ) : (
-                        <div className="flex md:flex-wrap overflow-x-auto whitespace-nowrap lg:w-[750px]    md:justify-between ">
+                        <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] ">
                           {projectsData.map((item, ind) => (
                             <div
                               key={ind}
@@ -574,7 +592,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         </div>
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <Section selectedProject={selectedProject} vendorData={vendorData} />
         </div>
         <ReviewDialog
@@ -612,6 +630,15 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           </DialogContent>
         </Dialog>
       </div>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message="Review submitted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
     </>
   );
 };
