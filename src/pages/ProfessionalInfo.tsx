@@ -158,6 +158,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setOpen(false);
     setIsSubmitted(false);
     setSelectedSubCategories([]);
+    window.location.reload();
   };
 
   const handleReviewDialogOpen = () => {
