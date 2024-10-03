@@ -39,7 +39,7 @@ interface MultipleSelectProps {
   maxSelection: number;
   selectedValue?: string[];
   onChange: (selectedValues: string[]) => void;
-  staticData?: any;
+  dataArray?: any;
 }
 
 export default function MultipleSelect({
@@ -47,7 +47,7 @@ export default function MultipleSelect({
   maxSelection,
   selectedValue: initialSelectedValues = [],
   onChange,
-  staticData,
+  dataArray,
 }: MultipleSelectProps) {
   const theme = useTheme();
   const [selectedValues, setSelectedValues] = useState<string[]>(
@@ -59,7 +59,7 @@ export default function MultipleSelect({
     () => fetchOptions(apiEndpoint!),
     {
       enabled: !!apiEndpoint,
-      initialData: staticData,
+      initialData: dataArray,
     }
   );
 

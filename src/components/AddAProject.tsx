@@ -267,8 +267,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
-                  // apiEndpoint={`/data.json`}
-                  staticData={spacesData}
+                  dataArray={spacesData}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
