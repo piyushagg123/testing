@@ -83,10 +83,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           sx={{
             width: "355px",
             [themes.breakpoints.down("md")]: {
-              width: "224px",
-            },
-            [themes.breakpoints.down("xs")]: {
-              width: "200px",
+              width: "170px",
+              border: "none",
+              boxShadow: "none",
             },
           }}
         >
@@ -110,20 +109,23 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                           color: "grey",
                           textTransform: "none",
                           justifyContent: "flex-start",
+                          paddingX: 0,
                         }}
                       >
-                        {truncateText(title, 15)}
+                        {matches
+                          ? truncateText(title, 15)
+                          : truncateText(title, 10)}
                       </Button>
                     </Tooltip>
                   </p>
                 )}
-                <p className="text-[10px] flex items-center text-sec">
+                <p className="text-[10px] flex items-center  text-sec">
                   <PlaceIcon sx={{ fontSize: "15px" }} />
                   {city}
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className="flex gap-2 pb-1">
+                <p className="flex gap-2 pb-1 justify-center lg:justify-start">
                   {matches ? (
                     <>
                       {themeArray.map((item, ind) =>
@@ -287,6 +289,9 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
           height: matches ? 250 : 150,
           scrollbarWidth: "none",
           scrollbarColor: "black",
+          padding: matches ? 0 : "10px",
+          border: matches ? "none" : "solid #e5e7eb 0.2px",
+          borderRadius: matches ? 0 : "10px",
         }}
         variant="standard"
         cols={matches ? numberOfImages : 1}
@@ -310,7 +315,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
                         <img
                           src={`${constants.apiImageUrl}/${item}`}
                           loading="lazy"
-                          height={1}
+                          style={{ height: matches ? "250px" : "128.67px" }}
                         />
                       </ImageListItem>
                     )}
@@ -321,11 +326,11 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
           </>
         ) : (
           <>
-            <ImageListItem>
+            <ImageListItem sx={{}}>
               <img
                 src={NoProjectImage}
                 loading="lazy"
-                style={{ height: matches ? "250px" : "150px" }}
+                style={{ height: matches ? "250px" : "128.67px" }}
               />
             </ImageListItem>
           </>

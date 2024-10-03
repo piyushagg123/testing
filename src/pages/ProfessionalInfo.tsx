@@ -12,6 +12,7 @@ import {
   Snackbar,
   useMediaQuery,
   useTheme,
+  Chip,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -27,8 +28,10 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
-import ProfessionalHeader from "../components/ProfessionalHeader";
-import Section from "../components/Section";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import img from "../assets/noImageinProject.jpg";
 
 interface VendorData {
   logo?: string;
@@ -281,6 +284,266 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const formatCategory = (str: string) => {
+    let formattedStr = str.replace(/_/g, " ");
+    return formattedStr
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const content = (
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
+      <>
+        <>
+          {selectedProject ? (
+            <>
+              <div className="w-1/2 md:w-fit">
+                <p className="font-bold text-black">Contact Number</p>
+                <p className="">{vendorData?.mobile ?? "N/A"}</p>
+              </div>
+              <div className="w-full mt-[1em]">
+                <p className="font-bold  text-black">Email</p>
+                <p className="">{vendorData?.email ?? "N/A"}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-purple  mt-[1em]">
+                  Project Details
+                </p>
+                <p className="font-bold  text-black">Title</p>
+                <p className=" max-w-[300px]">{selectedProject.title}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Description</p>
+                <p className=" max-w-[300px]">{selectedProject.description}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">City</p>
+                <p className=" max-w-[300px]">{selectedProject.city}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black mt-[1em]">State</p>
+                <p className=" max-w-[300px]">{selectedProject.state}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black mt-[1em]">Spaces</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_2)
+                    .split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Theme</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_1)
+                    .split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-row lg:flex-col w-full">
+                <div className="mt-[1em] w-1/2 lg:w-fit">
+                  <p className="font-bold  text-black">Typical Job Cost</p>
+                  <p className="">
+                    {vendorData?.average_project_value ?? "N/A"}
+                  </p>
+                </div>
+                <div className="mt-[1em] w-1/2 lg:w-fit">
+                  <p className="font-bold  text-black">Number of Employees</p>
+                  <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+                </div>
+              </div>
+              <div className="flex  w-full flex-row lg:flex-col mt-[1em]">
+                <div className="w-1/2 lg:w-fit mt-[1em]">
+                  <p className="font-bold  text-black">Projects Completed</p>
+                  <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
+                </div>
+                <div className=" w-1/2 lg:w-fit mt-[1em]">
+                  <p className="font-bold  text-black">Location</p>
+                  <p className="">{vendorData?.city ?? "N/A"}</p>
+                </div>
+              </div>
+              <div className="flex flex-row lg:flex-col  w-full">
+                {(vendorData?.social?.facebook ||
+                  vendorData?.social?.instagram ||
+                  vendorData?.social?.website) && (
+                  <div className="w-1/2 mt-[1em]">
+                    <p className="font-bold  text-black">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
+                )}
+                <div className="w-1/2 lg:w-fit">
+                  <p className="font-bold text-black mt-[1em]">
+                    Contact Number
+                  </p>
+                  <p className="">{vendorData?.mobile ?? "N/A"}</p>
+                </div>
+              </div>
+              <div className="w-full mt-[1em]">
+                <p className="font-bold  text-black">Email</p>
+                <p className="">{vendorData?.email ?? "N/A"}</p>
+              </div>
+              <div className="lg:hidden w-full ">
+                <p className="font-bold  text-black">About</p>
+                <p className=" text-justify mb-[1em] rounded-md">
+                  {contentPreview}
+                  {isMobile &&
+                    vendorData?.description.length! > maxVisibleLength && (
+                      <button
+                        onClick={handleExpandClick}
+                        className="text-blue-500 hover:text-blue-700 font-medium"
+                      >
+                        {expanded ? "Read Less" : "Read More"}
+                      </button>
+                    )}
+                </p>
+              </div>
+            </>
+          )}
+        </>
+      </>
+    </div>
+  );
+
+  const professionalHeader = (
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em]">
+      <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
+        {vendorData?.logo ? (
+          <img
+            src={`${constants.apiImageUrl}/${vendorData.logo}`}
+            alt="Vendor Logo"
+            className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
+          />
+        ) : (
+          <img
+            src={img}
+            alt=""
+            className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
+          />
+        )}
+        <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
+          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+        </p>
+      </div>
+      <div className="mx-3">
+        <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
+          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+        </p>
+        <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
+          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
+            SPECIALIZED THEMES :
+          </span>{" "}
+          <div className="flex flex-wrap gap-1">
+            {formatCategory(vendorData?.sub_category_1 ?? "N/A")
+              .split(",")
+              .map((item, ind) => (
+                <Chip
+                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  variant="outlined"
+                  key={ind}
+                  sx={{ height: "20px", fontSize: "11px" }}
+                />
+              ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
+          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
+            SPECIALIZED SPACES :
+          </span>
+          <div className="flex flex-wrap gap-1">
+            {formatCategory(vendorData?.sub_category_2 ?? "N/A")
+              .split(",")
+              .map((item, ind) => (
+                <Chip
+                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  variant="outlined"
+                  key={ind}
+                  sx={{ height: "20px", fontSize: "11px" }}
+                />
+              ))}
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
+          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
+            EXECUTION TYPE :
+          </span>{" "}
+          {(vendorData?.sub_category_3 ?? "N/A")
+            .split(",")
+            .map((item: string, ind: number) => (
+              <Chip
+                label={
+                  item === "DESIGN"
+                    ? constants.DESIGN
+                    : item === "MATERIAL_SUPPORT"
+                    ? constants.MATERIAL_SUPPORT
+                    : constants.COMPLETE
+                }
+                variant="outlined"
+                key={ind}
+                sx={{
+                  height: "20px",
+                  fontSize: "11px",
+                  maxWidth: "90vw",
+                  overflowWrap: "break-word",
+                }}
+              />
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+
   if (isVendorLoading || isProjectsLoading)
     return <div className="min-h-screen">Loading...</div>;
   return (
@@ -288,13 +551,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       <div className="mt-[50px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
-            <ProfessionalHeader vendorData={vendorData} />
+            {professionalHeader}
 
             <div className="lg:hidden flex justify-center">
-              <Section
-                selectedProject={selectedProject}
-                vendorData={vendorData}
-              />
+              {isMobile ? (
+                <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
+                  {content}
+                </div>
+              ) : (
+                <div className="">{content}</div>
+              )}
             </div>
 
             {login && userDetails?.vendor_id !== Number(professionalId) && (
@@ -479,26 +745,34 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </>
             ) : (
               <>
-                <div className="button-container w-screen">
+                <div className="w-screen sticky top-0 bg-white z-[1000] flex gap-[10px] h-[52px] text-base">
                   <button
-                    className={`scroll-btn ${
-                      activeSection === "projects" ? " text-[#8c52ff] abc" : ""
+                    className={` p-[10px] border-none cursor-pointer flex-grow ${
+                      activeSection === "projects" ? " text-[#8c52ff]" : ""
                     }`}
+                    style={{
+                      borderBottom:
+                        activeSection === "projects" ? "solid 2px #8c52ff" : "",
+                    }}
                     onClick={() => handleScrollToSection("projects")}
                   >
                     Projects
                   </button>
                   <button
-                    className={`scroll-btn ${
-                      activeSection === "reviews" ? " text-[#8c52ff] abc" : ""
+                    className={`p-[10px] border-none cursor-pointer flex-grow ${
+                      activeSection === "reviews" ? " text-[#8c52ff]" : ""
                     }`}
+                    style={{
+                      borderBottom:
+                        activeSection === "reviews" ? "solid 2px #8c52ff" : "",
+                    }}
                     onClick={() => handleScrollToSection("reviews")}
                   >
                     Reviews
                   </button>
                 </div>
 
-                <div id="projects" className="section ">
+                <div id="projects" className=" mb-[10px] min-h-[50vh] pt-14 ">
                   {renderProfileView && (
                     <div
                       className={`${
@@ -516,10 +790,32 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       </Button>
                     </div>
                   )}
-                  <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[2rem] ">
+                  <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
                     <div className="flex  mb-[3em] ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
+                          {renderProfileView ||
+                            (Number(professionalId) ==
+                              userDetails.vendor_id && (
+                              <div
+                                className={`${
+                                  selectedProject
+                                    ? "hidden"
+                                    : "flex w-full justify-end"
+                                }`}
+                              >
+                                <Button
+                                  variant="outlined"
+                                  style={{
+                                    backgroundColor: "#8c52ff",
+                                    color: "white",
+                                  }}
+                                  onClick={() => setOpen(true)}
+                                >
+                                  <AddCircleIcon /> Add a new project
+                                </Button>
+                              </div>
+                            ))}
                           <div className="mb-[1em]">
                             <img
                               src={projectImage}
@@ -557,7 +853,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                           </div>
                         </div>
                       ) : (
-                        <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-center ">
+                        <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-start ">
                           <div>
                             {renderProfileView ||
                               (Number(professionalId) ==
@@ -570,12 +866,17 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                   <Button
                                     variant="outlined"
                                     style={{
-                                      backgroundColor: "#8c52ff",
-                                      color: "white",
+                                      color: "#8c52ff",
+                                      height: "145px",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      borderRadius: "10px",
+                                      borderColor: "#8c52ff",
                                     }}
                                     onClick={() => setOpen(true)}
                                   >
                                     <AddCircleIcon />
+                                    <p>Add a project</p>
                                   </Button>
                                 </div>
                               ))}
@@ -603,8 +904,11 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   </div>
                   <Divider />
                 </div>
-                <div id="reviews" className="section pt-20 w-[90vw] m-auto">
-                  <div className=" lg:w-[750px] border-[#d3d8e0] border-[1px] rounded-md   flex justify-center flex-col items-center p-2">
+                <div
+                  id="reviews"
+                  className=" mb-[10px] min-h-[50vh] pt-14 w-[90vw] m-auto"
+                >
+                  <div className=" lg:w-[750px] flex justify-center flex-col items-center p-2">
                     {
                       <Reviews
                         id={
@@ -613,14 +917,19 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       />
                     }
                   </div>
-                  <Divider />
                 </div>
               </>
             )}
           </div>
         </div>
         <div className="hidden lg:block">
-          <Section selectedProject={selectedProject} vendorData={vendorData} />
+          {isMobile ? (
+            <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
+              {content}
+            </div>
+          ) : (
+            <div className="">{content}</div>
+          )}
         </div>
         <ReviewDialog
           handleReviewDialogClose={handleReviewDialogClose}
