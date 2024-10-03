@@ -74,6 +74,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
+  const matches = useMediaQuery(themes.breakpoints.up("md"));
 
   return (
     <>
@@ -82,10 +83,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           sx={{
             width: "355px",
             [themes.breakpoints.down("md")]: {
-              width: "350px",
-            },
-            [themes.breakpoints.down("sm")]: {
-              width: "70vw",
+              width: "224px",
             },
             [themes.breakpoints.down("xs")]: {
               width: "200px",
@@ -126,20 +124,49 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               </Typography>
               <Typography variant="body2">
                 <p className="flex gap-2 pb-1">
-                  {themeArray.map((item, ind) =>
-                    ind < 2 ? (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                      />
-                    ) : (
-                      ""
-                    )
+                  {matches ? (
+                    <>
+                      {themeArray.map((item, ind) =>
+                        ind < 2 ? (
+                          <Chip
+                            label={item}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        ) : (
+                          ""
+                        )
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {themeArray.map((item, ind) =>
+                        ind < 1 ? (
+                          <Chip
+                            label={item}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        ) : (
+                          ""
+                        )
+                      )}
+                    </>
                   )}
-                  {themeArray.length > 2 && (
-                    <span>+{themeArray.length - 2}</span>
+                  {matches ? (
+                    <>
+                      {themeArray.length > 2 && (
+                        <span>+{themeArray.length - 2}</span>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {themeArray.length > 1 && (
+                        <span>+{themeArray.length - 1}</span>
+                      )}
+                    </>
                   )}
                 </p>
               </Typography>
@@ -257,7 +284,6 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
     <>
       <ImageList
         sx={{
-          width: "100%",
           height: matches ? 250 : 150,
           scrollbarWidth: "none",
           scrollbarColor: "black",

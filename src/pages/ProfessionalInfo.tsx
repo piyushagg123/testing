@@ -10,6 +10,8 @@ import {
   Button,
   Divider,
   Snackbar,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Carousel from "../components/ProjectCard";
 import { useParams } from "react-router-dom";
@@ -275,6 +277,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     isMobile && !expanded
       ? vendorData?.description.slice(0, maxVisibleLength) + "..."
       : vendorData?.description;
+
+  const theme = useTheme();
+  const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (isVendorLoading || isProjectsLoading)
     return <div className="min-h-screen">Loading...</div>;
@@ -552,7 +557,29 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                           </div>
                         </div>
                       ) : (
-                        <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] ">
+                        <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-center ">
+                          <div>
+                            {renderProfileView ||
+                              (Number(professionalId) ==
+                                userDetails.vendor_id && (
+                                <div
+                                  className={`${
+                                    selectedProject ? "hidden" : "mr-2"
+                                  }`}
+                                >
+                                  <Button
+                                    variant="outlined"
+                                    style={{
+                                      backgroundColor: "#8c52ff",
+                                      color: "white",
+                                    }}
+                                    onClick={() => setOpen(true)}
+                                  >
+                                    <AddCircleIcon />
+                                  </Button>
+                                </div>
+                              ))}
+                          </div>
                           {projectsData.map((item, ind) => (
                             <div
                               key={ind}
@@ -603,7 +630,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           reviewError={reviewError}
         />
 
-        <Dialog open={open} fullWidth>
+        <Dialog open={open} fullWidth fullScreen={isFullScreen}>
           <DialogContent sx={{ height: "max-content" }}>
             <div className="flex justify-end">
               <IconButton
