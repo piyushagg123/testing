@@ -294,7 +294,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
       .join(" ");
   };
 
-  const content = (
+  const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
       <>
         <>
@@ -557,10 +557,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             <div className="lg:hidden flex justify-center">
               {isMobile ? (
                 <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
-                  {content}
+                  {professionalCard}
                 </div>
               ) : (
-                <div className="">{content}</div>
+                <div className="">{professionalCard}</div>
               )}
             </div>
 
@@ -926,10 +926,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         <div className="hidden lg:block">
           {isMobile ? (
             <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
-              {content}
+              {professionalCard}
             </div>
           ) : (
-            <div className="">{content}</div>
+            <div className="">{professionalCard}</div>
           )}
         </div>
         <ReviewDialog
