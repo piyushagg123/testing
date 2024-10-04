@@ -12,6 +12,8 @@ import {
   CardActionArea,
   Grid,
   useTheme,
+  Tooltip,
+  Button,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
@@ -70,8 +72,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     const formattedStr = str.toLowerCase().replace(/_/g, " ");
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
-
-  if (title) title = truncateText(title, 20);
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
 
   return (
@@ -79,13 +79,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
       {showProjectDetails ? (
         <Card
           sx={{
-            height: 340,
             width: "355px",
             [themes.breakpoints.down("md")]: {
-              width: "300px",
+              width: "350px",
             },
             [themes.breakpoints.down("sm")]: {
-              width: "250px",
+              width: "90vw",
             },
             [themes.breakpoints.down("xs")]: {
               width: "200px",
@@ -97,30 +96,49 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               <WovenImageList items={arr} />
             </Box>
             <CardContent sx={{ padding: "0px 5px" }}>
-              <br />
               <Typography
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="flex items-center justify-between"
+                className="flex items-center justify-between mt-[1em]"
               >
-                <p className="font-bold text-base text-darkgrey">{title}</p>
+                {title && (
+                  <p className="font-bold text-base text-darkgrey">
+                    <Tooltip title={title} placement="top-start">
+                      <Button
+                        sx={{
+                          fontWeight: "700",
+                          color: "grey",
+                          textTransform: "none",
+                        }}
+                      >
+                        {truncateText(title, 20)}
+                      </Button>
+                    </Tooltip>
+                  </p>
+                )}
                 <p className="text-[10px] flex items-center text-sec">
                   <PlaceIcon sx={{ fontSize: "15px" }} />
                   {city}
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className="flex gap-2 items-center">
-                  <span className="font-bold">Theme: </span>
-                  {themeArray.map((item, ind) => (
-                    <Chip
-                      label={item}
-                      variant="outlined"
-                      key={ind}
-                      sx={{ height: "25px" }}
-                    />
-                  ))}
+                <p className="flex gap-2 items-center pb-1">
+                  {themeArray.map((item, ind) =>
+                    ind < 2 ? (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                      />
+                    ) : (
+                      ""
+                    )
+                  )}
+                  {themeArray.length > 2 && (
+                    <span>+{themeArray.length - 2}</span>
+                  )}
                 </p>
               </Typography>
             </CardContent>
@@ -189,7 +207,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 {imageObj[selectedSpace]?.map((img, i) => (
                   <>
                     <Item key={i} item={img} />
-                    <br />
                   </>
                 ))}
               </Carousel>
@@ -209,7 +226,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
 const Item: React.FC<ItemProps> = ({ item }) => {
   return (
-    <Paper sx={{ display: "flex", justifyContent: "center" }}>
+    <Paper
+      sx={{ display: "flex", justifyContent: "center", marginBottom: "1em" }}
+    >
       <img
         src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"

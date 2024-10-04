@@ -17,6 +17,7 @@
     "axios": "^1.6.8",
     "crypto-js": "^4.2.0",
     "esbuild": "^0.23.1",
+    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-material-ui-carousel": "^3.4.2",

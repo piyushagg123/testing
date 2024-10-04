@@ -7,7 +7,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
-import { Alert } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -169,19 +169,21 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   }
 
   return (
-    <div className="pl-3 h-full flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold text-text">Add a New Project</h1>
+    <div className="md:pl-3 h-full flex flex-col items-center justify-center">
+      <h1 className="text-2xl md:text-3xl font-bold text-text">
+        Add a New Project
+      </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col mt-6 h-[548]">
         {currentStep === 1 && (
           <div className="h-[385px]">
             {error && <Alert severity="error">{error}</Alert>}
-            <div className="flex gap-4">
-              <label className="text-sm w-full md:w-auto">
-                Title <br />
+            <div className="flex gap-4 mb-[1em]">
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>Title</p>
                 <input
                   type="text"
-                  className="w-full md:w-[250px] h-10 mt-1 px-2"
+                  className="w-[220px] h-10 mt-1 px-2"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   required
@@ -189,24 +191,23 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <br />
-            <div className="flex gap-6 justify-between">
-              <label className="text-sm w-full md:w-auto">
-                Start Date <br />
+            <div className="flex flex-col md:flex-row gap-6 justify-between">
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>Start Date </p>
                 <input
                   type="date"
-                  className="w-full md:w-[250px] h-10 mt-1 px-2"
+                  className="w-[220px] h-10 mt-1 px-2"
                   value={startDate}
                   onChange={(event) => setStartDate(event.target.value)}
                   required
                   style={{ borderRadius: "5px", border: "solid 0.3px" }}
                 />
               </label>
-              <label className="text-sm w-full md:w-auto">
-                End Date <br />
+              <label className="text-sm w-full md:w-auto flex flex-col">
+                <p>End Date </p>
                 <input
                   type="date"
-                  className="w-full md:w-[250px] h-10 mt-1 px-2"
+                  className="w-[220px] h-10 mt-1 px-2"
                   value={endDate}
                   onChange={(event) => setEndDate(event.target.value)}
                   required
@@ -214,11 +215,11 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <label className="text-sm mt-4">
-              Description
-              <br />
+            <label className="text-sm mt-4 flex flex-col mb-[3em]">
+              <p>Description</p>
+
               <textarea
-                className="w-full md:w-[548px] mt-1 px-2"
+                className="w-[220px] md:w-[548px] mt-1 px-2"
                 rows={5}
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
@@ -226,17 +227,14 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 required
               />
             </label>
-            <br />
-            <br />
-            <br />
-            <div className="flex gap-2 justify-end w-[548px]">
-              <button
-                type="button"
+            <div className="flex gap-2 justify-end w-[220px] md:w-[548px]">
+              <Button
                 onClick={nextStep}
-                className="p-2 w-[100px] bg-sec rounded-[5px] border-[2px] text-white"
+                variant="outlined"
+                style={{ backgroundColor: "#8c52ff", color: "white" }}
               >
                 Next
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -244,10 +242,10 @@ const AddAProject: React.FC<AddAProjectProps> = ({
         {currentStep === 2 && (
           <>
             {error && <Alert severity="error">{error}</Alert>}
-            <div className="flex flex-col items-end flex-wrap justify-around w-[540px]">
+            <div className="flex flex-col items-end flex-wrap justify-around w-[220px] md:w-[540px]">
               <label
                 htmlFor=""
-                className="flex  w-[540px] items-center justify-between"
+                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
               >
                 <p>Select the theme (maximum of 7)</p>
                 <MultipleSelect
@@ -264,7 +262,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
               <label
                 htmlFor=""
-                className="flex  w-[540px] items-center justify-between"
+                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
@@ -280,7 +278,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               </label>
               <label
                 htmlFor=""
-                className="flex  w-[540px] items-center justify-between"
+                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
               >
                 <p>Type of execution</p>
                 <MultipleSelect
@@ -295,10 +293,13 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <div className="flex flex-col gap-2 w-[534px]  justify-between ">
+            <div className="flex flex-col gap-2 w-[220px] md:w-[534px]  justify-between ">
               <div className="mt-4">
-                <label htmlFor="" className="flex  justify-between">
-                  <p>Select the state</p>
+                <label
+                  htmlFor=""
+                  className="flex flex-col items-center md:flex-row  justify-between"
+                >
+                  <p className="mb-2">Select the state</p>
                   <Autocomplete
                     disablePortal
                     id="state-autocomplete"
@@ -332,8 +333,11 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 </label>
               </div>
               <div className="mt-4">
-                <label htmlFor="" className="flex  justify-between">
-                  <p>Select the city</p>
+                <label
+                  htmlFor=""
+                  className="flex flex-col items-center md:flex-row  justify-between"
+                >
+                  <p className="mb-2">Select the city</p>
                   <Autocomplete
                     disablePortal
                     size="small"
@@ -372,22 +376,21 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 </label>
               </div>
             </div>
-            <br />
-            <div className="flex gap-2 justify-between  items-center">
-              <button
-                type="button"
+            <div className="flex gap-2 justify-between  items-center mt-[1em]">
+              <Button
                 onClick={prevStep}
-                className="p-2 w-[100px]  rounded-[5px] border-text border-[2px] text-text bg-prim"
+                variant="outlined"
+                style={{ backgroundColor: "#8c52ff", color: "white" }}
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                style={{ borderRadius: "5px" }}
-                className="p-2 w-[100px]  rounded-[5px] border-text border-[2px] text-text bg-prim"
+                variant="outlined"
+                style={{ backgroundColor: "#8c52ff", color: "white" }}
               >
                 Next
-              </button>
+              </Button>
             </div>
           </>
         )}

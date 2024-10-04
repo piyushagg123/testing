@@ -18,7 +18,7 @@ const Professional: React.FC<ProfessionalProps> = ({
   profCat,
 }) => {
   return (
-    <div className="flex gap-8 mb-5  items-start flex-col sm:flex-row mt-3 sm:mt-0 text-text px-4">
+    <div className="flex gap-8 mb-7 items-center sm:items-start flex-col sm:flex-row mt-3 sm:mt-0 text-text px-4">
       <div>
         <img
           src={img ? `${constants.apiImageUrl}/${img}` : NoProjectImage}
@@ -27,8 +27,8 @@ const Professional: React.FC<ProfessionalProps> = ({
         />
       </div>
 
-      <div className="flex flex-col justify-center xl:flex-row items-start">
-        <div className="w-[270px] md:w-[375px] xl:w-[600px]">
+      <div className="flex flex-col justify-center xl:flex-row items-start w-[90vw] md:w-auto">
+        <div className=" ">
           <div className="flex flex-col gap-1 items-start">
             <span className="font-bold text-base text-darkgrey">{profCat}</span>
             <Rating
@@ -39,8 +39,7 @@ const Professional: React.FC<ProfessionalProps> = ({
               style={{ color: "#ff5757", marginLeft: "-2px" }}
             />
           </div>
-          <br />
-          <p>{truncateText(about, 80)}</p>
+          <p className="mt-[1em]">{truncateText(about, 80)}</p>
         </div>
       </div>
     </div>

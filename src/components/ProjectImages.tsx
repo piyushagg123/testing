@@ -107,7 +107,9 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
 
   return (
     <div className="pl-3 h-full pb-6 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold text-text">Upload Project Images</h1>
+      <h1 className="text-xl md:text-3xl font-bold text-text">
+        Upload Project Images
+      </h1>
       <div>
         {spaceTypes.map((spaceType, spaceIndex) => (
           <div
@@ -119,7 +121,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                 {spaceType.subCategory}
               </label>
             </div>
-            <div className="flex flex-col md:flex-row items-center w-full md:w-auto">
+            <div className="flex md:flex-row items-center w-full md:w-auto">
               {spaceType.previews.map((preview, imageIndex) => (
                 <div
                   key={imageIndex}
@@ -134,7 +136,6 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           width: "40px",
                           height: "40px",
                           objectFit: "cover",
-                          margin: "10px",
                           borderRadius: "5px",
                           border: "solid 0.3px",
                         }}
@@ -155,8 +156,10 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           height: "20px",
                           border: "none",
                           cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "flex-end",
                         }}
-                        className="flex justify-center items-end"
                       >
                         &times;
                       </button>

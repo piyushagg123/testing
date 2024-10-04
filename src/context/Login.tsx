@@ -6,6 +6,8 @@ interface UserDetails {
   is_vendor: boolean;
   last_name: string;
   mobile: string;
+  user_id: number;
+  vendor_id: number;
 }
 
 interface AuthContextType {
@@ -29,6 +31,8 @@ const defaultUserDetails: UserDetails = {
   is_vendor: false,
   last_name: "",
   mobile: "",
+  user_id: 0,
+  vendor_id: 0,
 };
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
