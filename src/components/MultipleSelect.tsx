@@ -63,6 +63,16 @@ export default function MultipleSelect({
     }
   );
 
+  // let options = dataArray;
+
+  // if (apiEndpoint) {
+  //   const { data: fetchedOptions = [], isLoading } = useQuery(
+  //     ["options", apiEndpoint],
+  //     () => fetchOptions(apiEndpoint)
+  //   );
+  //   options = fetchedOptions;
+  // }
+
   useEffect(() => {
     setSelectedValues(initialSelectedValues);
   }, []);
