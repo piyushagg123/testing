@@ -792,7 +792,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                     </div>
                   )}
                   <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
-                    <div className="flex  mb-[3em] ">
+                    <div className="flex   ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
                           {renderProfileView ||
@@ -868,11 +868,12 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                     variant="outlined"
                                     style={{
                                       color: "#8c52ff",
-                                      height: "145px",
+                                      height: "170px",
                                       display: "flex",
                                       flexDirection: "column",
                                       borderRadius: "10px",
                                       borderColor: "#8c52ff",
+                                      textTransform: "none",
                                     }}
                                     onClick={() => setOpen(true)}
                                   >
@@ -907,9 +908,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
                 <div
                   id="reviews"
-                  className=" mb-[10px] min-h-[50vh] pt-14 w-[90vw] m-auto"
+                  className=" mb-[10px] min-h-[50vh] pt-10 w-[98vw] m-auto"
                 >
-                  <div className=" lg:w-[750px] flex justify-center flex-col items-center p-2">
+                  <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
                     {
                       <Reviews
                         id={
@@ -925,7 +926,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         </div>
         <div className="hidden lg:block">
           {isMobile ? (
-            <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
+            <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[93vw]">
               {professionalCard}
             </div>
           ) : (

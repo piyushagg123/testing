@@ -56,7 +56,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     setSelectedSpace(newValue);
   };
 
-  const themes = useTheme();
   const funct = (ar: any) => {
     if (ar) {
       return ar.map((item: any) => (
@@ -74,6 +73,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
+  const themes = useTheme();
   const matches = useMediaQuery(themes.breakpoints.up("md"));
 
   return (
@@ -83,7 +83,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           sx={{
             width: "355px",
             [themes.breakpoints.down("md")]: {
-              width: "170px",
+              width: "130px",
               border: "none",
               boxShadow: "none",
             },
@@ -98,15 +98,17 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="flex items-center justify-between mt-[1em]"
+                className={
+                  matches ? "flex items-center justify-between mt-[1em]" : ""
+                }
               >
                 {title && (
-                  <p className="font-bold text-base text-darkgrey">
+                  <p className="font-bold text-base text-black">
                     <Tooltip title={title} placement="top-start">
                       <Button
                         sx={{
                           fontWeight: "700",
-                          color: "grey",
+                          color: "black",
                           textTransform: "none",
                           justifyContent: "flex-start",
                           paddingX: 0,
@@ -114,18 +116,19 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                       >
                         {matches
                           ? truncateText(title, 15)
-                          : truncateText(title, 10)}
+                          : truncateText(title, 15)}
                       </Button>
                     </Tooltip>
                   </p>
                 )}
-                <p className="text-[10px] flex items-center  text-sec">
-                  <PlaceIcon sx={{ fontSize: "15px" }} />
+
+                <p className="text-[10px] flex items-center  text-darkgrey">
+                  <PlaceIcon sx={{ fontSize: "10px" }} />
                   {city}
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className="flex gap-2 pb-1 justify-center lg:justify-start">
+                <p className={`flex gap-1 pb-1 lg:justify-start`}>
                   {matches ? (
                     <>
                       {themeArray.map((item, ind) =>
@@ -145,12 +148,40 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                     <>
                       {themeArray.map((item, ind) =>
                         ind < 1 ? (
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                          />
+                          // <Chip
+                          //   label={item}
+                          //   variant="outlined"
+                          //   key={ind}
+                          //   sx={{ height: "25px" }}
+                          // />
+                          <div className="flex flex-col w-[120px]">
+                            <div>
+                              <div className="flex gap-1">
+                                <p className="text-[10px] text-darkgrey">
+                                  {" "}
+                                  {item}
+                                </p>
+                                {themeArray.length > 1 && (
+                                  <span className="text-[10px] text-darkgrey">
+                                    +{themeArray.length - 1}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex justify-center items-center mt-1">
+                              <Button
+                                sx={{
+                                  padding: 0,
+                                  width: "100%",
+                                  border: "solid red 0.3px",
+                                  color: "red",
+                                  textTransform: "none",
+                                }}
+                              >
+                                Learn more
+                              </Button>
+                            </div>
+                          </div>
                         ) : (
                           ""
                         )
@@ -164,11 +195,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                       )}
                     </>
                   ) : (
-                    <>
-                      {themeArray.length > 1 && (
-                        <span>+{themeArray.length - 1}</span>
-                      )}
-                    </>
+                    <></>
                   )}
                 </p>
               </Typography>
@@ -286,7 +313,8 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
     <>
       <ImageList
         sx={{
-          height: matches ? 250 : 150,
+          height: matches ? 250 : 180,
+          width: matches ? "100% " : "130px",
           scrollbarWidth: "none",
           scrollbarColor: "black",
           padding: matches ? 0 : "10px",
