@@ -27,7 +27,7 @@ interface VendorItem {
   business_name: string;
 }
 
-const SearchProfessionals: React.FC = () => {
+const SearchProfessionals = ({ professional }) => {
   const apiContext = useContext(ApiContext);
   if (apiContext === undefined) {
     throw new Error("ApiContext must be used within a ApiProvider");
@@ -84,6 +84,20 @@ const SearchProfessionals: React.FC = () => {
             .join(","),
         },
       });
+      setFilteredItems(response.data.data);
+    } catch (error) {
+      setErrorInApi(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchFinanceList = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${constants.apiBaseUrl}/financial-advisor/advisors`
+      );
       setFilteredItems(response.data.data);
     } catch (error) {
       setErrorInApi(true);
@@ -198,7 +212,13 @@ const SearchProfessionals: React.FC = () => {
         <div className="flex  justify-start flex-col lg:flex-row items-start p-1 lg:px-[64px] mt-[1em]">
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
-              <Filters fetchVendorList={fetchVendorList} />
+              <Filters
+                fetchVendorList={
+                  professional === "interiorDesigners"
+                    ? fetchVendorList
+                    : fetchFinanceList
+                }
+              />
             </div>
           </div>
           <div className="w-full">

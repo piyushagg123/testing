@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-const fetchThemes = async () => {
+const fetchThemes = async (professional: string) => {
   const response = await axios.get(
     `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
   );
@@ -48,8 +48,10 @@ interface FilterItem {
   value: string;
 }
 
-const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
-  const { data: theme = [] } = useQuery("themes", fetchThemes);
+const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
+  const { data: theme = [] } = useQuery(["themes", professional], () =>
+    fetchThemes(professional)
+  );
   const { data: spaces = [] } = useQuery("spaces", fetchSpaces);
   const { data: executionType = [] } = useQuery(
     "executionTypes",

@@ -82,7 +82,11 @@ const App: React.FC = () => {
           <Route path="/about" element={<AboutUs />} />
           <Route
             path="/search-professionals"
-            element={<SearchProfessionals />}
+            element={<SearchProfessionals professional={"interiorDesigners"} />}
+          />
+          <Route
+            path="/finance-planners"
+            element={<SearchProfessionals professional={"financePlanners"} />}
           />
           <Route
             path="/search-professionals/:professionalId"

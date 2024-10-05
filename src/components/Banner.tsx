@@ -1,8 +1,4 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
 import { AuthContext } from "../context/Login";
 import data from "../assets/data.json";
 import { Link } from "react-router-dom";
@@ -52,8 +48,8 @@ const Banner = () => {
     return;
   }
   return (
-    <div className="mt-16">
-      <div className="flex flex-col mb-28">
+    <div className="mt-16 min-h-[80vh]">
+      <div className="flex flex-col mb-10">
         <div className="bg-[#f0f0f0] w-[100%] m-auto flex flex-col items-center p-10">
           <h1 className="font-bold text-lg" style={{ color: "#576375" }}>
             FIND THE MOST SUITABLE INTERIOR DESIGNER NEAR YOU
@@ -141,26 +137,14 @@ const Banner = () => {
       </div>
       <div className="flex justify-center flex-wrap gap-6">
         {data.map((item, ind) => (
-          <Link to={item.route}>
-            <Card
-              sx={{
-                maxWidth: 345,
-                maxHeight: 200,
-                marginBottom: 0,
-                paddingBottom: 0,
-              }}
-              key={ind}
+          <Link to={item.route} className="pb-0" key={ind}>
+            <div
+              className="flex flex-col items-center p-3"
+              style={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}
             >
-              <CardMedia
-                sx={{ height: 120, marginBottom: 2 }}
-                image={item.image}
-              />
-              <CardContent sx={{ marginBottom: 0, paddingBottom: 0 }}>
-                <Typography gutterBottom variant="h5">
-                  {item.name}
-                </Typography>
-              </CardContent>
-            </Card>
+              <img src={item.image} alt="" className="h-[100px]" />
+              <p>{item.name}</p>
+            </div>
           </Link>
         ))}
       </div>

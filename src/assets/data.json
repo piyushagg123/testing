@@ -1,14 +1,14 @@
 [
     {
         "name":"Interior Designers",
-        "image":"https://cdni.iconscout.com/illustration/premium/thumb/interior-designer-illustration-download-in-svg-png-gif-file-formats--sketch-logo-house-improvement-room-decorating-architecture-plan-artistic-jobs-pack-art-abstract-illustrations-7786345.png?f=webp",
+        "image":"/public/interior_designers.jpg",
         "route":"/search-professionals"
         
 
     },
     {
         "name":"Finance Planners",
-        "image":"https://cdni.iconscout.com/illustration/premium/thumb/financial-advisor-giving-investment-advice-illustration-download-in-svg-png-gif-file-formats--pack-business-illustrations-4668387.png?f=webp",
-          "route":"/search-professionals"
+        "image":"/public/finance_planners.jpg",
+          "route":"/finance-planners"
     }
 ]
