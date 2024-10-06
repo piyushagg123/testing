@@ -457,7 +457,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   );
 
   const professionalHeader = (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em]">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw]">
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -476,7 +476,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
       </div>
-      <div className="mx-3">
+      <div className="mx-3 w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
@@ -556,7 +556,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
             <div className="lg:hidden flex justify-center">
               {isMobile ? (
-                <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[90vw]">
+                <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw]">
                   {professionalCard}
                 </div>
               ) : (
@@ -566,7 +566,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
             {login && userDetails?.vendor_id !== Number(professionalId) && (
               <div className=" gap-3 md:flex mb-[2em]">
-                <div className="mt-3 mt:mt-0">
+                <div className="mt-3 ml-2 lg:ml-0 mt:mt-0">
                   {renderProfessionalInfoView && (
                     <Button
                       variant="outlined"
@@ -934,7 +934,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
                 <div
                   id="reviews"
-                  className=" mb-[10px] min-h-[50vh] pt-10 w-[98vw] m-auto"
+                  className=" mb-[10px] min-h-[50vh] pt-5 w-[98vw] m-auto"
                 >
                   <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
                     {
@@ -952,7 +952,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         </div>
         <div className="hidden lg:block">
           {isMobile ? (
-            <div className="border border-1 m-3 rounded-md border-[#d3d8e0] w-[93vw]">
+            <div className="border border-1  rounded-md border-[#d3d8e0] w-[93vw]">
               {professionalCard}
             </div>
           ) : (

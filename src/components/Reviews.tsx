@@ -139,7 +139,7 @@ const Reviews: React.FC<user> = ({ id }) => {
 
   return (
     <>
-      <div className="my-[2em] w-full">
+      <div className="my-[1em] w-full">
         {reviews?.length > 0 ? (
           <>
             <p className="text-base font-bold">Rating & Reviews</p>
@@ -289,7 +289,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                 <div>
                   <img src={reviewImage} alt="" className="w-[300px]" />
                 </div>
-                <p className="my-[1em]">No reviews added yet by the users</p>
+                <p className="mb-[1em]">No reviews added yet by the users</p>
               </div>
             </div>
           </>
