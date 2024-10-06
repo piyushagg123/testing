@@ -178,7 +178,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                   textTransform: "none",
                                 }}
                               >
-                                Learn more
+                                View details
                               </Button>
                             </div>
                           </div>

@@ -444,7 +444,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         onClick={handleExpandClick}
                         className="text-blue-500 hover:text-blue-700 font-medium"
                       >
-                        {expanded ? "Read Less" : "Read More"}
+                        {expanded ? "View details" : "Read More"}
                       </button>
                     )}
                 </p>
@@ -457,7 +457,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   );
 
   const professionalHeader = (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw]">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] md:w-auto">
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -802,7 +802,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                 className={`${
                                   selectedProject
                                     ? "hidden"
-                                    : "flex w-full justify-center"
+                                    : "flex w-full justify-start"
                                 }`}
                               >
                                 {/* <Button
