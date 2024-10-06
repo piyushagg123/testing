@@ -802,10 +802,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                 className={`${
                                   selectedProject
                                     ? "hidden"
-                                    : "flex w-full justify-end"
+                                    : "flex w-full justify-center"
                                 }`}
                               >
-                                <Button
+                                {/* <Button
                                   variant="outlined"
                                   style={{
                                     backgroundColor: "#8c52ff",
@@ -814,19 +814,45 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                   onClick={() => setOpen(true)}
                                 >
                                   <AddCircleIcon /> Add a new project
-                                </Button>
+                                </Button> */}
+                                <div
+                                  className={`${
+                                    selectedProject ? "hidden" : "mr-2"
+                                  }`}
+                                >
+                                  <Button
+                                    variant="outlined"
+                                    style={{
+                                      color: "#8c52ff",
+                                      height: "170px",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      borderRadius: "10px",
+                                      borderColor: "#8c52ff",
+                                      textTransform: "none",
+                                    }}
+                                    onClick={() => setOpen(true)}
+                                  >
+                                    <AddCircleIcon />
+                                    <p>Add a project</p>
+                                  </Button>
+                                </div>
                               </div>
                             ))}
-                          <div className="mb-[1em]">
-                            <img
-                              src={projectImage}
-                              alt=""
-                              className="w-[300px]"
-                            />
-                          </div>
-                          <p className="mb-[1em]">
-                            No projects added yet by the designer
-                          </p>
+                          {Number(professionalId) !== userDetails.vendor_id && (
+                            <>
+                              <div className="mb-[1em]">
+                                <img
+                                  src={projectImage}
+                                  alt=""
+                                  className="w-[300px]"
+                                />
+                              </div>
+                              <p className="mb-[1em]">
+                                No projects added yet by the designer
+                              </p>
+                            </>
+                          )}
                         </div>
                       ) : selectedProject ? (
                         <div className="flex flex-col mt-2">
