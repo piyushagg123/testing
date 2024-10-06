@@ -27,7 +27,13 @@ interface VendorItem {
   business_name: string;
 }
 
-const SearchProfessionals = ({ professional }) => {
+interface SearchProfessionalsProps {
+  professional: string;
+}
+
+const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
+  professional,
+}) => {
   const apiContext = useContext(ApiContext);
   if (apiContext === undefined) {
     throw new Error("ApiContext must be used within a ApiProvider");
@@ -213,6 +219,7 @@ const SearchProfessionals = ({ professional }) => {
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               <Filters
+                professional={professional}
                 fetchVendorList={
                   professional === "interiorDesigners"
                     ? fetchVendorList

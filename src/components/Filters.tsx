@@ -15,24 +15,48 @@ import {
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const fetchThemes = async (professional: string) => {
+  if (professional === "interiorDesigners") {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
+    );
+    return response.data.data.value;
+  }
   const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
+    `${constants.apiBaseUrl}/financial-advisor/deals`
   );
-  return response.data.data.value;
+  console.log(response);
+
+  return response.data.data;
 };
 
-const fetchSpaces = async () => {
+const fetchSpaces = async (professional: string) => {
+  if (professional === "interiorDesigners") {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
+    );
+    return response.data.data.value;
+  }
   const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
+    `${constants.apiBaseUrl}/financial-advisor/investment-ideology`
   );
-  return response.data.data.value;
+  console.log(response);
+
+  return response.data.data;
 };
 
-const fetchExecutionTypes = async () => {
+const fetchExecutionTypes = async (professional: string) => {
+  if (professional === "interiorDesigners") {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
+    );
+    return response.data.data.value;
+  }
   const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
+    `${constants.apiBaseUrl}/financial-advisor/fees-type`
   );
-  return response.data.data.value;
+  console.log(response);
+
+  return response.data.data;
 };
 
 interface FiltersProps {
@@ -41,6 +65,7 @@ interface FiltersProps {
     spaceFilters: any,
     executionFilters: any
   ) => void;
+  professional: string;
 }
 
 interface FilterItem {
@@ -52,10 +77,12 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
   const { data: theme = [] } = useQuery(["themes", professional], () =>
     fetchThemes(professional)
   );
-  const { data: spaces = [] } = useQuery("spaces", fetchSpaces);
+  const { data: spaces = [] } = useQuery(["spaces", professional], () =>
+    fetchSpaces(professional)
+  );
   const { data: executionType = [] } = useQuery(
-    "executionTypes",
-    fetchExecutionTypes
+    ["executionTypes", professional],
+    () => fetchExecutionTypes(professional)
   );
 
   const [themeFilters, setThemeFilters] = useState(new Set());
@@ -67,15 +94,19 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
   }, [themeFilters, spaceFilters, executionFilters]);
 
   const formatString = (str: string) => {
-    const formattedStr = str.toLowerCase().replace(/_/g, " ");
-    return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
+    const formattedStr = str?.toLowerCase().replace(/_/g, " ");
+    return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
   };
 
-  const formattedThemes = theme.map((theme: FilterItem) =>
-    formatString(theme.value)
+  const formattedThemes = theme.map((theme: FilterItem | string) =>
+    typeof theme === "object" && "value" in theme
+      ? formatString(theme.value)
+      : formatString(theme)
   );
-  const formattedSpaces = spaces.map((space: FilterItem) =>
-    formatString(space.value)
+  const formattedSpaces = spaces.map((space: FilterItem | string) =>
+    typeof space === "object" && "value" in space
+      ? formatString(space.value)
+      : formatString(space)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);
@@ -136,31 +167,34 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
           <p className="font-bold text-base text-darkgrey">THEMES</p>
           {formattedThemes.map((theme: string) => {
             return (
-              <FormControlLabel
-                key={theme}
-                className="-mb-2.5 -mt-2.5"
-                control={
-                  <Checkbox
-                    checked={selectedThemes.has(theme)}
-                    sx={{
-                      "&.Mui-checked": {
-                        color: "#ff5757",
-                      },
-                      transform: "scale(0.75)",
-                    }}
-                    onChange={() =>
-                      handleCheckboxChange(
-                        theme,
-                        selectedThemes,
-                        setSelectedThemes,
-                        setThemeFilters,
-                        themeFilters
-                      )
-                    }
-                  />
-                }
-                label={<span className="text-sm">{theme}</span>}
-              />
+              <>
+                {console.log(formattedThemes)}
+                <FormControlLabel
+                  key={theme}
+                  className="-mb-2.5 -mt-2.5"
+                  control={
+                    <Checkbox
+                      checked={selectedThemes.has(theme)}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#ff5757",
+                        },
+                        transform: "scale(0.75)",
+                      }}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          theme,
+                          selectedThemes,
+                          setSelectedThemes,
+                          setThemeFilters,
+                          themeFilters
+                        )
+                      }
+                    />
+                  }
+                  label={<span className="text-sm">{theme}</span>}
+                />
+              </>
             );
           })}
         </div>
@@ -198,15 +232,23 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
         </div>
         <div className="flex flex-col gap-7 pt-5">
           <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
-          {executionType.map((executionType: FilterItem) => {
+          {executionType.map((executionType: FilterItem | string) => {
+            const executionValue =
+              typeof executionType === "object" && "value" in executionType
+                ? executionType.value
+                : executionType;
+
             const labelValue =
-              executionType.value === "DESIGN"
-                ? constants.DESIGN
-                : executionType.value === "MATERIAL_SUPPORT"
-                ? constants.MATERIAL_SUPPORT
-                : executionType.value === "COMPLETE"
-                ? constants.COMPLETE
-                : "";
+              typeof executionType === "object" && "value" in executionType
+                ? executionValue === "DESIGN"
+                  ? constants.DESIGN
+                  : executionValue === "MATERIAL_SUPPORT"
+                  ? constants.MATERIAL_SUPPORT
+                  : executionValue === "COMPLETE"
+                  ? constants.COMPLETE
+                  : ""
+                : executionValue;
+
             return (
               <FormControlLabel
                 sx={{
@@ -216,18 +258,17 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
                 className="-mb-2.5 -mt-2.5"
                 control={
                   <Checkbox
-                    checked={selectedExecutions.has(executionType.value)}
+                    checked={selectedExecutions.has(executionValue)}
                     sx={{
                       "&.Mui-checked": {
                         color: "#ff5757",
                       },
-
                       transform: "scale(0.75)",
                       paddingY: 0,
                     }}
                     onChange={(_event: any) => {
                       handleCheckboxChange(
-                        executionType.value,
+                        executionValue,
                         selectedExecutions,
                         setSelectedExecutions,
                         setExecutionFilters,
