@@ -184,16 +184,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setSelectedProject(undefined);
   };
 
-  const [activeSection, setActiveSection] = useState("about");
-
-  const handleScrollToSection = (section: string) => {
-    const element = document.getElementById(section);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    } else {
-    }
-    setActiveSection(section);
-  };
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -235,35 +225,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setValue("1");
     window.location.reload();
   };
-  const handleScroll = () => {
-    const aboutSection = document.getElementById("about");
-    const projectsSection = document.getElementById("projects");
-    const reviewsSection = document.getElementById("reviews");
-
-    const sections = [
-      { id: "about", ref: aboutSection },
-      { id: "projects", ref: projectsSection },
-      { id: "reviews", ref: reviewsSection },
-    ];
-
-    sections.forEach((section) => {
-      const rect = section.ref?.getBoundingClientRect();
-      if (
-        rect &&
-        rect.top <= window.innerHeight / 2 &&
-        rect.bottom >= window.innerHeight / 2
-      ) {
-        setActiveSection(section.id);
-      }
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -444,7 +405,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         onClick={handleExpandClick}
                         className="text-blue-500 hover:text-blue-700 font-medium"
                       >
-                        {expanded ? "View details" : "Read More"}
+                        {expanded ? "Read less" : "Read More"}
                       </button>
                     )}
                 </p>
@@ -457,7 +418,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   );
 
   const professionalHeader = (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] md:w-auto">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] md:w-auto mx-auto">
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -476,7 +437,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
       </div>
-      <div className="mx-3 w-[93vw] md:w-auto">
+      <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
@@ -746,40 +707,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </>
             ) : (
               <>
-                <div className="w-screen sticky top-0 bg-white z-[1000] flex gap-[10px] h-[52px] text-base">
-                  <button
-                    className={` p-[10px] border-none cursor-pointer flex-grow ${
-                      activeSection === "projects" ? " text-[#8c52ff]" : ""
-                    }`}
-                    style={{
-                      borderBottom:
-                        activeSection === "projects" ? "solid 2px #8c52ff" : "",
-                    }}
-                    onClick={() => handleScrollToSection("projects")}
-                  >
+                <div id="projects" className=" mb-[10px] min-h-[50vh] pt-10 ">
+                  <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
                     Projects
-                  </button>
-                  <button
-                    className={`p-[10px] border-none cursor-pointer flex-grow ${
-                      activeSection === "reviews" ? " text-[#8c52ff]" : ""
-                    }`}
-                    style={{
-                      borderBottom:
-                        activeSection === "reviews" ? "solid 2px #8c52ff" : "",
-                    }}
-                    onClick={() => handleScrollToSection("reviews")}
-                  >
-                    Reviews
-                  </button>
-                </div>
-
-                <div id="projects" className=" mb-[10px] min-h-[50vh] pt-14 ">
+                  </p>
                   {renderProfileView && (
                     <div
                       className={`${
                         selectedProject
                           ? "hidden"
-                          : "flex mt-3 mx-3 justify-end"
+                          : "flex mt-3 mx-2 justify-end"
                       }`}
                     >
                       <Button
@@ -791,7 +728,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       </Button>
                     </div>
                   )}
-                  <div className="w-[90vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
+                  <div className="w-[93vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
                     <div className="flex   ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
@@ -805,16 +742,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                     : "flex w-full justify-start"
                                 }`}
                               >
-                                {/* <Button
-                                  variant="outlined"
-                                  style={{
-                                    backgroundColor: "#8c52ff",
-                                    color: "white",
-                                  }}
-                                  onClick={() => setOpen(true)}
-                                >
-                                  <AddCircleIcon /> Add a new project
-                                </Button> */}
                                 <div
                                   className={`${
                                     selectedProject ? "hidden" : "mr-2"

@@ -139,10 +139,10 @@ const Reviews: React.FC<user> = ({ id }) => {
 
   return (
     <>
-      <div className="my-[1em] w-full">
+      <div className="my-[1em] w-[93vw] lg:w-full">
+        <p className="text-base font-bold">Rating & Reviews</p>
         {reviews?.length > 0 ? (
           <>
-            <p className="text-base font-bold">Rating & Reviews</p>
             <div className="flex gap-1 items-center text-[green]">
               <VerifiedIcon sx={{ fontSize: 20 }} />
               <p>By verified users only</p>
@@ -284,7 +284,7 @@ const Reviews: React.FC<user> = ({ id }) => {
           </>
         ) : (
           <>
-            <div className="flex flex-wrap">
+            <div className="flex items-center justify-center">
               <div className="flex flex-col items-center justify-center">
                 <div>
                   <img src={reviewImage} alt="" className="w-[300px]" />

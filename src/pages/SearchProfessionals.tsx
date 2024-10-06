@@ -110,7 +110,7 @@ const SearchProfessionals: React.FC = () => {
       <div className="mt-16 ">
         <div className="flex flex-col">
           <div className="bg-[#f0f0f0] w-[100%] m-auto flex flex-col items-center p-10">
-            <h1 className="font-bold text-lg" style={{ color: "#576375" }}>
+            <h1 className="font-bold text-lg text-darkgrey">
               FIND THE MOST SUITABLE INTERIOR DESIGNER NEAR YOU
             </h1>
             <p className="text-black text-m pt-2 pb-6">

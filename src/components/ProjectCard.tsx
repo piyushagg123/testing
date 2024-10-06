@@ -122,7 +122,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                   </p>
                 )}
 
-                <p className="text-[10px] flex items-center  text-darkgrey">
+                <p className="text-[10px] flex items-center  text-sec">
                   <PlaceIcon sx={{ fontSize: "10px" }} />
                   {city}
                 </p>
@@ -148,12 +148,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                     <>
                       {themeArray.map((item, ind) =>
                         ind < 1 ? (
-                          // <Chip
-                          //   label={item}
-                          //   variant="outlined"
-                          //   key={ind}
-                          //   sx={{ height: "25px" }}
-                          // />
                           <div className="flex flex-col w-[120px]">
                             <div>
                               <div className="flex gap-1">
