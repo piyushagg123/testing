@@ -1,14 +1,18 @@
 [
     {
         "name":"Interior Designers",
-        "image":"/public/interior_designers.jpg",
+        "image":"/public/interior_designer.png",
         "route":"/search-professionals"
         
 
     },
     {
         "name":"Finance Planners",
-        "image":"/public/finance_planners.jpg",
+        "image":"/public/finance_planner.png",
           "route":"/finance-planners"
     }
+   
+
+
+
 ]
