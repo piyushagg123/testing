@@ -135,7 +135,7 @@ const Reviews: React.FC<user> = ({ id }) => {
   };
 
   const themes = useTheme();
-  const matches = useMediaQuery(themes.breakpoints.up("md"));
+  const matches = useMediaQuery(themes.breakpoints.up("sm"));
 
   return (
     <>
@@ -176,7 +176,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                 <div className="flex flex-col ">
                   <p className="my-[1em]">What our customers said</p>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[165px] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
                       <p className="flex items-center md:text-sm">
                         Work Quality
                       </p>
@@ -184,7 +184,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                         variant="determinate"
                         value={averages.quality * 20}
                         sx={{
-                          width: matches ? "160px" : "95px",
+                          width: matches ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.quality
@@ -196,13 +196,13 @@ const Reviews: React.FC<user> = ({ id }) => {
                     <p className="text-[10px]">{averages.quality}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[165px] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
                       <p className="flex items-center md:text-sm"> Execution</p>
                       <BorderLinearProgress
                         variant="determinate"
                         value={averages.execution * 20}
                         sx={{
-                          width: matches ? "160px" : "95px",
+                          width: matches ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.execution
@@ -214,13 +214,13 @@ const Reviews: React.FC<user> = ({ id }) => {
                     <p className="text-[10px]">{averages.execution}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[165px] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
                       <p className="flex items-center md:text-sm">Behaviour</p>
                       <BorderLinearProgress
                         variant="determinate"
                         value={averages.behaviour * 20}
                         sx={{
-                          width: matches ? "160px" : "95px",
+                          width: matches ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.behaviour
