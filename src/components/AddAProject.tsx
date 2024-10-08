@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
+import spacesData from "./spaces.ts";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -262,11 +263,11 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
               <label
                 htmlFor=""
-                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
+                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between my-3"
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  dataArray={spacesData}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
