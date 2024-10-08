@@ -707,7 +707,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </>
             ) : (
               <>
-                <div id="projects" className=" mb-[10px] min-h-[50vh] pt-10 ">
+                <div id="projects" className=" mb-[10px]  pt-10 ">
                   <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
                     Projects
                   </p>
@@ -842,10 +842,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   </div>
                   <Divider />
                 </div>
-                <div
-                  id="reviews"
-                  className=" mb-[10px] min-h-[50vh] pt-5 w-[98vw] m-auto"
-                >
+                <div id="reviews" className=" mb-[10px] pt-5 w-[98vw] m-auto">
                   <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
                     {
                       <Reviews
