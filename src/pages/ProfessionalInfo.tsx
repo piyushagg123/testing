@@ -239,7 +239,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const maxVisibleLength = 100;
 
   const contentPreview =
-    isMobile && !expanded
+    isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
       ? vendorData?.description.slice(0, maxVisibleLength) + "..."
       : vendorData?.description;
 
@@ -711,61 +711,44 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
                     Projects
                   </p>
-                  {renderProfileView && (
-                    <div
-                      className={`${
-                        selectedProject
-                          ? "hidden"
-                          : "flex mt-3 mx-2 justify-end"
-                      }`}
-                    >
-                      <Button
-                        variant="outlined"
-                        style={{ backgroundColor: "#8c52ff", color: "white" }}
-                        onClick={() => setOpen(true)}
-                      >
-                        <AddCircleIcon /> Add a new project
-                      </Button>
-                    </div>
-                  )}
                   <div className="w-[93vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
                     <div className="flex   ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
-                          {renderProfileView ||
-                            (Number(professionalId) ==
-                              userDetails.vendor_id && (
+                          {(renderProfileView ||
+                            Number(professionalId) ==
+                              userDetails.vendor_id) && (
+                            <div
+                              className={`${
+                                selectedProject
+                                  ? "hidden"
+                                  : "flex w-full justify-start"
+                              }`}
+                            >
                               <div
                                 className={`${
-                                  selectedProject
-                                    ? "hidden"
-                                    : "flex w-full justify-start"
-                                }`}
+                                  selectedProject ? "hidden" : "mr-2"
+                                } mb-3`}
                               >
-                                <div
-                                  className={`${
-                                    selectedProject ? "hidden" : "mr-2"
-                                  }`}
+                                <Button
+                                  variant="outlined"
+                                  style={{
+                                    color: "#8c52ff",
+                                    height: "170px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    borderRadius: "10px",
+                                    borderColor: "#8c52ff",
+                                    textTransform: "none",
+                                  }}
+                                  onClick={() => setOpen(true)}
                                 >
-                                  <Button
-                                    variant="outlined"
-                                    style={{
-                                      color: "#8c52ff",
-                                      height: "170px",
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      borderRadius: "10px",
-                                      borderColor: "#8c52ff",
-                                      textTransform: "none",
-                                    }}
-                                    onClick={() => setOpen(true)}
-                                  >
-                                    <AddCircleIcon />
-                                    <p>Add a project</p>
-                                  </Button>
-                                </div>
+                                  <AddCircleIcon />
+                                  <p>Add a project</p>
+                                </Button>
                               </div>
-                            ))}
+                            </div>
+                          )}
                           {Number(professionalId) !== userDetails.vendor_id && (
                             <>
                               <div className="mb-[1em]">
@@ -809,32 +792,32 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       ) : (
                         <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-start ">
                           <div>
-                            {renderProfileView ||
-                              (Number(professionalId) ==
-                                userDetails.vendor_id && (
-                                <div
-                                  className={`${
-                                    selectedProject ? "hidden" : "mr-2"
-                                  }`}
+                            {(renderProfileView ||
+                              Number(professionalId) ==
+                                userDetails.vendor_id) && (
+                              <div
+                                className={`${
+                                  selectedProject ? "hidden" : "mr-2"
+                                } mb-3`}
+                              >
+                                <Button
+                                  variant="outlined"
+                                  style={{
+                                    color: "#8c52ff",
+                                    height: "170px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    borderRadius: "10px",
+                                    borderColor: "#8c52ff",
+                                    textTransform: "none",
+                                  }}
+                                  onClick={() => setOpen(true)}
                                 >
-                                  <Button
-                                    variant="outlined"
-                                    style={{
-                                      color: "#8c52ff",
-                                      height: "170px",
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      borderRadius: "10px",
-                                      borderColor: "#8c52ff",
-                                      textTransform: "none",
-                                    }}
-                                    onClick={() => setOpen(true)}
-                                  >
-                                    <AddCircleIcon />
-                                    <p>Add a project</p>
-                                  </Button>
-                                </div>
-                              ))}
+                                  <AddCircleIcon />
+                                  <p>Add a project</p>
+                                </Button>
+                              </div>
+                            )}
                           </div>
                           {projectsData.map((item, ind) => (
                             <div
