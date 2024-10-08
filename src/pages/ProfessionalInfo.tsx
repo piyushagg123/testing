@@ -175,6 +175,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setReviewDialogOpen(false);
     setReviewError("");
   };
+  const formatCategory = (str: string) => {
+    let formattedStr = str.replace(/_/g, " ");
+    formattedStr = formattedStr
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    return formattedStr;
+  };
 
   const handleCarouselClick = (project: ProjectData) => {
     setSelectedProject(project);
@@ -245,15 +255,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
-    return formattedStr
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
 
   const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
@@ -749,20 +750,21 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                               </div>
                             </div>
                           )}
-                          {Number(professionalId) !== userDetails.vendor_id && (
-                            <>
-                              <div className="mb-[1em]">
-                                <img
-                                  src={projectImage}
-                                  alt=""
-                                  className="w-[300px]"
-                                />
-                              </div>
-                              <p className="mb-[1em]">
-                                No projects added yet by the designer
-                              </p>
-                            </>
-                          )}
+                          {Number(professionalId) !== userDetails.vendor_id &&
+                            !renderProfileView && (
+                              <>
+                                <div className="mb-[1em]">
+                                  <img
+                                    src={projectImage}
+                                    alt=""
+                                    className="w-[300px]"
+                                  />
+                                </div>
+                                <p className="mb-[1em]">
+                                  No projects added yet by the designersssss
+                                </p>
+                              </>
+                            )}
                         </div>
                       ) : selectedProject ? (
                         <div className="flex flex-col mt-2">

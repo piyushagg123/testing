@@ -138,6 +138,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           objectFit: "cover",
                           borderRadius: "5px",
                           border: "solid 0.3px",
+                          margin: 10,
                         }}
                       />
                       <button
