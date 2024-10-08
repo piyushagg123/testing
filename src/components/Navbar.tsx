@@ -142,7 +142,6 @@ const Navbar: React.FC = () => {
   };
 
   useEffect(() => {
-    // Store the previous path when navigating to /profile-options
     if (location.pathname !== "/profile-options") {
       setPrevPath(location.pathname);
     }
