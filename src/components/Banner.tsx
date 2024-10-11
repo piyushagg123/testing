@@ -48,7 +48,7 @@ const Banner = () => {
         <p className="text-2xl md:text-4xl w-[70%] pl-7 font-semibold block">
           Pick professionals effectively
         </p>
-        <div className=" md:border-[1px] md:border-[#80808073] md:w-[450px] md:ml-7 p-4 mt-5 rounded-md">
+        <div className=" md:border-[1px] md:border-[#80808073] lg:w-[450px] md:ml-7 p-4 mt-5 rounded-md">
           <p className="pb-4 text-lg hidden md:block">
             What are you looking for?
           </p>
