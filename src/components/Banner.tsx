@@ -50,7 +50,7 @@ const Banner = () => {
         </p>
         <div className=" md:border-[1px] md:border-[#80808073] lg:w-[450px] md:ml-7 p-4 mt-5 rounded-md">
           <p className="pb-4 text-lg hidden md:block">
-            What are you looking for?
+            What are you looking for ?
           </p>
           <div className=" flex justify-center flex-wrap gap-6 ">
             {data.map((item, ind) => (
