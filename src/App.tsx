@@ -81,7 +81,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Banner />} />
           <Route path="/about" element={<AboutUs />} />
           <Route
-            path="/search-professionals"
+            path="/interior-designers"
             element={<SearchProfessionals professional={"interiorDesigners"} />}
           />
           <Route
@@ -89,7 +89,7 @@ const App: React.FC = () => {
             element={<SearchProfessionals professional={"financePlanners"} />}
           />
           <Route
-            path="/search-professionals/:professionalId"
+            path="/interior-designers/:professionalId"
             element={
               <ProfessionalInfo
                 renderProfileView={false}

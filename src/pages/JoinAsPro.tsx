@@ -35,11 +35,7 @@ interface FormData {
   social: SocialLinks;
 }
 
-interface JoinAsProProps {
-  handleClose: () => void;
-}
-
-const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
+const JoinAsPro = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -175,9 +171,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         );
       }
     } catch (error) {}
-    navigate("/");
+    navigate("/interior-designers");
     window.location.reload();
-    handleClose();
   };
 
   const nextStep = () => {

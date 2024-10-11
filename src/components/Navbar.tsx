@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
     }
   };
 
-  const options = ["Sign Up", "Join as interior designer"];
+  const options = ["Sign Up", "Join as professional"];
 
   const [openDrop, setOpenDrop] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -276,7 +276,7 @@ const Navbar: React.FC = () => {
                     style={{ backgroundColor: "#8c52ff", color: "white" }}
                     onClick={() => navigate("/join-as-pro")}
                   >
-                    Join as interior designer
+                    Join as a professional
                   </MaterialButton>
                 </div>
               </div>
@@ -380,7 +380,7 @@ const Navbar: React.FC = () => {
           >
             x
           </IconButton>
-          <JoinAsPro handleClose={handleClose} />
+          <JoinAsPro />
         </DialogContent>
       </Dialog>
     </div>

@@ -2,7 +2,7 @@
     {
         "name":"Interior Designers",
         "image":"/public/interior_designer.png",
-        "route":"/search-professionals"
+        "route":"/interior-designers"
         
 
     },

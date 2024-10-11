@@ -36,11 +36,8 @@ interface FormData {
   feesType: string[];
   social: SocialLinks;
 }
-interface FinancePlannerProps {
-  handleClose: () => void;
-}
 
-const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
+const FinancePlanner = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -54,18 +51,20 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
 
   const [formData, setFormData] = useState<FormData>({
     business_name: "",
-    address: "",
-    sub_category_1: [],
-    sub_category_2: [],
-    sub_category_3: [],
-    category: "INTERIOR_DESIGNER",
+    sebiRegistered: false,
     started_in: "",
     number_of_employees: "",
-    average_project_value: "",
-    projects_completed: "",
+    address: "",
     city: "",
     state: "",
     description: "",
+    aumHandled: 0,
+    minimumInvestment: 0,
+    numberOfClients: 0,
+    fees: 0,
+    deals: [],
+    InvestmentIdeology: [],
+    feesType: [],
     social: {
       instagram: "",
       facebook: "",
@@ -75,7 +74,7 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
 
   const navigate = useNavigate();
 
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  // const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | ArrayBuffer | null>(
     null
   );
@@ -139,16 +138,18 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
     const processedFormData = {
       ...formData,
       number_of_employees: parseInt(formData.number_of_employees, 10),
-      average_project_value: parseFloat(formData.average_project_value),
-      projects_completed: parseInt(formData.projects_completed, 10),
-      sub_category_1: formData.sub_category_1.join(","),
-      sub_category_2: formData.sub_category_2.join(","),
-      sub_category_3: formData.sub_category_3.join(","),
+      deals: formData.deals.join(","),
+      InvestmentIdeology: formData.InvestmentIdeology.join(","),
+      feesType: formData.feesType.join(","),
+      aumHandled: parseFloat(formData.aumHandled.toString()),
+      minimumInvestment: parseFloat(formData.minimumInvestment.toString()),
+      numberOfClients: parseInt(formData.numberOfClients.toString(), 10),
+      fees: parseInt(formData.fees.toString(), 10),
     };
 
     try {
       const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/onboard`,
+        `${constants.apiBaseUrl}/financial-advisor/create`,
         processedFormData,
         {
           headers: {
@@ -156,29 +157,9 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
           },
         }
       );
-
-      sessionStorage.removeItem("token");
-      sessionStorage.setItem("token", response.data.access_token);
-
-      if (logoFile) {
-        const formData = new FormData();
-        formData.append("logo", logoFile);
-
-        await axios.post(
-          `${constants.apiBaseUrl}/image-upload/logo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      }
+      console.log(response);
     } catch (error) {}
-    navigate("/");
-    window.location.reload();
-    handleClose();
+    navigate("/finance-planners");
   };
 
   const nextStep = () => {
@@ -191,20 +172,22 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
         setError("Please enter the start date of your business ");
         return;
       }
-      if (!formData.address) {
-        setError("Please enter your address ");
-        return;
-      }
+
       if (!formData.number_of_employees) {
         setError("Please enter the number of employees working with you ");
         return;
       }
-      if (!formData.average_project_value) {
+      if (!formData.aumHandled) {
         setError("Please enter average value of your projects ");
         return;
       }
-      if (!formData.projects_completed) {
-        setError("Please enter the number of cprojects completed so far ");
+
+      if (!formData.minimumInvestment) {
+        setError("Please enter the minimum investment required");
+        return;
+      }
+      if (!formData.numberOfClients) {
+        setError("Please enter the number of your clients");
         return;
       }
       if (!formData.description) {
@@ -214,21 +197,29 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
     }
 
     if (currentStep === 2) {
-      if (formData.sub_category_1.length === 0) {
+      if (formData.deals.length === 0) {
         setError("please select your theme");
         return;
       }
-      if (formData.sub_category_2.length === 0) {
+      if (formData.InvestmentIdeology.length === 0) {
         setError("please select your specialized spaces");
         return;
       }
-      if (formData.sub_category_3.length === 0) {
+      if (formData.feesType.length === 0) {
         setError("please select your type of execution");
+        return;
+      }
+      if (!formData.fees) {
+        setError("Please enter your fees");
         return;
       }
     }
 
     if (currentStep === 3) {
+      if (!formData.address) {
+        setError("Please enter your address ");
+        return;
+      }
       if (!formData.state) {
         setError("Please enter your state ");
         return;
@@ -244,7 +235,7 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
-    setLogoFile(file);
+    // setLogoFile(file);
 
     if (file) {
       const reader = new FileReader();
@@ -298,15 +289,15 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
 
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
-                  Address
+                  Aum handled
                   <input
-                    type="text"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="address"
+                    type="number"
+                    name="aumHandled"
                     className="w-[235px] px-2"
-                    value={formData.address}
+                    value={formData.aumHandled}
                     onChange={handleChange}
                     required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
                   />
                 </label>
                 <label className="flex flex-col text-[16px]">
@@ -324,25 +315,38 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
               </div>
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
-                  Sebi registered
+                  Minimum investment
                   <input
-                    type="checkbox"
-                    step="0.01"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="average_project_value"
+                    type="number"
+                    name="minimumInvestment"
                     className="w-[235px] px-2"
-                    value={formData.average_project_value}
+                    value={formData.minimumInvestment}
                     onChange={handleChange}
                     required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
                   />
                 </label>
                 <label className="flex flex-col text-[16px]">
-                  Fees
+                  Number of clients
                   <input
                     type="number"
-                    name="projects_completed"
+                    name="numberOfClients"
                     className="w-[235px] px-2"
-                    value={formData.projects_completed}
+                    value={formData.numberOfClients}
+                    onChange={handleChange}
+                    required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  />
+                </label>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-3">
+                <label className="flex flex-row text-[16px] items-center justify-center">
+                  Sebi registered
+                  <input
+                    type="checkbox"
+                    name="sebiRegistered"
+                    className="ml-4"
+                    checked={formData.sebiRegistered}
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -380,19 +384,15 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
                 htmlFor=""
                 className="flex flex-col lg:flex-row justify-start lg:justify-between md:mt-10"
               >
-                <p className="text-base ">
-                  Select your themes (maximum of three)
-                </p>
+                <p className="text-base ">Deals</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/deals`}
                   maxSelection={3}
-                  selectedValue={
-                    formData.sub_category_1 ? formData.sub_category_1 : []
-                  }
+                  selectedValue={formData.deals ? formData.deals : []}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
                       ...prevData,
-                      sub_category_1: selected,
+                      deals: selected,
                     }));
                   }}
                 />
@@ -402,17 +402,19 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
                 htmlFor=""
                 className="flex flex-col lg:flex-row   justify-start lg:justify-between"
               >
-                <p className="text-base">Select your spaces</p>
+                <p className="text-base">Investment ideology</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/investment-ideology`}
                   maxSelection={3}
                   selectedValue={
-                    formData.sub_category_2 ? formData.sub_category_2 : []
+                    formData.InvestmentIdeology
+                      ? formData.InvestmentIdeology
+                      : []
                   }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      sub_category_2: selected,
+                      InvestmentIdeology: selected,
                     }))
                   }
                 />
@@ -422,20 +424,32 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
                 htmlFor=""
                 className="flex flex-col lg:flex-row justify-start lg:justify-between"
               >
-                <p className="text-base">Type of execution</p>
+                <p className="text-base">Fees type</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/fees-type`}
                   maxSelection={1}
-                  selectedValue={
-                    formData.sub_category_3 ? formData.sub_category_3 : []
-                  }
+                  selectedValue={formData.feesType ? formData.feesType : []}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      sub_category_3: selected,
+                      feesType: selected,
                     }))
                   }
                 />
+              </label>
+              <label className="flex flex-col lg:flex-row justify-start lg:justify-between">
+                <p className="text-base">Fees</p>
+                <div className="w-[226px] flex justify-center">
+                  <input
+                    type="number"
+                    name="fees"
+                    className="w-[206.67px] px-2"
+                    value={formData.fees}
+                    onChange={handleChange}
+                    required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  />
+                </div>
               </label>
               <div className="flex gap-2 justify-end  mt-[1em]">
                 <Button
@@ -457,9 +471,21 @@ const FinancePlanner: React.FC<FinancePlannerProps> = ({ handleClose }) => {
 
           {currentStep === 3 && (
             <>
+              <label className="flex flex-col lg:flex-row justify-between md:mt-10 mt-[1em]">
+                Address
+                <input
+                  type="text"
+                  style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  name="address"
+                  className="w-[235px] px-2"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row justify-between md:mt-10 mt-[1em]"
+                className="flex flex-col lg:flex-row justify-between"
               >
                 <p className="text-base">Select your state</p>
                 <Autocomplete
