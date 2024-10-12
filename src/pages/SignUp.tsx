@@ -255,13 +255,13 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                     sx={{ marginBottom: "1em", width: "300px" }}
                   >
                     <InputLabel id="demo-simple-select-label" size="small">
-                      Join as
+                      Profession
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={joinAs}
-                      label="Join as"
+                      label="Profession"
                       onChange={handleChange}
                       size="small"
                     >
