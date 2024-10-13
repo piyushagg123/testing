@@ -436,16 +436,18 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       fontSize: "1rem",
                     }}
                   />
-                  <Tab
-                    label="Projects"
-                    value="2"
-                    sx={{
-                      fontWeight: "bold",
-                      textTransform: "none",
-                      fontSize: "1rem",
-                    }}
-                    onClick={handleBackClick}
-                  />
+                  {professional === "interiorDesigners" && (
+                    <Tab
+                      label="Projects"
+                      value="2"
+                      sx={{
+                        fontWeight: "bold",
+                        textTransform: "none",
+                        fontSize: "1rem",
+                      }}
+                      onClick={handleBackClick}
+                    />
+                  )}
                   <Tab
                     label="Reviews"
                     value="3"
