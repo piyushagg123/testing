@@ -20,7 +20,8 @@ import service from "../assets/service.png";
 import { ApiContext } from "../context/Api";
 
 interface VendorItem {
-  vendor_id: string;
+  vendor_id?: string;
+  financial_advisor_id?: string;
   description: string;
   rating: number;
   logo: string;
@@ -294,7 +295,11 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
                     {filteredItems.map((item) => (
                       <>
                         <NavLink
-                          to={`/interior-designers/${item.vendor_id}`}
+                          to={
+                            professional === "interiorDesigners"
+                              ? `/interior-designers/${item.vendor_id}`
+                              : `/finance-planners/${item.financial_advisor_id}`
+                          }
                           key={item.vendor_id}
                         >
                           <div className="mb-[2em] mt-1">

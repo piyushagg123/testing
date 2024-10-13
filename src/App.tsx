@@ -94,6 +94,17 @@ const App: React.FC = () => {
               <ProfessionalInfo
                 renderProfileView={false}
                 renderProfessionalInfoView={true}
+                professional="interiorDesigners"
+              />
+            }
+          />
+          <Route
+            path="/finance-planners/:professionalId"
+            element={
+              <ProfessionalInfo
+                renderProfileView={false}
+                renderProfessionalInfoView={true}
+                professional="financePlanners"
               />
             }
           />
@@ -107,6 +118,7 @@ const App: React.FC = () => {
               <ProfessionalInfo
                 renderProfileView={true}
                 renderProfessionalInfoView={false}
+                professional="interiorDesigners"
               />
             }
           />

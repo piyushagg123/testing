@@ -48,11 +48,11 @@ const Banner = () => {
         <p className="text-2xl md:text-4xl w-[70%] pl-4 md:pl-7 pt-5 md:pt-0 font-semibold block">
           Pick professionals effectively
         </p>
-        <div className=" md:border-[1px] md:border-[#80808073] lg:w-[450px] md:ml-7 p-4 mt-5 rounded-md">
+        <div className=" md:border-[1px] md:border-[#80808073] w-fit md:ml-7 p-4 mt-5 rounded-md">
           <p className="pb-4 text-lg hidden md:block">
             What are you looking for ?
           </p>
-          <div className=" flex justify-start md:justify-center flex-wrap gap-6 ">
+          <div className=" flex justify-start flex-wrap gap-6 ">
             {data.map((item, ind) => (
               <Link
                 to={item.route}

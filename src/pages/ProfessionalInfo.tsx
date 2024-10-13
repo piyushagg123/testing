@@ -29,6 +29,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddAProject from "../components/AddAProject";
 import ProjectImages from "../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 interface VendorData {
   logo?: string;
@@ -36,6 +37,14 @@ interface VendorData {
   sub_category_1: string;
   sub_category_2: string;
   sub_category_3: string;
+  deals?: string;
+  investment_ideology?: string;
+  fees_type?: string;
+  fees?: number;
+  number_of_clients?: number;
+  aum_handled?: number;
+  sebi_registered?: boolean;
+  minimum_investment?: number;
   description: string;
   business_name: string;
   average_project_value: string;
@@ -75,11 +84,21 @@ interface ReviewFormObject {
 interface ProfessionalInfoProps {
   renderProfileView: boolean;
   renderProfessionalInfoView: boolean;
+  professional: string;
 }
 
-const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
+const fetchVendorDetails = async (
+  id: string,
+  renderProfileView: boolean,
+  professional: string
+) => {
   let data;
-  if (renderProfileView) {
+  if (professional === "financePlanners") {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/financial-advisor/details?financial_advisor_id=${id}`
+    );
+    data = response.data;
+  } else if (renderProfileView) {
     const response = await axios.get(
       `${constants.apiBaseUrl}/vendor/auth/details`,
       {
@@ -122,6 +141,7 @@ const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
 const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
   renderProfessionalInfoView,
+  professional,
 }) => {
   const authContext = useContext(AuthContext);
 
@@ -135,7 +155,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!, renderProfileView)
+    () => fetchVendorDetails(professionalId!, renderProfileView, professional)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
@@ -235,7 +255,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      {window.scrollTo(0, 0)}
+      {console.log(vendorData)}
       <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
@@ -256,70 +276,121 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 )}
               </div>
               <div>
-                <p className="font-bold text-base text-darkgrey m-auto">
+                <p className="font-bold text-base text-darkgrey m-auto flex items-center gap-1">
                   {formatCategory(
                     vendorData?.business_name ?? "Unknown Business"
                   )}
+                  {professional === "financePlanners" &&
+                    vendorData?.sebi_registered && (
+                      <VerifiedIcon sx={{ fontSize: "15px" }} />
+                    )}
                 </p>
                 <p className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
                   <span className="font-bold text-sm text-darkgrey">
-                    SPECIALIZED THEMES :
+                    {professional === "interiorDesigners"
+                      ? "SPECIALIZED THEMES :"
+                      : "DEALS :"}
                   </span>{" "}
                   <div className="flex flex-wrap gap-1">
-                    {formatCategory(vendorData?.sub_category_1 ?? "N/A")
-                      .split(",")
-                      .map((item, ind) => (
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ))}
+                    {professional === "interiorDesigners"
+                      ? formatCategory(vendorData?.sub_category_1 ?? "N/A")
+                          .split(",")
+                          .map((item, ind) => (
+                            <Chip
+                              label={
+                                item.charAt(0).toUpperCase() + item.slice(1)
+                              }
+                              variant="outlined"
+                              key={ind}
+                              sx={{ height: "25px" }}
+                            />
+                          ))
+                      : formatCategory(vendorData?.deals ?? "N/A")
+                          .split(",")
+                          .map((item, ind) => (
+                            <Chip
+                              label={
+                                item.charAt(0).toUpperCase() + item.slice(1)
+                              }
+                              variant="outlined"
+                              key={ind}
+                              sx={{ height: "25px" }}
+                            />
+                          ))}
                   </div>
                 </p>
 
                 <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
-                    SPECIALIZED SPACES :
+                    {professional === "interiorDesigners"
+                      ? "SPECIALIZED SPACES :"
+                      : "INVESTMENT IDEOLOGY :"}
                   </span>
                   <div className="flex flex-wrap gap-1">
-                    {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-                      .split(",")
-                      .map((item, ind) => (
-                        <Chip
-                          label={item.charAt(0).toUpperCase() + item.slice(1)}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ))}
+                    {professional === "interiorDesigners"
+                      ? formatCategory(vendorData?.sub_category_2 ?? "N/A")
+                          .split(",")
+                          .map((item, ind) => (
+                            <Chip
+                              label={
+                                item.charAt(0).toUpperCase() + item.slice(1)
+                              }
+                              variant="outlined"
+                              key={ind}
+                              sx={{ height: "25px" }}
+                            />
+                          ))
+                      : formatCategory(vendorData?.investment_ideology ?? "N/A")
+                          .split(",")
+                          .map((item, ind) => (
+                            <Chip
+                              label={
+                                item.charAt(0).toUpperCase() + item.slice(1)
+                              }
+                              variant="outlined"
+                              key={ind}
+                              sx={{ height: "25px" }}
+                            />
+                          ))}
                   </div>
                 </p>
                 <p className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
                   <span className="font-bold text-sm text-darkgrey">
-                    EXECUTION TYPE :
-                  </span>{" "}
-                  {(vendorData?.sub_category_3 ?? "N/A")
-                    .split(",")
-                    .map((item, ind) => (
-                      <Chip
-                        label={
-                          item === "DESIGN"
-                            ? constants.DESIGN
-                            : item === "MATERIAL_SUPPORT"
-                            ? constants.MATERIAL_SUPPORT
-                            : constants.COMPLETE
-                        }
-                        variant="outlined"
-                        key={ind}
-                        sx={{
-                          height: "25px",
-                          maxWidth: "95vw",
-                          overflowWrap: "break-word",
-                        }}
-                      />
-                    ))}
+                    {professional === "interiorDesigners"
+                      ? "EXECUTION TYPE :"
+                      : "FEES TYPE :"}
+                  </span>
+                  {professional === "interiorDesigners"
+                    ? (vendorData?.sub_category_3 ?? "N/A")
+                        .split(",")
+                        .map((item, ind) => (
+                          <Chip
+                            label={
+                              item === "DESIGN"
+                                ? constants.DESIGN
+                                : item === "MATERIAL_SUPPORT"
+                                ? constants.MATERIAL_SUPPORT
+                                : constants.COMPLETE
+                            }
+                            variant="outlined"
+                            key={ind}
+                            sx={{
+                              height: "25px",
+                              maxWidth: "95vw",
+                              overflowWrap: "break-word",
+                            }}
+                          />
+                        ))
+                    : formatCategory(vendorData?.fees_type ?? "N/A")
+                        .split(",")
+                        .map((item, ind) => (
+                          <Chip
+                            label={item.charAt(0).toUpperCase() + item.slice(1)}
+                            variant="outlined"
+                            key={ind}
+                            sx={{ height: "25px" }}
+                          />
+                        ))}
                 </p>
               </div>
             </div>
@@ -583,12 +654,32 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </>
             ) : (
               <>
+                {professional === "financePlanners" && (
+                  <>
+                    <div>
+                      <p className="font-bold text-base text-darkgrey">
+                        AUM handled
+                      </p>
+                      <p className="text-[16px]">
+                        {vendorData?.aum_handled ?? "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-base text-darkgrey">Fees</p>
+                      <p className="text-[16px]">{vendorData?.fees ?? "N/A"}</p>
+                    </div>
+                  </>
+                )}
                 <div>
                   <p className="font-bold text-base text-darkgrey">
-                    Typical Job Cost
+                    {professional === "interiorDesigners"
+                      ? "Typical Job Cost"
+                      : "Minimum Investment"}
                   </p>
                   <p className="text-[16px]">
-                    {vendorData?.average_project_value ?? "N/A"}
+                    {professional === "interiorDesigners"
+                      ? vendorData?.average_project_value ?? "N/A"
+                      : vendorData?.minimum_investment ?? "N/A"}
                   </p>
                 </div>
                 <div className=" ">
@@ -601,10 +692,14 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
                 <div className=" ">
                   <p className="font-bold text-base text-darkgrey">
-                    Projects Completed
+                    {professional === "interiorDesigners"
+                      ? "Projects Completed"
+                      : "Number of clients"}
                   </p>
                   <p className="text-[16px]">
-                    {vendorData?.projects_completed ?? "N/A"}
+                    {professional === "interiorDesigners"
+                      ? vendorData?.projects_completed ?? "N/A"
+                      : vendorData?.number_of_clients ?? "N/A"}
                   </p>
                 </div>
 
@@ -615,7 +710,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                 {(vendorData?.social?.facebook ||
                   vendorData?.social?.instagram ||
                   vendorData?.social?.website) && (
-                  <div>
+                  <div className="mb-3">
                     <p className="font-bold text-base text-darkgrey">Socials</p>
                     {vendorData.social.facebook && (
                       <a

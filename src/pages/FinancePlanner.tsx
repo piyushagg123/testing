@@ -20,20 +20,20 @@ interface SocialLinks {
 
 interface FormData {
   business_name: string;
-  sebiRegistered: boolean;
+  sebi_registered: boolean;
   started_in: string;
   number_of_employees: string;
   address: string;
   city: string;
   state: string;
   description: string;
-  aumHandled: number;
-  minimumInvestment: number;
-  numberOfClients: number;
+  aum_handled: number;
+  minimum_investment: number;
+  number_of_clients: number;
   fees: number;
   deals: string[];
-  InvestmentIdeology: string[];
-  feesType: string[];
+  investment_ideology: string[];
+  fees_type: string[];
   social: SocialLinks;
 }
 
@@ -51,20 +51,20 @@ const FinancePlanner = () => {
 
   const [formData, setFormData] = useState<FormData>({
     business_name: "",
-    sebiRegistered: false,
+    sebi_registered: false,
     started_in: "",
     number_of_employees: "",
     address: "",
     city: "",
     state: "",
     description: "",
-    aumHandled: 0,
-    minimumInvestment: 0,
-    numberOfClients: 0,
+    aum_handled: 0,
+    minimum_investment: 0,
+    number_of_clients: 0,
     fees: 0,
     deals: [],
-    InvestmentIdeology: [],
-    feesType: [],
+    investment_ideology: [],
+    fees_type: [],
     social: {
       instagram: "",
       facebook: "",
@@ -139,13 +139,15 @@ const FinancePlanner = () => {
       ...formData,
       number_of_employees: parseInt(formData.number_of_employees, 10),
       deals: formData.deals.join(","),
-      InvestmentIdeology: formData.InvestmentIdeology.join(","),
-      feesType: formData.feesType.join(","),
-      aumHandled: parseFloat(formData.aumHandled.toString()),
-      minimumInvestment: parseFloat(formData.minimumInvestment.toString()),
-      numberOfClients: parseInt(formData.numberOfClients.toString(), 10),
+      investment_ideology: formData.investment_ideology.join(","),
+      fees_type: formData.fees_type.join(","),
+      aum_handled: parseFloat(formData.aum_handled.toString()),
+      minimum_investment: parseFloat(formData.minimum_investment.toString()),
+      number_of_clients: parseInt(formData.number_of_clients.toString(), 10),
       fees: parseInt(formData.fees.toString(), 10),
     };
+
+    console.log(processedFormData);
 
     try {
       const response = await axios.post(
@@ -177,16 +179,16 @@ const FinancePlanner = () => {
         setError("Please enter the number of employees working with you ");
         return;
       }
-      if (!formData.aumHandled) {
+      if (!formData.aum_handled) {
         setError("Please enter average value of your projects ");
         return;
       }
 
-      if (!formData.minimumInvestment) {
+      if (!formData.minimum_investment) {
         setError("Please enter the minimum investment required");
         return;
       }
-      if (!formData.numberOfClients) {
+      if (!formData.number_of_clients) {
         setError("Please enter the number of your clients");
         return;
       }
@@ -201,11 +203,11 @@ const FinancePlanner = () => {
         setError("please select your theme");
         return;
       }
-      if (formData.InvestmentIdeology.length === 0) {
+      if (formData.investment_ideology.length === 0) {
         setError("please select your specialized spaces");
         return;
       }
-      if (formData.feesType.length === 0) {
+      if (formData.fees_type.length === 0) {
         setError("please select your type of execution");
         return;
       }
@@ -292,9 +294,9 @@ const FinancePlanner = () => {
                   Aum handled
                   <input
                     type="number"
-                    name="aumHandled"
+                    name="aum_handled"
                     className="w-[235px] px-2"
-                    value={formData.aumHandled}
+                    value={formData.aum_handled}
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -318,9 +320,9 @@ const FinancePlanner = () => {
                   Minimum investment
                   <input
                     type="number"
-                    name="minimumInvestment"
+                    name="minimum_investment"
                     className="w-[235px] px-2"
-                    value={formData.minimumInvestment}
+                    value={formData.minimum_investment}
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -330,9 +332,9 @@ const FinancePlanner = () => {
                   Number of clients
                   <input
                     type="number"
-                    name="numberOfClients"
+                    name="number_of_clients"
                     className="w-[235px] px-2"
-                    value={formData.numberOfClients}
+                    value={formData.number_of_clients}
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -344,9 +346,9 @@ const FinancePlanner = () => {
                   Sebi registered
                   <input
                     type="checkbox"
-                    name="sebiRegistered"
+                    name="sebi_registered"
                     className="ml-4"
-                    checked={formData.sebiRegistered}
+                    checked={formData.sebi_registered}
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -407,14 +409,14 @@ const FinancePlanner = () => {
                   apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/investment-ideology`}
                   maxSelection={3}
                   selectedValue={
-                    formData.InvestmentIdeology
-                      ? formData.InvestmentIdeology
+                    formData.investment_ideology
+                      ? formData.investment_ideology
                       : []
                   }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      InvestmentIdeology: selected,
+                      investment_ideology: selected,
                     }))
                   }
                 />
@@ -428,11 +430,11 @@ const FinancePlanner = () => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/fees-type`}
                   maxSelection={1}
-                  selectedValue={formData.feesType ? formData.feesType : []}
+                  selectedValue={formData.fees_type ? formData.fees_type : []}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      feesType: selected,
+                      fees_type: selected,
                     }))
                   }
                 />
