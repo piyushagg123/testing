@@ -608,27 +608,25 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                     </div>
                   </TabPanel>
                   <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                    {renderProfileView ||
-                      (Number(professionalId) == userDetails.vendor_id && (
-                        <div
-                          className={`${
-                            selectedProject
-                              ? "hidden"
-                              : "flex w-full justify-end"
-                          }`}
+                    {(renderProfileView ||
+                      Number(professionalId) == userDetails.vendor_id) && (
+                      <div
+                        className={`${
+                          selectedProject ? "hidden" : "flex w-full justify-end"
+                        }`}
+                      >
+                        <Button
+                          variant="outlined"
+                          style={{
+                            backgroundColor: "#8c52ff",
+                            color: "white",
+                          }}
+                          onClick={() => setOpen(true)}
                         >
-                          <Button
-                            variant="outlined"
-                            style={{
-                              backgroundColor: "#8c52ff",
-                              color: "white",
-                            }}
-                            onClick={() => setOpen(true)}
-                          >
-                            <AddCircleIcon /> Add a new project
-                          </Button>
-                        </div>
-                      ))}
+                          <AddCircleIcon /> Add a new project
+                        </Button>
+                      </div>
+                    )}
                     <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap lg:w-[750px] flex justify-center  gap-1 items-center  md:m-0 ">
                       <div className="flex flex-wrap pt-[1em] mb-[3em]">
                         {!projectsData ? (
