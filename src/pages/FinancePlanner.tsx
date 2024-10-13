@@ -33,6 +33,7 @@ interface FormData {
   fees: number;
   deals: string[];
   investment_ideology: string[];
+
   fees_type: string[];
   social: SocialLinks;
 }
