@@ -759,7 +759,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                                   />
                                 </div>
                                 <p className="mb-[1em]">
-                                  No projects added yet by the designersssss
+                                  No projects added yet by the designer
                                 </p>
                               </>
                             )}

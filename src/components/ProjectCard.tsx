@@ -76,6 +76,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   const themes = useTheme();
   const matches = useMediaQuery(themes.breakpoints.up("md"));
 
+  //
+  const maxChipCount = 0;
+
   return (
     <>
       {showProjectDetails ? (
