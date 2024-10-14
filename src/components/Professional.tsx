@@ -30,7 +30,7 @@ const Professional: React.FC<ProfessionalProps> = ({
       <div className="flex flex-col justify-center xl:flex-row items-start w-[90vw] md:w-auto">
         <div className=" ">
           <div className="flex flex-col gap-1 items-start">
-            <span className="font-bold text-base text-darkgrey">{profCat}</span>
+            <span className="font-bold text-base text-text">{profCat}</span>
             <Rating
               size="small"
               value={rating}

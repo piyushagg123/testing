@@ -114,9 +114,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                           paddingX: 0,
                         }}
                       >
-                        {matches
-                          ? truncateText(title, 15)
-                          : truncateText(title, 15)}
+                        {truncateText(title, 15)}
                       </Button>
                     </Tooltip>
                   </p>
@@ -131,54 +129,52 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 <p className={`flex gap-1 pb-1 lg:justify-start`}>
                   {matches ? (
                     <>
-                      {themeArray.map((item, ind) =>
-                        ind < 2 ? (
-                          <Chip
-                            label={item}
-                            variant="outlined"
-                            key={ind}
-                            sx={{ height: "25px" }}
-                          />
-                        ) : (
-                          ""
-                        )
+                      {themeArray.map(
+                        (item, ind) =>
+                          ind < 2 && (
+                            <Chip
+                              label={item}
+                              variant="outlined"
+                              key={ind}
+                              sx={{ height: "25px" }}
+                            />
+                          )
                       )}
                     </>
                   ) : (
                     <>
-                      {themeArray.map((item, ind) =>
-                        ind < 1 ? (
-                          <div className="flex flex-col w-[120px]">
-                            <div>
-                              <div className="flex gap-1">
-                                <p className="text-[10px] text-darkgrey">
-                                  {" "}
-                                  {item}
-                                </p>
-                                {themeArray.length > 1 && (
-                                  <span className="text-[10px] text-darkgrey">
-                                    +{themeArray.length - 1}
-                                  </span>
-                                )}
+                      {themeArray.map(
+                        (item, ind) =>
+                          ind < 1 && (
+                            <div className="flex flex-col w-[120px]">
+                              <div>
+                                <div className="flex gap-1">
+                                  <p className="text-[10px] text-text">
+                                    {" "}
+                                    {item}
+                                  </p>
+                                  {themeArray.length > 1 && (
+                                    <span className="text-[10px] text-text">
+                                      +{themeArray.length - 1}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="flex justify-center items-center mt-1">
+                                <Button
+                                  sx={{
+                                    padding: 0,
+                                    width: "100%",
+                                    border: "solid red 0.3px",
+                                    color: "red",
+                                    textTransform: "none",
+                                  }}
+                                >
+                                  View details
+                                </Button>
                               </div>
                             </div>
-                            <div className="flex justify-center items-center mt-1">
-                              <Button
-                                sx={{
-                                  padding: 0,
-                                  width: "100%",
-                                  border: "solid red 0.3px",
-                                  color: "red",
-                                  textTransform: "none",
-                                }}
-                              >
-                                View details
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          ""
-                        )
+                          )
                       )}
                     </>
                   )}
@@ -348,7 +344,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
           </>
         ) : (
           <>
-            <ImageListItem sx={{}}>
+            <ImageListItem>
               <img
                 src={NoProjectImage}
                 loading="lazy"

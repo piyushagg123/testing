@@ -443,7 +443,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
-          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
+          <span className="font-bold text-[11px] md:text-sm text-text">
             SPECIALIZED THEMES :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
@@ -461,7 +461,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         </div>
 
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
+          <span className="font-bold text-[11px] md:text-sm text-text">
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
@@ -478,7 +478,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           </div>
         </div>
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-          <span className="font-bold text-[11px] md:text-sm text-darkgrey">
+          <span className="font-bold text-[11px] md:text-sm text-text">
             EXECUTION TYPE :
           </span>{" "}
           {(vendorData?.sub_category_3 ?? "N/A")
