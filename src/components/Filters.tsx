@@ -20,13 +20,13 @@ const fetchFilterCategory1 = async (professional: string) => {
       `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
     );
     return response.data.data.value;
-  }
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/deals`
-  );
-  console.log(response);
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/financial-advisor/deals`
+    );
 
-  return response.data.data;
+    return response.data.data;
+  }
 };
 
 const fetchFilterCategory2 = async (professional: string) => {
@@ -35,13 +35,13 @@ const fetchFilterCategory2 = async (professional: string) => {
       `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
     );
     return response.data.data.value;
-  }
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/investment-ideology`
-  );
-  console.log(response);
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/financial-advisor/investment-ideology`
+    );
 
-  return response.data.data;
+    return response.data.data;
+  }
 };
 
 const fetchFilterCategory3 = async (professional: string) => {
@@ -50,13 +50,13 @@ const fetchFilterCategory3 = async (professional: string) => {
       `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
     );
     return response.data.data.value;
-  }
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/fees-type`
-  );
-  console.log(response);
+  } else {
+    const response = await axios.get(
+      `${constants.apiBaseUrl}/financial-advisor/fees-type`
+    );
 
-  return response.data.data;
+    return response.data.data;
+  }
 };
 
 interface FiltersProps {

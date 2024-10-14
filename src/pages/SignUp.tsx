@@ -4,7 +4,7 @@ import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
-import JoinAsPro from "./JoinAsPro";
+import InteriorDesignerOnboarding from "./InteriorDesignerOnboarding";
 import {
   Alert,
   Button,
@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
-import FinancePlanner from "./FinancePlanner";
+import FinancePlannerOnboarding from "./FinancePlannerOnboarding";
 
 interface FormObject {
   [key: string]: string;
@@ -186,9 +186,9 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
           {openJoinasPro ? (
             <div className="py-8">
               {joinAs === "InteriorDesigner" ? (
-                <JoinAsPro />
+                <InteriorDesignerOnboarding />
               ) : (
-                <FinancePlanner />
+                <FinancePlannerOnboarding />
               )}
             </div>
           ) : (

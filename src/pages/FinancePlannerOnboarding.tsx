@@ -38,7 +38,7 @@ interface FormData {
   social: SocialLinks;
 }
 
-const FinancePlanner = () => {
+const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -148,8 +148,6 @@ const FinancePlanner = () => {
       fees: parseInt(formData.fees.toString(), 10),
     };
 
-    console.log(processedFormData);
-
     try {
       const response = await axios.post(
         `${constants.apiBaseUrl}/financial-advisor/create`,
@@ -160,7 +158,6 @@ const FinancePlanner = () => {
           },
         }
       );
-      console.log(response);
     } catch (error) {}
     navigate("/finance-planners");
   };
@@ -695,4 +692,4 @@ const FinancePlanner = () => {
   );
 };
 
-export default FinancePlanner;
+export default FinancePlannerOnboarding;

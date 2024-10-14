@@ -35,7 +35,7 @@ interface FormData {
   social: SocialLinks;
 }
 
-const JoinAsPro = () => {
+const InteriorDesignerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -661,4 +661,4 @@ const JoinAsPro = () => {
   );
 };
 
-export default JoinAsPro;
+export default InteriorDesignerOnboarding;

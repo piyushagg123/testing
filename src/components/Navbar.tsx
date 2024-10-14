@@ -17,7 +17,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import JoinAsPro from "../pages/JoinAsPro";
+import InteriorDesignerOnboarding from "../pages/InteriorDesignerOnboarding";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -380,7 +380,7 @@ const Navbar: React.FC = () => {
           >
             x
           </IconButton>
-          <JoinAsPro />
+          <InteriorDesignerOnboarding />
         </DialogContent>
       </Dialog>
     </div>
