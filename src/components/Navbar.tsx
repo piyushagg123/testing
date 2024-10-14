@@ -164,7 +164,7 @@ const Navbar: React.FC = () => {
     }
   };
   return (
-    <div className="navBar flex justify-between py-[6px] px-3 fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg lg:px-[64px]">
+    <div className="navBar flex justify-between py-[6px] px-3 fixed bg-prim w-screen top-0 items-center z-[1000] text-black text-lg lg:px-[64px]">
       <div className="flex items-center gap-2 md:gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
@@ -204,7 +204,7 @@ const Navbar: React.FC = () => {
                 <div
                   className={
                     toggleProfileMenu && isDivVisible
-                      ? "fixed bg-[#f3f1f1] w-screen h-screen sm:h-auto sm:w-[400px] text-text right-1 flex flex-col items-center sm:justify-center top-[52px] sm:rounded-[10px] "
+                      ? "fixed bg-[#f3f1f1] w-screen h-screen sm:h-auto sm:w-[400px] text-black right-1 flex flex-col items-center sm:justify-center top-[52px] sm:rounded-[10px] "
                       : "hidden"
                   }
                   style={{
@@ -233,7 +233,7 @@ const Navbar: React.FC = () => {
                         <div className="">
                           <NavLink
                             to={"/profile"}
-                            className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
+                            className="text-black p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                             onClick={() => setToggleProfileMenu(false)}
                           >
                             <AccountCircleIcon /> <p>View Profile</p>

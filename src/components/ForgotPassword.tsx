@@ -266,7 +266,9 @@ const ForgotPassword = () => {
   const [loading, setLoading] = React.useState(false);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("lg"));
+
+  // device-width > 1200px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("lg"));
 
   const handleNext = async () => {
     setError("");
@@ -337,7 +339,7 @@ const ForgotPassword = () => {
   }, [activeStep, handleNext]);
 
   return (
-    <div className="text-text lg:w-[70%] m-auto">
+    <div className="text-black lg:w-[70%] m-auto">
       {!success && (
         <div className="flex justify-center">
           <p className="text-2xl md:text-3xl text-center font-bold text-purple">
@@ -346,7 +348,7 @@ const ForgotPassword = () => {
         </div>
       )}
 
-      <DialogContent className="bg-prim text-text" style={{ padding: "15px" }}>
+      <DialogContent className="bg-prim text-black" style={{ padding: "15px" }}>
         <Box sx={{ width: "100%" }}>
           <div className="w-full flex justify-center mb-[1em]">
             {error && <Alert severity="error">{error}</Alert>}
@@ -407,7 +409,9 @@ const ForgotPassword = () => {
                               }}
                             >
                               <OTP
-                                separator={matches ? <span> - </span> : ""}
+                                separator={
+                                  isLargeDevice ? <span> - </span> : ""
+                                }
                                 value={otp}
                                 onChange={setOtp}
                                 length={6}

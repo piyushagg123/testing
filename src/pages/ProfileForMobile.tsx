@@ -56,7 +56,7 @@ const ProfileForMobile = () => {
               <div className="">
                 <NavLink
                   to={"/profile"}
-                  className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
+                  className="text-black p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                 >
                   <AccountCircleIcon /> <p>View Profile</p>
                 </NavLink>

@@ -443,7 +443,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           {formatCategory(vendorData?.business_name ?? "Unknown Business")}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
-          <span className="font-bold text-[11px] md:text-sm text-text">
+          <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
@@ -461,7 +461,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         </div>
 
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-          <span className="font-bold text-[11px] md:text-sm text-text">
+          <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
@@ -478,7 +478,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           </div>
         </div>
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
-          <span className="font-bold text-[11px] md:text-sm text-text">
+          <span className="font-bold text-[11px] md:text-sm text-black">
             EXECUTION TYPE :
           </span>{" "}
           {(vendorData?.sub_category_3 ?? "N/A")
@@ -511,7 +511,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-[50px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
+      <div className="mt-[50px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
             {professionalHeader}

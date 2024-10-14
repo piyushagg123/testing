@@ -74,10 +74,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   };
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
   const themes = useTheme();
-  const matches = useMediaQuery(themes.breakpoints.up("md"));
 
-  //
-  const maxChipCount = 0;
+  //device-width >900px
+  const isLargeDevice = useMediaQuery(themes.breakpoints.up("md"));
+
+  const maxChipCount = isLargeDevice ? 2 : 1;
 
   return (
     <>
@@ -102,7 +103,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 variant="h5"
                 component="div"
                 className={
-                  matches ? "flex items-center justify-between mt-[1em]" : ""
+                  isLargeDevice
+                    ? "flex items-center justify-between mt-[1em]"
+                    : ""
                 }
               >
                 {title && (
@@ -130,58 +133,45 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               </Typography>
               <Typography variant="body2">
                 <p className={`flex gap-1 pb-1 lg:justify-start`}>
-                  {matches ? (
-                    <>
-                      {themeArray.map(
-                        (item, ind) =>
-                          ind < 2 && (
-                            <Chip
-                              label={item}
-                              variant="outlined"
-                              key={ind}
-                              sx={{ height: "25px" }}
-                            />
-                          )
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {themeArray.map(
-                        (item, ind) =>
-                          ind < 1 && (
-                            <div className="flex flex-col w-[120px]">
-                              <div>
-                                <div className="flex gap-1">
-                                  <p className="text-[10px] text-text">
-                                    {" "}
-                                    {item}
-                                  </p>
-                                  {themeArray.length > 1 && (
-                                    <span className="text-[10px] text-text">
-                                      +{themeArray.length - 1}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="flex justify-center items-center mt-1">
-                                <Button
-                                  sx={{
-                                    padding: 0,
-                                    width: "100%",
-                                    border: "solid red 0.3px",
-                                    color: "red",
-                                    textTransform: "none",
-                                  }}
-                                >
-                                  View details
-                                </Button>
-                              </div>
+                  {themeArray.map(
+                    (item, ind) =>
+                      ind < maxChipCount &&
+                      (isLargeDevice ? (
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
+                      ) : (
+                        <div className="flex flex-col w-[120px]">
+                          <div>
+                            <div className="flex gap-1">
+                              <p className="text-[10px] text-black"> {item}</p>
+                              {themeArray.length > 1 && (
+                                <span className="text-[10px] text-black">
+                                  +{themeArray.length - 1}
+                                </span>
+                              )}
                             </div>
-                          )
-                      )}
-                    </>
+                          </div>
+                          <div className="flex justify-center items-center mt-1">
+                            <Button
+                              sx={{
+                                padding: 0,
+                                width: "100%",
+                                border: "solid red 0.3px",
+                                color: "red",
+                                textTransform: "none",
+                              }}
+                            >
+                              View details
+                            </Button>
+                          </div>
+                        </div>
+                      ))
                   )}
-                  {matches ? (
+                  {isLargeDevice ? (
                     <>
                       {themeArray.length > 2 && (
                         <span>+{themeArray.length - 2}</span>
@@ -294,7 +284,9 @@ interface ItemProp {
 }
 const WovenImageList: React.FC<ItemProp> = ({ items }) => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("md"));
+
+  //device-width > 900px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   let numberOfImages: number = 0;
   if (items.length <= 2) {
     numberOfImages = 1;
@@ -306,23 +298,23 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
     <>
       <ImageList
         sx={{
-          height: matches ? 250 : 180,
-          width: matches ? "100% " : "130px",
+          height: isLargeDevice ? 250 : 180,
+          width: isLargeDevice ? "100% " : "130px",
           scrollbarWidth: "none",
           scrollbarColor: "black",
-          padding: matches ? 0 : "10px",
-          border: matches ? "none" : "solid #e5e7eb 0.2px",
-          borderRadius: matches ? 0 : "10px",
+          padding: isLargeDevice ? 0 : "10px",
+          border: isLargeDevice ? "none" : "solid #e5e7eb 0.2px",
+          borderRadius: isLargeDevice ? 0 : "10px",
         }}
         variant="standard"
-        cols={matches ? numberOfImages : 1}
+        cols={isLargeDevice ? numberOfImages : 1}
         gap={1}
       >
         {items.length !== 0 ? (
           <>
             {items?.map((item, ind: number) => (
               <>
-                {matches ? (
+                {isLargeDevice ? (
                   <ImageListItem key={ind}>
                     <img
                       src={`${constants.apiImageUrl}/${item}`}
@@ -336,7 +328,9 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
                         <img
                           src={`${constants.apiImageUrl}/${item}`}
                           loading="lazy"
-                          style={{ height: matches ? "250px" : "128.67px" }}
+                          style={{
+                            height: isLargeDevice ? "250px" : "128.67px",
+                          }}
                         />
                       </ImageListItem>
                     )}
@@ -351,7 +345,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
               <img
                 src={NoProjectImage}
                 loading="lazy"
-                style={{ height: matches ? "250px" : "128.67px" }}
+                style={{ height: isLargeDevice ? "250px" : "128.67px" }}
               />
             </ImageListItem>
           </>

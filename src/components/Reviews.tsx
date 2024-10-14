@@ -136,8 +136,8 @@ const Reviews: React.FC<user> = ({ id }) => {
 
   const themes = useTheme();
 
-  //
-  const matches = useMediaQuery(themes.breakpoints.up("sm"));
+  //device-width > 600px
+  const isLargeDevice = useMediaQuery(themes.breakpoints.up("sm"));
 
   return (
     <>
@@ -186,7 +186,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                         variant="determinate"
                         value={averages.quality * 20}
                         sx={{
-                          width: matches ? "160px" : "30vw",
+                          width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.quality
@@ -204,7 +204,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                         variant="determinate"
                         value={averages.execution * 20}
                         sx={{
-                          width: matches ? "160px" : "30vw",
+                          width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.execution
@@ -222,7 +222,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                         variant="determinate"
                         value={averages.behaviour * 20}
                         sx={{
-                          width: matches ? "160px" : "30vw",
+                          width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.behaviour
