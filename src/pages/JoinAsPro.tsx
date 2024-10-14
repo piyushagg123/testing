@@ -11,6 +11,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 interface SocialLinks {
   instagram: string;
@@ -44,6 +45,8 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const stateContext = useContext(StateContext);
 
   if (stateContext === undefined) {
@@ -134,6 +137,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -178,6 +182,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
     navigate("/");
     window.location.reload();
     handleClose();
+    setLoading(false);
   };
 
   const nextStep = () => {
@@ -650,13 +655,19 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                   Back
                 </Button>
 
-                <Button
+                <LoadingButton
                   variant="outlined"
                   type="submit"
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{
+                    backgroundColor: "#8c52ff",
+                    color: "white",
+                    width: "85px",
+                    height: "36px",
+                  }}
+                  loading={loading}
                 >
-                  Submit
-                </Button>
+                  {loading ? "" : "Submit"}
+                </LoadingButton>
               </div>
             </>
           )}

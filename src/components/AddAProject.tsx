@@ -7,8 +7,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
-import { Alert, Button } from "@mui/material";
+import { Alert, Button, Snackbar } from "@mui/material";
 import spacesData from "./spaces.ts";
+import { LoadingButton } from "@mui/lab";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -38,6 +39,12 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   );
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const nextStep = () => {
     if (currentStep === 1) {
@@ -111,6 +118,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -157,7 +165,9 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setProjectId(response.data.data.project_id);
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
+      setSnackbarOpen(true);
     } catch (error) {}
+    setLoading(false);
   };
 
   if (isSubmitted) {
@@ -385,17 +395,27 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 Back
               </Button>
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="outlined"
                 style={{ backgroundColor: "#8c52ff", color: "white" }}
+                loading={loading}
               >
-                Next
-              </Button>
+                {loading ? "" : "Next"}
+              </LoadingButton>
             </div>
           </>
         )}
       </form>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message="New project created successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useState, useCallback, ChangeEvent } from "react";
 import axios from "axios";
 import constants from "../constants";
+import { Snackbar } from "@mui/material";
 
 interface ProjectImagesProps {
   subCategories: string[];
@@ -26,6 +27,15 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
       imageNames: [null, null, null],
     }))
   );
+  const [imageUploadSnackbarOpen, setImageUploadSnackbarOpen] = useState(false);
+  const handleImageUploadSnackbarClose = () => {
+    setImageUploadSnackbarOpen(false);
+  };
+
+  const [imageDeleteSnackbarOpen, setImageDeleteSnackbarOpen] = useState(false);
+  const handleImageDeleteSnackbarClose = () => {
+    setImageDeleteSnackbarOpen(false);
+  };
 
   const handleImageChange = useCallback(
     async (
@@ -65,6 +75,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
           }
         );
         const imageName = response.data.data;
+        setImageUploadSnackbarOpen(true);
 
         setSpaceTypes((prevSpaceTypes) => {
           const updatedSpaces = [...prevSpaceTypes];
@@ -92,6 +103,8 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
             },
           }
         );
+
+        setImageDeleteSnackbarOpen(true);
 
         setSpaceTypes((prevSpaceTypes) => {
           const updatedSpaces = [...prevSpaceTypes];
@@ -208,6 +221,24 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
           </div>
         ))}
       </div>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={imageUploadSnackbarOpen}
+        onClose={handleImageUploadSnackbarClose}
+        message="Image uploaded successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={imageDeleteSnackbarOpen}
+        onClose={handleImageDeleteSnackbarClose}
+        message="Image deleted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
     </div>
   );
 };
