@@ -124,7 +124,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             <LoadingButton
               type="submit"
               variant="contained"
-              style={{ background: "#8c52ff", height: "36px" }}
+              style={{ background: "#8c52ff", height: "36px", width: "85px" }}
               loading={loading}
             >
               {loading ? "" : <>Submit</>}
