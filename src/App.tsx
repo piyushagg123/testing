@@ -12,7 +12,7 @@ import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
-import Banner from "./components/Banner";
+import HomePage from "./components/HomePage";
 import AboutUs from "./pages/AboutUs";
 import ProfessionalInfo from "./pages/ProfessionalInfo";
 import ProfileForMobile from "./pages/ProfileForMobile";
@@ -78,7 +78,7 @@ const App: React.FC = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Banner />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route
             path="/interior-designers"

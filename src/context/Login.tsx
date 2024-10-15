@@ -15,8 +15,6 @@ interface AuthContextType {
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
   userDetails: UserDetails;
   setUserDetails: React.Dispatch<React.SetStateAction<UserDetails>>;
-  showBanner: boolean;
-  setShowBanner: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,7 +35,6 @@ const defaultUserDetails: UserDetails = {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [login, setLogin] = useState<boolean>(false);
-  const [showBanner, setShowBanner] = useState<boolean>(false);
   const [userDetails, setUserDetails] =
     useState<UserDetails>(defaultUserDetails);
 
@@ -48,8 +45,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLogin,
         userDetails,
         setUserDetails,
-        showBanner,
-        setShowBanner,
       }}
     >
       {children}

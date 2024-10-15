@@ -96,8 +96,7 @@ const Navbar: React.FC = () => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, userDetails, login, setUserDetails, setShowBanner } =
-    authContext;
+  const { setLogin, userDetails, login, setUserDetails } = authContext;
   const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -139,15 +138,11 @@ const Navbar: React.FC = () => {
     }
     setOpen(false);
   };
-
-  const handleBanner = () => {
-    setShowBanner(true);
-  };
   return (
     <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg lg:px-[64px]">
       <div className="flex items-center gap-2 md:gap-4">
         <div className="logo">
-          <Link to="/" className="text-[purple]" onClick={handleBanner}>
+          <Link to="/" className="text-[purple]">
             <img src={pickelelogo} alt="Pickele" className="h-10 w-auto" />
           </Link>
         </div>

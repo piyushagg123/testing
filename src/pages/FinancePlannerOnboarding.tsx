@@ -149,7 +149,7 @@ const FinancePlannerOnboarding = () => {
     };
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${constants.apiBaseUrl}/financial-advisor/create`,
         processedFormData,
         {

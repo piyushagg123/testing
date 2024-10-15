@@ -1,17 +1,16 @@
 import * as React from "react";
 import { AuthContext } from "../context/Login";
-import data from "../assets/data.json";
+import data from "../assets/professionals.json";
 import { Link } from "react-router-dom";
 import { ImageList, ImageListItem } from "@mui/material";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { StateContext } from "../context/State";
 
-const Banner = () => {
+const HomePage = () => {
   const authContext = React.useContext(AuthContext);
   const stateContext = React.useContext(StateContext);
   if (stateContext === undefined || authContext === undefined) {
-    throw new Error("StateContext must be used within a StateProvider");
+    return;
   }
 
   const itemData = [
@@ -44,11 +43,11 @@ const Banner = () => {
   }
   return (
     <div className="mt-16 min-h-screen flex md:pt-10">
-      <div className="md:w-[50vw] md:pt-4">
-        <p className="text-2xl md:text-4xl w-[70%] pl-4 md:pl-7 pt-5 md:pt-0 font-semibold block">
+      <div className="md:w-[50vw] md:pt-4 lg:pl-16">
+        <p className="text-2xl md:text-4xl w-[70%]  pt-5 md:pt-0 font-semibold block">
           Pick professionals effectively
         </p>
-        <div className=" md:border-[1px] md:border-[#80808073] w-fit md:ml-7 p-4 mt-5 rounded-md">
+        <div className=" md:border-[1px] md:border-[#80808073] w-fit  p-4 mt-5 rounded-md">
           <p className="pb-4 text-lg hidden md:block">
             What are you looking for ?
           </p>
@@ -68,19 +67,12 @@ const Banner = () => {
           </div>
         </div>
 
-        <div className=" justify-start mt-10 w-[70%] ml-10 gap-5 hidden md:flex">
-          <div className="flex items-center gap-3">
-            <StarOutlineIcon sx={{ fontSize: "30px" }} />
-            <div className="flex flex-col">
-              <p>4.8</p>
-              <p className="text-darkgrey">Service rating</p>
-            </div>
-          </div>
+        <div className=" justify-start mt-10 w-[70%]  gap-5 hidden md:flex">
           <div className="flex items-center gap-3">
             <GroupsIcon sx={{ fontSize: "30px" }} />
             <div className="flex flex-col">
-              <p>12M+</p>
-              <p className="text-darkgrey">Customers globally</p>
+              <p>100+</p>
+              <p className="text-darkgrey">Registered professionals</p>
             </div>
           </div>
         </div>
@@ -103,4 +95,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default HomePage;
