@@ -9,6 +9,7 @@ import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
 import spacesData from "./spaces.ts";
+import { LoadingButton } from "@mui/lab";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -38,6 +39,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   );
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const nextStep = () => {
     if (currentStep === 1) {
@@ -111,6 +113,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -158,6 +161,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
     } catch (error) {}
+    setLoading(false);
   };
 
   if (isSubmitted) {
@@ -385,13 +389,14 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 Back
               </Button>
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="outlined"
                 style={{ backgroundColor: "#8c52ff", color: "white" }}
+                loading={loading}
               >
-                Next
-              </Button>
+                {loading ? "" : "Next"}
+              </LoadingButton>
             </div>
           </>
         )}

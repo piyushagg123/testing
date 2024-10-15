@@ -5,9 +5,10 @@ import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import JoinAsPro from "./JoinAsPro";
-import { Alert, Button, TextField } from "@mui/material";
+import { Alert, TextField } from "@mui/material";
 import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
+import { LoadingButton } from "@mui/lab";
 
 interface FormObject {
   [key: string]: string;
@@ -26,10 +27,12 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -117,6 +120,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
     } catch (error: any) {
       setError(error.response?.data?.debug_info ?? "An error occurred");
     }
+    setLoading(false);
   };
   const handleClose = (
     _event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -229,13 +233,19 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                     sx={{ width: "300px", marginY: "1em" }}
                   />
                   <div className="flex justify-center my-[1em]">
-                    <Button
+                    <LoadingButton
                       type="submit"
                       variant="outlined"
-                      style={{ backgroundColor: "#8c52ff", color: "white" }}
+                      style={{
+                        backgroundColor: "#8c52ff",
+                        color: "white",
+                        width: "100px",
+                        height: "36px",
+                      }}
+                      loading={loading}
                     >
-                      Continue
-                    </Button>
+                      {loading ? "" : "Continue"}
+                    </LoadingButton>
                   </div>
                 </label>
               </form>

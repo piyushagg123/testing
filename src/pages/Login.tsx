@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ForgotPassword from "../components/ForgotPassword";
-import { Alert, Button, TextField } from "@mui/material";
+import { Alert, TextField } from "@mui/material";
 import { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
@@ -8,6 +8,7 @@ import CryptoJS from "crypto-js";
 import constants from "../constants";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import { jwtDecode } from "jwt-decode";
+import { LoadingButton } from "@mui/lab";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -18,6 +19,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [openForgotPassword, setOpenForgotPassword] = useState(true);
+
+  const [loading, setLoading] = useState(false);
 
   const isEmail = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,6 +35,7 @@ const Login = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -90,6 +94,7 @@ const Login = () => {
     } catch (error: any) {
       setError(error.response.data.message);
     }
+    setLoading(false);
   };
   return (
     <>
@@ -159,13 +164,19 @@ const Login = () => {
                 </label>
 
                 <div className="flex justify-center mt-[1em]">
-                  <Button
+                  <LoadingButton
                     type="submit"
                     variant="outlined"
-                    style={{ backgroundColor: "#8c52ff", color: "white" }}
+                    style={{
+                      backgroundColor: "#8c52ff",
+                      color: "white",
+                      width: "100px",
+                      height: "36px",
+                    }}
+                    loading={loading}
                   >
-                    Continue
-                  </Button>
+                    {loading ? "" : "Continue"}
+                  </LoadingButton>
                 </div>
               </form>
             </div>
