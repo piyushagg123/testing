@@ -131,7 +131,7 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     return (
       <>
         <div className="flex flex-col gap-1 pt-3">
-          <p className="font-bold text-base text-darkgrey">THEMES</p>
+          <p className="font-bold text-base text-black">THEMES</p>
           {formattedThemes.map((theme: string) => {
             return (
               <FormControlLabel
@@ -163,7 +163,7 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
           })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <p className="font-bold text-base text-darkgrey">SPACES</p>
+          <p className="font-bold text-base text-black">SPACES</p>
           {formattedSpaces.map((space: string) => {
             return (
               <FormControlLabel
@@ -195,7 +195,7 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
           })}
         </div>
         <div className="flex flex-col gap-7 pt-5">
-          <p className="font-bold text-base text-darkgrey">EXECUTION TYPE</p>
+          <p className="font-bold text-base text-black">EXECUTION TYPE</p>
           {executionType.map((executionType: FilterItem) => {
             const labelValue =
               executionType.value === "DESIGN"
@@ -243,11 +243,11 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     );
   };
   return (
-    <div className=" flex flex-col gap-3  text-text w-[225px]">
+    <div className=" flex flex-col gap-3  text-black w-[225px]">
       <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
         <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
           <p
-            className="font-bold text-base text-darkgrey"
+            className="font-bold text-base text-black"
             onClick={() => setFilterMenu(() => true)}
           >
             <FilterAltIcon />

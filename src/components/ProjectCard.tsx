@@ -14,6 +14,7 @@ import {
   useTheme,
   Tooltip,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
@@ -55,7 +56,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     setSelectedSpace(newValue);
   };
 
-  const themes = useTheme();
   const funct = (ar: any) => {
     if (ar) {
       return ar.map((item: any) => (
@@ -73,6 +73,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
   };
   const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
+  const themes = useTheme();
+
+  //device-width >900px
+  const isLargeDevice = useMediaQuery(themes.breakpoints.up("md"));
+
+  const maxChipCount = isLargeDevice ? 2 : 1;
 
   return (
     <>
@@ -81,13 +87,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           sx={{
             width: "355px",
             [themes.breakpoints.down("md")]: {
-              width: "350px",
-            },
-            [themes.breakpoints.down("sm")]: {
-              width: "90vw",
-            },
-            [themes.breakpoints.down("xs")]: {
-              width: "200px",
+              width: "130px",
+              border: "none",
+              boxShadow: "none",
             },
           }}
         >
@@ -100,44 +102,83 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 gutterBottom
                 variant="h5"
                 component="div"
-                className="flex items-center justify-between mt-[1em]"
+                className={
+                  isLargeDevice
+                    ? "flex items-center justify-between mt-[1em]"
+                    : ""
+                }
               >
                 {title && (
-                  <p className="font-bold text-base text-darkgrey">
+                  <p className="font-bold text-base text-black">
                     <Tooltip title={title} placement="top-start">
                       <Button
                         sx={{
                           fontWeight: "700",
-                          color: "grey",
+                          color: "black",
                           textTransform: "none",
+                          justifyContent: "flex-start",
+                          paddingX: 0,
                         }}
                       >
-                        {truncateText(title, 20)}
+                        {truncateText(title, 15)}
                       </Button>
                     </Tooltip>
                   </p>
                 )}
-                <p className="text-[10px] flex items-center text-sec">
-                  <PlaceIcon sx={{ fontSize: "15px" }} />
+
+                <p className="text-[10px] flex items-center  text-sec">
+                  <PlaceIcon sx={{ fontSize: "10px" }} />
                   {city}
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className="flex gap-2 items-center pb-1">
-                  {themeArray.map((item, ind) =>
-                    ind < 2 ? (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                      />
-                    ) : (
-                      ""
-                    )
+                <p className={`flex gap-1 pb-1 lg:justify-start`}>
+                  {themeArray.map(
+                    (item, ind) =>
+                      ind < maxChipCount &&
+                      (isLargeDevice ? (
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                        />
+                      ) : (
+                        <div className="flex flex-col w-[120px]">
+                          <div>
+                            <div className="flex gap-1">
+                              <p className="text-[10px] text-black"> {item}</p>
+                              {themeArray.length > 1 && (
+                                <span className="text-[10px] text-black">
+                                  +{themeArray.length - 1}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex justify-center items-center mt-1">
+                            <Button
+                              sx={{
+                                padding: 0,
+                                width: "100%",
+                                border: "solid red 0.3px",
+                                color: "red",
+                                textTransform: "none",
+                              }}
+                            >
+                              View details
+                            </Button>
+                          </div>
+                        </div>
+                      ))
                   )}
-                  {themeArray.length > 2 && (
-                    <span>+{themeArray.length - 2}</span>
+                  {isLargeDevice ? (
+                    <>
+                      {themeArray.length > 2 && (
+                        <span>+{themeArray.length - 2}</span>
+                      )}
+                    </>
+                  ) : (
+                    <></>
                   )}
                 </p>
               </Typography>
@@ -242,6 +283,10 @@ interface ItemProp {
   items: string[];
 }
 const WovenImageList: React.FC<ItemProp> = ({ items }) => {
+  const theme = useTheme();
+
+  //device-width > 900px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   let numberOfImages: number = 0;
   if (items.length <= 2) {
     numberOfImages = 1;
@@ -253,21 +298,45 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
     <>
       <ImageList
         sx={{
-          width: "100%",
-          height: 250,
+          height: isLargeDevice ? 250 : 180,
+          width: isLargeDevice ? "100% " : "130px",
           scrollbarWidth: "none",
           scrollbarColor: "black",
+          padding: isLargeDevice ? 0 : "10px",
+          border: isLargeDevice ? "none" : "solid #e5e7eb 0.2px",
+          borderRadius: isLargeDevice ? 0 : "10px",
         }}
         variant="standard"
-        cols={numberOfImages}
+        cols={isLargeDevice ? numberOfImages : 1}
         gap={1}
       >
         {items.length !== 0 ? (
           <>
             {items?.map((item, ind: number) => (
-              <ImageListItem key={ind}>
-                <img src={`${constants.apiImageUrl}/${item}`} loading="lazy" />
-              </ImageListItem>
+              <>
+                {isLargeDevice ? (
+                  <ImageListItem key={ind}>
+                    <img
+                      src={`${constants.apiImageUrl}/${item}`}
+                      loading="lazy"
+                    />
+                  </ImageListItem>
+                ) : (
+                  <>
+                    {ind < 1 && (
+                      <ImageListItem key={ind}>
+                        <img
+                          src={`${constants.apiImageUrl}/${item}`}
+                          loading="lazy"
+                          style={{
+                            height: isLargeDevice ? "250px" : "128.67px",
+                          }}
+                        />
+                      </ImageListItem>
+                    )}
+                  </>
+                )}
+              </>
             ))}
           </>
         ) : (
@@ -276,7 +345,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
               <img
                 src={NoProjectImage}
                 loading="lazy"
-                style={{ height: "250px" }}
+                style={{ height: isLargeDevice ? "250px" : "128.67px" }}
               />
             </ImageListItem>
           </>

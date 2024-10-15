@@ -62,6 +62,7 @@ const App: React.FC = () => {
     },
     onError: () => {
       setLogin(false);
+      sessionStorage.removeItem("token");
     },
   });
 
@@ -73,7 +74,7 @@ const App: React.FC = () => {
   });
 
   return (
-    <div className="bg-prim text-text">
+    <div className="bg-prim text-black">
       <Router>
         <Navbar />
         <Routes>

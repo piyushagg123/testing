@@ -1,5 +1,5 @@
 import StarIcon from "@mui/icons-material/Star";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
@@ -7,10 +7,11 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../constants";
 import reviewImage from "../assets/noReviewsAdded.png";
-import { Divider, Snackbar } from "@mui/material";
+import { Divider, Snackbar, useMediaQuery } from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 interface user {
   id: number;
@@ -133,14 +134,24 @@ const Reviews: React.FC<user> = ({ id }) => {
     return "rating-green";
   };
 
+  const themes = useTheme();
+
+  //device-width > 600px
+  const isLargeDevice = useMediaQuery(themes.breakpoints.up("sm"));
+
   return (
     <>
-      <div className="my-[2em]">
+      <div className=" w-[93vw] lg:w-full">
+        <p className="text-base font-bold">Rating & Reviews</p>
         {reviews?.length > 0 ? (
           <>
+            <div className="flex gap-1 items-center text-[green]">
+              <VerifiedIcon sx={{ fontSize: 20 }} />
+              <p>By verified users only</p>
+            </div>
             <div className={`flex flex-col w-full gap-3 mt-1`}>
-              <div className="flex items-center justify-start md:gap-10 flex-col md:flex-row">
-                <div className="flex flex-col items-center justify-center">
+              <div className="flex md:items-center justify-start gap-2 md:gap-10 flex-row">
+                <div className="flex flex-col md:items-center justify-center">
                   <p className="flex items-center gap-2">
                     <span className="text-[40px]">
                       {(
@@ -167,13 +178,15 @@ const Reviews: React.FC<user> = ({ id }) => {
                 <div className="flex flex-col ">
                   <p className="my-[1em]">What our customers said</p>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[293px]">
-                      <p className="flex items-center text-sm"> Work Quality</p>
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                      <p className="flex items-center md:text-sm">
+                        Work Quality
+                      </p>
                       <BorderLinearProgress
                         variant="determinate"
                         value={averages.quality * 20}
                         sx={{
-                          width: "200px",
+                          width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.quality
@@ -185,13 +198,13 @@ const Reviews: React.FC<user> = ({ id }) => {
                     <p className="text-[10px]">{averages.quality}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[293px]">
-                      <p className="flex items-center text-sm"> Execution</p>
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                      <p className="flex items-center md:text-sm"> Execution</p>
                       <BorderLinearProgress
                         variant="determinate"
                         value={averages.execution * 20}
                         sx={{
-                          width: "200px",
+                          width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.execution
@@ -203,13 +216,13 @@ const Reviews: React.FC<user> = ({ id }) => {
                     <p className="text-[10px]">{averages.execution}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[293px]">
-                      <p className="flex items-center text-sm">Behaviour</p>
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                      <p className="flex items-center md:text-sm">Behaviour</p>
                       <BorderLinearProgress
                         variant="determinate"
                         value={averages.behaviour * 20}
                         sx={{
-                          width: "200px",
+                          width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
                               averages.behaviour
@@ -223,7 +236,8 @@ const Reviews: React.FC<user> = ({ id }) => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-9 justify-start w-full mt-[1em]">
+              <p className="font-bold">Customer Reviews ({reviews?.length})</p>
+              <div className="flex flex-col gap-9 justify-start w-full">
                 {reviews?.map((review: Review) => (
                   <div className="flex items-start gap-2 justify-between">
                     <div className="flex items-start gap-2">
@@ -272,12 +286,12 @@ const Reviews: React.FC<user> = ({ id }) => {
           </>
         ) : (
           <>
-            <div className="flex flex-wrap">
+            <div className="flex items-center justify-center">
               <div className="flex flex-col items-center justify-center">
                 <div>
                   <img src={reviewImage} alt="" className="w-[300px]" />
                 </div>
-                <p className="my-[1em]">No reviews added yet by the users</p>
+                <p className="mb-[1em]">No reviews added yet by the users</p>
               </div>
             </div>
           </>

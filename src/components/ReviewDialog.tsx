@@ -29,7 +29,9 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   reviewError,
 }) => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("md"));
+
+  // device-width > 900px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Dialog
@@ -38,13 +40,16 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
       fullScreen={isFullScreen}
     >
       <form onSubmit={handleReviewSubmit}>
-        <DialogTitle sx={{ width: matches ? "524px" : "70vw" }}>
+        <DialogTitle sx={{ width: isLargeDevice ? "524px" : "70vw" }}>
           Write a review
         </DialogTitle>
 
         <DialogContent className="flex flex-col gap-4 justify-center items-center">
           {reviewError && (
-            <Alert severity="error" sx={{ width: matches ? "524px" : "70vw" }}>
+            <Alert
+              severity="error"
+              sx={{ width: isLargeDevice ? "524px" : "70vw" }}
+            >
               {reviewError}
             </Alert>
           )}
@@ -56,7 +61,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             name="title"
             fullWidth
             sx={{
-              width: matches ? "524px" : "70vw",
+              width: isLargeDevice ? "524px" : "70vw",
               marginTop: "10px",
               color: "black",
               borderRadius: "4px",
@@ -69,7 +74,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             multiline
             rows={4}
             sx={{
-              width: matches ? "524px" : "70vw",
+              width: isLargeDevice ? "524px" : "70vw",
               color: "black",
               borderRadius: "4px",
             }}
@@ -107,7 +112,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
 
           <DialogActions
             sx={{
-              width: matches ? "524px" : "70vw",
+              width: isLargeDevice ? "524px" : "70vw",
               display: "flex",
               justifyContent: "flex-end",
               gap: "10px",

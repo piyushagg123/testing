@@ -1,11 +1,11 @@
 const AboutUs = () => {
   return (
     <div className="min-h-screen mt-18 pt-20 text-lg px-20 bg-[#f7f8fa]">
-      <h1 className="font-bold text-lg text-darkgrey text-center mb-5">
+      <h1 className="font-bold text-lg text-black text-center mb-5">
         ABOUT US
       </h1>
       <div>
-        <div className="bg-white  text-darkgrey">
+        <div className="bg-white  text-black">
           <p className="text-center  text-black">
             At Pickele, we’re creating a unique platform that aims to connect
             interior designers with customers. Why join us?

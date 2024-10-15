@@ -171,7 +171,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
   return (
     <div className="md:pl-3 h-full flex flex-col items-center justify-center">
-      <h1 className="text-2xl md:text-3xl font-bold text-text">
+      <h1 className="text-2xl md:text-3xl font-bold text-black">
         Add a New Project
       </h1>
 

@@ -94,7 +94,7 @@ const SearchProfessionals: React.FC = () => {
 
   if (errorInApi) {
     return (
-      <div className="maintenance-container flex flex-col justify-center items-center min-h-screen">
+      <div className="maintenance-container flex flex-col justify-center items-center">
         <img
           src={service}
           alt=""
@@ -107,11 +107,10 @@ const SearchProfessionals: React.FC = () => {
   }
   return (
     <>
-      {window.scrollTo(0, 0)}
-      <div className="mt-16">
+      <div className="mt-16 ">
         <div className="flex flex-col">
           <div className="bg-[#f0f0f0] w-[100%] m-auto flex flex-col items-center p-10">
-            <h1 className="font-bold text-lg" style={{ color: "#576375" }}>
+            <h1 className="font-bold text-lg text-black">
               FIND THE MOST SUITABLE INTERIOR DESIGNER NEAR YOU
             </h1>
             <p className="text-black text-m pt-2 pb-6">
@@ -119,7 +118,7 @@ const SearchProfessionals: React.FC = () => {
               suitable for your needs
             </p>
             <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
-              <label htmlFor="" className="text-text text-sm">
+              <label htmlFor="" className="text-black text-sm">
                 Select your state
                 <Autocomplete
                   size="small"
@@ -148,7 +147,7 @@ const SearchProfessionals: React.FC = () => {
                   )}
                 />
               </label>
-              <label htmlFor="" className="text-text text-sm">
+              <label htmlFor="" className="text-black text-sm">
                 Select your city
                 <Autocomplete
                   size="small"
@@ -205,7 +204,7 @@ const SearchProfessionals: React.FC = () => {
             <div className="flex mt-2 md:mt-0 gap-1 md:gap-0 flex-col-reverse md:justify-between md:pl-[0.75rem] pb-3 md:flex-row items-start md:items-start">
               {filteredItems ? (
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <span className="font-bold text-base text-darkgrey pl-3 md:pl-0">
+                  <span className="font-bold text-base text-black pl-3 md:pl-0">
                     INTERIOR DESIGNERS
                   </span>
                   <span
@@ -217,7 +216,7 @@ const SearchProfessionals: React.FC = () => {
                   >
                     •
                   </span>
-                  <span className="text-sm text-text">
+                  <span className="text-sm text-black">
                     {filteredItems.length} found
                   </span>
                 </div>

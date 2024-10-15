@@ -628,7 +628,7 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
                 </label>
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
-                    <OpenInNewIcon className="text-darkgrey" /> Website
+                    <OpenInNewIcon className="text-black" /> Website
                   </p>
                   <input
                     type="url"
