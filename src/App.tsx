@@ -14,9 +14,10 @@ import constants from "./constants";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/AboutUs";
-import ProfessionalInfo from "./pages/ProfessionalInfo";
+import InteriorDesignerInfo from "./pages/professionalInfo/InteriorDesignerInfo";
 import ProfileForMobile from "./pages/ProfileForMobile";
 import { jwtDecode } from "jwt-decode";
+import FinancePlannerInfo from "./pages/professionalInfo/FinancePlannerInfo";
 
 const fetchUserData = async () => {
   const token = sessionStorage.getItem("token");
@@ -63,6 +64,7 @@ const App: React.FC = () => {
     },
     onError: () => {
       setLogin(false);
+      sessionStorage.removeItem("token");
     },
   });
 
@@ -74,7 +76,7 @@ const App: React.FC = () => {
   });
 
   return (
-    <div className="bg-prim text-text">
+    <div className="bg-prim text-black">
       <Router>
         <Navbar />
         <Routes>
@@ -91,20 +93,18 @@ const App: React.FC = () => {
           <Route
             path="/interior-designers/:professionalId"
             element={
-              <ProfessionalInfo
+              <InteriorDesignerInfo
                 renderProfileView={false}
                 renderProfessionalInfoView={true}
-                professional="interiorDesigners"
               />
             }
           />
           <Route
             path="/finance-planners/:professionalId"
             element={
-              <ProfessionalInfo
+              <FinancePlannerInfo
                 renderProfileView={false}
                 renderProfessionalInfoView={true}
-                professional="financePlanners"
               />
             }
           />
@@ -115,10 +115,9 @@ const App: React.FC = () => {
           <Route
             path="/profile"
             element={
-              <ProfessionalInfo
+              <InteriorDesignerInfo
                 renderProfileView={true}
                 renderProfessionalInfoView={false}
-                professional="interiorDesigners"
               />
             }
           />

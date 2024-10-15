@@ -13,9 +13,13 @@ const HomePage = () => {
     return;
   }
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const itemData = [
     {
-      img: "https://images.unsplash.com/photo-1549388604-817d15aa0110",
+      img: "https://www.whsuites.com/wp-content/uploads/2023/04/CRM-For-Financial-Advisors.jpg",
       title: "Bed",
     },
     {
@@ -28,13 +32,8 @@ const HomePage = () => {
       title: "Kitchen",
     },
     {
-      img: "https://images.unsplash.com/photo-1588436706487-9d55d73a39e3",
+      img: "https://canadianbusinesscollege.com/wp-content/uploads/2021/03/Mar-12-healthcare-careers-1201x800.jpg",
       title: "Blinds",
-    },
-
-    {
-      img: "https://images.unsplash.com/photo-1530731141654-5993c3016c77",
-      title: "Laptop",
     },
   ];
 
@@ -42,9 +41,9 @@ const HomePage = () => {
     return;
   }
   return (
-    <div className="mt-16 min-h-screen flex md:pt-10">
-      <div className="md:w-[50vw] md:pt-4 lg:pl-16">
-        <p className="text-2xl md:text-4xl w-[70%]  pt-5 md:pt-0 font-semibold block">
+    <div className="mt-16 min-h-screen flex md:pt-10 px-5 lg:px-16">
+      <div className="md:w-[50vw] md:pt-4 ">
+        <p className="text-2xl md:text-4xl text-center md:text-left md:w-[70%]  pt-5 md:pt-0 font-semibold block">
           Pick professionals effectively
         </p>
         <div className=" md:border-[1px] md:border-[#80808073] w-fit  p-4 mt-5 rounded-md">

@@ -18,7 +18,7 @@ const Professional: React.FC<ProfessionalProps> = ({
   profCat,
 }) => {
   return (
-    <div className="flex gap-8 mb-7 items-center sm:items-start flex-col sm:flex-row mt-3 sm:mt-0 text-text px-4">
+    <div className="flex gap-8 mb-7 items-center sm:items-start flex-col sm:flex-row mt-3 sm:mt-0 text-black px-4">
       <div>
         <img
           src={img ? `${constants.apiImageUrl}/${img}` : NoProjectImage}
@@ -30,7 +30,7 @@ const Professional: React.FC<ProfessionalProps> = ({
       <div className="flex flex-col justify-center xl:flex-row items-start w-[90vw] md:w-auto">
         <div className=" ">
           <div className="flex flex-col gap-1 items-start">
-            <span className="font-bold text-base text-darkgrey">{profCat}</span>
+            <span className="font-bold text-base text-black">{profCat}</span>
             <Rating
               size="small"
               value={rating}

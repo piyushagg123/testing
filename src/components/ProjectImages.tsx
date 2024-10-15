@@ -107,7 +107,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
 
   return (
     <div className="pl-3 h-full pb-6 flex flex-col items-center justify-center">
-      <h1 className="text-xl md:text-3xl font-bold text-text">
+      <h1 className="text-xl md:text-3xl font-bold text-black">
         Upload Project Images
       </h1>
       <div>
@@ -138,6 +138,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
                           objectFit: "cover",
                           borderRadius: "5px",
                           border: "solid 0.3px",
+                          margin: 10,
                         }}
                       />
                       <button

@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
@@ -7,7 +7,6 @@ import CryptoJS from "crypto-js";
 import InteriorDesignerOnboarding from "./onboarding/InteriorDesignerOnboarding";
 import {
   Alert,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -18,6 +17,7 @@ import {
 import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerOnboarding from "./onboarding/FinancePlannerOnboarding";
+import { LoadingButton } from "@mui/lab";
 
 interface FormObject {
   [key: string]: string;
@@ -36,7 +36,12 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [joinAs, setJoinAs] = useState("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
     setJoinAs(event.target.value as string);
@@ -45,6 +50,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -59,50 +65,59 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
 
     if (!formObject.first_name) {
       setError("Please enter your first name.");
+      setLoading(false);
       return;
     }
 
     if (!formObject.last_name) {
       setError("Please enter your last name.");
+      setLoading(false);
       return;
     }
 
     if (!formObject.email) {
       setError("Please enter your email.");
+      setLoading(false);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formObject.email)) {
       setError("Please enter a valid email.");
+      setLoading(false);
       return;
     }
 
     if (!formObject.mobile) {
       setError("Please enter your mobile number.");
+      setLoading(false);
       return;
     }
 
     const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(formObject.mobile)) {
       setError("Please enter a valid mobile number.");
+      setLoading(false);
       return;
     }
 
     if (joinAsPro) {
       if (!joinAs) {
         setError("Please select the professional type");
+        setLoading(false);
         return;
       }
     }
 
     if (!formObject.password) {
       setError("Please enter your password.");
+      setLoading(false);
       return;
     }
 
     if (formObject.password !== confirmPassword) {
       setError("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
@@ -138,7 +153,10 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
       }
     } catch (error: any) {
       setError(error.response?.data?.debug_info ?? "An error occurred");
+      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   const handleProfession = (event: FormEvent<HTMLFormElement>) => {
@@ -296,13 +314,19 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                     />
                   )}
                   <div className="flex justify-center my-[1em]">
-                    <Button
+                    <LoadingButton
                       type="submit"
                       variant="outlined"
-                      style={{ backgroundColor: "#8c52ff", color: "white" }}
+                      style={{
+                        backgroundColor: "#8c52ff",
+                        color: "white",
+                        width: "100px",
+                        height: "36px",
+                      }}
+                      loading={loading}
                     >
-                      Continue
-                    </Button>
+                      {loading ? "" : "Continue"}
+                    </LoadingButton>
                   </div>
                 </label>
               </form>

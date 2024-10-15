@@ -38,10 +38,11 @@ const fetchOptions = async (apiEndpoint: string) => {
 };
 
 interface MultipleSelectProps {
-  apiEndpoint: string;
+  apiEndpoint?: string;
   maxSelection: number;
   selectedValue?: string[];
   onChange: (selectedValues: string[]) => void;
+  dataArray?: any;
 }
 
 export default function MultipleSelect({
@@ -49,14 +50,24 @@ export default function MultipleSelect({
   maxSelection,
   selectedValue: initialSelectedValues = [],
   onChange,
+  dataArray,
 }: MultipleSelectProps) {
   const theme = useTheme();
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  const { data: options = [], isLoading } = useQuery(
-    ["options", apiEndpoint],
-    () => fetchOptions(apiEndpoint)
+  const [selectedValues, setSelectedValues] = useState<string[]>(
+    initialSelectedValues
   );
+
+  let options = dataArray;
+  let isLoading = apiEndpoint ? true : false;
+
+  if (apiEndpoint) {
+    const { data: fetchedOptions = [] } = useQuery(
+      ["options", apiEndpoint],
+      () => fetchOptions(apiEndpoint)
+    );
+    isLoading = false;
+    options = fetchedOptions;
+  }
 
   useEffect(() => {
     setSelectedValues(initialSelectedValues);
@@ -87,9 +98,8 @@ export default function MultipleSelect({
   selectedValuesWithIds.sort((a, b) => a.id - b.id);
 
   const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
-
   return (
-    <div className="w-[226px] h-[57px] flex justify-center">
+    <div className="w-[226px] flex justify-center">
       <FormControl>
         <Select
           multiple

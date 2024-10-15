@@ -2,7 +2,7 @@ import { Avatar, Button } from "@mui/material";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import constants from "../constants";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/Login";
 import { deepOrange } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -14,6 +14,10 @@ const ProfileForMobile = () => {
   if (authContext === undefined) {
     return;
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { setLogin, userDetails } = authContext;
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -52,7 +56,7 @@ const ProfileForMobile = () => {
               <div className="">
                 <NavLink
                   to={"/profile"}
-                  className="text-text p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
+                  className="text-black p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                 >
                   <AccountCircleIcon /> <p>View Profile</p>
                 </NavLink>

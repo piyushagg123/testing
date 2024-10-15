@@ -11,6 +11,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 interface SocialLinks {
   instagram: string;
@@ -40,6 +41,8 @@ const InteriorDesignerOnboarding = () => {
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const stateContext = useContext(StateContext);
 
   if (stateContext === undefined) {
@@ -130,6 +133,7 @@ const InteriorDesignerOnboarding = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -173,6 +177,7 @@ const InteriorDesignerOnboarding = () => {
     } catch (error) {}
     navigate("/interior-designers");
     window.location.reload();
+    setLoading(false);
   };
 
   const nextStep = () => {
@@ -623,7 +628,7 @@ const InteriorDesignerOnboarding = () => {
                 </label>
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
-                    <OpenInNewIcon className="text-darkgrey" /> Website
+                    <OpenInNewIcon className="text-black" /> Website
                   </p>
                   <input
                     type="url"
@@ -645,13 +650,19 @@ const InteriorDesignerOnboarding = () => {
                   Back
                 </Button>
 
-                <Button
+                <LoadingButton
                   variant="outlined"
                   type="submit"
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  style={{
+                    backgroundColor: "#8c52ff",
+                    color: "white",
+                    width: "85px",
+                    height: "36px",
+                  }}
+                  loading={loading}
                 >
-                  Submit
-                </Button>
+                  {loading ? "" : "Submit"}
+                </LoadingButton>
               </div>
             </>
           )}

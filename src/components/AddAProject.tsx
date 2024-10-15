@@ -8,6 +8,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
+import spacesData from "./spaces.ts";
+import { LoadingButton } from "@mui/lab";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -37,6 +39,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   );
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const nextStep = () => {
     if (currentStep === 1) {
@@ -110,6 +113,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -157,6 +161,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
     } catch (error) {}
+    setLoading(false);
   };
 
   if (isSubmitted) {
@@ -170,7 +175,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
   return (
     <div className="md:pl-3 h-full flex flex-col items-center justify-center">
-      <h1 className="text-2xl md:text-3xl font-bold text-text">
+      <h1 className="text-2xl md:text-3xl font-bold text-black">
         Add a New Project
       </h1>
 
@@ -262,11 +267,11 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
               <label
                 htmlFor=""
-                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
+                className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between my-3"
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  dataArray={spacesData}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -384,13 +389,14 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 Back
               </Button>
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="outlined"
                 style={{ backgroundColor: "#8c52ff", color: "white" }}
+                loading={loading}
               >
-                Next
-              </Button>
+                {loading ? "" : "Next"}
+              </LoadingButton>
             </div>
           </>
         )}

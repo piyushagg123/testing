@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import ForgotPassword from "../components/ForgotPassword";
-import { Alert, Button, TextField } from "@mui/material";
-import { FormEvent, useContext, useState } from "react";
+import { Alert, TextField } from "@mui/material";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import { jwtDecode } from "jwt-decode";
+import { LoadingButton } from "@mui/lab";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -19,6 +20,8 @@ const Login = () => {
   const [error, setError] = useState("");
   const [openForgotPassword, setOpenForgotPassword] = useState(true);
 
+  const [loading, setLoading] = useState(false);
+
   const isEmail = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(input);
@@ -29,9 +32,14 @@ const Login = () => {
     return mobileRegex.test(input);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -41,11 +49,13 @@ const Login = () => {
 
     if (!emailOrMobile) {
       setError("Please enter your email or mobile number.");
+      setLoading(false);
       return;
     }
 
     if (!password) {
       setError("Please enter your password.");
+      setLoading(false);
       return;
     }
 
@@ -58,6 +68,7 @@ const Login = () => {
       data.mobile = emailOrMobile;
     } else {
       setError("Please enter a valid email or mobile number.");
+      setLoading(false);
       return;
     }
 
@@ -89,11 +100,12 @@ const Login = () => {
       navigate("/");
     } catch (error: any) {
       setError(error.response.data.debug_info);
+      setLoading(false);
     }
+    setLoading(false);
   };
   return (
     <>
-      {window.scrollTo(0, 0)}
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         {openForgotPassword ? (
           <div className=" mt-28">
@@ -159,13 +171,19 @@ const Login = () => {
                 </label>
 
                 <div className="flex justify-center mt-[1em]">
-                  <Button
+                  <LoadingButton
                     type="submit"
                     variant="outlined"
-                    style={{ backgroundColor: "#8c52ff", color: "white" }}
+                    style={{
+                      backgroundColor: "#8c52ff",
+                      color: "white",
+                      width: "100px",
+                      height: "36px",
+                    }}
+                    loading={loading}
                   >
-                    Continue
-                  </Button>
+                    {loading ? "" : "Continue"}
+                  </LoadingButton>
                 </div>
               </form>
             </div>
