@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
-import constants from "../constants";
+import constants from "../../constants";
 import {
   Button,
   FormControl,
@@ -14,49 +14,25 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-const fetchFilterCategory1 = async (professional: string) => {
-  if (professional === "interiorDesigners") {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
-    );
-    return response.data.data.value;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/financial-advisor/deals`
-    );
-
-    return response.data.data;
-  }
+const fetchThemes = async () => {
+  const response = await axios.get(
+    `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
+  );
+  return response.data.data.value;
 };
 
-const fetchFilterCategory2 = async (professional: string) => {
-  if (professional === "interiorDesigners") {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
-    );
-    return response.data.data.value;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/financial-advisor/investment-ideology`
-    );
-
-    return response.data.data;
-  }
+const fetchSpaces = async () => {
+  const response = await axios.get(
+    `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
+  );
+  return response.data.data.value;
 };
 
-const fetchFilterCategory3 = async (professional: string) => {
-  if (professional === "interiorDesigners") {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
-    );
-    return response.data.data.value;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/financial-advisor/fees-type`
-    );
-
-    return response.data.data;
-  }
+const fetchExecutionTypes = async () => {
+  const response = await axios.get(
+    `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
+  );
+  return response.data.data.value;
 };
 
 interface FiltersProps {
@@ -65,7 +41,6 @@ interface FiltersProps {
     spaceFilters: any,
     executionFilters: any
   ) => void;
-  professional: string;
 }
 
 interface FilterItem {
@@ -73,18 +48,13 @@ interface FilterItem {
   value: string;
 }
 
-const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
-  const { data: filterCategory1 = [] } = useQuery(
-    ["themes", professional],
-    () => fetchFilterCategory1(professional)
-  );
-  const { data: filterCategory2 = [] } = useQuery(
-    ["spaces", professional],
-    () => fetchFilterCategory2(professional)
-  );
-  const { data: filterCategory3 = [] } = useQuery(
-    ["executionTypes", professional],
-    () => fetchFilterCategory3(professional)
+const InteriorDesignerFilters: React.FC<FiltersProps> = ({
+  fetchVendorList,
+}) => {
+  const { data: themes = [] } = useQuery(["themes"], () => fetchThemes());
+  const { data: spaces = [] } = useQuery(["spaces"], () => fetchSpaces());
+  const { data: executionType = [] } = useQuery(["executionTypes"], () =>
+    fetchExecutionTypes()
   );
 
   const [themeFilters, setThemeFilters] = useState(new Set());
@@ -100,11 +70,11 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
     return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
   };
 
-  const formattedCategory1 = filterCategory1.map((item: FilterItem) =>
-    formatString(item.value)
+  const formattedThemes = themes.map((theme: FilterItem) =>
+    formatString(theme.value)
   );
-  const formattedCategory2 = filterCategory2.map((item: FilterItem) =>
-    formatString(item.value)
+  const formattedSpaces = spaces.map((space: FilterItem) =>
+    formatString(space.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);
@@ -162,10 +132,8 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
     return (
       <>
         <div className="flex flex-col gap-1 pt-3">
-          <p className="font-bold text-base text-darkgrey">
-            {professional === "interiorDesigners" ? "THEMES" : "DEALS"}
-          </p>
-          {formattedCategory1.map((theme: string) => {
+          <p className="font-bold text-base text-darkgrey">THEMES</p>
+          {formattedThemes.map((theme: string) => {
             return (
               <>
                 <FormControlLabel
@@ -198,12 +166,8 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
           })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <p className="font-bold text-base text-darkgrey">
-            {professional === "interiorDesigners"
-              ? "SPACES"
-              : "INVESTMENT IDEOLOGY"}
-          </p>
-          {formattedCategory2.map((space: string) => {
+          <p className="font-bold text-base text-darkgrey">SPACES</p>
+          {formattedSpaces.map((space: string) => {
             return (
               <FormControlLabel
                 key={space}
@@ -233,55 +197,48 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
             );
           })}
         </div>
-        <div className="flex flex-col gap-5 pt-5">
-          <p className="font-bold text-base text-darkgrey">
-            {professional === "interiorDesigners"
-              ? "EXECUTION TYPE"
-              : "FEES TYPE"}
-          </p>
-          {filterCategory3.map((item: FilterItem) => {
-            const executionValue =
-              typeof item === "object" && "value" in item ? item.value : item;
-
+        <div className="flex flex-col gap-7 pt-5">
+          <p className="font-bold text-base text-black">EXECUTION TYPE</p>
+          {executionType.map((executionType: FilterItem) => {
             const labelValue =
-              typeof item === "object" && "value" in item
-                ? executionValue === "DESIGN"
-                  ? constants.DESIGN
-                  : executionValue === "MATERIAL_SUPPORT"
-                  ? constants.MATERIAL_SUPPORT
-                  : executionValue === "COMPLETE"
-                  ? constants.COMPLETE
-                  : executionValue
-                : executionValue;
-
+              executionType.value === "DESIGN"
+                ? constants.DESIGN
+                : executionType.value === "MATERIAL_SUPPORT"
+                ? constants.MATERIAL_SUPPORT
+                : executionType.value === "COMPLETE"
+                ? constants.COMPLETE
+                : "";
             return (
-              <>
-                <FormControlLabel
-                  className="-mb-2.5 -mt-2.5"
-                  control={
-                    <Checkbox
-                      checked={selectedExecutions.has(executionValue)}
-                      sx={{
-                        "&.Mui-checked": {
-                          color: "#ff5757",
-                        },
-                        transform: "scale(0.75)",
-                        paddingY: 0,
-                      }}
-                      onChange={(_event: any) => {
-                        handleCheckboxChange(
-                          executionValue,
-                          selectedExecutions,
-                          setSelectedExecutions,
-                          setExecutionFilters,
-                          executionFilters
-                        );
-                      }}
-                    />
-                  }
-                  label={<span className="text-sm">{labelValue}</span>}
-                />
-              </>
+              <FormControlLabel
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
+                className="-mb-2.5 -mt-2.5"
+                control={
+                  <Checkbox
+                    checked={selectedExecutions.has(executionType.value)}
+                    sx={{
+                      "&.Mui-checked": {
+                        color: "#ff5757",
+                      },
+
+                      transform: "scale(0.75)",
+                      paddingY: 0,
+                    }}
+                    onChange={(_event: any) => {
+                      handleCheckboxChange(
+                        executionType.value,
+                        selectedExecutions,
+                        setSelectedExecutions,
+                        setExecutionFilters,
+                        executionFilters
+                      );
+                    }}
+                  />
+                }
+                label={<span className="text-sm">{labelValue}</span>}
+              />
             );
           })}
         </div>
@@ -361,4 +318,4 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList, professional }) => {
   );
 };
 
-export default Filters;
+export default InteriorDesignerFilters;

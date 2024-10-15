@@ -13,11 +13,12 @@ import {
   Divider,
 } from "@mui/material";
 import Professional from "../components/Professional";
-import Filters from "../components/Filters";
+import InteriorDesignerFilters from "../components/filters/InteriorDesignerFilters";
 import constants from "../constants";
 import { StateContext } from "../context/State";
 import service from "../assets/service.png";
 import { ApiContext } from "../context/Api";
+import FinancePlannerFilters from "../components/filters/FInancePlannerFilters";
 
 interface VendorItem {
   vendor_id?: string;
@@ -228,14 +229,11 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
         <div className="flex  justify-start flex-col lg:flex-row items-start p-1 lg:px-[64px] mt-[1em]">
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
-              <Filters
-                professional={professional}
-                fetchVendorList={
-                  professional === "interiorDesigners"
-                    ? fetchVendorList
-                    : fetchFinanceList
-                }
-              />
+              {professional === "interiorDesigners" ? (
+                <InteriorDesignerFilters fetchVendorList={fetchVendorList} />
+              ) : (
+                <FinancePlannerFilters fetchVendorList={fetchFinanceList} />
+              )}
             </div>
           </div>
           <div className="w-full">
