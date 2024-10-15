@@ -7,7 +7,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import spacesData from "./spaces.ts";
 import { LoadingButton } from "@mui/lab";
 
@@ -40,11 +40,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
 
   const nextStep = () => {
     if (currentStep === 1) {
@@ -165,7 +160,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setProjectId(response.data.data.project_id);
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
-      setSnackbarOpen(true);
     } catch (error) {}
     setLoading(false);
   };
@@ -407,15 +401,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
           </>
         )}
       </form>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={snackbarOpen}
-        onClose={handleSnackbarClose}
-        message="New project created successfully!"
-        key="bottom-center"
-        autoHideDuration={3000}
-      />
     </div>
   );
 };
