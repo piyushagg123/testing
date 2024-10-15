@@ -12,7 +12,7 @@ import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
 import constants from "./constants";
 import Footer from "./components/Footer";
-import HomePage from "./components/HomePage";
+import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/AboutUs";
 import ProfessionalInfo from "./pages/ProfessionalInfo";
 import ProfileForMobile from "./pages/ProfileForMobile";

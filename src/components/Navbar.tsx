@@ -6,10 +6,7 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
-  Dialog,
-  DialogContent,
   Grow,
-  IconButton,
   MenuItem,
   MenuList,
   Paper,
@@ -17,7 +14,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import InteriorDesignerOnboarding from "../pages/InteriorDesignerOnboarding";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -129,15 +125,6 @@ const Navbar: React.FC = () => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClose = (
-    _?: React.SyntheticEvent<Element, Event>,
-    reason?: "backdropClick" | "escapeKeyDown"
-  ) => {
-    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
-      return;
-    }
-    setOpen(false);
-  };
   return (
     <div className="navBar flex justify-between p-[12px] fixed bg-prim w-screen top-0 items-center z-[1000] text-text text-lg lg:px-[64px]">
       <div className="flex items-center gap-2 md:gap-4">
@@ -356,28 +343,6 @@ const Navbar: React.FC = () => {
           )}
         </>
       )}
-      <Dialog
-        open={open}
-        onClose={() => handleClose}
-        sx={{ margin: "auto" }}
-        fullScreen={isFullScreen}
-      >
-        <DialogContent sx={{ height: "max-content", position: "relative" }}>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            x
-          </IconButton>
-          <InteriorDesignerOnboarding />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

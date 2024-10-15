@@ -1,11 +1,11 @@
 import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
 import axios from "axios";
-import MultipleSelect from "../components/MultipleSelect";
+import MultipleSelect from "../../components/MultipleSelect";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { StateContext } from "../context/State";
-import constants from "../constants";
+import { StateContext } from "../../context/State";
+import constants from "../../constants";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -20,22 +20,25 @@ interface SocialLinks {
 
 interface FormData {
   business_name: string;
-  address: string;
-  sub_category_1: string[];
-  sub_category_2: string[];
-  sub_category_3: string[];
-  category: string;
+  sebi_registered: boolean;
   started_in: string;
   number_of_employees: string;
-  average_project_value: string;
-  projects_completed: string;
+  address: string;
   city: string;
   state: string;
   description: string;
+  aum_handled: number;
+  minimum_investment: number;
+  number_of_clients: number;
+  fees: number;
+  deals: string[];
+  investment_ideology: string[];
+
+  fees_type: string[];
   social: SocialLinks;
 }
 
-const InteriorDesignerOnboarding = () => {
+const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -49,18 +52,20 @@ const InteriorDesignerOnboarding = () => {
 
   const [formData, setFormData] = useState<FormData>({
     business_name: "",
-    address: "",
-    sub_category_1: [],
-    sub_category_2: [],
-    sub_category_3: [],
-    category: "INTERIOR_DESIGNER",
+    sebi_registered: false,
     started_in: "",
     number_of_employees: "",
-    average_project_value: "",
-    projects_completed: "",
+    address: "",
     city: "",
     state: "",
     description: "",
+    aum_handled: 0,
+    minimum_investment: 0,
+    number_of_clients: 0,
+    fees: 0,
+    deals: [],
+    investment_ideology: [],
+    fees_type: [],
     social: {
       instagram: "",
       facebook: "",
@@ -70,7 +75,7 @@ const InteriorDesignerOnboarding = () => {
 
   const navigate = useNavigate();
 
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  // const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | ArrayBuffer | null>(
     null
   );
@@ -134,16 +139,18 @@ const InteriorDesignerOnboarding = () => {
     const processedFormData = {
       ...formData,
       number_of_employees: parseInt(formData.number_of_employees, 10),
-      average_project_value: parseFloat(formData.average_project_value),
-      projects_completed: parseInt(formData.projects_completed, 10),
-      sub_category_1: formData.sub_category_1.join(","),
-      sub_category_2: formData.sub_category_2.join(","),
-      sub_category_3: formData.sub_category_3.join(","),
+      deals: formData.deals.join(","),
+      investment_ideology: formData.investment_ideology.join(","),
+      fees_type: formData.fees_type.join(","),
+      aum_handled: parseFloat(formData.aum_handled.toString()),
+      minimum_investment: parseFloat(formData.minimum_investment.toString()),
+      number_of_clients: parseInt(formData.number_of_clients.toString(), 10),
+      fees: parseInt(formData.fees.toString(), 10),
     };
 
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/onboard`,
+      await axios.post(
+        `${constants.apiBaseUrl}/financial-advisor/create`,
         processedFormData,
         {
           headers: {
@@ -151,28 +158,8 @@ const InteriorDesignerOnboarding = () => {
           },
         }
       );
-
-      sessionStorage.removeItem("token");
-      sessionStorage.setItem("token", response.data.access_token);
-
-      if (logoFile) {
-        const formData = new FormData();
-        formData.append("logo", logoFile);
-
-        await axios.post(
-          `${constants.apiBaseUrl}/image-upload/logo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      }
     } catch (error) {}
-    navigate("/interior-designers");
-    window.location.reload();
+    navigate("/finance-planners");
   };
 
   const nextStep = () => {
@@ -185,20 +172,22 @@ const InteriorDesignerOnboarding = () => {
         setError("Please enter the start date of your business ");
         return;
       }
-      if (!formData.address) {
-        setError("Please enter your address ");
-        return;
-      }
+
       if (!formData.number_of_employees) {
         setError("Please enter the number of employees working with you ");
         return;
       }
-      if (!formData.average_project_value) {
+      if (!formData.aum_handled) {
         setError("Please enter average value of your projects ");
         return;
       }
-      if (!formData.projects_completed) {
-        setError("Please enter the number of cprojects completed so far ");
+
+      if (!formData.minimum_investment) {
+        setError("Please enter the minimum investment required");
+        return;
+      }
+      if (!formData.number_of_clients) {
+        setError("Please enter the number of your clients");
         return;
       }
       if (!formData.description) {
@@ -208,21 +197,29 @@ const InteriorDesignerOnboarding = () => {
     }
 
     if (currentStep === 2) {
-      if (formData.sub_category_1.length === 0) {
+      if (formData.deals.length === 0) {
         setError("please select your theme");
         return;
       }
-      if (formData.sub_category_2.length === 0) {
+      if (formData.investment_ideology.length === 0) {
         setError("please select your specialized spaces");
         return;
       }
-      if (formData.sub_category_3.length === 0) {
+      if (formData.fees_type.length === 0) {
         setError("please select your type of execution");
+        return;
+      }
+      if (!formData.fees) {
+        setError("Please enter your fees");
         return;
       }
     }
 
     if (currentStep === 3) {
+      if (!formData.address) {
+        setError("Please enter your address ");
+        return;
+      }
       if (!formData.state) {
         setError("Please enter your state ");
         return;
@@ -238,7 +235,7 @@ const InteriorDesignerOnboarding = () => {
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
-    setLogoFile(file);
+    // setLogoFile(file);
 
     if (file) {
       const reader = new FileReader();
@@ -248,7 +245,6 @@ const InteriorDesignerOnboarding = () => {
       reader.readAsDataURL(file);
     }
   };
-
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-4  text-lg">
@@ -293,15 +289,15 @@ const InteriorDesignerOnboarding = () => {
 
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
-                  Address
+                  Aum handled
                   <input
-                    type="text"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="address"
+                    type="number"
+                    name="aum_handled"
                     className="w-[235px] px-2"
-                    value={formData.address}
+                    value={formData.aum_handled}
                     onChange={handleChange}
                     required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
                   />
                 </label>
                 <label className="flex flex-col text-[16px]">
@@ -319,25 +315,38 @@ const InteriorDesignerOnboarding = () => {
               </div>
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
-                  Average project value
+                  Minimum investment
                   <input
                     type="number"
-                    step="0.01"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="average_project_value"
+                    name="minimum_investment"
                     className="w-[235px] px-2"
-                    value={formData.average_project_value}
+                    value={formData.minimum_investment}
                     onChange={handleChange}
                     required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
                   />
                 </label>
                 <label className="flex flex-col text-[16px]">
-                  Projects completed
+                  Number of clients
                   <input
                     type="number"
-                    name="projects_completed"
+                    name="number_of_clients"
                     className="w-[235px] px-2"
-                    value={formData.projects_completed}
+                    value={formData.number_of_clients}
+                    onChange={handleChange}
+                    required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  />
+                </label>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-3">
+                <label className="flex flex-row text-[16px] items-center justify-center">
+                  Sebi registered
+                  <input
+                    type="checkbox"
+                    name="sebi_registered"
+                    className="ml-4"
+                    checked={formData.sebi_registered}
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -375,19 +384,15 @@ const InteriorDesignerOnboarding = () => {
                 htmlFor=""
                 className="flex flex-col lg:flex-row justify-start lg:justify-between md:mt-10"
               >
-                <p className="text-base ">
-                  Select your themes (maximum of three)
-                </p>
+                <p className="text-base ">Deals</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/deals`}
                   maxSelection={3}
-                  selectedValue={
-                    formData.sub_category_1 ? formData.sub_category_1 : []
-                  }
+                  selectedValue={formData.deals ? formData.deals : []}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
                       ...prevData,
-                      sub_category_1: selected,
+                      deals: selected,
                     }));
                   }}
                 />
@@ -397,17 +402,19 @@ const InteriorDesignerOnboarding = () => {
                 htmlFor=""
                 className="flex flex-col lg:flex-row   justify-start lg:justify-between"
               >
-                <p className="text-base">Select your spaces</p>
+                <p className="text-base">Investment ideology</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/investment-ideology`}
                   maxSelection={3}
                   selectedValue={
-                    formData.sub_category_2 ? formData.sub_category_2 : []
+                    formData.investment_ideology
+                      ? formData.investment_ideology
+                      : []
                   }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      sub_category_2: selected,
+                      investment_ideology: selected,
                     }))
                   }
                 />
@@ -417,20 +424,32 @@ const InteriorDesignerOnboarding = () => {
                 htmlFor=""
                 className="flex flex-col lg:flex-row justify-start lg:justify-between"
               >
-                <p className="text-base">Type of execution</p>
+                <p className="text-base">Fees type</p>
                 <MultipleSelect
-                  apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                  apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/fees-type`}
                   maxSelection={1}
-                  selectedValue={
-                    formData.sub_category_3 ? formData.sub_category_3 : []
-                  }
+                  selectedValue={formData.fees_type ? formData.fees_type : []}
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
-                      sub_category_3: selected,
+                      fees_type: selected,
                     }))
                   }
                 />
+              </label>
+              <label className="flex flex-col lg:flex-row justify-start lg:justify-between">
+                <p className="text-base">Fees</p>
+                <div className="w-[226px] flex justify-center">
+                  <input
+                    type="number"
+                    name="fees"
+                    className="w-[206.67px] px-2"
+                    value={formData.fees}
+                    onChange={handleChange}
+                    required
+                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  />
+                </div>
               </label>
               <div className="flex gap-2 justify-end  mt-[1em]">
                 <Button
@@ -452,9 +471,21 @@ const InteriorDesignerOnboarding = () => {
 
           {currentStep === 3 && (
             <>
+              <label className="flex flex-col lg:flex-row justify-between md:mt-10 mt-[1em]">
+                Address
+                <input
+                  type="text"
+                  style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  name="address"
+                  className="w-[235px] px-2"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
               <label
                 htmlFor=""
-                className="flex flex-col lg:flex-row justify-between md:mt-10 mt-[1em]"
+                className="flex flex-col lg:flex-row justify-between"
               >
                 <p className="text-base">Select your state</p>
                 <Autocomplete
@@ -661,4 +692,4 @@ const InteriorDesignerOnboarding = () => {
   );
 };
 
-export default InteriorDesignerOnboarding;
+export default FinancePlannerOnboarding;

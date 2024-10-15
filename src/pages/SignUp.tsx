@@ -4,7 +4,7 @@ import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
-import InteriorDesignerOnboarding from "./InteriorDesignerOnboarding";
+import InteriorDesignerOnboarding from "./onboarding/InteriorDesignerOnboarding";
 import {
   Alert,
   Button,
@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
-import FinancePlannerOnboarding from "./FinancePlannerOnboarding";
+import FinancePlannerOnboarding from "./onboarding/FinancePlannerOnboarding";
 
 interface FormObject {
   [key: string]: string;
