@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import img from "../../assets/noImageinProject.jpg";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -25,6 +25,7 @@ import ReviewDialog from "../../components/ReviewDialog";
 import AddAProject from "../../components/AddAProject";
 import ProjectImages from "../../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
+import FinancePlannerReviews from "../../components/FinancePlannerReviews";
 
 interface VendorData {
   logo?: string;
@@ -52,10 +53,8 @@ interface VendorData {
 interface ReviewFormObject {
   title?: string;
   body?: string;
-  rating_quality?: number;
-  rating_execution?: number;
-  rating_behaviour?: number;
-  vendor_id?: number;
+  rating?: number;
+  financial_advisor_id?: number;
 }
 
 interface ProfessionalInfoProps {
@@ -90,6 +89,10 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
     ["vendorDetails", professionalId],
     () => fetchVendorDetails(professionalId!)
   );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
@@ -144,26 +147,33 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
+    const formObject: ReviewFormObject = {
+      financial_advisor_id: Number(professionalId),
+    };
     formData.forEach((value, key) => {
-      if (key.startsWith("rating_")) {
-        (formObject[
-          key as "rating_quality" | "rating_execution" | "rating_behaviour"
-        ] as number) = Number(value);
+      if (key === "rating") {
+        (formObject[key as "rating"] as number) = Number(value);
       } else {
         formObject[key as "body"] = value.toString();
       }
     });
 
+    console.log(formObject);
+
     try {
-      await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.post(
+        `${constants.apiBaseUrl}/financial-advisor/review`,
+        formObject,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
 
       handleReviewDialogClose();
       setSnackbarOpen(true);
+      console.log(response);
     } catch (error: any) {
       setReviewError(error.response.data.debug_info);
     }
@@ -185,9 +195,9 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       ? vendorData?.description.slice(0, maxVisibleLength) + "..."
       : vendorData?.description;
   const professionalCard = (
-    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2">
       <div className="flex flex-row lg:flex-col w-full">
-        <div className="mt-[1em] w-1/2 lg:w-fit">
+        <div className="mt-[1em] lg:mt-0 w-1/2 lg:w-fit">
           <p className="font-bold  text-black">AUM handled</p>
           <p className="">{vendorData?.aum_handled ?? "N/A"}</p>
         </div>
@@ -443,11 +453,12 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                   <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
                     <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
                       {
-                        <Reviews
-                          id={
-                            professionalId ? Number(professionalId) : Number(-1)
-                          }
-                        />
+                        // <Reviews
+                        //   id={
+                        //     professionalId ? Number(professionalId) : Number(-1)
+                        //   }
+                        // />
+                        <FinancePlannerReviews id={Number(professionalId)} />
                       }
                     </div>
                   </TabPanel>
@@ -486,6 +497,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           loading={loading}
           reviewDialogOpen={reviewDialogOpen}
           reviewError={reviewError}
+          professional="financePlanner"
         />
 
         <Dialog open={open} fullWidth>

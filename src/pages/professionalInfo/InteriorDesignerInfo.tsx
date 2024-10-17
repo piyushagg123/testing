@@ -232,6 +232,8 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
       }
     });
 
+    console.log(formObject);
+
     try {
       await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
         headers: {
@@ -246,7 +248,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
     }
     setLoading(false);
     setValue("1");
-    window.location.reload();
+    // window.location.reload();
   };
 
   useEffect(() => {
@@ -885,6 +887,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
           loading={loading}
           reviewDialogOpen={reviewDialogOpen}
           reviewError={reviewError}
+          professional="interiorDesigner"
         />
 
         <Dialog open={open} fullWidth fullScreen={isFullScreen}>
