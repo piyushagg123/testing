@@ -433,7 +433,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
   );
 
   const largeProfessionalCard = (
-    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2 w-[750px]">
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2 ">
       <>
         <>
           {selectedProject ? (
@@ -758,7 +758,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                 )}
               </div> */}
               <div className="flex justify-center">
-                <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw] lg:w-[55vw]">
+                <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw] lg:w-[50vw]">
                   {isMobile ? professionalCard : largeProfessionalCard}
                 </div>
               </div>
