@@ -142,7 +142,7 @@ const Reviews: React.FC<user> = ({ id }) => {
   return (
     <>
       <div className=" w-[93vw] lg:w-full">
-        <p className="text-base font-bold">Rating & Reviews</p>
+        <p className="text-base lg:text-xl font-bold">Rating & Reviews</p>
         {reviews?.length > 0 ? (
           <>
             <div className="flex gap-1 items-center text-[green]">

@@ -2,7 +2,6 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import projectImage from "../../assets/noProjectAdded.jpg";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
-  Tab,
   Box,
   Dialog,
   DialogContent,
@@ -21,7 +20,7 @@ import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { TabContext } from "@mui/lab";
 import Reviews from "../../components/Reviews";
 import ReviewDialog from "../../components/ReviewDialog";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -207,9 +206,9 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
     setSelectedProject(undefined);
   };
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  // const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+  //   setValue(newValue);
+  // };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -264,7 +263,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
   const maxVisibleLength = 100;
 
   const contentPreview =
-    isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
+    !expanded && vendorData?.description?.length! > maxVisibleLength
       ? vendorData?.description.slice(0, maxVisibleLength) + "..."
       : vendorData?.description;
 
@@ -433,8 +432,225 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
     </div>
   );
 
+  const largeProfessionalCard = (
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2 w-[750px]">
+      <>
+        <>
+          {selectedProject ? (
+            <>
+              <div className="w-1/2 md:w-fit">
+                <p className="font-bold text-black">Contact Number</p>
+                <p className="">{vendorData?.mobile ?? "N/A"}</p>
+              </div>
+              <div className="w-full mt-[1em]">
+                <p className="font-bold  text-black">Email</p>
+                <p className="">{vendorData?.email ?? "N/A"}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-purple  mt-[1em]">
+                  Project Details
+                </p>
+                <p className="font-bold  text-black">Title</p>
+                <p className=" max-w-[300px]">{selectedProject.title}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Description</p>
+                <p className=" max-w-[300px]">{selectedProject.description}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">City</p>
+                <p className=" max-w-[300px]">{selectedProject.city}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black mt-[1em]">State</p>
+                <p className=" max-w-[300px]">{selectedProject.state}</p>
+              </div>
+              <div>
+                <p className="font-bold  text-black mt-[1em]">Spaces</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_2)
+                    .split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Theme</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_1)
+                    .split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-row w-full">
+                <div className="mt-[1em] w-1/3 ">
+                  <p className="font-bold  text-black">Typical Job Cost</p>
+                  <p className="">
+                    {vendorData?.average_project_value ?? "N/A"}
+                  </p>
+                </div>
+                <div className="mt-[1em] w-1/3 ">
+                  <p className="font-bold  text-black">Number of Employees</p>
+                  <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+                </div>
+                <div className="w-1/3 mt-[1em]">
+                  <p className="font-bold  text-black">Projects Completed</p>
+                  <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
+                </div>
+              </div>
+              <div className="flex  w-full flex-row  mt-[1em]">
+                <div className=" w-1/3  mt-[1em]">
+                  <p className="font-bold  text-black">Location</p>
+                  <p className="">{vendorData?.city ?? "N/A"}</p>
+                </div>
+                <div className="w-1/3 ">
+                  <p className="font-bold text-black mt-[1em]">
+                    Contact Number
+                  </p>
+                  <p className="">{vendorData?.mobile ?? "N/A"}</p>
+                </div>
+                {(vendorData?.social?.facebook ||
+                  vendorData?.social?.instagram ||
+                  vendorData?.social?.website) && (
+                  <div className="w-1/3 mt-[1em]">
+                    <p className="font-bold  text-black">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+              {/* <div className="flex flex-row  w-full">
+                {(vendorData?.social?.facebook ||
+                  vendorData?.social?.instagram ||
+                  vendorData?.social?.website) && (
+                  <div className="w-1/3 mt-[1em]">
+                    <p className="font-bold  text-black">Socials</p>
+                    {vendorData.social.facebook && (
+                      <a
+                        href={vendorData.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FacebookIcon />
+                      </a>
+                    )}
+                    {vendorData.social.instagram && (
+                      <a
+                        href={vendorData.social.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <InstagramIcon />
+                      </a>
+                    )}
+                    {vendorData.social.website && (
+                      <a
+                        href={vendorData.social.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <OpenInNewIcon />
+                      </a>
+                    )}
+                  </div>
+                )}
+                <div className="w-1/2 ">
+                  <p className="font-bold text-black mt-[1em]">
+                    Contact Number
+                  </p>
+                  <p className="">{vendorData?.mobile ?? "N/A"}</p>
+                </div>
+              </div> */}
+              <div className="w-full mt-[1em]">
+                <p className="font-bold  text-black">Email</p>
+                <p className="">{vendorData?.email ?? "N/A"}</p>
+              </div>
+              {/* <div className="lg:hidden w-full ">
+                <p className="font-bold  text-black">About</p>
+                <p className=" text-justify mb-[1em] rounded-md">
+                  {contentPreview}
+                  {isMobile &&
+                    vendorData?.description.length! > maxVisibleLength && (
+                      <button
+                        onClick={handleExpandClick}
+                        className="text-blue-500 hover:text-blue-700 font-medium"
+                      >
+                        {expanded ? "Read less" : "Read More"}
+                      </button>
+                    )}
+                </p>
+              </div> */}
+              <div className=" w-full mt-[1em]">
+                <p className="font-bold  text-black">About</p>
+                <p className=" text-justify mb-[1em] rounded-md">
+                  {contentPreview}
+
+                  {vendorData?.description.length! > maxVisibleLength && (
+                    <button
+                      onClick={handleExpandClick}
+                      className="text-blue-500 hover:text-blue-700 font-medium"
+                    >
+                      {expanded ? "Read less" : "Read More"}
+                    </button>
+                  )}
+                </p>
+              </div>
+            </>
+          )}
+        </>
+      </>
+    </div>
+  );
+
   const professionalHeader = (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] md:w-auto mx-auto">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] md:w-auto mx-auto lg:mx-0">
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -526,19 +742,26 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-[50px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
+      <div className="mt-[50px] lg:mt-[70px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
-            {professionalHeader}
+            <div className="flex flex-col justify-center lg:flex-row gap-2">
+              {professionalHeader}
 
-            <div className="lg:hidden flex justify-center">
-              {isMobile ? (
-                <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw]">
-                  {professionalCard}
+              {/* <div className="lg:hidden flex justify-center">
+                {isMobile ? (
+                  <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw]">
+                    {professionalCard}
+                  </div>
+                ) : (
+                  <div className="">{professionalCard}</div>
+                )}
+              </div> */}
+              <div className="flex justify-center">
+                <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw] lg:w-[55vw]">
+                  {isMobile ? professionalCard : largeProfessionalCard}
                 </div>
-              ) : (
-                <div className="">{professionalCard}</div>
-              )}
+              </div>
             </div>
 
             {login && userDetails?.vendor_id !== Number(professionalId) && (
@@ -560,7 +783,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
               <>
                 <TabContext value={value}>
                   <Box>
-                    <TabList
+                    {/* <TabList
                       onChange={handleChange}
                       aria-label="lab API tabs example"
                       sx={{
@@ -603,9 +826,9 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                           fontSize: "1rem",
                         }}
                       />
-                    </TabList>
+                    </TabList> */}
                   </Box>
-                  <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
+                  {/* <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
                     <div className="w-[95vw] lg:w-[750px]">
                       <p className="text-sm md:text-base text-justify mb-[1em]">
                         {contentPreview}
@@ -621,8 +844,8 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                           )}
                       </p>
                     </div>
-                  </TabPanel>
-                  <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+                  </TabPanel> */}
+                  {/* <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
                     {(renderProfileView ||
                       Number(professionalId) == userDetails.vendor_id) && (
                       <div
@@ -705,8 +928,8 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                         )}
                       </div>
                     </div>
-                  </TabPanel>
-                  <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
+                  </TabPanel> */}
+                  {/* <TabPanel value={"3"} sx={{ padding: 0, marginTop: "10px" }}>
                     <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
                       {
                         <Reviews
@@ -716,8 +939,116 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                         />
                       }
                     </div>
-                  </TabPanel>
+                  </TabPanel> */}
                 </TabContext>
+
+                <div className="mt-5">
+                  {(renderProfileView ||
+                    Number(professionalId) == userDetails.vendor_id) && (
+                    <div
+                      className={`${
+                        selectedProject ? "hidden" : "flex w-full justify-end"
+                      }`}
+                    >
+                      <Button
+                        variant="outlined"
+                        style={{
+                          backgroundColor: "#8c52ff",
+                          color: "white",
+                        }}
+                        onClick={() => setOpen(true)}
+                      >
+                        <AddCircleIcon /> Add a new project
+                      </Button>
+                    </div>
+                  )}
+                  <p className="text-xl font-bold">Projects</p>
+                  <div className="max-w-[95vw] overflow-x-auto whitespace-nowrap  flex flex-col justify-center  gap-1 items-center  md:m-0 ">
+                    <div className="flex flex-wrap pt-[1em] mb-[3em]">
+                      {!projectsData ? (
+                        <div className="flex flex-col items-center justify-center ">
+                          <div className="mb-[1em]">
+                            <img
+                              src={projectImage}
+                              alt=""
+                              className="w-[300px]"
+                            />
+                          </div>
+                          <p className="mb-[1em]">
+                            No projects added yet by the designer
+                          </p>
+                        </div>
+                      ) : selectedProject ? (
+                        <div className="flex flex-col mt-2">
+                          <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
+                            <Button
+                              variant="outlined"
+                              style={{
+                                backgroundColor: "#8c52ff",
+                                color: "white",
+                              }}
+                              onClick={handleBackClick}
+                            >
+                              <ArrowBackIcon />
+                            </Button>
+                          </div>
+                          <div className="flex flex-col gap-3 mb-[1em]">
+                            <Carousel
+                              imageObj={selectedProject.images}
+                              showProjectDetails={false}
+                              city=""
+                              state=""
+                              theme=""
+                              title=""
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          {/* <p className="text-base font-bold">Projects</p> */}
+                          <br />
+                          <br />
+
+                          <div className="flex flex-col">
+                            <div className="flex gap-3  overflow-x-auto whitespace-nowrap lg:w-[90vw] ">
+                              {projectsData.map((item, ind) => (
+                                <div
+                                  key={ind}
+                                  onClick={() => handleCarouselClick(item)}
+                                  className="mb-4 mr-2 md:mr-0"
+                                >
+                                  <Carousel
+                                    key={ind}
+                                    imageObj={item.images}
+                                    title={item.title}
+                                    city={item.city}
+                                    state={item.state}
+                                    theme={item.sub_category_1}
+                                    showProjectDetails={true}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <br />
+                <br />
+
+                <div className="w-[95vw] flex justify-center flex-col items-center">
+                  {
+                    <Reviews
+                      id={professionalId ? Number(professionalId) : Number(-1)}
+                    />
+                  }
+                  <br />
+                  <br />
+                  <br />
+                </div>
               </>
             ) : (
               <>
@@ -872,7 +1203,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         </div>
-        <div className="hidden lg:block">
+        {/* <div className="hidden lg:block">
           {isMobile ? (
             <div className="border border-1  rounded-md border-[#d3d8e0] w-[93vw]">
               {professionalCard}
@@ -880,7 +1211,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
           ) : (
             <div className="">{professionalCard}</div>
           )}
-        </div>
+        </div> */}
         <ReviewDialog
           handleReviewDialogClose={handleReviewDialogClose}
           handleReviewSubmit={handleReviewSubmit}

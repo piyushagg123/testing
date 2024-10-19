@@ -62,7 +62,7 @@ const FinancePlannerReviews: React.FC<user> = ({ id }) => {
     return data.data;
   };
 
-  const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
+  const { data: reviews } = useQuery(["reviews", id], fetchReviews);
 
   const calculateAverages = (reviews: Review[]) => {
     if (reviews?.length === 0) return 0;
@@ -78,22 +78,22 @@ const FinancePlannerReviews: React.FC<user> = ({ id }) => {
     return averageRating;
   };
 
-  const handleDelete = async (reviewId: number) => {
-    try {
-      await axios.delete(
-        `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
+  // const handleDelete = async (reviewId: number) => {
+  //   try {
+  //     await axios.delete(
+  //       `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
 
-      refetch();
+  //     refetch();
 
-      setSnackbarOpen(true);
-    } catch (error) {}
-  };
+  //     setSnackbarOpen(true);
+  //   } catch (error) {}
+  // };
 
   const averages = calculateAverages(reviews);
 
