@@ -504,7 +504,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-[55px] text-black flex flex-col lg:flex-row min-h-screen">
+      <div className="mt-[55px] text-black flex flex-col lg:flex-row lg:justify-center min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
             {isMobile && !selectedProject && professionalHeader}
