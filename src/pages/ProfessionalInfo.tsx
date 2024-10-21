@@ -239,6 +239,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [selectedProject]);
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -257,41 +260,32 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const professionalCard = (
-    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 lg:items-center p-2">
       <>
         <>
           {selectedProject ? (
             <>
-              <div className="w-1/2 md:w-fit">
-                <p className="font-bold text-black">Contact Number</p>
-                <p className="">{vendorData?.mobile ?? "N/A"}</p>
-              </div>
-              <div className="w-full mt-[1em]">
-                <p className="font-bold  text-black">Email</p>
-                <p className="">{vendorData?.email ?? "N/A"}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-purple  mt-[1em]">
+              <div className="flex w-1/2 flex-col">
+                {/* <p className="font-bold  text-purple  mt-[1em]">
                   Project Details
-                </p>
+                </p> */}
                 <p className="font-bold  text-black">Title</p>
                 <p className=" max-w-[300px]">{selectedProject.title}</p>
               </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Description</p>
-                <p className=" max-w-[300px]">{selectedProject.description}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">City</p>
-                <p className=" max-w-[300px]">{selectedProject.city}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black mt-[1em]">State</p>
-                <p className=" max-w-[300px]">{selectedProject.state}</p>
+
+              <div className="flex items-center w-full lg:w-auto justify-end lg:block">
+                <div className="w-1/2 lg:w-auto">
+                  <p className="font-bold  text-black   lg:mt-[1em]">City</p>
+                  <p className=" max-w-[300px]">{selectedProject.city}</p>
+                </div>
+                <div className="w-1/2 lg:w-auto">
+                  <p className="font-bold  text-black  lg:mt-[1em]">State</p>
+                  <p className=" max-w-[300px]">{selectedProject.state}</p>
+                </div>
               </div>
               <div>
                 <p className="font-bold  text-black mt-[1em]">Spaces</p>
-                <p className="">
+                <p className="flex gap-1">
                   {formatCategory(selectedProject.sub_category_2)
                     .split(",")
                     .map((item: any, ind: number) => (
@@ -309,7 +303,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               </div>
               <div>
                 <p className="font-bold  text-black  mt-[1em]">Theme</p>
-                <p className="">
+                <p className="flex gap-1">
                   {formatCategory(selectedProject.sub_category_1)
                     .split(",")
                     .map((item: any, ind: number) => (
@@ -324,6 +318,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       />
                     ))}
                 </p>
+              </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Description</p>
+                <p className=" max-w-[300px]">{selectedProject.description}</p>
               </div>
             </>
           ) : (
@@ -511,10 +509,28 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-[50px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
+      <div className="mt-[60px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
-            {professionalHeader}
+            {isMobile && !selectedProject && professionalHeader}
+
+            {isMobile && selectedProject && (
+              <div className="flex gap-3 mb-3 items-center">
+                <Button
+                  variant="outlined"
+                  style={{
+                    backgroundColor: "#8c52ff",
+                    color: "white",
+                  }}
+                  onClick={handleBackClick}
+                >
+                  <ArrowBackIcon />
+                </Button>
+                <p className="text-base">{vendorData?.business_name}</p>
+              </div>
+            )}
+
+            {!isMobile && professionalHeader}
 
             <div className="lg:hidden flex justify-center">
               {isMobile ? (
@@ -707,9 +723,11 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             ) : (
               <>
                 <div id="projects" className=" mb-[10px]">
-                  <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
-                    Projects
-                  </p>
+                  {!selectedProject && (
+                    <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
+                      Projects
+                    </p>
+                  )}
                   <div className="w-[93vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
                     <div className="flex   ">
                       {!projectsData ? (
@@ -766,7 +784,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         </div>
                       ) : selectedProject ? (
                         <div className="flex flex-col mt-2">
-                          <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
+                          {/* <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
                             <Button
                               variant="outlined"
                               style={{
@@ -777,7 +795,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                             >
                               <ArrowBackIcon />
                             </Button>
-                          </div>
+                          </div> */}
                           <div className="flex flex-col gap-3 mb-[1em]">
                             <Carousel
                               imageObj={selectedProject.images}
@@ -842,17 +860,19 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   </div>
                   <Divider />
                 </div>
-                <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
-                  <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
-                    {
-                      <Reviews
-                        id={
-                          professionalId ? Number(professionalId) : Number(-1)
-                        }
-                      />
-                    }
+                {!selectedProject && (
+                  <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+                    <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
+                      {
+                        <Reviews
+                          id={
+                            professionalId ? Number(professionalId) : Number(-1)
+                          }
+                        />
+                      }
+                    </div>
                   </div>
-                </div>
+                )}
               </>
             )}
           </div>
