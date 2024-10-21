@@ -259,11 +259,15 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           <>
             {keysArray.map((key) => (
               <>
-                <p className="text-base">{key}</p>
+                <p className="text-base font-bold">{formatString(key)}</p>
                 <div className=" flex gap-2 overflow-x-auto whitespace-nowrap">
                   {imageObj[selectedSpace]?.map((img, i) => (
                     <>
-                      <img src={`${constants.apiImageUrl}/${img}`} alt="" />
+                      <img
+                        src={`${constants.apiImageUrl}/${img}`}
+                        alt=""
+                        key={i}
+                      />
                     </>
                   ))}
                 </div>

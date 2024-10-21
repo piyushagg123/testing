@@ -164,6 +164,26 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
   };
+  useEffect(() => {
+    const handlePopState = (event: any) => {
+      if (selectedProject) {
+        event.preventDefault();
+
+        setSelectedProject(undefined);
+      }
+    };
+
+    if (selectedProject) {
+      window.history.pushState(null, "", window.location.pathname);
+      window.addEventListener("popstate", handlePopState);
+    } else {
+      window.removeEventListener("popstate", handlePopState);
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [selectedProject]);
 
   const handleReviewDialogClose = (
     _?: React.SyntheticEvent<Element, Event>,
@@ -176,10 +196,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     setReviewError("");
   };
   const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
+    let formattedStr = str?.replace(/_/g, " ");
     formattedStr = formattedStr
-      .toLowerCase()
-      .split(" ")
+      ?.toLowerCase()
+      ?.split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
 
@@ -266,11 +286,10 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           {selectedProject ? (
             <>
               <div className="flex w-1/2 flex-col">
-                {/* <p className="font-bold  text-purple  mt-[1em]">
-                  Project Details
-                </p> */}
                 <p className="font-bold  text-black">Title</p>
-                <p className=" max-w-[300px]">{selectedProject.title}</p>
+                <p className=" max-w-[300px]">
+                  {formatCategory(selectedProject.title)}
+                </p>
               </div>
 
               <div className="flex items-center w-full lg:w-auto justify-end lg:block">
@@ -286,37 +305,13 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               <div>
                 <p className="font-bold  text-black mt-[1em]">Spaces</p>
                 <p className="flex gap-1">
-                  {formatCategory(selectedProject.sub_category_2)
-                    .split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
+                  {formatCategory(selectedProject.sub_category_2)}
                 </p>
               </div>
               <div>
                 <p className="font-bold  text-black  mt-[1em]">Theme</p>
                 <p className="flex gap-1">
-                  {formatCategory(selectedProject.sub_category_1)
-                    .split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
+                  {formatCategory(selectedProject.sub_category_1)}
                 </p>
               </div>
               <div>
@@ -446,7 +441,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           </span>{" "}
           <div className="flex flex-wrap gap-1">
             {formatCategory(vendorData?.sub_category_1 ?? "N/A")
-              .split(",")
+              ?.split(",")
               .map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
@@ -464,7 +459,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-              .split(",")
+              ?.split(",")
               .map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
@@ -480,7 +475,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
             EXECUTION TYPE :
           </span>{" "}
           {(vendorData?.sub_category_3 ?? "N/A")
-            .split(",")
+            ?.split(",")
             .map((item: string, ind: number) => (
               <Chip
                 label={
@@ -509,24 +504,16 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-[60px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
+      <div className="mt-[55px] text-black flex flex-col lg:flex-row min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
             {isMobile && !selectedProject && professionalHeader}
 
             {isMobile && selectedProject && (
               <div className="flex gap-3 mb-3 items-center">
-                <Button
-                  variant="outlined"
-                  style={{
-                    backgroundColor: "#8c52ff",
-                    color: "white",
-                  }}
-                  onClick={handleBackClick}
-                >
-                  <ArrowBackIcon />
-                </Button>
-                <p className="text-base">{vendorData?.business_name}</p>
+                <p className="text-base font-bold">
+                  {vendorData?.business_name}
+                </p>
               </div>
             )}
 
@@ -724,7 +711,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
               <>
                 <div id="projects" className=" mb-[10px]">
                   {!selectedProject && (
-                    <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
+                    <p className="text-base font-bold w-[93vw] lg:w-auto m-auto mt-5">
                       Projects
                     </p>
                   )}
@@ -784,18 +771,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                         </div>
                       ) : selectedProject ? (
                         <div className="flex flex-col mt-2">
-                          {/* <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
-                            <Button
-                              variant="outlined"
-                              style={{
-                                backgroundColor: "#8c52ff",
-                                color: "white",
-                              }}
-                              onClick={handleBackClick}
-                            >
-                              <ArrowBackIcon />
-                            </Button>
-                          </div> */}
                           <div className="flex flex-col gap-3 mb-[1em]">
                             <Carousel
                               imageObj={selectedProject.images}
