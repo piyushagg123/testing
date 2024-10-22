@@ -650,7 +650,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
   );
 
   const professionalHeader = (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] md:w-auto mx-auto lg:mx-0">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] lg:w-[50%] md:w-auto mx-auto lg:mx-0">
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -742,24 +742,164 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
     return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-[50px] lg:mt-[70px] text-black flex flex-col lg:flex-row  justify-center  min-h-screen">
+      <div className="mt-[50px] lg:mt-[70px] text-black flex flex-col lg:flex-row  justify-center lg:justify-start lg:px-16  min-h-screen">
         <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
-          <div className=" md:w-max m-auto lg:m-0 md:mt-[2em]">
-            <div className="flex flex-col justify-center lg:flex-row gap-2">
+          <div className=" md:w-max m-auto lg:m-0 md:mt-[2em] flex flex-row">
+            <div className="flex flex-col  gap-2">
               {professionalHeader}
-
-              {/* <div className="lg:hidden flex justify-center">
-                {isMobile ? (
-                  <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw]">
-                    {professionalCard}
-                  </div>
-                ) : (
-                  <div className="">{professionalCard}</div>
-                )}
-              </div> */}
-              <div className="flex justify-center">
+              {/* <div className="flex justify-center">
                 <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw] lg:w-[50vw]">
                   {isMobile ? professionalCard : largeProfessionalCard}
+                </div>
+              </div> */}
+              <div
+                id="projects"
+                className=" mb-[10px] hidden lg:block w-[55%] overflow-x-auto whitespace-nowrap"
+              >
+                <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
+                  Projects
+                </p>
+                <div className="  m-auto  overflow-x-auto whitespace-nowrap max-w-[100%] flex  gap-2  pt-[10px] ">
+                  <div className="flex   ">
+                    {!projectsData ? (
+                      <div className="flex flex-col items-center justify-center w-[90vw]">
+                        {(renderProfileView ||
+                          Number(professionalId) == userDetails.vendor_id) && (
+                          <div
+                            className={`${
+                              selectedProject
+                                ? "hidden"
+                                : "flex w-full justify-start"
+                            }`}
+                          >
+                            <div
+                              className={`${
+                                selectedProject ? "hidden" : "mr-2"
+                              } mb-3`}
+                            >
+                              <Button
+                                variant="outlined"
+                                style={{
+                                  color: "#8c52ff",
+                                  height: "170px",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  borderRadius: "10px",
+                                  borderColor: "#8c52ff",
+                                  textTransform: "none",
+                                }}
+                                onClick={() => setOpen(true)}
+                              >
+                                <AddCircleIcon />
+                                <p>Add a project</p>
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                        {Number(professionalId) !== userDetails.vendor_id &&
+                          !renderProfileView && (
+                            <>
+                              <div className="mb-[1em]">
+                                <img
+                                  src={projectImage}
+                                  alt=""
+                                  className="w-[300px]"
+                                />
+                              </div>
+                              <p className="mb-[1em]">
+                                No projects added yet by the designer
+                              </p>
+                            </>
+                          )}
+                      </div>
+                    ) : selectedProject ? (
+                      <div className="flex flex-col mt-2">
+                        <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
+                          <Button
+                            variant="outlined"
+                            style={{
+                              backgroundColor: "#8c52ff",
+                              color: "white",
+                            }}
+                            onClick={handleBackClick}
+                          >
+                            <ArrowBackIcon />
+                          </Button>
+                        </div>
+                        <div className="flex flex-col gap-3 mb-[1em]">
+                          <Carousel
+                            imageObj={selectedProject.images}
+                            showProjectDetails={false}
+                            city=""
+                            state=""
+                            theme=""
+                            title=""
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-start ">
+                        <div>
+                          {(renderProfileView ||
+                            Number(professionalId) ==
+                              userDetails.vendor_id) && (
+                            <div
+                              className={`${
+                                selectedProject ? "hidden" : "mr-2"
+                              } mb-3`}
+                            >
+                              <Button
+                                variant="outlined"
+                                style={{
+                                  color: "#8c52ff",
+                                  height: "170px",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  borderRadius: "10px",
+                                  borderColor: "#8c52ff",
+                                  textTransform: "none",
+                                }}
+                                onClick={() => setOpen(true)}
+                              >
+                                <AddCircleIcon />
+                                <p>Add a project</p>
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                        {projectsData.map((item, ind) => (
+                          <div
+                            key={ind}
+                            onClick={() => handleCarouselClick(item)}
+                            className="mb-4 mr-2"
+                          >
+                            <Carousel
+                              key={ind}
+                              imageObj={item.images}
+                              title={item.title}
+                              city={item.city}
+                              state={item.state}
+                              theme={item.sub_category_1}
+                              showProjectDetails={true}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <Divider />
+              </div>
+            </div>
+            <div>
+              {largeProfessionalCard}
+              <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+                <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
+                  {
+                    <Reviews
+                      id={professionalId ? Number(professionalId) : Number(-1)}
+                    />
+                  }
                 </div>
               </div>
             </div>
@@ -941,7 +1081,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                     </div>
                   </TabPanel> */}
                 </TabContext>
-
+                {/* 
                 <div className="mt-5">
                   {(renderProfileView ||
                     Number(professionalId) == userDetails.vendor_id) && (
@@ -1005,7 +1145,6 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                         </div>
                       ) : (
                         <>
-                          {/* <p className="text-base font-bold">Projects</p> */}
                           <br />
                           <br />
 
@@ -1034,12 +1173,12 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <br />
                 <br />
                 <br />
 
-                <div className="w-[95vw] flex justify-center flex-col items-center">
+                {/* <div className="w-[95vw] flex justify-center flex-col items-center">
                   {
                     <Reviews
                       id={professionalId ? Number(professionalId) : Number(-1)}
@@ -1048,15 +1187,15 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                   <br />
                   <br />
                   <br />
-                </div>
+                </div> */}
               </>
             ) : (
               <>
-                <div id="projects" className=" mb-[10px]">
+                {/* <div id="projects" className=" mb-[10px]">
                   <p className="text-base font-bold w-[93vw] lg:w-auto m-auto">
                     Projects
                   </p>
-                  <div className="w-[93vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
+                  <div className="m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
                     <div className="flex   ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
@@ -1187,8 +1326,8 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                     </div>
                   </div>
                   <Divider />
-                </div>
-                <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+                </div> */}
+                {/* <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
                   <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
                     {
                       <Reviews
@@ -1198,7 +1337,7 @@ const InteriorDesignerInfo: React.FC<ProfessionalInfoProps> = ({
                       />
                     }
                   </div>
-                </div>
+                </div> */}
               </>
             )}
           </div>

@@ -18,6 +18,7 @@ import InteriorDesignerInfo from "./pages/professionalInfo/InteriorDesignerInfo"
 import ProfileForMobile from "./pages/ProfileForMobile";
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerInfo from "./pages/professionalInfo/FinancePlannerInfo";
+import Dummy from "./pages/professionalInfo/Dummy";
 
 const fetchUserData = async () => {
   const token = sessionStorage.getItem("token");
@@ -93,7 +94,7 @@ const App: React.FC = () => {
           <Route
             path="/interior-designers/:professionalId"
             element={
-              <InteriorDesignerInfo
+              <Dummy
                 renderProfileView={false}
                 renderProfessionalInfoView={true}
               />
