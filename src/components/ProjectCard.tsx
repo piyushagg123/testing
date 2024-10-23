@@ -186,74 +186,20 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </CardActionArea>
         </Card>
       ) : keysArray.length > 0 ? (
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <Tabs
-              value={selectedSpace}
-              onChange={handleChange}
-              aria-label="Spaces tabs"
-              orientation="vertical"
-              variant={keysArray.length <= 3 ? "standard" : "scrollable"}
-              sx={{
-                textAlign: "center",
-                rotate: "180deg",
-                marginRight: "60px",
-                height: dynamicHeight,
-
-                "& .MuiTabs-indicator": {
-                  transition: "none",
-                },
-                "& .MuiTab-root": {
-                  transition: "none",
-                },
-                "& .MuiSvgIcon-root": {
-                  marginLeft: "38px",
-                },
-                "& .MuiButtonBase-root": {
-                  transition: "none",
-                  animation: "none",
-                },
-              }}
-              TabIndicatorProps={{
-                sx: { display: "none" },
-              }}
-            >
-              {keysArray.map((key) => (
-                <Tab
-                  label={
-                    <span style={{ writingMode: "vertical-rl" }}>
-                      {formatString(key)}
-                    </span>
-                  }
-                  value={key}
-                  key={key}
-                  sx={{
-                    transition: "none",
-                    color: selectedSpace === key ? "black" : "grey",
-                    "&.Mui-selected": {
-                      color: "black",
-                    },
-                  }}
-                />
-              ))}
-            </Tabs>
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative", top: "-60px" }}>
-            <Box>
-              <Carousel
-                animation="slide"
-                cycleNavigation={true}
-                IndicatorIcon={funct(imageObj[selectedSpace])}
-              >
-                {imageObj[selectedSpace]?.map((img, i) => (
+        <Box>
+          {keysArray.map((key) => (
+            <>
+              <p>{key}</p>
+              <Carousel animation="slide" cycleNavigation={true}>
+                {imageObj[key]?.map((img, i) => (
                   <>
                     <Item key={i} item={img} />
                   </>
                 ))}
               </Carousel>
-            </Box>
-          </Grid>
-        </Grid>
+            </>
+          ))}
+        </Box>
       ) : (
         <>
           <p className="text-center top-[-78px] relative">

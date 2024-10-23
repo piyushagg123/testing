@@ -150,7 +150,7 @@ const Reviews: React.FC<user> = ({ id }) => {
               <p>By verified users only</p>
             </div>
             <div className={`flex flex-col w-full gap-3 mt-1`}>
-              <div className="flex md:items-center justify-start gap-2 md:gap-10 flex-row">
+              <div className="flex md:items-center justify-start gap-2  flex-row">
                 <div className="flex flex-col md:items-center justify-center">
                   <p className="flex items-center gap-2">
                     <span className="text-[40px]">
@@ -178,7 +178,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                 <div className="flex flex-col ">
                   <p className="my-[1em]">What our customers said</p>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[255px]">
                       <p className="flex items-center md:text-sm">
                         Work Quality
                       </p>
@@ -198,7 +198,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                     <p className="text-[10px]">{averages.quality}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[255px]">
                       <p className="flex items-center md:text-sm"> Execution</p>
                       <BorderLinearProgress
                         variant="determinate"
@@ -216,7 +216,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                     <p className="text-[10px]">{averages.execution}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[255px]">
                       <p className="flex items-center md:text-sm">Behaviour</p>
                       <BorderLinearProgress
                         variant="determinate"

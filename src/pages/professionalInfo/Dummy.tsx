@@ -189,12 +189,12 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
     setReviewError("");
   };
   const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
+    let formattedStr = str?.replace(/_/g, " ");
     formattedStr = formattedStr
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      ?.toLowerCase()
+      ?.split(" ")
+      ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      ?.join(" ");
 
     return formattedStr;
   };
@@ -272,381 +272,85 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const professionalCard = (
-    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2">
-      <>
-        <>
-          {selectedProject ? (
-            <>
-              <div className="w-1/2 md:w-fit">
-                <p className="font-bold text-black">Contact Number</p>
-                <p className="">{vendorData?.mobile ?? "N/A"}</p>
-              </div>
-              <div className="w-full mt-[1em]">
-                <p className="font-bold  text-black">Email</p>
-                <p className="">{vendorData?.email ?? "N/A"}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-purple  mt-[1em]">
-                  Project Details
-                </p>
-                <p className="font-bold  text-black">Title</p>
-                <p className=" max-w-[300px]">{selectedProject.title}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Description</p>
-                <p className=" max-w-[300px]">{selectedProject.description}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">City</p>
-                <p className=" max-w-[300px]">{selectedProject.city}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black mt-[1em]">State</p>
-                <p className=" max-w-[300px]">{selectedProject.state}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black mt-[1em]">Spaces</p>
-                <p className="">
-                  {formatCategory(selectedProject.sub_category_2)
-                    .split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Theme</p>
-                <p className="">
-                  {formatCategory(selectedProject.sub_category_1)
-                    .split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex flex-row lg:flex-col w-full">
-                <div className="mt-[1em] w-1/2 lg:w-fit">
-                  <p className="font-bold  text-black">Typical Job Cost</p>
-                  <p className="">
-                    {vendorData?.average_project_value ?? "N/A"}
-                  </p>
-                </div>
-                <div className="mt-[1em] w-1/2 lg:w-fit">
-                  <p className="font-bold  text-black">Number of Employees</p>
-                  <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
-                </div>
-              </div>
-              <div className="flex  w-full flex-row lg:flex-col mt-[1em]">
-                <div className="w-1/2 lg:w-fit mt-[1em]">
-                  <p className="font-bold  text-black">Projects Completed</p>
-                  <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
-                </div>
-                <div className=" w-1/2 lg:w-fit mt-[1em]">
-                  <p className="font-bold  text-black">Location</p>
-                  <p className="">{vendorData?.city ?? "N/A"}</p>
-                </div>
-              </div>
-              <div className="flex flex-row lg:flex-col  w-full">
-                {(vendorData?.social?.facebook ||
-                  vendorData?.social?.instagram ||
-                  vendorData?.social?.website) && (
-                  <div className="w-1/2 mt-[1em]">
-                    <p className="font-bold  text-black">Socials</p>
-                    {vendorData.social.facebook && (
-                      <a
-                        href={vendorData.social.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FacebookIcon />
-                      </a>
-                    )}
-                    {vendorData.social.instagram && (
-                      <a
-                        href={vendorData.social.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <InstagramIcon />
-                      </a>
-                    )}
-                    {vendorData.social.website && (
-                      <a
-                        href={vendorData.social.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <OpenInNewIcon />
-                      </a>
-                    )}
-                  </div>
-                )}
-                <div className="w-1/2 lg:w-fit">
-                  <p className="font-bold text-black mt-[1em]">
-                    Contact Number
-                  </p>
-                  <p className="">{vendorData?.mobile ?? "N/A"}</p>
-                </div>
-              </div>
-              <div className="w-full mt-[1em]">
-                <p className="font-bold  text-black">Email</p>
-                <p className="">{vendorData?.email ?? "N/A"}</p>
-              </div>
-              <div className="lg:hidden w-full ">
-                <p className="font-bold  text-black">About</p>
-                <p className=" text-justify mb-[1em] rounded-md">
-                  {contentPreview}
-                  {isMobile &&
-                    vendorData?.description.length! > maxVisibleLength && (
-                      <button
-                        onClick={handleExpandClick}
-                        className="text-blue-500 hover:text-blue-700 font-medium"
-                      >
-                        {expanded ? "Read less" : "Read More"}
-                      </button>
-                    )}
-                </p>
-              </div>
-            </>
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex  gap-4 items-center p-2 lg:border lg:rounded-md">
+      <div className="flex flex-row  w-full">
+        <div className="mt-[1em] w-1/2 ">
+          <p className="font-bold  text-black">Typical Job Cost</p>
+          <p className="">{vendorData?.average_project_value ?? "N/A"}</p>
+        </div>
+        <div className="mt-[1em] w-1/2 ">
+          <p className="font-bold  text-black">Number of Employees</p>
+          <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+        </div>
+      </div>
+      <div className="flex  w-full flex-row  mt-[1em]">
+        <div className="w-1/2  mt-[1em]">
+          <p className="font-bold  text-black">Projects Completed</p>
+          <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
+        </div>
+        <div className=" w-1/2  mt-[1em]">
+          <p className="font-bold  text-black">Location</p>
+          <p className="">{vendorData?.city ?? "N/A"}</p>
+        </div>
+      </div>
+      <div className="flex flex-row  w-full">
+        {(vendorData?.social?.facebook ||
+          vendorData?.social?.instagram ||
+          vendorData?.social?.website) && (
+          <div className="w-1/2 mt-[1em]">
+            <p className="font-bold  text-black">Socials</p>
+            {vendorData.social.facebook && (
+              <a
+                href={vendorData.social.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FacebookIcon />
+              </a>
+            )}
+            {vendorData.social.instagram && (
+              <a
+                href={vendorData.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InstagramIcon />
+              </a>
+            )}
+            {vendorData.social.website && (
+              <a
+                href={vendorData.social.website}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <OpenInNewIcon />
+              </a>
+            )}
+          </div>
+        )}
+        <div className="w-1/2 ">
+          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="">{vendorData?.mobile ?? "N/A"}</p>
+        </div>
+      </div>
+      <div className="w-full mt-[1em]">
+        <p className="font-bold  text-black">Email</p>
+        <p className="">{vendorData?.email ?? "N/A"}</p>
+      </div>
+      <div className=" w-full ">
+        <p className="font-bold  text-black">About</p>
+        <p className=" text-justify mb-[1em] rounded-md">
+          {contentPreview}
+          {vendorData?.description.length! > maxVisibleLength && (
+            <button
+              onClick={handleExpandClick}
+              className="text-blue-500 hover:text-blue-700 font-medium"
+            >
+              {expanded ? "Read less" : "Read More"}
+            </button>
           )}
-        </>
-      </>
-    </div>
-  );
-
-  const largeProfessionalCard = (
-    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex lg:block gap-4 items-center p-2 border rounded-md">
-      <>
-        <>
-          {selectedProject ? (
-            <>
-              <div className="w-1/2 md:w-fit">
-                <p className="font-bold text-black">Contact Number</p>
-                <p className="">{vendorData?.mobile ?? "N/A"}</p>
-              </div>
-              <div className="w-full mt-[1em]">
-                <p className="font-bold  text-black">Email</p>
-                <p className="">{vendorData?.email ?? "N/A"}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-purple  mt-[1em]">
-                  Project Details
-                </p>
-                <p className="font-bold  text-black">Title</p>
-                <p className=" max-w-[300px]">{selectedProject.title}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Description</p>
-                <p className=" max-w-[300px]">{selectedProject.description}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">City</p>
-                <p className=" max-w-[300px]">{selectedProject.city}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black mt-[1em]">State</p>
-                <p className=" max-w-[300px]">{selectedProject.state}</p>
-              </div>
-              <div>
-                <p className="font-bold  text-black mt-[1em]">Spaces</p>
-                <p className="">
-                  {formatCategory(selectedProject.sub_category_2)
-                    .split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Theme</p>
-                <p className="">
-                  {formatCategory(selectedProject.sub_category_1)
-                    .split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex flex-row w-full">
-                <div className="mt-[1em] w-1/3 ">
-                  <p className="font-bold  text-black">Typical Job Cost</p>
-                  <p className="">
-                    {vendorData?.average_project_value ?? "N/A"}
-                  </p>
-                </div>
-                <div className="mt-[1em] w-1/3 ">
-                  <p className="font-bold  text-black">Number of Employees</p>
-                  <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
-                </div>
-                <div className="w-1/3 mt-[1em]">
-                  <p className="font-bold  text-black">Projects Completed</p>
-                  <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
-                </div>
-              </div>
-              <div className="flex  w-full flex-row  mt-[1em]">
-                <div className=" w-1/3  mt-[1em]">
-                  <p className="font-bold  text-black">Location</p>
-                  <p className="">{vendorData?.city ?? "N/A"}</p>
-                </div>
-                <div className="w-1/3 ">
-                  <p className="font-bold text-black mt-[1em]">
-                    Contact Number
-                  </p>
-                  <p className="">{vendorData?.mobile ?? "N/A"}</p>
-                </div>
-                {(vendorData?.social?.facebook ||
-                  vendorData?.social?.instagram ||
-                  vendorData?.social?.website) && (
-                  <div className="w-1/3 mt-[1em]">
-                    <p className="font-bold  text-black">Socials</p>
-                    {vendorData.social.facebook && (
-                      <a
-                        href={vendorData.social.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FacebookIcon />
-                      </a>
-                    )}
-                    {vendorData.social.instagram && (
-                      <a
-                        href={vendorData.social.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <InstagramIcon />
-                      </a>
-                    )}
-                    {vendorData.social.website && (
-                      <a
-                        href={vendorData.social.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <OpenInNewIcon />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-              {/* <div className="flex flex-row  w-full">
-                  {(vendorData?.social?.facebook ||
-                    vendorData?.social?.instagram ||
-                    vendorData?.social?.website) && (
-                    <div className="w-1/3 mt-[1em]">
-                      <p className="font-bold  text-black">Socials</p>
-                      {vendorData.social.facebook && (
-                        <a
-                          href={vendorData.social.facebook}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FacebookIcon />
-                        </a>
-                      )}
-                      {vendorData.social.instagram && (
-                        <a
-                          href={vendorData.social.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <InstagramIcon />
-                        </a>
-                      )}
-                      {vendorData.social.website && (
-                        <a
-                          href={vendorData.social.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <OpenInNewIcon />
-                        </a>
-                      )}
-                    </div>
-                  )}
-                  <div className="w-1/2 ">
-                    <p className="font-bold text-black mt-[1em]">
-                      Contact Number
-                    </p>
-                    <p className="">{vendorData?.mobile ?? "N/A"}</p>
-                  </div>
-                </div> */}
-              <div className="w-full mt-[1em]">
-                <p className="font-bold  text-black">Email</p>
-                <p className="">{vendorData?.email ?? "N/A"}</p>
-              </div>
-              {/* <div className="lg:hidden w-full ">
-                  <p className="font-bold  text-black">About</p>
-                  <p className=" text-justify mb-[1em] rounded-md">
-                    {contentPreview}
-                    {isMobile &&
-                      vendorData?.description.length! > maxVisibleLength && (
-                        <button
-                          onClick={handleExpandClick}
-                          className="text-blue-500 hover:text-blue-700 font-medium"
-                        >
-                          {expanded ? "Read less" : "Read More"}
-                        </button>
-                      )}
-                  </p>
-                </div> */}
-              <div className=" w-full mt-[1em]">
-                <p className="font-bold  text-black">About</p>
-                <p className=" text-justify mb-[1em] rounded-md">
-                  {contentPreview}
-
-                  {vendorData?.description.length! > maxVisibleLength && (
-                    <button
-                      onClick={handleExpandClick}
-                      className="text-blue-500 hover:text-blue-700 font-medium"
-                    >
-                      {expanded ? "Read less" : "Read More"}
-                    </button>
-                  )}
-                </p>
-              </div>
-            </>
-          )}
-        </>
-      </>
+        </p>
+      </div>
     </div>
   );
 
@@ -680,7 +384,7 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
           </span>{" "}
           <div className="flex flex-wrap gap-1">
             {formatCategory(vendorData?.sub_category_1 ?? "N/A")
-              .split(",")
+              ?.split(",")
               .map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
@@ -698,7 +402,7 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {formatCategory(vendorData?.sub_category_2 ?? "N/A")
-              .split(",")
+              ?.split(",")
               .map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
@@ -714,7 +418,7 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
             EXECUTION TYPE :
           </span>{" "}
           {(vendorData?.sub_category_3 ?? "N/A")
-            .split(",")
+            ?.split(",")
             .map((item: string, ind: number) => (
               <Chip
                 label={
@@ -799,33 +503,8 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
                       </>
                     )}
                 </div>
-              ) : selectedProject ? (
-                <div className="flex flex-col mt-2">
-                  <div className="flex mb-[1em] justify-start gap-60 lg:w-[750px]">
-                    <Button
-                      variant="outlined"
-                      style={{
-                        backgroundColor: "#8c52ff",
-                        color: "white",
-                      }}
-                      onClick={handleBackClick}
-                    >
-                      <ArrowBackIcon />
-                    </Button>
-                  </div>
-                  <div className="flex flex-col gap-3 mb-[1em]">
-                    <Carousel
-                      imageObj={selectedProject.images}
-                      showProjectDetails={false}
-                      city=""
-                      state=""
-                      theme=""
-                      title=""
-                    />
-                  </div>
-                </div>
               ) : (
-                <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-start ">
+                <div className="flex overflow-x-auto whitespace-nowrap items-start ">
                   <div>
                     {(renderProfileView ||
                       Number(professionalId) == userDetails.vendor_id) && (
@@ -874,14 +553,75 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
               )}
             </div>
           </div>
-          <Divider />
         </div>
+
+        {selectedProject && (
+          <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-1/2 mb-3">
+            <div>
+              <p className="font-bold  text-black">Project name</p>
+              <p className=" max-w-[300px]">{selectedProject.title}</p>
+            </div>
+            <div>
+              <p className="font-bold  text-black  mt-[1em]">Description</p>
+              <p className=" max-w-[300px]">{selectedProject.description}</p>
+            </div>
+            <div className="flex">
+              <div className="w-1/2">
+                <p className="font-bold  text-black  mt-[1em] ">City</p>
+                <p className=" max-w-[300px]">{selectedProject.city}</p>
+              </div>
+              <div className="w-1/2">
+                <p className="font-bold  text-black mt-[1em]">State</p>
+                <p className=" max-w-[300px]">{selectedProject.state}</p>
+              </div>
+            </div>
+            <div className="flex">
+              <div className="w-1/2">
+                <p className="font-bold  text-black mt-[1em]">Spaces</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_2)
+                    ?.split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+              <div className="w-1/2">
+                <p className="font-bold  text-black  mt-[1em]">Theme</p>
+                <p className="">
+                  {formatCategory(selectedProject.sub_category_1)
+                    ?.split(",")
+                    .map((item: any, ind: number) => (
+                      <Chip
+                        label={item}
+                        variant="outlined"
+                        key={ind}
+                        sx={{ height: "25px" }}
+                        style={{
+                          color: "linear-gradient(#ff5757,#8c52ff)",
+                        }}
+                      />
+                    ))}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
       <div className=" h-fit w-[40%] flex flex-col">
-        {largeProfessionalCard}
+        {professionalCard}
         <br />
-        <div id="reviews" className=" mb-[10px] w-[98vw] m-auto ml-6">
-          <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
+        <div id="reviews" className=" mb-[10px]  m-auto ml-6">
+          <div className=" flex justify-center flex-col items-center px-2">
             {
               <Reviews
                 id={professionalId ? Number(professionalId) : Number(-1)}
