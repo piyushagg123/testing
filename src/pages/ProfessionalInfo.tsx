@@ -285,7 +285,6 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         <>
           {selectedProject ? (
             <>
-              {console.log(selectedProject)}
               <div className="flex w-1/2 flex-col">
                 <p className="font-bold  text-black">Project name</p>
                 <p className=" max-w-[300px]">
