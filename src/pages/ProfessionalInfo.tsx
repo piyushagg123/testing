@@ -285,8 +285,9 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
         <>
           {selectedProject ? (
             <>
+              {console.log(selectedProject)}
               <div className="flex w-1/2 flex-col">
-                <p className="font-bold  text-black">Title</p>
+                <p className="font-bold  text-black">Project name</p>
                 <p className=" max-w-[300px]">
                   {formatCategory(selectedProject.title)}
                 </p>
@@ -302,17 +303,21 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                   <p className=" max-w-[300px]">{selectedProject.state}</p>
                 </div>
               </div>
-              <div>
-                <p className="font-bold  text-black mt-[1em]">Spaces</p>
-                <p className="flex gap-1">
-                  {formatCategory(selectedProject.sub_category_2)}
-                </p>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Theme</p>
-                <p className="flex gap-1">
-                  {formatCategory(selectedProject.sub_category_1)}
-                </p>
+              <div className="flex  w-full lg:w-auto  lg:block justify-end">
+                <div className="w-1/2 lg:w-auto">
+                  <p className="font-bold  text-black mt-[1em] ">Spaces</p>
+                  <p className="flex gap-1">
+                    {formatCategory(
+                      Object.keys(selectedProject.images).join(",")
+                    )}
+                  </p>
+                </div>
+                <div className="w-1/2 lg:w-auto">
+                  <p className="font-bold  text-black  mt-[1em] w-1/2">Theme</p>
+                  <p className="flex gap-1">
+                    {formatCategory(selectedProject.sub_category_1)}
+                  </p>
+                </div>
               </div>
               <div>
                 <p className="font-bold  text-black  mt-[1em]">Description</p>
@@ -511,7 +516,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
 
             {isMobile && selectedProject && (
               <div className="flex gap-3 mb-3 items-center">
-                <p className="text-base font-bold">
+                <p className="text-base font-bold mt-2 w-[93vw] m-auto">
                   {vendorData?.business_name}
                 </p>
               </div>
@@ -715,8 +720,8 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       Projects
                     </p>
                   )}
-                  <div className="w-[93vw] m-auto  overflow-x-auto whitespace-nowrap lg:w-[750px] flex  gap-2  pt-[10px] ">
-                    <div className="flex   ">
+                  <div className="w-[93vw] m-auto   lg:w-[750px]   gap-2  pt-[10px] ">
+                    <div className="   ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
                           {(renderProfileView ||
@@ -833,7 +838,7 @@ const ProfessionalInfo: React.FC<ProfessionalInfoProps> = ({
                       )}
                     </div>
                   </div>
-                  <Divider />
+                  {!selectedProject && <Divider />}
                 </div>
                 {!selectedProject && (
                   <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">

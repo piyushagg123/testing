@@ -245,6 +245,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                   animation="slide"
                   cycleNavigation={true}
                   IndicatorIcon={funct(imageObj[selectedSpace])}
+                  sx={{ width: "90vw" }}
                 >
                   {imageObj[selectedSpace]?.map((img, i) => (
                     <>
@@ -260,17 +261,23 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             {keysArray.map((key) => (
               <>
                 <p className="text-base font-bold">{formatString(key)}</p>
-                <div className=" flex gap-2 overflow-x-auto whitespace-nowrap">
-                  {imageObj[selectedSpace]?.map((img, i) => (
-                    <>
-                      <img
-                        src={`${constants.apiImageUrl}/${img}`}
-                        alt=""
-                        key={i}
-                      />
-                    </>
-                  ))}
-                </div>
+
+                {imageObj[selectedSpace].length === 0 ? (
+                  <>
+                    {" "}
+                    <p>No image uploaded by the designer</p>
+                  </>
+                ) : (
+                  <Box>
+                    <Carousel animation="slide" cycleNavigation={true}>
+                      {imageObj[selectedSpace]?.map((img, i) => (
+                        <>
+                          <Item key={i} item={img} />
+                        </>
+                      ))}
+                    </Carousel>
+                  </Box>
+                )}
               </>
             ))}
           </>
@@ -287,6 +294,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 };
 
 const Item: React.FC<ItemProps> = ({ item }) => {
+  const theme = useTheme();
+  //device-width > 900px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Paper
       sx={{ display: "flex", justifyContent: "center", marginBottom: "1em" }}
@@ -294,7 +304,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       <img
         src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"
-        style={{ height: "400px" }}
+        style={{ height: isLargeDevice ? "400px" : "200px" }}
       />
     </Paper>
   );
