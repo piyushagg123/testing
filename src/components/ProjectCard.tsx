@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import {
   Chip,
@@ -48,6 +48,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     imageObj[key].forEach((img) => arr.push(img));
   });
 
+  const [showImages, setShowImages] = useState(false);
+
+  useEffect(() => {
+    let imagesExist = keysArray.some((key) => imageObj[key].length > 0);
+    setShowImages(imagesExist);
+  }, [imageObj, keysArray]);
   const themeArray = theme?.split(",");
 
   const [selectedSpace, setSelectedSpace] = useState(keysArray[0]);
@@ -258,28 +264,29 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </Grid>
         ) : (
           <>
-            {keysArray.map((key) => (
-              <>
-                <p className="text-base font-bold">{formatString(key)}</p>
+            {showImages ? (
+              keysArray.map((key) => (
+                <>
+                  <p className="text-base font-bold">{formatString(key)}</p>
 
-                {imageObj[selectedSpace].length === 0 ? (
-                  <>
-                    {" "}
-                    <p>No image uploaded by the designer</p>
-                  </>
-                ) : (
-                  <Box>
-                    <Carousel animation="slide" cycleNavigation={true}>
-                      {imageObj[selectedSpace]?.map((img, i) => (
-                        <>
-                          <Item key={i} item={img} />
-                        </>
-                      ))}
-                    </Carousel>
-                  </Box>
-                )}
-              </>
-            ))}
+                  {imageObj[selectedSpace].length === 0 && (
+                    <Box>
+                      <Carousel animation="slide">
+                        {imageObj[selectedSpace]?.map((img, i) => (
+                          <>
+                            <Item key={i} item={img} />
+                          </>
+                        ))}
+                      </Carousel>
+                    </Box>
+                  )}
+                </>
+              ))
+            ) : (
+              <p className="text-center  ">
+                No images uploaded by the designer
+              </p>
+            )}
           </>
         )
       ) : (
