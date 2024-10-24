@@ -42,3 +42,15 @@
   min-height: 100vh;
 }
 
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap; /* Keep items in one line */
+  -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer and Edge */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome, Safari, and other WebKit browsers */
+}
+

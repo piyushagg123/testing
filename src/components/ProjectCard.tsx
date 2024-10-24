@@ -189,8 +189,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         <Box>
           {keysArray.map((key) => (
             <>
-              <p>{key}</p>
-              <Carousel animation="slide" cycleNavigation={true}>
+              <p className="text-base font-bold">{formatString(key)}</p>
+              <Carousel animation="slide" cycleNavigation={false}>
                 {imageObj[key]?.map((img, i) => (
                   <>
                     <Item key={i} item={img} />
@@ -202,9 +202,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         </Box>
       ) : (
         <>
-          <p className="text-center top-[-78px] relative">
-            No images uploaded by the designer
-          </p>
+          <p className="text-center ">No images uploaded by the designer</p>
         </>
       )}
     </>

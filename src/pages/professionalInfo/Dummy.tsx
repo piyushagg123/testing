@@ -452,7 +452,7 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
           className=" mb-[10px] hidden lg:block w-[100%] overflow-x-auto whitespace-nowrap"
         >
           <p className="text-base font-bold  lg:w-auto m-auto">Projects</p>
-          <div className="  m-auto  overflow-x-auto whitespace-nowrap w-[100%] flex  gap-2  pt-[10px] ">
+          <div className="  m-auto  horizontal-scroll w-[100%] flex  gap-2  pt-[10px] ">
             <div className="flex   ">
               {!projectsData ? (
                 <div className="flex flex-col items-center justify-center ">
@@ -556,64 +556,79 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
         </div>
 
         {selectedProject && (
-          <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-1/2 mb-3">
-            <div>
-              <p className="font-bold  text-black">Project name</p>
-              <p className=" max-w-[300px]">{selectedProject.title}</p>
-            </div>
-            <div>
-              <p className="font-bold  text-black  mt-[1em]">Description</p>
-              <p className=" max-w-[300px]">{selectedProject.description}</p>
-            </div>
-            <div className="flex">
-              <div className="w-1/2">
-                <p className="font-bold  text-black  mt-[1em] ">City</p>
-                <p className=" max-w-[300px]">{selectedProject.city}</p>
+          <>
+            <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-1/2 mb-3">
+              <div>
+                <p className="font-bold  text-black">Project name</p>
+                <p className=" max-w-[300px]">{selectedProject.title}</p>
               </div>
-              <div className="w-1/2">
-                <p className="font-bold  text-black mt-[1em]">State</p>
-                <p className=" max-w-[300px]">{selectedProject.state}</p>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Description</p>
+                <p className=" max-w-[300px]">{selectedProject.description}</p>
+              </div>
+              <div className="flex">
+                <div className="w-1/2">
+                  <p className="font-bold  text-black  mt-[1em] ">City</p>
+                  <p className=" max-w-[300px]">{selectedProject.city}</p>
+                </div>
+                <div className="w-1/2">
+                  <p className="font-bold  text-black mt-[1em]">State</p>
+                  <p className=" max-w-[300px]">{selectedProject.state}</p>
+                </div>
+              </div>
+              <div className="flex">
+                <div className="w-1/2">
+                  <p className="font-bold  text-black mt-[1em]">Spaces</p>
+                  <p className="">
+                    {formatCategory(selectedProject.sub_category_2)
+                      ?.split(",")
+                      .map((item: any, ind: number) => (
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                          style={{
+                            color: "linear-gradient(#ff5757,#8c52ff)",
+                          }}
+                        />
+                      ))}
+                  </p>
+                </div>
+                <div className="w-1/2">
+                  <p className="font-bold  text-black  mt-[1em]">Theme</p>
+                  <p className="">
+                    {formatCategory(selectedProject.sub_category_1)
+                      ?.split(",")
+                      .map((item: any, ind: number) => (
+                        <Chip
+                          label={item}
+                          variant="outlined"
+                          key={ind}
+                          sx={{ height: "25px" }}
+                          style={{
+                            color: "linear-gradient(#ff5757,#8c52ff)",
+                          }}
+                        />
+                      ))}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex">
-              <div className="w-1/2">
-                <p className="font-bold  text-black mt-[1em]">Spaces</p>
-                <p className="">
-                  {formatCategory(selectedProject.sub_category_2)
-                    ?.split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
-              <div className="w-1/2">
-                <p className="font-bold  text-black  mt-[1em]">Theme</p>
-                <p className="">
-                  {formatCategory(selectedProject.sub_category_1)
-                    ?.split(",")
-                    .map((item: any, ind: number) => (
-                      <Chip
-                        label={item}
-                        variant="outlined"
-                        key={ind}
-                        sx={{ height: "25px" }}
-                        style={{
-                          color: "linear-gradient(#ff5757,#8c52ff)",
-                        }}
-                      />
-                    ))}
-                </p>
-              </div>
-            </div>
-          </div>
+
+            <Carousel
+              imageObj={selectedProject.images}
+              title={selectedProject.title}
+              city={selectedProject.city}
+              state={selectedProject.state}
+              theme={selectedProject.sub_category_1}
+              showProjectDetails={false}
+            />
+            <br />
+            <br />
+            <br />
+            <br />
+          </>
         )}
       </div>
 
