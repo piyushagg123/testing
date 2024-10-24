@@ -14,11 +14,12 @@ import constants from "./constants";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/AboutUs";
-import InteriorDesignerInfo from "./pages/professionalInfo/InteriorDesignerInfo";
+import InteriorDesignerInfoMobile from "./pages/professionalInfo/InteriorDesignerInfoMobile";
 import ProfileForMobile from "./pages/ProfileForMobile";
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerInfo from "./pages/professionalInfo/FinancePlannerInfo";
-import Dummy from "./pages/professionalInfo/Dummy";
+import InteriorDesignerInfoLaptop from "./pages/professionalInfo/InteriorDesignerInfoLaptop";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const fetchUserData = async () => {
   const token = sessionStorage.getItem("token");
@@ -76,6 +77,10 @@ const App: React.FC = () => {
     onError: () => {},
   });
 
+  const themes = useTheme();
+
+  //device-width >900px
+  const isLargeDevice = useMediaQuery(themes.breakpoints.up("md"));
   return (
     <div className="bg-prim text-black">
       <Router>
@@ -94,10 +99,17 @@ const App: React.FC = () => {
           <Route
             path="/interior-designers/:professionalId"
             element={
-              <Dummy
-                renderProfileView={false}
-                renderProfessionalInfoView={true}
-              />
+              isLargeDevice ? (
+                <InteriorDesignerInfoLaptop
+                  renderProfileView={false}
+                  renderProfessionalInfoView={true}
+                />
+              ) : (
+                <InteriorDesignerInfoMobile
+                  renderProfileView={false}
+                  renderProfessionalInfoView={true}
+                />
+              )
             }
           />
           <Route
@@ -116,10 +128,17 @@ const App: React.FC = () => {
           <Route
             path="/profile"
             element={
-              <InteriorDesignerInfo
-                renderProfileView={true}
-                renderProfessionalInfoView={false}
-              />
+              isLargeDevice ? (
+                <InteriorDesignerInfoLaptop
+                  renderProfileView={true}
+                  renderProfessionalInfoView={false}
+                />
+              ) : (
+                <InteriorDesignerInfoMobile
+                  renderProfileView={true}
+                  renderProfessionalInfoView={false}
+                />
+              )
             }
           />
           <Route path="/*" element={<Error />} />

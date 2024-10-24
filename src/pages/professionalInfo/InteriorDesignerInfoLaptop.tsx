@@ -2,12 +2,10 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import projectImage from "../../assets/noProjectAdded.jpg";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
-  Box,
   Dialog,
   DialogContent,
   IconButton,
   Button,
-  Divider,
   Snackbar,
   useMediaQuery,
   useTheme,
@@ -19,8 +17,6 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { TabContext } from "@mui/lab";
 import Reviews from "../../components/Reviews";
 import ReviewDialog from "../../components/ReviewDialog";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -38,14 +34,6 @@ interface VendorData {
   sub_category_1: string;
   sub_category_2: string;
   sub_category_3: string;
-  deals?: string;
-  investment_ideology?: string;
-  fees_type?: string;
-  fees?: number;
-  number_of_clients?: number;
-  aum_handled?: number;
-  sebi_registered?: boolean;
-  minimum_investment?: number;
   description: string;
   business_name: string;
   average_project_value: string;
@@ -135,7 +123,7 @@ const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
   return data.data as ProjectData[];
 };
 
-const Dummy: React.FC<ProfessionalInfoProps> = ({
+const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
   renderProfessionalInfoView,
 }) => {
@@ -148,13 +136,11 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
   const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
-  const [value, setValue] = useState("1");
-  const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!, renderProfileView)
+  const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
+    fetchVendorDetails(professionalId!, renderProfileView)
   );
 
-  const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
+  const { data: projectsData } = useQuery(
     ["vendorProjects", professionalId],
     () => fetchVendorProjects(professionalId!, renderProfileView)
   );
@@ -203,14 +189,6 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
     setSelectedProject(project);
   };
 
-  const handleBackClick = () => {
-    setSelectedProject(undefined);
-  };
-
-  // const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-  //   setValue(newValue);
-  // };
-
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -247,21 +225,21 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
       setReviewError(error.response.data.debug_info);
     }
     setLoading(false);
-    setValue("1");
-    // window.location.reload();
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   const [expanded, setExpanded] = useState(false);
+  const [expandedAbout, setExpandedAbout] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
-  const isMobile = window.innerWidth < 1024;
-  const maxVisibleLength = 100;
+  const handleExpandAboutClick = () => {
+    setExpandedAbout(!expandedAbout);
+  };
+  const maxVisibleLength = 300;
 
   const contentPreview =
     !expanded && vendorData?.description?.length! > maxVisibleLength
@@ -447,6 +425,22 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
       <div className="w-[60%]">
         {professionalHeader}
 
+        {login && userDetails?.vendor_id !== Number(professionalId) && (
+          <div className=" gap-3 md:flex mb-[2em]">
+            <div className="mt-3 ml-2 lg:ml-0 mt:mt-0">
+              {renderProfessionalInfoView && (
+                <Button
+                  variant="outlined"
+                  style={{ backgroundColor: "#8c52ff", color: "white" }}
+                  onClick={handleReviewDialogOpen}
+                >
+                  <StarBorderIcon /> <p>Write a Review</p>
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
         <div
           id="projects"
           className=" mb-[10px] hidden lg:block w-[100%] overflow-x-auto whitespace-nowrap"
@@ -509,9 +503,9 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
                     {(renderProfileView ||
                       Number(professionalId) == userDetails.vendor_id) && (
                       <div
-                        className={`${
-                          selectedProject ? "hidden" : "mr-2"
-                        } mb-3`}
+                        className={`
+                           mr-2
+                         mb-3`}
                       >
                         <Button
                           variant="outlined"
@@ -557,23 +551,37 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
 
         {selectedProject && (
           <>
-            <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-1/2 mb-3">
+            <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-full mb-3">
               <div>
                 <p className="font-bold  text-black">Project name</p>
-                <p className=" max-w-[300px]">{selectedProject.title}</p>
+                <p>{selectedProject.title}</p>
               </div>
               <div>
                 <p className="font-bold  text-black  mt-[1em]">Description</p>
-                <p className=" max-w-[300px]">{selectedProject.description}</p>
+                {/* <p>{selectedProject.description}</p> */}
+
+                {!expandedAbout &&
+                selectedProject.description.length! > maxVisibleLength
+                  ? selectedProject.description.slice(0, maxVisibleLength) +
+                    "..."
+                  : selectedProject.description}
+                {selectedProject.description.length! > maxVisibleLength && (
+                  <button
+                    onClick={handleExpandAboutClick}
+                    className="text-blue-500 hover:text-blue-700 font-medium"
+                  >
+                    {expandedAbout ? "Read less" : "Read More"}
+                  </button>
+                )}
               </div>
               <div className="flex">
                 <div className="w-1/2">
                   <p className="font-bold  text-black  mt-[1em] ">City</p>
-                  <p className=" max-w-[300px]">{selectedProject.city}</p>
+                  <p>{selectedProject.city}</p>
                 </div>
                 <div className="w-1/2">
                   <p className="font-bold  text-black mt-[1em]">State</p>
-                  <p className=" max-w-[300px]">{selectedProject.state}</p>
+                  <p>{selectedProject.state}</p>
                 </div>
               </div>
               <div className="flex">
@@ -645,8 +653,53 @@ const Dummy: React.FC<ProfessionalInfoProps> = ({
           </div>
         </div>
       </div>
+
+      <ReviewDialog
+        handleReviewDialogClose={handleReviewDialogClose}
+        handleReviewSubmit={handleReviewSubmit}
+        loading={loading}
+        reviewDialogOpen={reviewDialogOpen}
+        reviewError={reviewError}
+        professional="interiorDesigner"
+      />
+
+      <Dialog open={open} fullWidth fullScreen={isFullScreen}>
+        <DialogContent sx={{ height: "max-content" }}>
+          <div className="flex justify-end">
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+          {!isSubmitted ? (
+            <AddAProject setProjectId={setProjectId} projectId={projectId} />
+          ) : (
+            <ProjectImages
+              subCategories={selectedSubCategories}
+              projectId={projectId}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        message="Review submitted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
     </div>
   );
 };
 
-export default Dummy;
+export default InteriorDesignerInfoLaptop;
