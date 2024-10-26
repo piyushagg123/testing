@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import {
   Chip,
@@ -48,6 +48,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     imageObj[key].forEach((img) => arr.push(img));
   });
 
+  const [showImages, setShowImages] = useState(false);
+
+  useEffect(() => {
+    let imagesExist = keysArray.some((key) => imageObj[key].length > 0);
+    setShowImages(imagesExist);
+  }, [imageObj, keysArray]);
   const themeArray = theme?.split(",");
 
   const [selectedSpace, setSelectedSpace] = useState(keysArray[0]);
@@ -186,74 +192,103 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </CardActionArea>
         </Card>
       ) : keysArray.length > 0 ? (
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <Tabs
-              value={selectedSpace}
-              onChange={handleChange}
-              aria-label="Spaces tabs"
-              orientation="vertical"
-              variant={keysArray.length <= 3 ? "standard" : "scrollable"}
-              sx={{
-                textAlign: "center",
-                rotate: "180deg",
-                marginRight: "60px",
-                height: dynamicHeight,
+        isLargeDevice ? (
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <Tabs
+                value={selectedSpace}
+                onChange={handleChange}
+                aria-label="Spaces tabs"
+                orientation="vertical"
+                variant={keysArray.length <= 3 ? "standard" : "scrollable"}
+                sx={{
+                  textAlign: "center",
+                  rotate: "180deg",
+                  marginRight: "60px",
+                  height: dynamicHeight,
 
-                "& .MuiTabs-indicator": {
-                  transition: "none",
-                },
-                "& .MuiTab-root": {
-                  transition: "none",
-                },
-                "& .MuiSvgIcon-root": {
-                  marginLeft: "38px",
-                },
-                "& .MuiButtonBase-root": {
-                  transition: "none",
-                  animation: "none",
-                },
-              }}
-              TabIndicatorProps={{
-                sx: { display: "none" },
-              }}
-            >
-              {keysArray.map((key) => (
-                <Tab
-                  label={
-                    <span style={{ writingMode: "vertical-rl" }}>
-                      {formatString(key)}
-                    </span>
-                  }
-                  value={key}
-                  key={key}
-                  sx={{
+                  "& .MuiTabs-indicator": {
                     transition: "none",
-                    color: selectedSpace === key ? "black" : "grey",
-                    "&.Mui-selected": {
-                      color: "black",
-                    },
-                  }}
-                />
-              ))}
-            </Tabs>
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative", top: "-60px" }}>
-            <Box>
-              <Carousel
-                animation="slide"
-                cycleNavigation={true}
-                IndicatorIcon={funct(imageObj[selectedSpace])}
+                  },
+                  "& .MuiTab-root": {
+                    transition: "none",
+                  },
+                  "& .MuiSvgIcon-root": {
+                    marginLeft: "38px",
+                  },
+                  "& .MuiButtonBase-root": {
+                    transition: "none",
+                    animation: "none",
+                  },
+                }}
+                TabIndicatorProps={{
+                  sx: { display: "none" },
+                }}
               >
-                {imageObj[selectedSpace]?.map((img, i) => (
-                  <>
-                    <Item key={i} item={img} />
-                  </>
+                {keysArray.map((key) => (
+                  <Tab
+                    label={
+                      <span style={{ writingMode: "vertical-rl" }}>
+                        {formatString(key)}
+                      </span>
+                    }
+                    value={key}
+                    key={key}
+                    sx={{
+                      transition: "none",
+                      color: selectedSpace === key ? "black" : "grey",
+                      "&.Mui-selected": {
+                        color: "black",
+                      },
+                    }}
+                  />
                 ))}
-              </Carousel>
-            </Box>
+              </Tabs>
+            </Grid>
+            <Grid item xs={10} sx={{ position: "relative", top: "-60px" }}>
+              <Box>
+                <Carousel
+                  animation="slide"
+                  cycleNavigation={true}
+                  IndicatorIcon={funct(imageObj[selectedSpace])}
+                  sx={{ width: "90vw" }}
+                >
+                  {imageObj[selectedSpace]?.map((img, i) => (
+                    <>
+                      <Item key={i} item={img} />
+                    </>
+                  ))}
+                </Carousel>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
+        ) : (
+          <>
+            {showImages ? (
+              keysArray.map((key) => (
+                <>
+                  <p className="text-base font-bold">{formatString(key)}</p>
+
+                  {imageObj[selectedSpace].length === 0 && (
+                    <Box>
+                      <Carousel animation="slide">
+                        {imageObj[selectedSpace]?.map((img, i) => (
+                          <>
+                            <Item key={i} item={img} />
+                          </>
+                        ))}
+                      </Carousel>
+                    </Box>
+                  )}
+                </>
+              ))
+            ) : (
+              <p className="text-center  ">
+                No images uploaded by the designer
+              </p>
+            )}
+          </>
+        )
       ) : (
         <>
           <p className="text-center top-[-78px] relative">
@@ -266,6 +301,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 };
 
 const Item: React.FC<ItemProps> = ({ item }) => {
+  const theme = useTheme();
+  //device-width > 900px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Paper
       sx={{ display: "flex", justifyContent: "center", marginBottom: "1em" }}
@@ -273,7 +311,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       <img
         src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"
-        style={{ height: "400px" }}
+        style={{ height: isLargeDevice ? "400px" : "200px" }}
       />
     </Paper>
   );
