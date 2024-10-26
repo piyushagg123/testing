@@ -569,7 +569,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             {login && userDetails?.vendor_id !== Number(professionalId) && (
               <div className=" gap-3 md:flex mb-[2em]">
                 <div className="mt-3 ml-2 lg:ml-0 mt:mt-0">
-                  {renderProfessionalInfoView && (
+                  {renderProfessionalInfoView && !selectedProject && (
                     <Button
                       variant="outlined"
                       style={{ backgroundColor: "#8c52ff", color: "white" }}
