@@ -75,7 +75,6 @@ const FinancePlannerOnboarding = () => {
 
   const navigate = useNavigate();
 
-  // const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | ArrayBuffer | null>(
     null
   );
@@ -235,7 +234,6 @@ const FinancePlannerOnboarding = () => {
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
-    // setLogoFile(file);
 
     if (file) {
       const reader = new FileReader();

@@ -6,11 +6,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import {
   Chip,
-  Tab,
-  Box,
   Dialog,
   DialogContent,
-  IconButton,
   Button,
   Snackbar,
   useMediaQuery,
@@ -25,15 +22,9 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
-import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
-import Reviews from "../../components/Reviews";
+import { LoadingButton } from "@mui/lab";
 import ReviewDialog from "../../components/ReviewDialog";
-import AddAProject from "../../components/AddAProject";
-import ProjectImages from "../../components/ProjectImages";
-import CloseIcon from "@mui/icons-material/Close";
 import FinancePlannerReviews from "../../components/FinancePlannerReviews";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ImageCarousel from "../../components/ProjectCard";
 
 interface VendorData {
   logo?: string;
@@ -92,7 +83,6 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
-  const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
     () => fetchVendorDetails(professionalId!)
@@ -105,18 +95,9 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const [courseDialogOpen, setCourseDialogOpen] = useState(false);
   const [serviceDialogOpen, setServiceDialogOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-  const [projectId, setProjectId] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const handleClose = () => {
-    setOpen(false);
-    setIsSubmitted(false);
-    setSelectedSubCategories([]);
-  };
 
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
@@ -144,10 +125,6 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     return formattedStr;
   };
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -169,10 +146,8 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       }
     });
 
-    console.log(formObject);
-
     try {
-      const response = await axios.post(
+      await axios.post(
         `${constants.apiBaseUrl}/financial-advisor/review`,
         formObject,
         {
@@ -184,12 +159,10 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
       handleDialogClose();
       setSnackbarOpen(true);
-      console.log(response);
     } catch (error: any) {
       setReviewError(error.response.data.debug_info);
     }
     setLoading(false);
-    setValue("1");
   };
 
   const [expanded, setExpanded] = useState(false);
@@ -399,95 +372,6 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
           <br />
-          <div className="w-full">
-            <p className="text-base font-bold">Courses</p>
-            {/* <p>No courses added yet by the advisor</p> */}
-            <div className="flex items-start gap-2 horizontal-scroll">
-              <Button
-                variant="outlined"
-                style={{
-                  color: "#8c52ff",
-                  height: "170px",
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: "10px",
-                  borderColor: "#8c52ff",
-                  textTransform: "none",
-                }}
-                onClick={() => setCourseDialogOpen(true)}
-              >
-                <AddCircleIcon />
-                <p>Add a course</p>
-              </Button>
-
-              <ImageCarousel
-                title="test"
-                city="10 hrs"
-                theme={`Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur vel error facere vitae `}
-                imageObj={{}}
-                professional="financePlanner"
-              />
-              <ImageCarousel
-                title="test"
-                city="10 hrs"
-                theme={`Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur vel error facere vitae `}
-                imageObj={{}}
-                professional="financePlanner"
-              />
-
-              <ImageCarousel
-                title="test"
-                city="10 hrs"
-                theme={`Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur vel error facere vitae `}
-                imageObj={{}}
-                professional="financePlanner"
-              />
-            </div>
-          </div>
-          <br />
-          <div className="w-full">
-            <p className="text-base font-bold">Services</p>
-            {/* <p>No services added yet by the advisor</p> */}
-            <div className="flex items-start gap-2">
-              <Button
-                variant="outlined"
-                style={{
-                  color: "#8c52ff",
-                  height: "170px",
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: "10px",
-                  borderColor: "#8c52ff",
-                  textTransform: "none",
-                }}
-                onClick={() => setServiceDialogOpen(true)}
-              >
-                <AddCircleIcon />
-                <p>Add a Service</p>
-              </Button>
-              <ImageCarousel
-                title="test"
-                city="10 hrs"
-                theme={`Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur vel error facere vitae `}
-                imageObj={{}}
-                professional="financePlanner"
-              />
-              <ImageCarousel
-                title="test"
-                city="10 hrs"
-                theme={`Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur vel error facere vitae `}
-                imageObj={{}}
-                professional="financePlanner"
-              />
-              <ImageCarousel
-                title="test"
-                city="10 hrs"
-                theme={`Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur vel error facere vitae `}
-                imageObj={{}}
-                professional="financePlanner"
-              />
-            </div>
-          </div>
         </div>
 
         <div className="h-fit w-[40%] flex flex-col">

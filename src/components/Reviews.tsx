@@ -286,7 +286,7 @@ const Reviews: React.FC<user> = ({ id }) => {
           </>
         ) : (
           <>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-center justify-center">
                 <div>
                   <img src={reviewImage} alt="" className="w-[300px]" />

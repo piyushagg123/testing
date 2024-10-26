@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import {
   Paper,
@@ -9,6 +9,8 @@ import {
   CardActionArea,
   Tooltip,
   Button,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
@@ -42,6 +44,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     imageObj[key].forEach((img) => arr.push(img));
   });
 
+  const [showImages, setShowImages] = useState(false);
+
+  useEffect(() => {
+    let imagesExist = keysArray.some((key) => imageObj[key].length > 0);
+    setShowImages(imagesExist);
+  }, [imageObj, keysArray]);
   const themeArray = theme?.split(",");
 
   const formatString = (str: string) => {
@@ -129,22 +137,26 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         </Card>
       ) : keysArray.length > 0 ? (
         <Box sx={{ boxShadow: "none" }}>
-          {keysArray.map((key) => (
-            <>
-              <p className="text-base font-bold">{formatString(key)}</p>
-              <Carousel
-                animation="slide"
-                cycleNavigation={false}
-                sx={{ boxShadow: "none" }}
-              >
-                {imageObj[key]?.map((img, i) => (
-                  <>
-                    <Item key={i} item={img} />
-                  </>
-                ))}
-              </Carousel>
-            </>
-          ))}
+          {showImages ? (
+            keysArray.map((key) => (
+              <>
+                <p className="text-base font-bold">{formatString(key)}</p>
+                <Carousel
+                  animation="slide"
+                  cycleNavigation={false}
+                  sx={{ boxShadow: "none" }}
+                >
+                  {imageObj[key]?.map((img, i) => (
+                    <>
+                      <Item key={i} item={img} />
+                    </>
+                  ))}
+                </Carousel>
+              </>
+            ))
+          ) : (
+            <p className="text-center  ">No images uploaded by the designer</p>
+          )}
         </Box>
       ) : (
         <>
@@ -156,6 +168,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 };
 
 const Item: React.FC<ItemProps> = ({ item }) => {
+  const theme = useTheme();
+  //device-width > 900px
+  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Paper
       sx={{
@@ -168,7 +183,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
       <img
         src={`${constants.apiImageUrl}/${item}`}
         alt="Carousel Item"
-        style={{ height: "400px" }}
+        style={{ height: isLargeDevice ? "400px" : "200px" }}
       />
     </Paper>
   );

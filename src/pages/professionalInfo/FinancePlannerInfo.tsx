@@ -158,10 +158,8 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       }
     });
 
-    console.log(formObject);
-
     try {
-      const response = await axios.post(
+      await axios.post(
         `${constants.apiBaseUrl}/financial-advisor/review`,
         formObject,
         {
@@ -173,7 +171,6 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
       handleReviewDialogClose();
       setSnackbarOpen(true);
-      console.log(response);
     } catch (error: any) {
       setReviewError(error.response.data.debug_info);
     }
@@ -452,14 +449,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                   </TabPanel>
                   <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
                     <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
-                      {
-                        // <Reviews
-                        //   id={
-                        //     professionalId ? Number(professionalId) : Number(-1)
-                        //   }
-                        // />
-                        <FinancePlannerReviews id={Number(professionalId)} />
-                      }
+                      {<FinancePlannerReviews id={Number(professionalId)} />}
                     </div>
                   </TabPanel>
                 </TabContext>

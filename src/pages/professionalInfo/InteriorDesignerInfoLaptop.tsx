@@ -218,8 +218,6 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       }
     });
 
-    console.log(formObject);
-
     try {
       await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
         headers: {
@@ -240,13 +238,14 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   }, []);
   const [expanded, setExpanded] = useState(false);
   const [expandedAbout, setExpandedAbout] = useState(false);
+  const handleExpandAboutClick = () => {
+    setExpandedAbout(!expandedAbout);
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const handleExpandAboutClick = () => {
-    setExpandedAbout(!expandedAbout);
-  };
+
   const maxVisibleLength = 300;
 
   const contentPreview =
@@ -429,284 +428,268 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     </div>
   );
   return (
-    <div className="mt-16 px-16 flex">
-      <div className="w-[60%]">
-        {professionalHeader}
+    <>
+      <div className="mt-16 px-16 flex">
+        <div className="w-[60%]">
+          {professionalHeader}
 
-        {login && userDetails?.vendor_id !== Number(professionalId) && (
-          <div className=" gap-3 md:flex mb-[2em]">
-            <div className="mt-3 ml-2 lg:ml-0 mt:mt-0">
-              {renderProfessionalInfoView && (
-                <Button
-                  variant="outlined"
-                  style={{ backgroundColor: "#8c52ff", color: "white" }}
-                  onClick={handleReviewDialogOpen}
-                >
-                  <StarBorderIcon /> <p>Write a Review</p>
-                </Button>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div
-          id="projects"
-          className=" mb-[10px] hidden lg:block w-[100%] overflow-x-auto whitespace-nowrap"
-        >
-          <p className="text-base font-bold  lg:w-auto m-auto">Projects</p>
-          <div className="  m-auto  horizontal-scroll w-[100%] flex  gap-2  pt-[10px] ">
-            <div className="flex   ">
-              {!projectsData ? (
-                <div className="flex flex-col items-center justify-center ">
-                  {(renderProfileView ||
-                    Number(professionalId) == userDetails.vendor_id) && (
-                    <div
-                      className={`${
-                        selectedProject ? "hidden" : "flex w-full justify-start"
-                      }`}
-                    >
-                      <div
-                        className={`${
-                          selectedProject ? "hidden" : "mr-2"
-                        } mb-3`}
-                      >
-                        <Button
-                          variant="outlined"
-                          style={{
-                            color: "#8c52ff",
-                            height: "170px",
-                            display: "flex",
-                            flexDirection: "column",
-                            borderRadius: "10px",
-                            borderColor: "#8c52ff",
-                            textTransform: "none",
-                          }}
-                          onClick={() => setOpen(true)}
-                        >
-                          <AddCircleIcon />
-                          <p>Add a project</p>
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  {Number(professionalId) !== userDetails.vendor_id &&
-                    !renderProfileView && (
-                      <>
-                        <div className="mb-[1em]">
-                          <img
-                            src={projectImage}
-                            alt=""
-                            className="w-[300px]"
-                          />
-                        </div>
-                        <p className="mb-[1em]">
-                          No projects added yet by the designer
-                        </p>
-                      </>
-                    )}
-                </div>
-              ) : (
-                <div className="flex overflow-x-auto whitespace-nowrap items-start ">
-                  <div>
-                    {(renderProfileView ||
-                      Number(professionalId) == userDetails.vendor_id) && (
-                      <div
-                        className={`
-                           mr-2
-                         mb-3`}
-                      >
-                        <Button
-                          variant="outlined"
-                          style={{
-                            color: "#8c52ff",
-                            height: "170px",
-                            display: "flex",
-                            flexDirection: "column",
-                            borderRadius: "10px",
-                            borderColor: "#8c52ff",
-                            textTransform: "none",
-                          }}
-                          onClick={() => setOpen(true)}
-                        >
-                          <AddCircleIcon />
-                          <p>Add a project</p>
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                  {projectsData.map((item, ind) => (
-                    <div
-                      key={ind}
-                      onClick={() => handleCarouselClick(item)}
-                      className="mb-4 mr-2"
-                    >
-                      <Carousel
-                        key={ind}
-                        imageObj={item.images}
-                        title={item.title}
-                        city={item.city}
-                        state={item.state}
-                        theme={item.sub_category_1}
-                        showProjectDetails={true}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {selectedProject && (
-          <>
-            <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-full mb-3">
-              <div>
-                <p className="font-bold  text-black">Project name</p>
-                <p>{selectedProject.title}</p>
-              </div>
-
-              <div className="flex">
-                <div className="w-1/2">
-                  <p className="font-bold  text-black  mt-[1em] ">City</p>
-                  <p>{selectedProject.city}</p>
-                </div>
-                <div className="w-1/2">
-                  <p className="font-bold  text-black mt-[1em]">State</p>
-                  <p>{selectedProject.state}</p>
-                </div>
-              </div>
-              <div className="flex">
-                <div className="w-1/2">
-                  <p className="font-bold  text-black mt-[1em]">Spaces</p>
-                  <p className="">
-                    {formatCategory(selectedProject.sub_category_2)
-                      ?.split(",")
-                      .map((item: any, ind: number) => (
-                        <Chip
-                          label={item}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                          style={{
-                            color: "linear-gradient(#ff5757,#8c52ff)",
-                          }}
-                        />
-                      ))}
-                  </p>
-                </div>
-                <div className="w-1/2">
-                  <p className="font-bold  text-black  mt-[1em]">Theme</p>
-                  <p className="">
-                    {formatCategory(selectedProject.sub_category_1)
-                      ?.split(",")
-                      .map((item: any, ind: number) => (
-                        <Chip
-                          label={item}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                          style={{
-                            color: "linear-gradient(#ff5757,#8c52ff)",
-                          }}
-                        />
-                      ))}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Description</p>
-
-                {!expandedAbout &&
-                selectedProject.description.length! > maxVisibleLength
-                  ? selectedProject.description.slice(0, maxVisibleLength) +
-                    "..."
-                  : selectedProject.description}
-                {selectedProject.description.length! > maxVisibleLength && (
-                  <button
-                    onClick={handleExpandAboutClick}
-                    className="text-blue-500 hover:text-blue-700 font-medium"
+          {login && userDetails?.vendor_id !== Number(professionalId) && (
+            <div className=" gap-3 md:flex mb-[2em]">
+              <div className="mt-3 ml-2 lg:ml-0 mt:mt-0">
+                {renderProfessionalInfoView && (
+                  <Button
+                    variant="outlined"
+                    style={{ backgroundColor: "#8c52ff", color: "white" }}
+                    onClick={handleReviewDialogOpen}
                   >
-                    {expandedAbout ? "Read less" : "Read More"}
-                  </button>
+                    <StarBorderIcon /> <p>Write a Review</p>
+                  </Button>
                 )}
               </div>
             </div>
+          )}
 
-            <Carousel
-              imageObj={selectedProject.images}
-              title={selectedProject.title}
-              city={selectedProject.city}
-              state={selectedProject.state}
-              theme={selectedProject.sub_category_1}
-              showProjectDetails={false}
-            />
-            <br />
-            <br />
-            <br />
-            <br />
-          </>
-        )}
-      </div>
+          <div id="projects" className=" mb-[10px] hidden lg:block w-[100%]">
+            <p className="text-base font-bold  lg:w-auto m-auto">Projects</p>
+            <div className="  m-auto  horizontal-scroll w-[100%] flex  gap-2  pt-[10px] ">
+              <div className="flex   w-full">
+                {!projectsData ? (
+                  <div className="flex flex-col items-center justify-center w-full">
+                    {(renderProfileView ||
+                      Number(professionalId) == userDetails.vendor_id) && (
+                      <div
+                        className={`${
+                          selectedProject
+                            ? "hidden"
+                            : "flex w-full justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`${
+                            selectedProject ? "hidden" : "mr-2"
+                          } mb-3`}
+                        >
+                          <Button
+                            variant="outlined"
+                            style={{
+                              color: "#8c52ff",
+                              height: "170px",
+                              display: "flex",
+                              flexDirection: "column",
+                              borderRadius: "10px",
+                              borderColor: "#8c52ff",
+                              textTransform: "none",
+                            }}
+                            onClick={() => setOpen(true)}
+                          >
+                            <AddCircleIcon />
+                            <p>Add a project</p>
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    {Number(professionalId) !== userDetails.vendor_id &&
+                      !renderProfileView && (
+                        <>
+                          <div>
+                            <div className="mb-[1em]">
+                              <img
+                                src={projectImage}
+                                alt=""
+                                className="w-[300px]"
+                              />
+                            </div>
+                            <p className="mb-[1em]">
+                              No projects added yet by the designer
+                            </p>
+                          </div>
+                        </>
+                      )}
+                  </div>
+                ) : (
+                  <div
+                    className="flex overflow-x-auto whitespace-nowrap items-start "
+                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  >
+                    <div>
+                      {(renderProfileView ||
+                        Number(professionalId) == userDetails.vendor_id) && (
+                        <div
+                          className={`
+                           mr-2
+                         mb-3`}
+                        >
+                          <Button
+                            variant="outlined"
+                            style={{
+                              color: "#8c52ff",
+                              height: "170px",
+                              display: "flex",
+                              flexDirection: "column",
+                              borderRadius: "10px",
+                              borderColor: "#8c52ff",
+                              textTransform: "none",
+                            }}
+                            onClick={() => setOpen(true)}
+                          >
+                            <AddCircleIcon />
+                            <p>Add a project</p>
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                    {projectsData.map((item, ind) => (
+                      <div
+                        key={ind}
+                        onClick={() => handleCarouselClick(item)}
+                        className="mb-4 mr-2"
+                      >
+                        <Carousel
+                          key={ind}
+                          imageObj={item.images}
+                          title={item.title}
+                          city={item.city}
+                          state={item.state}
+                          theme={item.sub_category_1}
+                          showProjectDetails={true}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
 
-      <div className=" h-fit w-[40%] flex flex-col">
-        {professionalCard}
-        <br />
-        <div id="reviews" className=" mb-[10px]  m-auto ml-6  ">
-          <div className=" flex justify-center border rounded-md w-full flex-col items-center px-2   py-[1em]">
-            {
-              <Reviews
-                id={professionalId ? Number(professionalId) : Number(-1)}
+          {selectedProject && (
+            <>
+              <div className=" text-[12px] md:text-[16px]   lg:mt-10 flex-col flex  gap-4  p-2 lg:border lg:rounded-md w-full mb-3">
+                <div>
+                  <p className="font-bold  text-black">Project name</p>
+                  <p>{selectedProject.title}</p>
+                </div>
+
+                <div className="flex">
+                  <div className="w-1/2">
+                    <p className="font-bold  text-black  mt-[1em] ">City</p>
+                    <p>{selectedProject.city}</p>
+                  </div>
+                  <div className="w-1/2">
+                    <p className="font-bold  text-black mt-[1em]">State</p>
+                    <p>{selectedProject.state}</p>
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="w-1/2">
+                    <p className="font-bold  text-black mt-[1em]">Spaces</p>
+                    <p className="">
+                      {formatCategory(
+                        Object.keys(selectedProject.images).join(",")
+                      )}
+                    </p>
+                  </div>
+                  <div className="w-1/2">
+                    <p className="font-bold  text-black  mt-[1em]">Theme</p>
+                    <p className="">
+                      {formatCategory(selectedProject.sub_category_1)}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-bold  text-black  mt-[1em]">Description</p>
+
+                  {!expandedAbout &&
+                  selectedProject.description.length! > maxVisibleLength
+                    ? selectedProject.description.slice(0, maxVisibleLength) +
+                      "..."
+                    : selectedProject.description}
+                  {selectedProject.description.length! > maxVisibleLength && (
+                    <button
+                      onClick={handleExpandAboutClick}
+                      className="text-blue-500 hover:text-blue-700 font-medium"
+                    >
+                      {expandedAbout ? "Read less" : "Read More"}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <Carousel
+                imageObj={selectedProject.images}
+                title={selectedProject.title}
+                city={selectedProject.city}
+                state={selectedProject.state}
+                theme={selectedProject.sub_category_1}
+                showProjectDetails={false}
               />
-            }
+              <br />
+              <br />
+              <br />
+              <br />
+            </>
+          )}
+        </div>
+
+        <div className=" h-fit w-[40%] flex flex-col">
+          {professionalCard}
+          <br />
+          <div id="reviews" className=" mb-[10px]   ml-6  ">
+            <div className=" flex justify-center border rounded-md w-full flex-col items-center px-2   py-[1em]">
+              {
+                <Reviews
+                  id={professionalId ? Number(professionalId) : Number(-1)}
+                />
+              }
+            </div>
           </div>
         </div>
+
+        <ReviewDialog
+          handleReviewDialogClose={handleReviewDialogClose}
+          handleReviewSubmit={handleReviewSubmit}
+          loading={loading}
+          reviewDialogOpen={reviewDialogOpen}
+          reviewError={reviewError}
+          professional="interiorDesigner"
+        />
+
+        <Dialog open={open} fullWidth fullScreen={isFullScreen}>
+          <DialogContent sx={{ height: "max-content" }}>
+            <div className="flex justify-end">
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+            {!isSubmitted ? (
+              <AddAProject setProjectId={setProjectId} projectId={projectId} />
+            ) : (
+              <ProjectImages
+                subCategories={selectedSubCategories}
+                projectId={projectId}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={snackbarOpen}
+          onClose={handleSnackbarClose}
+          message="Review submitted successfully!"
+          key="bottom-center"
+          autoHideDuration={3000}
+        />
       </div>
-
-      <ReviewDialog
-        handleReviewDialogClose={handleReviewDialogClose}
-        handleReviewSubmit={handleReviewSubmit}
-        loading={loading}
-        reviewDialogOpen={reviewDialogOpen}
-        reviewError={reviewError}
-        professional="interiorDesigner"
-      />
-
-      <Dialog open={open} fullWidth fullScreen={isFullScreen}>
-        <DialogContent sx={{ height: "max-content" }}>
-          <div className="flex justify-end">
-            <IconButton
-              aria-label="close"
-              onClick={handleClose}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </div>
-          {!isSubmitted ? (
-            <AddAProject setProjectId={setProjectId} projectId={projectId} />
-          ) : (
-            <ProjectImages
-              subCategories={selectedSubCategories}
-              projectId={projectId}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={snackbarOpen}
-        onClose={handleSnackbarClose}
-        message="Review submitted successfully!"
-        key="bottom-center"
-        autoHideDuration={3000}
-      />
-    </div>
+    </>
   );
 };
 

@@ -10,7 +10,6 @@ import reviewImage from "../assets/noReviewsAdded.png";
 import { Divider, Snackbar, useMediaQuery } from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
-// import DeleteIcon from "@mui/icons-material/Delete";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
 interface user {
@@ -25,7 +24,6 @@ interface Review {
   last_name: string;
   review_id: number;
   title: string;
-  //   user_id: number;
 }
 
 const FinancePlannerReviews: React.FC<user> = ({ id }) => {
@@ -33,7 +31,6 @@ const FinancePlannerReviews: React.FC<user> = ({ id }) => {
   if (authContext === undefined) {
     return;
   }
-  //   const { userDetails } = authContext;
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const handleSnackbarClose = () => {
@@ -57,7 +54,6 @@ const FinancePlannerReviews: React.FC<user> = ({ id }) => {
         `${constants.apiBaseUrl}/financial-advisor/reviews?financial_advisor_id=${id}`
       );
       data = response.data;
-      console.log(response.data.data);
     }
     return data.data;
   };
@@ -77,23 +73,6 @@ const FinancePlannerReviews: React.FC<user> = ({ id }) => {
 
     return averageRating;
   };
-
-  // const handleDelete = async (reviewId: number) => {
-  //   try {
-  //     await axios.delete(
-  //       `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-  //         },
-  //       }
-  //     );
-
-  //     refetch();
-
-  //     setSnackbarOpen(true);
-  //   } catch (error) {}
-  // };
 
   const averages = calculateAverages(reviews);
 
