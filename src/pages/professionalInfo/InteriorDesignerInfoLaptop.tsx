@@ -135,14 +135,22 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
-  const [selectedProject, setSelectedProject] = useState<ProjectData>();
-  const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
-    fetchVendorDetails(professionalId!, renderProfileView)
-  );
+  const [selectedProject, setSelectedProject] = useState<
+    ProjectData | undefined
+  >(undefined);
 
   const { data: projectsData } = useQuery(
     ["vendorProjects", professionalId],
     () => fetchVendorProjects(professionalId!, renderProfileView)
+  );
+
+  useEffect(() => {
+    if (projectsData && projectsData.length > 0) {
+      setSelectedProject(projectsData[0]);
+    }
+  }, [projectsData]);
+  const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
+    fetchVendorDetails(professionalId!, renderProfileView)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -556,24 +564,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 <p className="font-bold  text-black">Project name</p>
                 <p>{selectedProject.title}</p>
               </div>
-              <div>
-                <p className="font-bold  text-black  mt-[1em]">Description</p>
-                {/* <p>{selectedProject.description}</p> */}
 
-                {!expandedAbout &&
-                selectedProject.description.length! > maxVisibleLength
-                  ? selectedProject.description.slice(0, maxVisibleLength) +
-                    "..."
-                  : selectedProject.description}
-                {selectedProject.description.length! > maxVisibleLength && (
-                  <button
-                    onClick={handleExpandAboutClick}
-                    className="text-blue-500 hover:text-blue-700 font-medium"
-                  >
-                    {expandedAbout ? "Read less" : "Read More"}
-                  </button>
-                )}
-              </div>
               <div className="flex">
                 <div className="w-1/2">
                   <p className="font-bold  text-black  mt-[1em] ">City</p>
@@ -622,6 +613,23 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                   </p>
                 </div>
               </div>
+              <div>
+                <p className="font-bold  text-black  mt-[1em]">Description</p>
+
+                {!expandedAbout &&
+                selectedProject.description.length! > maxVisibleLength
+                  ? selectedProject.description.slice(0, maxVisibleLength) +
+                    "..."
+                  : selectedProject.description}
+                {selectedProject.description.length! > maxVisibleLength && (
+                  <button
+                    onClick={handleExpandAboutClick}
+                    className="text-blue-500 hover:text-blue-700 font-medium"
+                  >
+                    {expandedAbout ? "Read less" : "Read More"}
+                  </button>
+                )}
+              </div>
             </div>
 
             <Carousel
@@ -643,8 +651,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       <div className=" h-fit w-[40%] flex flex-col">
         {professionalCard}
         <br />
-        <div id="reviews" className=" mb-[10px]  m-auto ml-6">
-          <div className=" flex justify-center flex-col items-center px-2">
+        <div id="reviews" className=" mb-[10px]  m-auto ml-6  ">
+          <div className=" flex justify-center border rounded-md w-full flex-col items-center px-2   py-[1em]">
             {
               <Reviews
                 id={professionalId ? Number(professionalId) : Number(-1)}
