@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AuthContext } from "../context/Login";
-import data from "../assets/professionals.json";
+import data from "../assets/professionalIcons.json";
 import { Link } from "react-router-dom";
 import { ImageList, ImageListItem } from "@mui/material";
 import GroupsIcon from "@mui/icons-material/Groups";
