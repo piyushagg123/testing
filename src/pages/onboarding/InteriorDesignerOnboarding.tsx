@@ -151,13 +151,13 @@ const InteriorDesignerOnboarding = () => {
         processedFormData,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      sessionStorage.removeItem("token");
-      sessionStorage.setItem("token", response.data.access_token);
+      localStorage.removeItem("token");
+      localStorage.setItem("token", response.data.access_token);
 
       if (logoFile) {
         const formData = new FormData();
@@ -168,7 +168,7 @@ const InteriorDesignerOnboarding = () => {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "multipart/form-data",
             },
           }

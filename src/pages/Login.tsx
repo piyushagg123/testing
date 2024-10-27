@@ -80,17 +80,17 @@ const Login = () => {
         data
       );
 
-      sessionStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("token", response.data.access_token);
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const decodedJWT = jwtDecode(localStorage.getItem("token")!);
       const combinedData = {
         ...user_data.data.data,
         ...decodedJWT,

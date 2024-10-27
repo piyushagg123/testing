@@ -82,7 +82,7 @@ const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
       `${constants.apiBaseUrl}/vendor/auth/details`,
       {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
@@ -109,7 +109,7 @@ const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
       `${constants.apiBaseUrl}/vendor/auth/project/details`,
       {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
@@ -221,7 +221,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     try {
       await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -552,6 +552,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                           state={item.state}
                           theme={item.sub_category_1}
                           showProjectDetails={true}
+                          color={item === selectedProject}
                         />
                       </div>
                     ))}

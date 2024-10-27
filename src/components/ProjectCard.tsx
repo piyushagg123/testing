@@ -26,6 +26,7 @@ interface ImageCarouselProps {
   state: string;
   imageObj: Record<string, string[]>;
   showProjectDetails: boolean;
+  color?: boolean;
 }
 interface ItemProps {
   item: string;
@@ -37,6 +38,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   city,
   imageObj,
   showProjectDetails = true,
+  color,
 }) => {
   const keysArray = Object.keys(imageObj);
   const arr: string[] = [];
@@ -67,6 +69,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             width: "130px",
             border: "none",
             boxShadow: "none",
+            background: color ? "#f2f2f2" : "",
           }}
         >
           <CardActionArea>

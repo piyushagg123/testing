@@ -22,7 +22,7 @@ import InteriorDesignerInfoLaptop from "./pages/professionalInfo/InteriorDesigne
 import { useMediaQuery, useTheme } from "@mui/material";
 
 const fetchUserData = async () => {
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   if (token) {
     const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
@@ -53,7 +53,7 @@ const App: React.FC = () => {
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {
       setLogin(true);
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       if (token) {
         const decodedJWT = jwtDecode(token);
 
@@ -66,7 +66,7 @@ const App: React.FC = () => {
     },
     onError: () => {
       setLogin(false);
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
     },
   });
 

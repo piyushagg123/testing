@@ -153,7 +153,7 @@ const FinancePlannerOnboarding = () => {
         processedFormData,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

@@ -24,12 +24,12 @@ const ProfileForMobile = () => {
     try {
       const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       if (result) {
         setLogin(false);
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         navigate("/");
       }
     } catch (error) {}

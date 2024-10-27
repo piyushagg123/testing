@@ -104,13 +104,13 @@ const Navbar: React.FC = () => {
     try {
       const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       if (result) {
         setToggleProfileMenu(false);
         setLogin(false);
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         setUserDetails({
           email: "",
           first_name: "",

@@ -164,7 +164,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         formObject,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

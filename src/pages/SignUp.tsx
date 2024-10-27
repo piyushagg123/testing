@@ -128,16 +128,16 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
         formObject
       );
 
-      sessionStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("token", response.data.access_token);
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const decodedJWT = jwtDecode(localStorage.getItem("token")!);
       const combinedData = {
         ...user_data.data.data,
         ...decodedJWT,
@@ -191,7 +191,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
           </div>
         </div>
         <div className="mt-28">
-          {!sessionStorage.getItem("token") && (
+          {!localStorage.getItem("token") && (
             <p className=" m-auto w-fit">
               Already have an account?
               <span className="ml-3">

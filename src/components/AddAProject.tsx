@@ -153,7 +153,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
         processedFormData,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

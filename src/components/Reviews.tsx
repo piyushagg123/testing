@@ -47,7 +47,7 @@ const Reviews: React.FC<user> = ({ id }) => {
         `${constants.apiBaseUrl}/vendor/auth/reviews`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -93,7 +93,7 @@ const Reviews: React.FC<user> = ({ id }) => {
         `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -266,7 +266,7 @@ const Reviews: React.FC<user> = ({ id }) => {
                           <Divider orientation="vertical" flexItem />
                           <p>{review.title}</p>
                           <div>
-                            {sessionStorage.getItem("token") &&
+                            {localStorage.getItem("token") &&
                               userDetails?.user_id === review.user_id && (
                                 <button
                                   onClick={() => handleDelete(review.review_id)}
