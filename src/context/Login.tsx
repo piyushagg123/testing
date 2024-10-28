@@ -31,6 +31,7 @@ const defaultUserDetails: UserDetails = {
   mobile: "",
   user_id: 0,
   vendor_id: 0,
+  // vendor_type:""
 };
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {

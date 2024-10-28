@@ -100,11 +100,26 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchFinanceList = async () => {
+  const fetchFinanceList = async (
+    dealFilters = new Set(),
+    investmentIdeologyFilters = new Set()
+  ) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${constants.apiBaseUrl}/financial-advisor/advisors`
+        `${constants.apiBaseUrl}/financial-advisor/advisors`,
+        {
+          params: {
+            deals: Array.from(dealFilters as Set<string>)
+              .map((option) => option.toUpperCase())
+              .join(","),
+            investmentIdeology: Array.from(
+              investmentIdeologyFilters as Set<string>
+            )
+              .map((option) => option.toUpperCase())
+              .join(","),
+          },
+        }
       );
       setFilteredItems(response.data.data);
     } catch (error) {
