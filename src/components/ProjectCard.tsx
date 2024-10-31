@@ -17,7 +17,7 @@ import constants from "../constants";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import NoProjectImage from "../assets/noImageinProject.jpg";
-import { truncateText } from "../utils";
+import { truncateText } from "../helpers/stringHelpers";
 
 interface ImageCarouselProps {
   title: string;

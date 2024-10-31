@@ -13,6 +13,7 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { formatString } from "../../helpers/stringHelpers";
 
 const fetchThemes = async () => {
   const response = await axios.get(
@@ -65,11 +66,6 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
     fetchVendorList(themeFilters, spaceFilters, executionFilters);
     window.scrollTo(0, 0);
   }, [themeFilters, spaceFilters, executionFilters]);
-
-  const formatString = (str: string) => {
-    const formattedStr = str?.toLowerCase().replace(/_/g, " ");
-    return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
-  };
 
   const formattedThemes = themes.map((theme: FilterItem) =>
     formatString(theme.value)

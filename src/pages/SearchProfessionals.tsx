@@ -71,7 +71,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchVendorList = async (
+  const fetchInteriorDesignerList = async (
     themeFilters = new Set(),
     spaceFilters = new Set(),
     executionFilters = new Set()
@@ -100,7 +100,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchFinanceList = async () => {
+  const fetchFinanceAdvisorsList = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
@@ -230,9 +230,13 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               {professional === "interiorDesigners" ? (
-                <InteriorDesignerFilters fetchVendorList={fetchVendorList} />
+                <InteriorDesignerFilters
+                  fetchVendorList={fetchInteriorDesignerList}
+                />
               ) : (
-                <FinancePlannerFilters fetchVendorList={fetchFinanceList} />
+                <FinancePlannerFilters
+                  fetchVendorList={fetchFinanceAdvisorsList}
+                />
               )}
             </div>
           </div>

@@ -6,73 +6,30 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import {
   Chip,
+  Tab,
+  Box,
   Dialog,
   DialogContent,
+  IconButton,
   Button,
   Snackbar,
-  useMediaQuery,
-  useTheme,
-  DialogTitle,
-  Alert,
-  TextField,
-  DialogActions,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
-import { LoadingButton } from "@mui/lab";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import Reviews from "../../components/Reviews";
 import ReviewDialog from "../../components/ReviewDialog";
-import FinancePlannerReviews from "../../components/FinancePlannerReviews";
+import AddAProject from "../../components/AddAProject";
+import ProjectImages from "../../components/ProjectImages";
+import CloseIcon from "@mui/icons-material/Close";
+import { ProfessionalInfoProps, ReviewFormObject } from "./types";
+import { fetchVendorDetails } from "./controller";
+import { formatCategory } from "../../helpers/stringHelpers";
 
-interface VendorData {
-  logo?: string;
-  deals?: string;
-  investment_ideology?: string;
-  fees_type?: string;
-  fees?: number;
-  number_of_clients?: number;
-  aum_handled?: number;
-  sebi_registered?: boolean;
-  minimum_investment?: number;
-  description: string;
-  business_name: string;
-  number_of_employees: number;
-  mobile: string;
-  email: string;
-  city: string;
-  social?: {
-    facebook?: string;
-    instagram?: string;
-    website?: string;
-  };
-}
-
-interface ReviewFormObject {
-  title?: string;
-  body?: string;
-  rating?: number;
-  financial_advisor_id?: number;
-}
-
-interface ProfessionalInfoProps {
-  renderProfileView: boolean;
-  renderProfessionalInfoView: boolean;
-}
-
-const fetchVendorDetails = async (id: string) => {
-  let data;
-
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/details?financial_advisor_id=${id}`
-  );
-  data = response.data;
-
-  return data.data as VendorData;
-};
-
-const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
+const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
 }) => {
   const authContext = useContext(AuthContext);
@@ -83,6 +40,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
+  const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
     () => fetchVendorDetails(professionalId!)
@@ -95,34 +53,34 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [courseDialogOpen, setCourseDialogOpen] = useState(false);
-  const [serviceDialogOpen, setServiceDialogOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const [projectId, setProjectId] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+    setIsSubmitted(false);
+    setSelectedSubCategories([]);
+  };
 
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
   };
 
-  const handleDialogClose = (
+  const handleReviewDialogClose = (
     _?: React.SyntheticEvent<Element, Event>,
     reason?: "backdropClick" | "escapeKeyDown"
   ) => {
     if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
       return;
     }
-    setCourseDialogOpen(false);
-    setServiceDialogOpen(false);
+    setReviewDialogOpen(false);
     setReviewError("");
   };
-  const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
-    formattedStr = formattedStr
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
 
-    return formattedStr;
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
   };
 
   const handleSnackbarClose = () => {
@@ -157,12 +115,13 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         }
       );
 
-      handleDialogClose();
+      handleReviewDialogClose();
       setSnackbarOpen(true);
     } catch (error: any) {
       setReviewError(error.response.data.debug_info);
     }
     setLoading(false);
+    setValue("1");
   };
 
   const [expanded, setExpanded] = useState(false);
@@ -179,48 +138,48 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       ? vendorData?.description.slice(0, maxVisibleLength) + "..."
       : vendorData?.description;
   const professionalCard = (
-    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2 lg:border lg:rounded-md">
-      <div className="flex flex-row w-full">
-        <div className="mt-[1em]  w-1/2 ">
+    <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2">
+      <div className="flex flex-row lg:flex-col w-full">
+        <div className="mt-[1em] lg:mt-0 w-1/2 lg:w-fit">
           <p className="font-bold  text-black">AUM handled</p>
           <p className="">{vendorData?.aum_handled ?? "N/A"}</p>
         </div>
-        <div className="mt-[1em] w-1/2 ">
+        <div className="mt-[1em] w-1/2 lg:w-fit">
           <p className="font-bold  text-black">Sebi registered</p>
           <p className="">{vendorData?.sebi_registered?.toString() ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex  w-full flex-row ">
-        <div className="w-1/2 mt-[1em]">
+      <div className="flex  w-full flex-row lg:flex-col ">
+        <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Fees type</p>
           <p className="">{vendorData?.fees_type ?? "N/A"}</p>
         </div>
-        <div className=" w-1/2 mt-[1em]">
+        <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Fees</p>
           <p className="">{vendorData?.fees ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex  w-full flex-row ">
-        <div className="w-1/2 mt-[1em]">
+      <div className="flex  w-full flex-row lg:flex-col ">
+        <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Minimum investment</p>
           <p className="">{vendorData?.minimum_investment ?? "N/A"}</p>
         </div>
-        <div className=" w-1/2 mt-[1em]">
+        <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Number of employees</p>
           <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex  w-full flex-row">
-        <div className="w-1/2 mt-[1em]">
+      <div className="flex  w-full flex-row lg:flex-col ">
+        <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Number of clients</p>
           <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
         </div>
-        <div className=" w-1/2 mt-[1em]">
+        <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Location</p>
           <p className="">{vendorData?.city ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex flex-row  w-full">
+      <div className="flex flex-row lg:flex-col  w-full">
         {(vendorData?.social?.facebook ||
           vendorData?.social?.instagram ||
           vendorData?.social?.website) && (
@@ -255,7 +214,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         )}
-        <div className="w-1/2 ">
+        <div className="w-1/2 lg:w-fit">
           <p className="font-bold text-black mt-[1em]">Contact Number</p>
           <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
@@ -264,11 +223,11 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         <p className="font-bold  text-black">Email</p>
         <p className="">{vendorData?.email ?? "N/A"}</p>
       </div>
-      <div className=" w-full mt-[1em]">
+      <div className="lg:hidden w-full ">
         <p className="font-bold  text-black">About</p>
         <p className=" text-justify mb-[1em] rounded-md">
           {contentPreview}
-          {vendorData?.description.length! > maxVisibleLength && (
+          {isMobile && vendorData?.description.length! > maxVisibleLength && (
             <button
               onClick={handleExpandClick}
               className="text-blue-500 hover:text-blue-700 font-medium"
@@ -343,18 +302,25 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       </div>
     </div>
   );
-  const theme = useTheme();
 
-  // device-width > 900px
-  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
-  const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   if (isVendorLoading) return <div className="min-h-screen">Loading...</div>;
   return (
     <>
-      <div className="mt-16 px-16 flex">
-        <div className="w-[60%]">
-          {professionalHeader}
+      <div className="mt-[70px] text-text flex flex-col lg:flex-row  justify-center  min-h-screen">
+        <div className="text-[10px] md:text-[16px] flex flex-col gap-7 md:gap-0">
           <div className=" md:w-max m-auto lg:m-0 my-[2em]">
+            {professionalHeader}
+
+            <div className="lg:hidden flex justify-center">
+              {isMobile ? (
+                <div className="border border-1 rounded-md border-[#d3d8e0] w-[93vw]">
+                  {professionalCard}
+                </div>
+              ) : (
+                <div className="">{professionalCard}</div>
+              )}
+            </div>
+
             {login && userDetails?.vendor_id !== Number(professionalId) && (
               <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
@@ -370,28 +336,132 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 </div>
               </div>
             )}
+            {!isMobile ? (
+              <>
+                <TabContext value={value}>
+                  <Box>
+                    <TabList
+                      onChange={handleChange}
+                      aria-label="lab API tabs example"
+                      sx={{
+                        "& .MuiTabs-indicator": {
+                          backgroundColor: "#8c52ff",
+                        },
+                        "& .MuiTab-root.Mui-selected": {
+                          color: "#8c52ff",
+                        },
+                        "& .MuiTab-root": {
+                          color: "#576375",
+                        },
+                      }}
+                    >
+                      <Tab
+                        label="About us"
+                        value="1"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "none",
+                          fontSize: "1rem",
+                        }}
+                      />
+
+                      <Tab
+                        label="Reviews"
+                        value="2"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "none",
+                          fontSize: "1rem",
+                        }}
+                      />
+                    </TabList>
+                  </Box>
+                  <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
+                    <div className="w-[95vw] lg:w-[750px]">
+                      <p className="text-sm md:text-base text-justify mb-[1em]">
+                        {contentPreview}
+                        {isMobile &&
+                          vendorData?.description.length! >
+                            maxVisibleLength && (
+                            <button
+                              onClick={handleExpandClick}
+                              className="text-blue-500 hover:text-blue-700 font-medium"
+                            >
+                              {expanded ? "Read Less" : "Read More"}
+                            </button>
+                          )}
+                      </p>
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
+                    <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
+                      {<Reviews id={Number(professionalId)} />}
+                    </div>
+                  </TabPanel>
+                </TabContext>
+              </>
+            ) : (
+              <>
+                <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+                  <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
+                    {
+                      <Reviews
+                        id={
+                          professionalId ? Number(professionalId) : Number(-1)
+                        }
+                      />
+                    }
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-          <br />
         </div>
 
-        <div className="h-fit w-[40%] flex flex-col">
-          {professionalCard}
-          <br />
-
-          <div id="reviews" className=" mb-[10px]  m-auto ml-6">
-            <div className=" flex justify-center flex-col items-center px-2">
-              {<FinancePlannerReviews id={Number(professionalId)} />}
+        <div className="hidden lg:block">
+          {isMobile ? (
+            <div className="border border-1  rounded-md border-[#d3d8e0] w-[93vw]">
+              {professionalCard}
             </div>
-          </div>
+          ) : (
+            <div className="">{professionalCard}</div>
+          )}
         </div>
         <ReviewDialog
-          handleReviewDialogClose={handleDialogClose}
+          handleReviewDialogClose={handleReviewDialogClose}
           handleReviewSubmit={handleReviewSubmit}
           loading={loading}
           reviewDialogOpen={reviewDialogOpen}
           reviewError={reviewError}
           professional="financePlanner"
         />
+
+        <Dialog open={open} fullWidth>
+          <DialogContent sx={{ height: "max-content" }}>
+            <div className="flex justify-end">
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+            {!isSubmitted ? (
+              <AddAProject setProjectId={setProjectId} projectId={projectId} />
+            ) : (
+              <ProjectImages
+                subCategories={selectedSubCategories}
+                projectId={projectId}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Snackbar
@@ -402,222 +472,8 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         key="bottom-center"
         autoHideDuration={3000}
       />
-
-      <Dialog
-        open={courseDialogOpen}
-        onClose={() => handleDialogClose}
-        fullScreen={isFullScreen}
-      >
-        <form>
-          <DialogTitle sx={{ width: isLargeDevice ? "524px" : "70vw" }}>
-            Add a course
-          </DialogTitle>
-
-          <DialogContent className="flex flex-col gap-4 justify-center items-center">
-            {reviewError && (
-              <Alert
-                severity="error"
-                sx={{ width: isLargeDevice ? "524px" : "70vw" }}
-              >
-                {reviewError}
-              </Alert>
-            )}
-            <TextField
-              id="outlined-basic"
-              label="Title"
-              variant="outlined"
-              size="small"
-              name="title"
-              fullWidth
-              sx={{
-                width: isLargeDevice ? "524px" : "70vw",
-                marginTop: "10px",
-                color: "black",
-                borderRadius: "4px",
-              }}
-            />
-
-            <div className="flex justify-between w-[524px]">
-              <TextField
-                id="outlined-basic"
-                label="Duration"
-                variant="outlined"
-                size="small"
-                name="title"
-                fullWidth
-                sx={{
-                  width: isLargeDevice ? "245px" : "70vw",
-                  marginTop: "10px",
-                  color: "black",
-                  borderRadius: "4px",
-                }}
-              />
-              <TextField
-                id="outlined-basic"
-                label="Cost"
-                variant="outlined"
-                size="small"
-                name="title"
-                fullWidth
-                sx={{
-                  width: isLargeDevice ? "245px" : "70vw",
-                  marginTop: "10px",
-                  color: "black",
-                  borderRadius: "4px",
-                }}
-              />
-            </div>
-            <TextField
-              id="outlined-multiline-static"
-              label="Description"
-              name="body"
-              multiline
-              rows={4}
-              sx={{
-                width: isLargeDevice ? "524px" : "70vw",
-                color: "black",
-                borderRadius: "4px",
-              }}
-              fullWidth
-            />
-
-            <DialogActions
-              sx={{
-                width: isLargeDevice ? "524px" : "70vw",
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "10px",
-                padding: 0,
-              }}
-            >
-              <Button
-                onClick={handleDialogClose}
-                variant="outlined"
-                style={{ borderColor: "#000", color: "#000" }}
-              >
-                Cancel
-              </Button>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                style={{ background: "#8c52ff", height: "36px", width: "85px" }}
-                loading={loading}
-              >
-                {loading ? "" : <>Submit</>}
-              </LoadingButton>
-            </DialogActions>
-          </DialogContent>
-        </form>
-      </Dialog>
-
-      <Dialog
-        open={serviceDialogOpen}
-        onClose={() => handleDialogClose}
-        fullScreen={isFullScreen}
-      >
-        <form>
-          <DialogTitle sx={{ width: isLargeDevice ? "524px" : "70vw" }}>
-            Add a service
-          </DialogTitle>
-
-          <DialogContent className="flex flex-col gap-4 justify-center items-center">
-            {reviewError && (
-              <Alert
-                severity="error"
-                sx={{ width: isLargeDevice ? "524px" : "70vw" }}
-              >
-                {reviewError}
-              </Alert>
-            )}
-            <TextField
-              id="outlined-basic"
-              label="Title"
-              variant="outlined"
-              size="small"
-              name="title"
-              fullWidth
-              sx={{
-                width: isLargeDevice ? "524px" : "70vw",
-                marginTop: "10px",
-                color: "black",
-                borderRadius: "4px",
-              }}
-            />
-
-            <div className="flex justify-between w-[524px]">
-              <TextField
-                id="outlined-basic"
-                label="Duration"
-                variant="outlined"
-                size="small"
-                name="title"
-                fullWidth
-                sx={{
-                  width: isLargeDevice ? "245px" : "70vw",
-                  marginTop: "10px",
-                  color: "black",
-                  borderRadius: "4px",
-                }}
-              />
-              <TextField
-                id="outlined-basic"
-                label="Cost"
-                variant="outlined"
-                size="small"
-                name="title"
-                fullWidth
-                sx={{
-                  width: isLargeDevice ? "245px" : "70vw",
-                  marginTop: "10px",
-                  color: "black",
-                  borderRadius: "4px",
-                }}
-              />
-            </div>
-            <TextField
-              id="outlined-multiline-static"
-              label="Description"
-              name="body"
-              multiline
-              rows={4}
-              sx={{
-                width: isLargeDevice ? "524px" : "70vw",
-                color: "black",
-                borderRadius: "4px",
-              }}
-              fullWidth
-            />
-
-            <DialogActions
-              sx={{
-                width: isLargeDevice ? "524px" : "70vw",
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "10px",
-                padding: 0,
-              }}
-            >
-              <Button
-                onClick={handleDialogClose}
-                variant="outlined"
-                style={{ borderColor: "#000", color: "#000" }}
-              >
-                Cancel
-              </Button>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                style={{ background: "#8c52ff", height: "36px", width: "85px" }}
-                loading={loading}
-              >
-                {loading ? "" : <>Submit</>}
-              </LoadingButton>
-            </DialogActions>
-          </DialogContent>
-        </form>
-      </Dialog>
     </>
   );
 };
 
-export default FinancePlannerInfoLaptop;
+export default FinancePlannerInfo;

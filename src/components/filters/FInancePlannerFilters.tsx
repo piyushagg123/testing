@@ -13,6 +13,7 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { formatString } from "../../helpers/stringHelpers";
 
 const fetchDeals = async () => {
   const response = await axios.get(
@@ -55,11 +56,6 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   useEffect(() => {
     fetchVendorList(dealFilters, investmentIdeologyFilters);
   }, [dealFilters, investmentIdeologyFilters]);
-
-  const formatString = (str: string) => {
-    const formattedStr = str?.toLowerCase().replace(/_/g, " ");
-    return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
-  };
 
   const formattedDeals = filterCategory1.map((item: FilterItem) =>
     formatString(item.value)
@@ -123,7 +119,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     return (
       <>
         <div className="flex flex-col gap-1 pt-3">
-          <p className="font-bold text-base text-darkgrey">{"DEALS"}</p>
+          <p className="font-bold text-base text-black">{"DEALS"}</p>
           {formattedDeals.map((deal: string) => {
             return (
               <>

@@ -5,40 +5,62 @@ import { Link } from "react-router-dom";
 import { ImageList, ImageListItem } from "@mui/material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { StateContext } from "../context/State";
+import { ApiContext } from "../context/Api";
+import service from "../assets/service.png";
+import photo1 from "../assets/photo1.jpg";
+import photo2 from "../assets/photo2.jpeg";
+import photo3 from "../assets/photo3.jpeg";
+import photo4 from "../assets/photo4.jpg";
 
 const HomePage = () => {
   const authContext = React.useContext(AuthContext);
   const stateContext = React.useContext(StateContext);
-  if (stateContext === undefined || authContext === undefined) {
+  const apiContext = React.useContext(ApiContext);
+
+  if (
+    authContext === undefined ||
+    stateContext === undefined ||
+    apiContext === undefined
+  ) {
     return;
   }
-
+  const { errorInApi } = apiContext;
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const itemData = [
     {
-      img: "https://www.whsuites.com/wp-content/uploads/2023/04/CRM-For-Financial-Advisors.jpg",
+      img: photo1,
       title: "Bed",
     },
     {
-      img: "https://images.unsplash.com/photo-1525097487452-6278ff080c31",
+      img: photo2,
       title: "Books",
     },
 
     {
-      img: "https://images.unsplash.com/photo-1563298723-dcfebaa392e3",
+      img: photo3,
       title: "Kitchen",
     },
     {
-      img: "https://canadianbusinesscollege.com/wp-content/uploads/2021/03/Mar-12-healthcare-careers-1201x800.jpg",
+      img: photo4,
       title: "Blinds",
     },
   ];
 
-  if (authContext === undefined) {
-    return;
+  if (errorInApi) {
+    return (
+      <div className="maintenance-container flex flex-col justify-center items-center min-h-screen">
+        <img
+          src={service}
+          alt=""
+          className="w-[30vw]"
+          style={{ mixBlendMode: "multiply" }}
+        />
+        <p>We are currently undergoing maintenance. Please check back later.</p>
+      </div>
+    );
   }
   return (
     <div className="mt-16 min-h-screen flex md:pt-10 px-5 lg:px-16">
@@ -82,7 +104,7 @@ const HomePage = () => {
             <ImageListItem key={item.img}>
               <img
                 srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.img}?w=248&fit=crop&auto=format`}
+                src={`${item.img}`}
                 alt={item.title}
                 loading="lazy"
               />

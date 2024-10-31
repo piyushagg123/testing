@@ -32,109 +32,10 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import img from "../../assets/noImageinProject.jpg";
+import { ProfessionalInfoProps, ProjectData, ReviewFormObject } from "./types";
+import { fetchVendorDetails, fetchVendorProjects } from "./controller";
+import { formatCategory } from "../../helpers/stringHelpers";
 
-interface VendorData {
-  logo?: string;
-  category: string;
-  sub_category_1: string;
-  sub_category_2: string;
-  sub_category_3: string;
-  deals?: string;
-  investment_ideology?: string;
-  fees_type?: string;
-  fees?: number;
-  number_of_clients?: number;
-  aum_handled?: number;
-  sebi_registered?: boolean;
-  minimum_investment?: number;
-  description: string;
-  business_name: string;
-  average_project_value: string;
-  number_of_employees: number;
-  projects_completed: number;
-  mobile: string;
-  email: string;
-  city: string;
-  social?: {
-    facebook?: string;
-    instagram?: string;
-    website?: string;
-  };
-}
-
-interface ProjectData {
-  images: Record<string, string[]>;
-  title: string;
-  description: string;
-  city: string;
-  state: string;
-  sub_category_1: string;
-  sub_category_2: string;
-  start_date: string;
-  end_date: string;
-}
-
-interface ReviewFormObject {
-  title?: string;
-  body?: string;
-  rating_quality?: number;
-  rating_execution?: number;
-  rating_behaviour?: number;
-  vendor_id?: number;
-}
-
-interface ProfessionalInfoProps {
-  renderProfileView: boolean;
-  renderProfessionalInfoView: boolean;
-}
-
-const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
-  let data;
-  if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/auth/details`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    data = response.data;
-  } else if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/financial-advisor/details?financial_advisor_id=${id}`
-    );
-    data = response.data;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
-    );
-    data = response.data;
-  }
-
-  return data.data as VendorData;
-};
-
-const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
-  let data;
-  if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/auth/project/details`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    data = response.data;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
-    );
-    data = response.data;
-  }
-  return data.data as ProjectData[];
-};
 const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
   renderProfessionalInfoView,
@@ -212,16 +113,6 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
     }
     setReviewDialogOpen(false);
     setReviewError("");
-  };
-  const formatCategory = (str: string) => {
-    let formattedStr = str?.replace(/_/g, " ");
-    formattedStr = formattedStr
-      ?.toLowerCase()
-      ?.split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
-    return formattedStr;
   };
 
   const handleCarouselClick = (project: ProjectData) => {
@@ -339,7 +230,6 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
               <div>
                 <p className="font-bold  text-black  mt-[1em]">Description</p>
                 <p className=" max-w-[300px]">
-                  {" "}
                   {!expandedAbout &&
                   selectedProject.description.length! > maxVisibleLength
                     ? selectedProject.description.slice(0, maxVisibleLength) +
@@ -475,7 +365,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
-          </span>{" "}
+          </span>
           <div className="flex flex-wrap gap-1">
             {formatCategory(vendorData?.sub_category_1 ?? "N/A")
               ?.split(",")
@@ -510,7 +400,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
           <span className="font-bold text-[11px] md:text-sm text-black">
             EXECUTION TYPE :
-          </span>{" "}
+          </span>
           {(vendorData?.sub_category_3 ?? "N/A")
             ?.split(",")
             .map((item: string, ind: number) => (
@@ -738,6 +628,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                           id={
                             professionalId ? Number(professionalId) : Number(-1)
                           }
+                          vendorType="interiorDesigner"
                         />
                       }
                     </div>
@@ -880,6 +771,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                           id={
                             professionalId ? Number(professionalId) : Number(-1)
                           }
+                          vendorType="interiorDesigner"
                         />
                       }
                     </div>
