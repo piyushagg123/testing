@@ -8,6 +8,7 @@ interface UserDetails {
   mobile: string;
   user_id: number;
   vendor_id: number;
+  vendor_type: string;
 }
 
 interface AuthContextType {
@@ -31,7 +32,7 @@ const defaultUserDetails: UserDetails = {
   mobile: "",
   user_id: 0,
   vendor_id: 0,
-  // vendor_type:""
+  vendor_type: "",
 };
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {

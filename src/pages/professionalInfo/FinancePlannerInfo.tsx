@@ -58,7 +58,7 @@ interface ReviewFormObject {
 }
 
 interface ProfessionalInfoProps {
-  renderProfileView: boolean;
+  vendor_id?: number;
   renderProfessionalInfoView: boolean;
 }
 
@@ -75,6 +75,7 @@ const fetchVendorDetails = async (id: string) => {
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
+  vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
 
@@ -82,12 +83,14 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
     return;
   }
   const { login, userDetails } = authContext;
-  const { professionalId } = useParams();
+  const { professionalId } = useParams<{ professionalId: string }>();
+
+  const vendorIdString = vendor_id ? vendor_id.toString() : professionalId;
 
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!)
+    () => fetchVendorDetails(vendorIdString!)
   );
 
   useEffect(() => {
@@ -449,7 +452,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                   </TabPanel>
                   <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
                     <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
-                      {<FinancePlannerReviews id={Number(professionalId)} />}
+                      {<FinancePlannerReviews id={Number(vendorIdString)} />}
                     </div>
                   </TabPanel>
                 </TabContext>

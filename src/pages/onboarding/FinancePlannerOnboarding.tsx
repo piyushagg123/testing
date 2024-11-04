@@ -79,6 +79,8 @@ const FinancePlannerOnboarding = () => {
     null
   );
 
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+
   const handleStateChange = async (
     _event: React.SyntheticEvent,
     value: string | null,
@@ -157,6 +159,22 @@ const FinancePlannerOnboarding = () => {
           },
         }
       );
+
+      if (logoFile) {
+        const formData = new FormData();
+        formData.append("logo", logoFile);
+
+        await axios.post(
+          `${constants.apiBaseUrl}/image-upload/logo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
     } catch (error) {}
     navigate("/finance-planners");
   };
@@ -234,6 +252,7 @@ const FinancePlannerOnboarding = () => {
   const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
+    setLogoFile(file);
 
     if (file) {
       const reader = new FileReader();

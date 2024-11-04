@@ -20,6 +20,7 @@ import { jwtDecode } from "jwt-decode";
 import FinancePlannerInfo from "./pages/professionalInfo/FinancePlannerInfo";
 import InteriorDesignerInfoLaptop from "./pages/professionalInfo/InteriorDesignerInfoLaptop";
 import { useMediaQuery, useTheme } from "@mui/material";
+import FinancePlannerInfoLaptop from "./pages/professionalInfo/FinancePlannerInfoLaptop";
 
 const fetchUserData = async () => {
   const token = localStorage.getItem("token");
@@ -49,7 +50,7 @@ const App: React.FC = () => {
     return;
   }
   const { setState } = stateContext;
-  const { setLogin, setUserDetails } = authContext;
+  const { setLogin, setUserDetails, userDetails } = authContext;
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {
       setLogin(true);
@@ -62,6 +63,8 @@ const App: React.FC = () => {
           ...decodedJWT,
         };
         setUserDetails(combinedData);
+
+        console.log(combinedData);
       }
     },
     onError: () => {
@@ -115,10 +118,11 @@ const App: React.FC = () => {
           <Route
             path="/finance-planners/:professionalId"
             element={
-              <FinancePlannerInfo
-                renderProfileView={false}
-                renderProfessionalInfoView={true}
-              />
+              isLargeDevice ? (
+                <FinancePlannerInfoLaptop renderProfessionalInfoView={true} />
+              ) : (
+                <FinancePlannerInfo renderProfessionalInfoView={true} />
+              )
             }
           />
           <Route path="/signup" element={<SignUp joinAsPro={false} />} />
@@ -128,7 +132,19 @@ const App: React.FC = () => {
           <Route
             path="/profile"
             element={
-              isLargeDevice ? (
+              userDetails.vendor_type === "FINANCIAL_ADVISOR" ? (
+                isLargeDevice ? (
+                  <FinancePlannerInfoLaptop
+                    renderProfessionalInfoView={false}
+                    vendor_id={userDetails.vendor_id}
+                  />
+                ) : (
+                  <FinancePlannerInfo
+                    renderProfessionalInfoView={false}
+                    vendor_id={userDetails.vendor_id}
+                  />
+                )
+              ) : isLargeDevice ? (
                 <InteriorDesignerInfoLaptop
                   renderProfileView={true}
                   renderProfessionalInfoView={false}
@@ -140,6 +156,9 @@ const App: React.FC = () => {
                 />
               )
             }
+            // element={
+
+            // }
           />
           <Route path="/*" element={<Error />} />
         </Routes>

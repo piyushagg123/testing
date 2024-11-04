@@ -57,8 +57,8 @@ interface ReviewFormObject {
 }
 
 interface ProfessionalInfoProps {
-  renderProfileView: boolean;
   renderProfessionalInfoView: boolean;
+  vendor_id?: number;
 }
 
 const fetchVendorDetails = async (id: string) => {
@@ -74,6 +74,7 @@ const fetchVendorDetails = async (id: string) => {
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
+  vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
 
@@ -81,11 +82,13 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     return;
   }
   const { login, userDetails } = authContext;
-  const { professionalId } = useParams();
+  const { professionalId } = useParams<{ professionalId: string }>();
+
+  const vendorIdString = vendor_id ? vendor_id.toString() : professionalId;
 
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!)
+    () => fetchVendorDetails(vendorIdString!)
   );
 
   useEffect(() => {
@@ -380,7 +383,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
           <div id="reviews" className=" mb-[10px]  m-auto ml-6">
             <div className=" flex justify-center flex-col items-center px-2">
-              {<FinancePlannerReviews id={Number(professionalId)} />}
+              {<FinancePlannerReviews id={Number(vendorIdString)} />}
             </div>
           </div>
         </div>

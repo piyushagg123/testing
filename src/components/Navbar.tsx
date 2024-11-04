@@ -119,6 +119,7 @@ const Navbar: React.FC = () => {
           mobile: "",
           user_id: 0,
           vendor_id: 0,
+          vendor_type: "",
         });
         navigate("/");
       }
