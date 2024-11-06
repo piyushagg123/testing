@@ -113,7 +113,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
             deals: Array.from(dealFilters as Set<string>)
               .map((option) => option.toUpperCase())
               .join(","),
-            investmentIdeology: Array.from(
+            investment_ideology: Array.from(
               investmentIdeologyFilters as Set<string>
             )
               .map((option) => option.toUpperCase())

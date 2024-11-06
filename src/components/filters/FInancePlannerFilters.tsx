@@ -54,6 +54,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
 
   useEffect(() => {
     fetchVendorList(dealFilters, investmentIdeologyFilters);
+    window.scrollTo(0, 0);
   }, [dealFilters, investmentIdeologyFilters]);
 
   const formatString = (str: string) => {
