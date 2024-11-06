@@ -59,7 +59,6 @@ interface ReviewFormObject {
 
 interface ProfessionalInfoProps {
   vendor_id?: number;
-  renderProfessionalInfoView: boolean;
 }
 
 const fetchVendorDetails = async (id: string) => {
@@ -73,10 +72,7 @@ const fetchVendorDetails = async (id: string) => {
   return data.data as VendorData;
 };
 
-const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
-  renderProfessionalInfoView,
-  vendor_id,
-}) => {
+const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({ vendor_id }) => {
   const authContext = useContext(AuthContext);
 
   if (authContext === undefined) {
@@ -381,7 +377,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             {login && userDetails?.vendor_id !== Number(professionalId) && (
               <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
-                  {renderProfessionalInfoView && (
+                  {!vendor_id && (
                     <Button
                       variant="outlined"
                       style={{ backgroundColor: "#8c52ff", color: "white" }}

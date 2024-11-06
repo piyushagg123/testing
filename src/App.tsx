@@ -119,9 +119,9 @@ const App: React.FC = () => {
             path="/finance-planners/:professionalId"
             element={
               isLargeDevice ? (
-                <FinancePlannerInfoLaptop renderProfessionalInfoView={true} />
+                <FinancePlannerInfoLaptop />
               ) : (
-                <FinancePlannerInfo renderProfessionalInfoView={true} />
+                <FinancePlannerInfo />
               )
             }
           />
@@ -134,15 +134,9 @@ const App: React.FC = () => {
             element={
               userDetails.vendor_type === "FINANCIAL_ADVISOR" ? (
                 isLargeDevice ? (
-                  <FinancePlannerInfoLaptop
-                    renderProfessionalInfoView={false}
-                    vendor_id={userDetails.vendor_id}
-                  />
+                  <FinancePlannerInfoLaptop vendor_id={userDetails.vendor_id} />
                 ) : (
-                  <FinancePlannerInfo
-                    renderProfessionalInfoView={false}
-                    vendor_id={userDetails.vendor_id}
-                  />
+                  <FinancePlannerInfo vendor_id={userDetails.vendor_id} />
                 )
               ) : isLargeDevice ? (
                 <InteriorDesignerInfoLaptop
@@ -156,9 +150,6 @@ const App: React.FC = () => {
                 />
               )
             }
-            // element={
-
-            // }
           />
           <Route path="/*" element={<Error />} />
         </Routes>
