@@ -1,16 +1,16 @@
 import * as React from "react";
 import { AuthContext } from "../context/Login";
-import data from "../assets/professionalIcons.json";
+import data from "../assets/ProfessionalIcons.json";
 import { Link } from "react-router-dom";
 import { ImageList, ImageListItem } from "@mui/material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { StateContext } from "../context/State";
 import { ApiContext } from "../context/Api";
 import service from "../assets/service.png";
-import photo1 from "../assets/photo1.jpg";
-import photo2 from "../assets/photo2.jpeg";
-import photo3 from "../assets/photo3.jpeg";
-import photo4 from "../assets/photo4.jpg";
+import HomePagePhoto1 from "../assets/HomePagePhoto1.jpg";
+import HomePagePhoto2 from "../assets/HomePagePhoto2.jpeg";
+import HomePagePhoto3 from "../assets/HomePagePhoto3.jpeg";
+import HomePagePhoto4 from "../assets/HomePagePhoto4.jpg";
 
 const HomePage = () => {
   const authContext = React.useContext(AuthContext);
@@ -31,20 +31,20 @@ const HomePage = () => {
 
   const itemData = [
     {
-      img: photo1,
+      img: HomePagePhoto1,
       title: "Bed",
     },
     {
-      img: photo2,
+      img: HomePagePhoto2,
       title: "Books",
     },
 
     {
-      img: photo3,
+      img: HomePagePhoto3,
       title: "Kitchen",
     },
     {
-      img: photo4,
+      img: HomePagePhoto4,
       title: "Blinds",
     },
   ];

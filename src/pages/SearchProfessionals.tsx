@@ -12,13 +12,15 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import Professional from "../components/Professional";
-import InteriorDesignerFilters from "../components/filters/InteriorDesignerFilters";
+import {
+  Professional,
+  InteriorDesignerFilters,
+  FinancePlannerFilters,
+} from "../components";
 import constants from "../constants";
 import { StateContext } from "../context/State";
 import service from "../assets/service.png";
 import { ApiContext } from "../context/Api";
-import FinancePlannerFilters from "../components/filters/FInancePlannerFilters";
 
 interface VendorItem {
   vendor_id?: string;

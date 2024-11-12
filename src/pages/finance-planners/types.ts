@@ -13,6 +13,7 @@ export type VendorData = {
   number_of_employees: number;
   mobile: string;
   email: string;
+  started_in: string;
   city: string;
   social?: {
     facebook?: string;

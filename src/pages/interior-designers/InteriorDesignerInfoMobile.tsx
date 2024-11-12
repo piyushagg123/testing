@@ -1,6 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import projectImage from "../../assets/noProjectAdded.jpg";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
   Tab,
   Box,
@@ -14,27 +13,35 @@ import {
   useTheme,
   Chip,
 } from "@mui/material";
-import Carousel from "../../components/ProjectCard";
+import {
+  Reviews,
+  ReviewDialog,
+  AddAProject,
+  ProjectImages,
+  Carousel,
+} from "../../components";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Reviews from "../../components/Reviews";
-import ReviewDialog from "../../components/ReviewDialog";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import AddAProject from "../../components/AddAProject";
-import ProjectImages from "../../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import {
+  OpenInNew,
+  StarBorder,
+  Facebook,
+  Instagram,
+} from "@mui/icons-material";
 import img from "../../assets/noImageinProject.jpg";
-import { ProfessionalInfoProps, ProjectData, ReviewFormObject } from "./types";
-import { fetchVendorDetails, fetchVendorProjects } from "./controller";
-import { formatCategory } from "../../helpers/stringHelpers";
+import { ProfessionalInfoProps, ProjectData } from "./Types";
+import {
+  fetchVendorDetails,
+  fetchVendorProjects,
+  submitReview,
+} from "./Controller";
+import { formatString, truncateText } from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
@@ -132,37 +139,19 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     setLoading(true);
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
-    formData.forEach((value, key) => {
-      if (key.startsWith("rating_")) {
-        (formObject[
-          key as "rating_quality" | "rating_execution" | "rating_behaviour"
-        ] as number) = Number(value);
-      } else {
-        formObject[key as "body"] = value.toString();
+    await submitReview(
+      event,
+      professionalId!,
+      () => {
+        setReviewDialogOpen(false);
+        setSnackbarOpen(true);
+      },
+      (errorMessage) => {
+        setReviewError(errorMessage);
       }
-    });
-
-    try {
-      await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      handleReviewDialogClose();
-      setSnackbarOpen(true);
-    } catch (error: any) {
-      setReviewError(error.response.data.debug_info);
-    }
+    );
     setLoading(false);
-    setValue("1");
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -182,7 +171,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
 
   const contentPreview =
     isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
-      ? vendorData?.description.slice(0, maxVisibleLength) + "..."
+      ? truncateText(vendorData?.description!, maxVisibleLength)
       : vendorData?.description;
 
   const theme = useTheme();
@@ -197,7 +186,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
               <div className="flex flex-col">
                 <p className="font-bold  text-black">Project name</p>
                 <p className=" max-w-[300px]">
-                  {formatCategory(selectedProject.title)}
+                  {formatString(selectedProject.title)}
                 </p>
               </div>
 
@@ -215,7 +204,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <div className="w-1/2 lg:w-auto">
                   <p className="font-bold  text-black mt-[1em] ">Spaces</p>
                   <p className="flex gap-1">
-                    {formatCategory(
+                    {formatString(
                       Object.keys(selectedProject.images).join(",")
                     )}
                   </p>
@@ -223,7 +212,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <div className="w-1/2 lg:w-auto">
                   <p className="font-bold  text-black  mt-[1em] w-1/2">Theme</p>
                   <p className="flex gap-1">
-                    {formatCategory(selectedProject.sub_category_1)}
+                    {formatString(selectedProject.sub_category_1)}
                   </p>
                 </div>
               </div>
@@ -282,7 +271,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <FacebookIcon />
+                        <Facebook />
                       </a>
                     )}
                     {vendorData.social.instagram && (
@@ -291,7 +280,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <InstagramIcon />
+                        <Instagram />
                       </a>
                     )}
                     {vendorData.social.website && (
@@ -300,7 +289,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <OpenInNewIcon />
+                        <OpenInNew />
                       </a>
                     )}
                   </div>
@@ -355,19 +344,19 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {formatString(vendorData?.business_name ?? "Unknown Business")}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {formatString(vendorData?.business_name ?? "Unknown Business")}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.sub_category_1 ?? "N/A")
+            {formatString(vendorData?.sub_category_1 ?? "N/A")
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -385,7 +374,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.sub_category_2 ?? "N/A")
+            {formatString(vendorData?.sub_category_2 ?? "N/A")
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -465,7 +454,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                       style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={handleReviewDialogOpen}
                     >
-                      <StarBorderIcon /> <p>Write a Review</p>
+                      <StarBorder /> <p>Write a Review</p>
                     </Button>
                   )}
                 </div>

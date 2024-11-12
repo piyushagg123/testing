@@ -18,7 +18,7 @@ import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerOnboarding from "./finance-planners/FinancePlannerOnboarding";
 import { LoadingButton } from "@mui/lab";
-import { checkUserDetailsExist } from "../helpers/userHelpers";
+import { checkUserDetailsExist } from "../helpers/UserHelpers";
 
 interface FormObject {
   [key: string]: string;

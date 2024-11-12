@@ -17,7 +17,7 @@ import constants from "../constants";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import NoProjectImage from "../assets/noImageinProject.jpg";
-import { truncateText } from "../helpers/stringHelpers";
+import { formatString, truncateText } from "../helpers/StringHelpers";
 
 interface ImageCarouselProps {
   title: string;
@@ -26,7 +26,7 @@ interface ImageCarouselProps {
   state: string;
   imageObj: Record<string, string[]>;
   showProjectDetails: boolean;
-  color?: boolean;
+  isActive?: boolean;
 }
 interface ItemProps {
   item: string;
@@ -38,7 +38,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   city,
   imageObj,
   showProjectDetails = true,
-  color,
+  isActive,
 }) => {
   const keysArray = Object.keys(imageObj);
   const arr: string[] = [];
@@ -54,11 +54,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   }, [imageObj, keysArray]);
   const themeArray = theme?.split(",");
 
-  const formatString = (str: string) => {
-    const formattedStr = str.toLowerCase().replace(/_/g, " ");
-    return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
-  };
-
   const maxChipCount = 1;
 
   return (
@@ -69,7 +64,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             width: "130px",
             border: "none",
             boxShadow: "none",
-            background: color ? "#f2f2f2" : "",
+            background: isActive ? "#f2f2f2" : "",
           }}
         >
           <CardActionArea>

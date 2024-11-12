@@ -13,7 +13,12 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { formatString } from "../../helpers/stringHelpers";
+import { formatString } from "../../helpers/StringHelpers";
+import {
+  FilterItem,
+  handleCheckboxChange,
+  handleFilterChange,
+} from "./Controller";
 
 const fetchDeals = async () => {
   const response = await axios.get(
@@ -33,11 +38,6 @@ const fetchInvestmentIdeology = async () => {
 
 interface FiltersProps {
   fetchVendorList: (dealFilters: any, investmentIdeologyFilters: any) => void;
-}
-
-interface FilterItem {
-  id: number;
-  value: string;
 }
 
 const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
@@ -68,41 +68,6 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const [selectedDeals, setSelectedDeals] = useState(new Set<string>());
   const [selectedInvestmentIdeologies, setSelectedInvestmentIdeologies] =
     useState(new Set<string>());
-
-  const handleCheckboxChange = (
-    item: string,
-    selectedItems: Set<any>,
-    setSelectedItems: React.Dispatch<React.SetStateAction<Set<any>>>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>,
-    filters: Set<any>
-  ) => {
-    const updatedItems = new Set(selectedItems);
-    if (updatedItems.has(item)) {
-      updatedItems.delete(item);
-    } else {
-      updatedItems.add(item);
-    }
-    setSelectedItems(updatedItems);
-    handleFilterChange(item, filters, setFilters);
-  };
-
-  const handleFilterChange = (
-    updatedItem: string,
-    filters: Set<any>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>
-  ) => {
-    if (updatedItem === "") setFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      const updatedFilters = new Set(filters);
-      if (updatedFilters.has(updatedItem)) {
-        updatedFilters.delete(updatedItem);
-      } else {
-        updatedFilters.add(updatedItem);
-      }
-      setFilters(updatedFilters);
-    }
-  };
 
   const clearAll = () => {
     setSelectedDeals(new Set());

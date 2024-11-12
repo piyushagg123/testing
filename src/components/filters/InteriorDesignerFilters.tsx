@@ -13,7 +13,12 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { formatString } from "../../helpers/stringHelpers";
+import { formatString } from "../../helpers/StringHelpers";
+import {
+  FilterItem,
+  handleCheckboxChange,
+  handleFilterChange,
+} from "./Controller";
 
 const fetchThemes = async () => {
   const response = await axios.get(
@@ -42,11 +47,6 @@ interface FiltersProps {
     spaceFilters: any,
     executionFilters: any
   ) => void;
-}
-
-interface FilterItem {
-  id: number;
-  value: string;
 }
 
 const InteriorDesignerFilters: React.FC<FiltersProps> = ({
@@ -80,41 +80,6 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
   const [selectedExecutions, setSelectedExecutions] = useState(
     new Set<string>()
   );
-
-  const handleCheckboxChange = (
-    item: string,
-    selectedItems: Set<any>,
-    setSelectedItems: React.Dispatch<React.SetStateAction<Set<any>>>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>,
-    filters: Set<any>
-  ) => {
-    const updatedItems = new Set(selectedItems);
-    if (updatedItems.has(item)) {
-      updatedItems.delete(item);
-    } else {
-      updatedItems.add(item);
-    }
-    setSelectedItems(updatedItems);
-    handleFilterChange(item, filters, setFilters);
-  };
-
-  const handleFilterChange = (
-    updatedItem: string,
-    filters: Set<any>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>
-  ) => {
-    if (updatedItem === "") setFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      const updatedFilters = new Set(filters);
-      if (updatedFilters.has(updatedItem)) {
-        updatedFilters.delete(updatedItem);
-      } else {
-        updatedFilters.add(updatedItem);
-      }
-      setFilters(updatedFilters);
-    }
-  };
 
   const clearAll = () => {
     setSelectedThemes(new Set());

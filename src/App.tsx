@@ -17,7 +17,7 @@ import AboutUs from "./pages/AboutUs";
 import InteriorDesignerInfoMobile from "./pages/interior-designers/InteriorDesignerInfoMobile";
 import ProfileForMobile from "./pages/ProfileForMobile";
 import { jwtDecode } from "jwt-decode";
-import FinancePlannerInfo from "./pages/finance-planners/FinancePlannerInfo";
+import FinancePlannerInfo from "./pages/finance-planners/FinancePlannerInfoMobile";
 import InteriorDesignerInfoLaptop from "./pages/interior-designers/InteriorDesignerInfoLaptop";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { ApiContext } from "./context/Api";

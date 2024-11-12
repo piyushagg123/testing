@@ -1,33 +1,20 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import img from "../../assets/noImageinProject.jpg";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
 import {
-  Chip,
-  Tab,
-  Box,
-  Dialog,
-  DialogContent,
-  IconButton,
-  Button,
-  Snackbar,
-} from "@mui/material";
+  OpenInNew,
+  StarBorder,
+  Facebook,
+  Instagram,
+} from "@mui/icons-material";
+import { Chip, Button, Snackbar } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Reviews from "../../components/Reviews";
-import ReviewDialog from "../../components/ReviewDialog";
-import AddAProject from "../../components/AddAProject";
-import ProjectImages from "../../components/ProjectImages";
-import CloseIcon from "@mui/icons-material/Close";
-import { ProfessionalInfoProps, ReviewFormObject } from "./types";
-import { fetchVendorDetails } from "./controller";
-import { formatCategory } from "../../helpers/stringHelpers";
+import { ReviewDialog, Reviews } from "../../components";
+import { ProfessionalInfoProps } from "./Types";
+import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
+import { formatString, truncateText } from "../../helpers/StringHelpers";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
@@ -40,10 +27,9 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   const { login, userDetails } = authContext;
   const { professionalId } = useParams();
 
-  const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!)
+    () => fetchFinancialAdvisorDetails(professionalId!)
   );
 
   useEffect(() => {
@@ -53,16 +39,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-  const [projectId, setProjectId] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const handleClose = () => {
-    setOpen(false);
-    setIsSubmitted(false);
-    setSelectedSubCategories([]);
-  };
 
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
@@ -79,49 +56,24 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
     setReviewError("");
   };
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     setLoading(true);
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    const formObject: ReviewFormObject = {
-      financial_advisor_id: Number(professionalId),
-    };
-    formData.forEach((value, key) => {
-      if (key === "rating") {
-        (formObject[key as "rating"] as number) = Number(value);
-      } else {
-        formObject[key as "body"] = value.toString();
+    submitReview(
+      event,
+      professionalId!,
+      () => {
+        setReviewDialogOpen(false);
+        setSnackbarOpen(true);
+      },
+      (errorMessage) => {
+        setReviewError(errorMessage);
       }
-    });
-
-    try {
-      await axios.post(
-        `${constants.apiBaseUrl}/financial-advisor/review`,
-        formObject,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      handleReviewDialogClose();
-      setSnackbarOpen(true);
-    } catch (error: any) {
-      setReviewError(error.response.data.debug_info);
-    }
+    );
     setLoading(false);
-    setValue("1");
   };
 
   const [expanded, setExpanded] = useState(false);
@@ -135,7 +87,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
   const contentPreview =
     isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
-      ? vendorData?.description.slice(0, maxVisibleLength) + "..."
+      ? truncateText(vendorData?.description!, maxVisibleLength)
       : vendorData?.description;
   const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2">
@@ -191,7 +143,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FacebookIcon />
+                <Facebook />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -200,7 +152,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <InstagramIcon />
+                <Instagram />
               </a>
             )}
             {vendorData.social.website && (
@@ -209,7 +161,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNewIcon />
+                <OpenInNew />
               </a>
             )}
           </div>
@@ -257,19 +209,19 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {formatString(vendorData?.business_name ?? "Unknown Business")}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {formatString(vendorData?.business_name ?? "Unknown Business")}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             DEALS :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.deals ?? "N/A")
+            {formatString(vendorData?.deals ?? "N/A")
               .split(",")
               .map((item, ind) => (
                 <Chip
@@ -287,7 +239,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             INVESTMENT IDEOLOGY :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.investment_ideology ?? "N/A")
+            {formatString(vendorData?.investment_ideology ?? "N/A")
               .split(",")
               .map((item, ind) => (
                 <Chip
@@ -330,103 +282,24 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                       style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={handleReviewDialogOpen}
                     >
-                      <StarBorderIcon /> <p>Write a Review</p>
+                      <StarBorder /> <p>Write a Review</p>
                     </Button>
                   )}
                 </div>
               </div>
             )}
-            {!isMobile ? (
-              <>
-                <TabContext value={value}>
-                  <Box>
-                    <TabList
-                      onChange={handleChange}
-                      aria-label="lab API tabs example"
-                      sx={{
-                        "& .MuiTabs-indicator": {
-                          backgroundColor: "#8c52ff",
-                        },
-                        "& .MuiTab-root.Mui-selected": {
-                          color: "#8c52ff",
-                        },
-                        "& .MuiTab-root": {
-                          color: "#576375",
-                        },
-                      }}
-                    >
-                      <Tab
-                        label="About us"
-                        value="1"
-                        sx={{
-                          fontWeight: "bold",
-                          textTransform: "none",
-                          fontSize: "1rem",
-                        }}
-                      />
-
-                      <Tab
-                        label="Reviews"
-                        value="2"
-                        sx={{
-                          fontWeight: "bold",
-                          textTransform: "none",
-                          fontSize: "1rem",
-                        }}
-                      />
-                    </TabList>
-                  </Box>
-                  <TabPanel value={"1"} sx={{ padding: 0, marginTop: "10px" }}>
-                    <div className="w-[95vw] lg:w-[750px]">
-                      <p className="text-sm md:text-base text-justify mb-[1em]">
-                        {contentPreview}
-                        {isMobile &&
-                          vendorData?.description.length! >
-                            maxVisibleLength && (
-                            <button
-                              onClick={handleExpandClick}
-                              className="text-blue-500 hover:text-blue-700 font-medium"
-                            >
-                              {expanded ? "Read Less" : "Read More"}
-                            </button>
-                          )}
-                      </p>
-                    </div>
-                  </TabPanel>
-                  <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                    <div className="w-[95vw] lg:w-[750px] flex justify-center flex-col items-center">
-                      {<Reviews id={Number(professionalId)} />}
-                    </div>
-                  </TabPanel>
-                </TabContext>
-              </>
-            ) : (
-              <>
-                <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
-                  <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
-                    {
-                      <Reviews
-                        id={
-                          professionalId ? Number(professionalId) : Number(-1)
-                        }
-                      />
-                    }
-                  </div>
-                </div>
-              </>
-            )}
+            <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+              <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
+                {
+                  <Reviews
+                    id={professionalId ? Number(professionalId) : Number(-1)}
+                  />
+                }
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="hidden lg:block">
-          {isMobile ? (
-            <div className="border border-1  rounded-md border-[#d3d8e0] w-[93vw]">
-              {professionalCard}
-            </div>
-          ) : (
-            <div className="">{professionalCard}</div>
-          )}
-        </div>
         <ReviewDialog
           handleReviewDialogClose={handleReviewDialogClose}
           handleReviewSubmit={handleReviewSubmit}
@@ -435,33 +308,6 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           reviewError={reviewError}
           professional="financePlanner"
         />
-
-        <Dialog open={open} fullWidth>
-          <DialogContent sx={{ height: "max-content" }}>
-            <div className="flex justify-end">
-              <IconButton
-                aria-label="close"
-                onClick={handleClose}
-                sx={{
-                  position: "absolute",
-                  right: 8,
-                  top: 8,
-                  color: (theme) => theme.palette.grey[500],
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </div>
-            {!isSubmitted ? (
-              <AddAProject setProjectId={setProjectId} projectId={projectId} />
-            ) : (
-              <ProjectImages
-                subCategories={selectedSubCategories}
-                projectId={projectId}
-              />
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
 
       <Snackbar

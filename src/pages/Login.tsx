@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import ForgotPassword from "../components/ForgotPassword";
+import { ForgotPassword } from "../components";
 import { Alert, TextField } from "@mui/material";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/Login";

@@ -6,10 +6,6 @@ const truncateText = (text: string, wordLimit: number): string => {
 };
 
 const formatString = (str: string) => {
-  const formattedStr = str?.toLowerCase().replace(/_/g, " ");
-  return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
-};
-const formatCategory = (str: string) => {
   let formattedStr = str?.replace(/_/g, " ");
   formattedStr = formattedStr
     ?.toLowerCase()
@@ -20,4 +16,4 @@ const formatCategory = (str: string) => {
   return formattedStr;
 };
 
-export { truncateText, formatString, formatCategory };
+export { truncateText, formatString };
