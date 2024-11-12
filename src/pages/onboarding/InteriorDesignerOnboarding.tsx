@@ -325,16 +325,19 @@ const InteriorDesignerOnboarding = () => {
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
                   Average project value
-                  <input
-                    type="number"
-                    step="0.01"
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                    name="average_project_value"
-                    className="w-[235px] px-2"
-                    value={formData.average_project_value}
-                    onChange={handleChange}
-                    required
-                  />
+                  <div className="flex items-center border border-black rounded w-[235px]">
+                    <span className="px-2">₹</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      style={{ borderRadius: "5px", border: "none" }}
+                      name="average_project_value"
+                      className="w-[235px] px-2 outline-none"
+                      value={formData.average_project_value}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
                 </label>
                 <label className="flex flex-col text-[16px]">
                   Projects completed

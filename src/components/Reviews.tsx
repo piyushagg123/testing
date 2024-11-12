@@ -12,12 +12,13 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import ReviewDialog from "./ReviewDialog";
 
 interface user {
   id: number;
 }
 
-interface Review {
+export interface Review {
   rating_quality: number;
   rating_execution: number;
   rating_behaviour: number;
@@ -61,7 +62,24 @@ const Reviews: React.FC<user> = ({ id }) => {
     return data.data;
   };
 
+  const handleDialogSubmit = (updatedReview: Review) => {
+    refetch(); // Refetch reviews to get the updated list
+    setSnackbarOpen(true);
+    setSelectedReview(null);
+    setIsEditMode(false);
+  };
+
   const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleEdit = (review: Review) => {
+    setSelectedReview(review);
+    setIsEditMode(true); // Enable edit mode
+    setDialogOpen(true); // Assuming `setDialogOpen` is used to open the dialog
+    console.log(review);
+  };
 
   const calculateAverages = (reviews: Review[]) => {
     if (reviews.length === 0) return { quality: 0, execution: 0, behaviour: 0 };
@@ -268,11 +286,18 @@ const Reviews: React.FC<user> = ({ id }) => {
                           <div>
                             {localStorage.getItem("token") &&
                               userDetails?.user_id === review.user_id && (
-                                <button
-                                  onClick={() => handleDelete(review.review_id)}
-                                >
-                                  <DeleteIcon sx={{ color: "var(--red)" }} />
-                                </button>
+                                <div>
+                                  <button
+                                    onClick={() =>
+                                      handleDelete(review.review_id)
+                                    }
+                                  >
+                                    <DeleteIcon sx={{ color: "var(--red)" }} />
+                                  </button>
+                                  <button onClick={() => handleEdit(review)}>
+                                    Edit
+                                  </button>
+                                </div>
                               )}
                           </div>
                         </div>
@@ -305,6 +330,15 @@ const Reviews: React.FC<user> = ({ id }) => {
         message="Review deleted successfully"
         key="bottom-center"
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
+
+      <ReviewDialog
+        reviewDialogOpen={dialogOpen}
+        handleReviewDialogClose={() => setDialogOpen(false)}
+        reviewData={selectedReview} // Pass selected review data for editing
+        // isEditMode={isEditMode}
+        professional="interiorDesigner"
+        e={true}
       />
     </>
   );

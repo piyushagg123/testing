@@ -7,19 +7,11 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { Checkbox } from "@mui/material";
+import { Checkbox, useMediaQuery } from "@mui/material";
 import constants from "../constants";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-    },
-  },
-};
-
 function getStyles(value: string, selectedValues: string[], theme: any) {
   return {
     fontWeight:
@@ -56,6 +48,7 @@ export default function MultipleSelect({
   const [selectedValues, setSelectedValues] = useState<string[]>(
     initialSelectedValues
   );
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md")); // Detects if the screen is large (desktop)
 
   let options = dataArray;
   let isLoading = apiEndpoint ? true : false;
@@ -98,8 +91,16 @@ export default function MultipleSelect({
   selectedValuesWithIds.sort((a, b) => a.id - b.id);
 
   const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * (isLargeScreen ? 7 : 4.5) + ITEM_PADDING_TOP,
+      },
+    },
+  };
   return (
-    <div className="w-[226px] flex justify-center">
+    <div className="w-[206.67px] flex justify-center">
       <FormControl>
         <Select
           multiple

@@ -176,6 +176,7 @@ const FinancePlannerOnboarding = () => {
         );
       }
     } catch (error) {}
+    window.location.reload();
     navigate("/finance-planners");
   };
 
@@ -247,9 +248,13 @@ const FinancePlannerOnboarding = () => {
       }
     }
     setCurrentStep((prevStep) => prevStep + 1);
+    window.scrollTo(0, 0);
     setError("");
   };
-  const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
+  const prevStep = () => {
+    setCurrentStep((prevStep) => prevStep - 1);
+    window.scrollTo(0, 0);
+  };
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setLogoFile(file);
@@ -306,16 +311,19 @@ const FinancePlannerOnboarding = () => {
 
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
-                  Aum handled
-                  <input
-                    type="number"
-                    name="aum_handled"
-                    className="w-[235px] px-2"
-                    value={formData.aum_handled}
-                    onChange={handleChange}
-                    required
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  />
+                  Aum handled (in lakhs)
+                  <div className="flex items-center border border-black rounded w-[235px]">
+                    <span className="px-2">₹</span>
+                    <input
+                      type="number"
+                      name="aum_handled"
+                      className="w-[235px] px-2 outline-none"
+                      value={formData.aum_handled}
+                      onChange={handleChange}
+                      required
+                      style={{ borderRadius: "5px", border: "none" }}
+                    />
+                  </div>
                 </label>
                 <label className="flex flex-col text-[16px]">
                   Number of Employees
@@ -333,16 +341,23 @@ const FinancePlannerOnboarding = () => {
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
                   Minimum investment
-                  <input
-                    type="number"
-                    name="minimum_investment"
-                    className="w-[235px] px-2"
-                    value={formData.minimum_investment}
-                    onChange={handleChange}
-                    required
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  />
+                  <div className="flex items-center border border-black rounded w-[235px]">
+                    <span className="px-2">₹</span>
+                    <input
+                      type="number"
+                      name="minimum_investment"
+                      className="w-full px-2 outline-none"
+                      value={formData.minimum_investment}
+                      onChange={handleChange}
+                      required
+                      style={{
+                        borderRadius: "5px",
+                        border: "none", // Remove the inner input border if needed
+                      }}
+                    />
+                  </div>
                 </label>
+
                 <label className="flex flex-col text-[16px]">
                   Number of clients
                   <input
@@ -456,7 +471,7 @@ const FinancePlannerOnboarding = () => {
               </label>
               <label className="flex flex-col lg:flex-row justify-start lg:justify-between">
                 <p className="text-base">Fees</p>
-                <div className="w-[226px] flex justify-center">
+                <div className="w-[226px] h-[40px] flex justify-center">
                   <input
                     type="number"
                     name="fees"
@@ -464,7 +479,7 @@ const FinancePlannerOnboarding = () => {
                     value={formData.fees}
                     onChange={handleChange}
                     required
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                    style={{ borderRadius: "5px", border: "solid 1px" }}
                   />
                 </div>
               </label>
@@ -492,9 +507,9 @@ const FinancePlannerOnboarding = () => {
                 Address
                 <input
                   type="text"
-                  style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  style={{ borderRadius: "5px", border: "solid 1px" }}
                   name="address"
-                  className="w-[235px] px-2"
+                  className="w-[235px] h-[40px] px-2"
                   value={formData.address}
                   onChange={handleChange}
                   required
