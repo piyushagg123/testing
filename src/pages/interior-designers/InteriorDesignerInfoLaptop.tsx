@@ -36,7 +36,10 @@ import {
   fetchVendorProjects,
   submitReview,
 } from "./Controller";
-import { formatString, truncateText } from "../../helpers/StringHelpers";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
@@ -137,10 +140,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const maxVisibleLength = 300;
 
-  const contentPreview =
-    !expanded && vendorData?.description?.length! > maxVisibleLength
-      ? truncateText(vendorData?.description!, maxVisibleLength)
-      : vendorData?.description;
+  const contentPreview = !expanded
+    ? truncateText(vendorData?.description!, maxVisibleLength)
+    : vendorData?.description;
 
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -245,19 +247,25 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.sub_category_1 ?? "N/A")
+            {removeUnderscoresAndFirstLetterCapital(
+              vendorData?.sub_category_1 ?? "N/A"
+            )
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -275,7 +283,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.sub_category_2 ?? "N/A")
+            {removeUnderscoresAndFirstLetterCapital(
+              vendorData?.sub_category_2 ?? "N/A"
+            )
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -473,7 +483,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                   <div className="w-1/2">
                     <p className="font-bold  text-black mt-[1em]">Spaces</p>
                     <p className="">
-                      {formatString(
+                      {removeUnderscoresAndFirstLetterCapital(
                         Object.keys(selectedProject.images).join(",")
                       )}
                     </p>
@@ -481,7 +491,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                   <div className="w-1/2">
                     <p className="font-bold  text-black  mt-[1em]">Theme</p>
                     <p className="">
-                      {formatString(selectedProject.sub_category_1)}
+                      {removeUnderscoresAndFirstLetterCapital(
+                        selectedProject.sub_category_1
+                      )}
                     </p>
                   </div>
                 </div>

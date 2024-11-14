@@ -41,7 +41,10 @@ import {
   fetchVendorProjects,
   submitReview,
 } from "./Controller";
-import { formatString, truncateText } from "../../helpers/StringHelpers";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
@@ -170,7 +173,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   const maxVisibleLength = 200;
 
   const contentPreview =
-    isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
+    isMobile && !expanded
       ? truncateText(vendorData?.description!, maxVisibleLength)
       : vendorData?.description;
 
@@ -186,7 +189,9 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
               <div className="flex flex-col">
                 <p className="font-bold  text-black">Project name</p>
                 <p className=" max-w-[300px]">
-                  {formatString(selectedProject.title)}
+                  {removeUnderscoresAndFirstLetterCapital(
+                    selectedProject.title
+                  )}
                 </p>
               </div>
 
@@ -204,7 +209,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <div className="w-1/2 lg:w-auto">
                   <p className="font-bold  text-black mt-[1em] ">Spaces</p>
                   <p className="flex gap-1">
-                    {formatString(
+                    {removeUnderscoresAndFirstLetterCapital(
                       Object.keys(selectedProject.images).join(",")
                     )}
                   </p>
@@ -212,7 +217,9 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <div className="w-1/2 lg:w-auto">
                   <p className="font-bold  text-black  mt-[1em] w-1/2">Theme</p>
                   <p className="flex gap-1">
-                    {formatString(selectedProject.sub_category_1)}
+                    {removeUnderscoresAndFirstLetterCapital(
+                      selectedProject.sub_category_1
+                    )}
                   </p>
                 </div>
               </div>
@@ -344,19 +351,25 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.sub_category_1 ?? "N/A")
+            {removeUnderscoresAndFirstLetterCapital(
+              vendorData?.sub_category_1 ?? "N/A"
+            )
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -374,7 +387,9 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.sub_category_2 ?? "N/A")
+            {removeUnderscoresAndFirstLetterCapital(
+              vendorData?.sub_category_2 ?? "N/A"
+            )
               ?.split(",")
               .map((item, ind) => (
                 <Chip

@@ -13,7 +13,7 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { formatString } from "../../helpers/StringHelpers";
+import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import {
   FilterItem,
   handleCheckboxChange,
@@ -68,10 +68,10 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
   }, [themeFilters, spaceFilters, executionFilters]);
 
   const formattedThemes = themes.map((theme: FilterItem) =>
-    formatString(theme.value)
+    removeUnderscoresAndFirstLetterCapital(theme.value)
   );
   const formattedSpaces = spaces.map((space: FilterItem) =>
-    formatString(space.value)
+    removeUnderscoresAndFirstLetterCapital(space.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);

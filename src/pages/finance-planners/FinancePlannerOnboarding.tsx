@@ -11,32 +11,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
-
-interface SocialLinks {
-  instagram: string;
-  facebook: string;
-  website: string;
-}
-
-interface FormData {
-  business_name: string;
-  sebi_registered: boolean;
-  started_in: string;
-  number_of_employees: string;
-  address: string;
-  city: string;
-  state: string;
-  description: string;
-  aum_handled: number;
-  minimum_investment: number;
-  number_of_clients: number;
-  fees: number;
-  deals: string[];
-  investment_ideology: string[];
-
-  fees_type: string[];
-  social: SocialLinks;
-}
+import { VendorData } from "./Types";
+import { initializeFormData } from "./Controller";
 
 const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -50,28 +26,7 @@ const FinancePlannerOnboarding = () => {
   }
   const { state } = stateContext;
 
-  const [formData, setFormData] = useState<FormData>({
-    business_name: "",
-    sebi_registered: false,
-    started_in: "",
-    number_of_employees: "",
-    address: "",
-    city: "",
-    state: "",
-    description: "",
-    aum_handled: 0,
-    minimum_investment: 0,
-    number_of_clients: 0,
-    fees: 0,
-    deals: [],
-    investment_ideology: [],
-    fees_type: [],
-    social: {
-      instagram: "",
-      facebook: "",
-      website: "",
-    },
-  });
+  const [formData, setFormData] = useState<VendorData>(initializeFormData());
 
   const navigate = useNavigate();
 
@@ -129,7 +84,7 @@ const FinancePlannerOnboarding = () => {
 
   const handleDeleteLogo = async () => {
     setLogoPreview(null);
-    setFormData((prevData) => ({ ...prevData, logo: null }));
+    setFormData((prevData) => ({ ...prevData, logo: undefined }));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -137,14 +92,13 @@ const FinancePlannerOnboarding = () => {
 
     const processedFormData = {
       ...formData,
-      number_of_employees: parseInt(formData.number_of_employees, 10),
-      deals: formData.deals.join(","),
-      investment_ideology: formData.investment_ideology.join(","),
-      fees_type: formData.fees_type.join(","),
-      aum_handled: parseFloat(formData.aum_handled.toString()),
-      minimum_investment: parseFloat(formData.minimum_investment.toString()),
-      number_of_clients: parseInt(formData.number_of_clients.toString(), 10),
-      fees: parseInt(formData.fees.toString(), 10),
+      deals: formData?.deals?.join(","),
+      investment_ideology: formData.investment_ideology?.join(","),
+      fees_type: formData.fees_type?.join(","),
+      aum_handled: parseFloat(formData?.aum_handled!.toString()),
+      minimum_investment: parseFloat(formData.minimum_investment!.toString()),
+      number_of_clients: parseInt(formData.number_of_clients!.toString(), 10),
+      fees: parseInt(formData.fees!.toString(), 10),
     };
 
     try {
@@ -196,15 +150,15 @@ const FinancePlannerOnboarding = () => {
     }
 
     if (currentStep === 2) {
-      if (formData.deals.length === 0) {
+      if (formData.deals!.length === 0) {
         setError("please select your theme");
         return;
       }
-      if (formData.investment_ideology.length === 0) {
+      if (formData.investment_ideology!.length === 0) {
         setError("please select your specialized spaces");
         return;
       }
-      if (formData.fees_type.length === 0) {
+      if (formData.fees_type!.length === 0) {
         setError("please select your type of execution");
         return;
       }
@@ -633,7 +587,7 @@ const FinancePlannerOnboarding = () => {
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="instagram"
                     className="w-[235px] px-2"
-                    value={formData.social.instagram}
+                    value={formData?.social?.instagram}
                     onChange={handleSocialChange}
                   />
                 </label>
@@ -646,7 +600,7 @@ const FinancePlannerOnboarding = () => {
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="facebook"
                     className="w-[235px] px-2"
-                    value={formData.social.facebook}
+                    value={formData.social?.facebook}
                     onChange={handleSocialChange}
                   />
                 </label>
@@ -659,7 +613,7 @@ const FinancePlannerOnboarding = () => {
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="website"
                     className="w-[235px] px-2"
-                    value={formData.social.website}
+                    value={formData.social?.website}
                     onChange={handleSocialChange}
                   />
                 </label>

@@ -26,7 +26,10 @@ import { AuthContext } from "../../context/Login";
 import { LoadingButton } from "@mui/lab";
 import { ProfessionalInfoProps } from "./Types";
 import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
-import { formatString, truncateText } from "../../helpers/StringHelpers";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../../helpers/StringHelpers";
 import { ReviewDialog, Reviews } from "../../components";
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
@@ -98,13 +101,11 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     setExpanded(!expanded);
   };
 
-  const isMobile = window.innerWidth < 1024;
   const maxVisibleLength = 100;
 
-  const contentPreview =
-    isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
-      ? truncateText(vendorData?.description!, maxVisibleLength)
-      : vendorData?.description;
+  const contentPreview = !expanded
+    ? truncateText(vendorData?.description!, maxVisibleLength)
+    : vendorData?.description;
   const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2 lg:border lg:rounded-md">
       <div className="flex flex-row w-full">
@@ -225,21 +226,24 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             DEALS :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.deals ?? "N/A")
-              .split(",")
-              .map((item, ind) => (
+            {vendorData?.deals &&
+              vendorData.deals.map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"
@@ -255,9 +259,8 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             INVESTMENT IDEOLOGY :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.investment_ideology ?? "N/A")
-              .split(",")
-              .map((item, ind) => (
+            {vendorData?.investment_ideology &&
+              vendorData.investment_ideology.map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"

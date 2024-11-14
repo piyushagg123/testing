@@ -13,7 +13,7 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { formatString } from "../../helpers/StringHelpers";
+import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import {
   FilterItem,
   handleCheckboxChange,
@@ -58,10 +58,10 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   }, [dealFilters, investmentIdeologyFilters]);
 
   const formattedDeals = filterCategory1.map((item: FilterItem) =>
-    formatString(item.value)
+    removeUnderscoresAndFirstLetterCapital(item.value)
   );
   const formattedInvestmentIdeology = filterCategory2.map((item: FilterItem) =>
-    formatString(item.value)
+    removeUnderscoresAndFirstLetterCapital(item.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);

@@ -5,15 +5,17 @@ const truncateText = (text: string, wordLimit: number): string => {
   return text;
 };
 
-const formatString = (str: string) => {
-  let formattedStr = str?.replace(/_/g, " ");
+const removeUnderscoresAndFirstLetterCapital = (str: string) => {
+  if (typeof str !== "string") return "";
+
+  let formattedStr = str.replace(/_/g, " ");
   formattedStr = formattedStr
-    ?.toLowerCase()
-    ?.split(" ")
-    ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    ?.join(" ");
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   return formattedStr;
 };
 
-export { truncateText, formatString };
+export { truncateText, removeUnderscoresAndFirstLetterCapital };

@@ -1,8 +1,8 @@
-export type VendorData = {
+export interface VendorData {
   logo?: string;
-  deals?: string;
-  investment_ideology?: string;
-  fees_type?: string;
+  deals?: string[];
+  investment_ideology?: string[];
+  fees_type?: string[];
   fees?: number;
   number_of_clients?: number;
   aum_handled?: number;
@@ -11,16 +11,18 @@ export type VendorData = {
   description: string;
   business_name: string;
   number_of_employees: number;
-  mobile: string;
-  email: string;
+  mobile?: string;
+  email?: string;
   started_in: string;
   city: string;
+  state?: string;
+  address?: string;
   social?: {
     facebook?: string;
     instagram?: string;
     website?: string;
   };
-};
+}
 
 export type ReviewFormObject = {
   title?: string;

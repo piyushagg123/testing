@@ -7,9 +7,26 @@ const fetchFinancialAdvisorDetails = async (id: string) => {
   let data;
 
   const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advaaisor/details?financial_advisor_id=${id}`
+    `${constants.apiBaseUrl}/financial-advisor/details?financial_advisor_id=${id}`
   );
   data = response.data;
+  if (data.data.deals) {
+    data.data.deals = data.data.deals
+      .split(",")
+      .map((item: string) => item.trim());
+  }
+  if (data.data.investment_ideology) {
+    data.data.investment_ideology = data.data.investment_ideology
+      .split(",")
+      .map((item: string) => item.trim());
+  }
+  if (data.data.fees_type) {
+    data.data.fees_type = data.data.fees_type
+      .split(",")
+      .map((item: string) => item.trim());
+  }
+
+  console.log(data.data);
 
   return data.data as VendorData;
 };
@@ -51,4 +68,27 @@ const submitReview = async (
   }
 };
 
-export { fetchFinancialAdvisorDetails, submitReview };
+const initializeFormData = (): VendorData => ({
+  business_name: "",
+  sebi_registered: false,
+  started_in: "",
+  number_of_employees: 0,
+  address: "",
+  city: "",
+  state: "",
+  description: "",
+  aum_handled: 0,
+  minimum_investment: 0,
+  number_of_clients: 0,
+  fees: 0,
+  deals: [],
+  investment_ideology: [],
+  fees_type: [],
+  social: {
+    instagram: "",
+    facebook: "",
+    website: "",
+  },
+});
+
+export { fetchFinancialAdvisorDetails, submitReview, initializeFormData };

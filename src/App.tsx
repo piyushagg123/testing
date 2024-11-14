@@ -21,6 +21,7 @@ import FinancePlannerInfo from "./pages/finance-planners/FinancePlannerInfoMobil
 import InteriorDesignerInfoLaptop from "./pages/interior-designers/InteriorDesignerInfoLaptop";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { ApiContext } from "./context/Api";
+import FinancePlannerInfoLaptop from "./pages/finance-planners/FinancePlannerInfoLaptop";
 
 const fetchUserData = async () => {
   const token = localStorage.getItem("token");
@@ -126,10 +127,17 @@ const App: React.FC = () => {
           <Route
             path="/finance-planners/:professionalId"
             element={
-              <FinancePlannerInfo
-                renderProfileView={false}
-                renderProfessionalInfoView={true}
-              />
+              isLargeDevice ? (
+                <FinancePlannerInfoLaptop
+                  renderProfileView={false}
+                  renderProfessionalInfoView={true}
+                />
+              ) : (
+                <FinancePlannerInfo
+                  renderProfileView={false}
+                  renderProfessionalInfoView={true}
+                />
+              )
             }
           />
           <Route path="/signup" element={<SignUp joinAsPro={false} />} />

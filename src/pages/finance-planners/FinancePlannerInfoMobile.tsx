@@ -14,7 +14,10 @@ import { AuthContext } from "../../context/Login";
 import { ReviewDialog, Reviews } from "../../components";
 import { ProfessionalInfoProps } from "./Types";
 import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
-import { formatString, truncateText } from "../../helpers/StringHelpers";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../../helpers/StringHelpers";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
@@ -86,7 +89,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   const maxVisibleLength = 100;
 
   const contentPreview =
-    isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
+    isMobile && !expanded
       ? truncateText(vendorData?.description!, maxVisibleLength)
       : vendorData?.description;
   const professionalCard = (
@@ -209,23 +212,26 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatString(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             DEALS :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.deals ?? "N/A")
-              .split(",")
-              .map((item, ind) => (
+            {vendorData?.deals &&
+              vendorData.deals.map((item, ind) => (
                 <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  label={removeUnderscoresAndFirstLetterCapital(item)}
                   variant="outlined"
                   key={ind}
                   sx={{ height: "20px", fontSize: "11px" }}
@@ -239,11 +245,10 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             INVESTMENT IDEOLOGY :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatString(vendorData?.investment_ideology ?? "N/A")
-              .split(",")
-              .map((item, ind) => (
+            {vendorData?.investment_ideology &&
+              vendorData.investment_ideology.map((item, ind) => (
                 <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  label={removeUnderscoresAndFirstLetterCapital(item)}
                   variant="outlined"
                   key={ind}
                   sx={{ height: "20px", fontSize: "11px" }}

@@ -17,7 +17,10 @@ import constants from "../constants";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import NoProjectImage from "../assets/noImageinProject.jpg";
-import { formatString, truncateText } from "../helpers/StringHelpers";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../helpers/StringHelpers";
 
 interface ImageCarouselProps {
   title: string;
@@ -138,7 +141,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           {showImages ? (
             keysArray.map((key) => (
               <>
-                <p className="text-base font-bold">{formatString(key)}</p>
+                <p className="text-base font-bold">
+                  {removeUnderscoresAndFirstLetterCapital(key)}
+                </p>
                 <Carousel
                   animation="slide"
                   cycleNavigation={false}

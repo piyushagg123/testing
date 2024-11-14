@@ -18,7 +18,6 @@ import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerOnboarding from "./finance-planners/FinancePlannerOnboarding";
 import { LoadingButton } from "@mui/lab";
-import { checkUserDetailsExist } from "../helpers/UserHelpers";
 
 interface FormObject {
   [key: string]: string;
@@ -33,7 +32,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails } = authContext;
+  const { setLogin, setUserDetails, login } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
@@ -223,13 +222,9 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
               )}
               <form
                 className="flex flex-col"
-                onSubmit={
-                  checkUserDetailsExist(authContext)
-                    ? handleSetProfession
-                    : handleSubmit
-                }
+                onSubmit={login ? handleSetProfession : handleSubmit}
               >
-                {!checkUserDetailsExist(authContext) && (
+                {!login && (
                   <>
                     {" "}
                     <TextField
@@ -284,7 +279,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                     </Select>
                   </FormControl>
                 )}
-                {!checkUserDetailsExist(authContext) && (
+                {!login && (
                   <TextField
                     label="Password"
                     type="password"
@@ -295,7 +290,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                   />
                 )}
                 <label>
-                  {!checkUserDetailsExist(authContext) && (
+                  {!login && (
                     <TextField
                       label="Confirm Password"
                       type="password"
