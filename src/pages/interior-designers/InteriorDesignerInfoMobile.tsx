@@ -35,12 +35,12 @@ import {
   Instagram,
 } from "@mui/icons-material";
 import img from "../../assets/noImageinProject.jpg";
-import { ProfessionalInfoProps, ProjectData } from "./Types";
+import { ProfessionalInfoProps, ProjectData } from "./types";
 import {
   fetchVendorDetails,
   fetchVendorProjects,
   submitReview,
-} from "./Controller";
+} from "./controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,

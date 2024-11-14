@@ -12,8 +12,8 @@ import { useQuery } from "react-query";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import { ReviewDialog, Reviews } from "../../components";
-import { ProfessionalInfoProps } from "./Types";
-import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
+import { ProfessionalInfoProps } from "./types";
+import { fetchFinancialAdvisorDetails, submitReview } from "./controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,

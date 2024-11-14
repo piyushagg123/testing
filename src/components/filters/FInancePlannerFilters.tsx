@@ -18,7 +18,7 @@ import {
   FilterItem,
   handleCheckboxChange,
   handleFilterChange,
-} from "./Controller";
+} from "./controller";
 
 const fetchDeals = async () => {
   const response = await axios.get(

@@ -11,8 +11,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
-import { VendorData } from "./Types";
-import { initializeFormData } from "./Controller";
+import { VendorData } from "./types";
+import { initializeFormData } from "./controller";
 
 const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
