@@ -12,12 +12,12 @@ import { useQuery } from "react-query";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import { ReviewDialog, Reviews } from "../../components";
-import { ProfessionalInfoProps } from "./types";
-import { fetchFinancialAdvisorDetails, submitReview } from "./controller";
+import { ProfessionalInfoProps } from "./Types";
+import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
-} from "../../helpers/stringHelpers";
+} from "../../helpers/StringHelpers";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,

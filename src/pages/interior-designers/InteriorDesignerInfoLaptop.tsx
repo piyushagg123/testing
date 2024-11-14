@@ -30,16 +30,16 @@ import {
   Instagram,
 } from "@mui/icons-material";
 import img from "../../assets/noImageinProject.jpg";
-import { ProfessionalInfoProps, ProjectData } from "./types";
+import { ProfessionalInfoProps, ProjectData } from "./Types";
 import {
   fetchVendorDetails,
   fetchVendorProjects,
   submitReview,
-} from "./controller";
+} from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
-} from "../../helpers/stringHelpers";
+} from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,

@@ -1,6 +1,6 @@
 import axios from "axios";
 import constants from "../../constants";
-import { ProjectData, ReviewFormObject, VendorData } from "./types";
+import { ProjectData, ReviewFormObject, VendorData } from "./Types";
 import { FormEvent } from "react";
 
 const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {

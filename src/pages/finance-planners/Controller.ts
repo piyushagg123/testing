@@ -1,6 +1,6 @@
 import axios from "axios";
 import constants from "../../constants";
-import { ReviewFormObject, VendorData } from "./types";
+import { ReviewFormObject, VendorData } from "./Types";
 import { FormEvent } from "react";
 
 const fetchFinancialAdvisorDetails = async (id: string) => {

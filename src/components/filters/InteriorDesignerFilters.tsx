@@ -13,7 +13,7 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/stringHelpers";
+import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import {
   FilterItem,
   handleCheckboxChange,
