@@ -6,10 +6,7 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
-  Dialog,
-  DialogContent,
   Grow,
-  IconButton,
   MenuItem,
   MenuList,
   Paper,
@@ -17,7 +14,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import JoinAsPro from "../pages/JoinAsPro";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -43,7 +39,7 @@ const Navbar: React.FC = () => {
     }
   };
 
-  const options = ["Sign Up", "Join as interior designer"];
+  const options = ["Sign Up", "Join as professional"];
 
   const [openDrop, setOpenDrop] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -108,13 +104,13 @@ const Navbar: React.FC = () => {
     try {
       const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       if (result) {
         setToggleProfileMenu(false);
         setLogin(false);
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         setUserDetails({
           email: "",
           first_name: "",
@@ -130,16 +126,6 @@ const Navbar: React.FC = () => {
   };
 
   const [open, setOpen] = useState(false);
-
-  const handleClose = (
-    _?: React.SyntheticEvent<Element, Event>,
-    reason?: "backdropClick" | "escapeKeyDown"
-  ) => {
-    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
-      return;
-    }
-    setOpen(false);
-  };
 
   useEffect(() => {
     if (location.pathname !== "/profile-options") {
@@ -284,7 +270,7 @@ const Navbar: React.FC = () => {
                     style={{ backgroundColor: "#8c52ff", color: "white" }}
                     onClick={() => navigate("/join-as-pro")}
                   >
-                    Join as interior designer
+                    Join as a professional
                   </MaterialButton>
                 </div>
               </div>
@@ -369,28 +355,6 @@ const Navbar: React.FC = () => {
           )}
         </>
       )}
-      <Dialog
-        open={open}
-        onClose={() => handleClose}
-        sx={{ margin: "auto" }}
-        fullScreen={isFullScreen}
-      >
-        <DialogContent sx={{ height: "max-content", position: "relative" }}>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            x
-          </IconButton>
-          <JoinAsPro handleClose={handleClose} />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

@@ -59,7 +59,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
           formData,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "multipart/form-data",
             },
           }
@@ -88,7 +88,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
           `${constants.apiBaseUrl}/image-upload/project?project_id=${projectId}&key=${imageName}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );

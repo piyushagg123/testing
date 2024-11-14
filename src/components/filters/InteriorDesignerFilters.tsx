@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
-import constants from "../constants";
+import constants from "../../constants";
 import {
   Button,
   FormControl,
@@ -13,6 +13,12 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
+import {
+  FilterItem,
+  handleCheckboxChange,
+  handleFilterChange,
+} from "./Controller";
 
 const fetchThemes = async () => {
   const response = await axios.get(
@@ -43,17 +49,13 @@ interface FiltersProps {
   ) => void;
 }
 
-interface FilterItem {
-  id: number;
-  value: string;
-}
-
-const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
-  const { data: theme = [] } = useQuery("themes", fetchThemes);
-  const { data: spaces = [] } = useQuery("spaces", fetchSpaces);
-  const { data: executionType = [] } = useQuery(
-    "executionTypes",
-    fetchExecutionTypes
+const InteriorDesignerFilters: React.FC<FiltersProps> = ({
+  fetchVendorList,
+}) => {
+  const { data: themes = [] } = useQuery(["themes"], () => fetchThemes());
+  const { data: spaces = [] } = useQuery(["spaces"], () => fetchSpaces());
+  const { data: executionType = [] } = useQuery(["executionTypes"], () =>
+    fetchExecutionTypes()
   );
 
   const [themeFilters, setThemeFilters] = useState(new Set());
@@ -62,18 +64,14 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
 
   useEffect(() => {
     fetchVendorList(themeFilters, spaceFilters, executionFilters);
+    window.scrollTo(0, 0);
   }, [themeFilters, spaceFilters, executionFilters]);
 
-  const formatString = (str: string) => {
-    const formattedStr = str.toLowerCase().replace(/_/g, " ");
-    return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
-  };
-
-  const formattedThemes = theme.map((theme: FilterItem) =>
-    formatString(theme.value)
+  const formattedThemes = themes.map((theme: FilterItem) =>
+    removeUnderscoresAndFirstLetterCapital(theme.value)
   );
   const formattedSpaces = spaces.map((space: FilterItem) =>
-    formatString(space.value)
+    removeUnderscoresAndFirstLetterCapital(space.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);
@@ -82,41 +80,6 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const [selectedExecutions, setSelectedExecutions] = useState(
     new Set<string>()
   );
-
-  const handleCheckboxChange = (
-    item: string,
-    selectedItems: Set<any>,
-    setSelectedItems: React.Dispatch<React.SetStateAction<Set<any>>>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>,
-    filters: Set<any>
-  ) => {
-    const updatedItems = new Set(selectedItems);
-    if (updatedItems.has(item)) {
-      updatedItems.delete(item);
-    } else {
-      updatedItems.add(item);
-    }
-    setSelectedItems(updatedItems);
-    handleFilterChange(item, filters, setFilters);
-  };
-
-  const handleFilterChange = (
-    updatedItem: string,
-    filters: Set<any>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>
-  ) => {
-    if (updatedItem === "") setFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      const updatedFilters = new Set(filters);
-      if (updatedFilters.has(updatedItem)) {
-        updatedFilters.delete(updatedItem);
-      } else {
-        updatedFilters.add(updatedItem);
-      }
-      setFilters(updatedFilters);
-    }
-  };
 
   const clearAll = () => {
     setSelectedThemes(new Set());
@@ -134,31 +97,33 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
           <p className="font-bold text-base text-black">THEMES</p>
           {formattedThemes.map((theme: string) => {
             return (
-              <FormControlLabel
-                key={theme}
-                className="-mb-2.5 -mt-2.5"
-                control={
-                  <Checkbox
-                    checked={selectedThemes.has(theme)}
-                    sx={{
-                      "&.Mui-checked": {
-                        color: "#ff5757",
-                      },
-                      transform: "scale(0.75)",
-                    }}
-                    onChange={() =>
-                      handleCheckboxChange(
-                        theme,
-                        selectedThemes,
-                        setSelectedThemes,
-                        setThemeFilters,
-                        themeFilters
-                      )
-                    }
-                  />
-                }
-                label={<span className="text-sm">{theme}</span>}
-              />
+              <>
+                <FormControlLabel
+                  key={theme}
+                  className="-mb-2.5 -mt-2.5"
+                  control={
+                    <Checkbox
+                      checked={selectedThemes.has(theme)}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#ff5757",
+                        },
+                        transform: "scale(0.75)",
+                      }}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          theme,
+                          selectedThemes,
+                          setSelectedThemes,
+                          setThemeFilters,
+                          themeFilters
+                        )
+                      }
+                    />
+                  }
+                  label={<span className="text-sm">{theme}</span>}
+                />
+              </>
             );
           })}
         </div>
@@ -315,4 +280,4 @@ const Filters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   );
 };
 
-export default Filters;
+export default InteriorDesignerFilters;

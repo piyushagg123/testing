@@ -1,0 +1,12 @@
+[
+    {
+        "name":"Interior Designers",
+        "image":"/interior_designer.png",
+        "route":"/interior-designers"
+    },
+    {
+        "name":"Finance Planners",
+        "image":"/finance_planner.png",
+          "route":"/finance-planners"
+    }
+]

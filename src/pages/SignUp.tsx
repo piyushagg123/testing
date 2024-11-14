@@ -1,13 +1,22 @@
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
-import JoinAsPro from "./JoinAsPro";
-import { Alert, TextField } from "@mui/material";
+import InteriorDesignerOnboarding from "./interior-designers/InteriorDesignerOnboarding";
+import {
+  Alert,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from "@mui/material";
 import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
+import FinancePlannerOnboarding from "./finance-planners/FinancePlannerOnboarding";
 import { LoadingButton } from "@mui/lab";
 
 interface FormObject {
@@ -23,16 +32,24 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails, userDetails } = authContext;
+  const { setLogin, setUserDetails, login } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const [joinAs, setJoinAs] = useState("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleProfessionalChange = (event: SelectChangeEvent) => {
+    setJoinAs(event.target.value as string);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -77,6 +94,13 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
       return;
     }
 
+    if (joinAsPro) {
+      if (!joinAs) {
+        setError("Please select the professional type");
+        return;
+      }
+    }
+
     if (!formObject.password) {
       setError("Please enter your password.");
       return;
@@ -88,22 +112,25 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
     }
 
     formObject.password = CryptoJS.SHA1(formObject.password).toString();
+
+    setLoading(true);
     try {
       const response = await axios.post(
         `${constants.apiBaseUrl}/user/register`,
         formObject
       );
 
-      sessionStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("token", response.data.access_token);
+
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${response.data.access_token}`,
           },
         }
       );
-      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const decodedJWT = jwtDecode(response.data.access_token);
       const combinedData = {
         ...user_data.data.data,
         ...decodedJWT,
@@ -119,17 +146,23 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
       }
     } catch (error: any) {
       setError(error.response?.data?.debug_info ?? "An error occurred");
+      setLoading(false);
     }
+
     setLoading(false);
   };
-  const handleClose = (
-    _event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    navigate("/");
+
+  const handleSetProfession = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    if (!joinAs) {
+      setError("Please select the professional type");
+      return;
+    }
+    setOpenJoinasPro(true);
   };
   return (
     <>
-      {window.scrollTo(0, 0)}
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         <div className="hidden md:block bg-purple p-12 lg:py-28 text-white lg:px-36">
           <h1 className="text-xl md:text-3xl font-bold mt-[4em]">
@@ -151,7 +184,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
           </div>
         </div>
         <div className="mt-28">
-          {!sessionStorage.getItem("token") && (
+          {!localStorage.getItem("token") && (
             <p className=" m-auto w-fit">
               Already have an account?
               <span className="ml-3">
@@ -161,9 +194,13 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
               </span>
             </p>
           )}
-          {openJoinasPro || userDetails.first_name ? (
+          {openJoinasPro ? (
             <div className="py-8">
-              <JoinAsPro handleClose={handleClose} />
+              {joinAs === "InteriorDesigner" ? (
+                <InteriorDesignerOnboarding />
+              ) : (
+                <FinancePlannerOnboarding />
+              )}
             </div>
           ) : (
             <div className="w-fit m-auto md:p-8 flex flex-col justify-center items-center ">
@@ -183,55 +220,86 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                   {error}
                 </Alert>
               )}
-              <form className="flex flex-col" onSubmit={handleSubmit}>
-                <TextField
-                  label="First name"
-                  id="first_name"
-                  name="first_name"
-                  size="small"
-                  sx={{ width: "300px" }}
-                />
-
-                <TextField
-                  label="Last name"
-                  id="last_name"
-                  name="last_name"
-                  size="small"
-                  sx={{ width: "300px", marginY: "1em" }}
-                />
-
-                <TextField
-                  label="Mobile number"
-                  id="mobile"
-                  name="mobile"
-                  type="number"
-                  size="small"
-                  sx={{ width: "300px" }}
-                />
-                <TextField
-                  label="Email"
-                  id="email"
-                  name="email"
-                  size="small"
-                  sx={{ width: "300px", marginY: "1em" }}
-                />
-                <TextField
-                  label="Password"
-                  type="password"
-                  id="password"
-                  name="password"
-                  size="small"
-                  sx={{ width: "300px" }}
-                />
-                <label>
+              <form
+                className="flex flex-col"
+                onSubmit={login ? handleSetProfession : handleSubmit}
+              >
+                {!login && (
+                  <>
+                    {" "}
+                    <TextField
+                      label="First name"
+                      id="first_name"
+                      name="first_name"
+                      size="small"
+                      sx={{ width: "300px" }}
+                    />
+                    <TextField
+                      label="Last name"
+                      id="last_name"
+                      name="last_name"
+                      size="small"
+                      sx={{ width: "300px", marginY: "1em" }}
+                    />
+                    <TextField
+                      label="Mobile number"
+                      id="mobile"
+                      name="mobile"
+                      type="number"
+                      size="small"
+                      sx={{ width: "300px" }}
+                    />
+                    <TextField
+                      label="Email"
+                      id="email"
+                      name="email"
+                      size="small"
+                      sx={{ width: "300px", marginY: "1em" }}
+                    />
+                  </>
+                )}
+                {joinAsPro && (
+                  <FormControl
+                    fullWidth
+                    sx={{ marginBottom: "1em", width: "300px" }}
+                  >
+                    <InputLabel size="small">Profession</InputLabel>
+                    <Select
+                      value={joinAs}
+                      label="Profession"
+                      onChange={handleProfessionalChange}
+                      size="small"
+                    >
+                      <MenuItem value={"InteriorDesigner"}>
+                        Interior designer
+                      </MenuItem>
+                      <MenuItem value={"FinancePlanner"}>
+                        Finance planner
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+                {!login && (
                   <TextField
-                    label="Confirm Password"
+                    label="Password"
                     type="password"
-                    id="confirm_password"
-                    name="confirm_password"
+                    id="password"
+                    name="password"
                     size="small"
-                    sx={{ width: "300px", marginY: "1em" }}
+                    sx={{ width: "300px" }}
                   />
+                )}
+                <label>
+                  {!login && (
+                    <TextField
+                      label="Confirm Password"
+                      type="password"
+                      id="confirm_password"
+                      name="confirm_password"
+                      size="small"
+                      sx={{ width: "300px", marginY: "1em" }}
+                    />
+                  )}
                   <div className="flex justify-center my-[1em]">
                     <LoadingButton
                       type="submit"

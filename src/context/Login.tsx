@@ -23,7 +23,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const defaultUserDetails: UserDetails = {
+export const defaultUserDetails: UserDetails = {
   email: "",
   first_name: "",
   is_vendor: false,

@@ -13,22 +13,33 @@ import { AuthContext } from "../context/Login";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
-interface user {
+interface Vendor {
   id: number;
+  vendorType?: string;
 }
 
 interface Review {
-  rating_quality: number;
-  rating_execution: number;
-  rating_behaviour: number;
+  rating_quality?: number;
+  rating_execution?: number;
+  rating_behaviour?: number;
   body: string;
-  user_name: string;
+  user_name?: string;
   review_id: number;
   title: string;
   user_id: number;
+
+  rating?: number;
+  first_name?: string;
+  last_name?: string;
 }
 
-const Reviews: React.FC<user> = ({ id }) => {
+type InteriorDesignerRating = {
+  quality: number;
+  execution: number;
+  behaviour: number;
+};
+
+const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     return;
@@ -42,19 +53,26 @@ const Reviews: React.FC<user> = ({ id }) => {
 
   const fetchReviews = async () => {
     let data;
-    if (id === -1) {
-      const response = await axios.get(
-        `${constants.apiBaseUrl}/vendor/auth/reviews`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
-      data = response.data;
+    if (vendorType) {
+      if (id === -1) {
+        const response = await axios.get(
+          `${constants.apiBaseUrl}/vendor/auth/reviews`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        data = response.data;
+      } else {
+        const response = await axios.get(
+          `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
+        );
+        data = response.data;
+      }
     } else {
       const response = await axios.get(
-        `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
+        `${constants.apiBaseUrl}/financial-advisor/reviews?financial_advisor_id=${id}`
       );
       data = response.data;
     }
@@ -64,27 +82,37 @@ const Reviews: React.FC<user> = ({ id }) => {
   const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
 
   const calculateAverages = (reviews: Review[]) => {
-    if (reviews.length === 0) return { quality: 0, execution: 0, behaviour: 0 };
+    if (reviews.length === 0) {
+      return vendorType === "interiorDesigner"
+        ? { quality: 0, execution: 0, behaviour: 0 }
+        : 0;
+    }
 
-    let totalQuality = 0;
-    let totalExecution = 0;
-    let totalBehaviour = 0;
+    if (vendorType === "interiorDesigner") {
+      let totalQuality = 0;
+      let totalExecution = 0;
+      let totalBehaviour = 0;
 
-    reviews.forEach((review) => {
-      totalQuality += review.rating_quality;
-      totalExecution += review.rating_execution;
-      totalBehaviour += review.rating_behaviour;
-    });
+      reviews.forEach((review) => {
+        totalQuality += review.rating_quality || 0;
+        totalExecution += review.rating_execution || 0;
+        totalBehaviour += review.rating_behaviour || 0;
+      });
 
-    const averageQuality = totalQuality / reviews.length;
-    const averageExecution = totalExecution / reviews.length;
-    const averageBehaviour = totalBehaviour / reviews.length;
+      return {
+        quality: totalQuality / reviews.length,
+        execution: totalExecution / reviews.length,
+        behaviour: totalBehaviour / reviews.length,
+      };
+    } else {
+      let totalRating = 0;
 
-    return {
-      quality: averageQuality,
-      execution: averageExecution,
-      behaviour: averageBehaviour,
-    };
+      reviews.forEach((review) => {
+        totalRating += review.rating || 0;
+      });
+
+      return totalRating / reviews.length;
+    }
   };
 
   const handleDelete = async (reviewId: number) => {
@@ -93,7 +121,7 @@ const Reviews: React.FC<user> = ({ id }) => {
         `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -142,7 +170,7 @@ const Reviews: React.FC<user> = ({ id }) => {
   return (
     <>
       <div className=" w-[93vw] lg:w-full">
-        <p className="text-base font-bold">Rating & Reviews</p>
+        <p className="text-base lg:text-xl font-bold">Rating & Reviews</p>
         {reviews?.length > 0 ? (
           <>
             <div className="flex gap-1 items-center text-[green]">
@@ -150,24 +178,28 @@ const Reviews: React.FC<user> = ({ id }) => {
               <p>By verified users only</p>
             </div>
             <div className={`flex flex-col w-full gap-3 mt-1`}>
-              <div className="flex md:items-center justify-start gap-2 md:gap-10 flex-row">
+              <div className="flex md:items-center justify-start gap-2  flex-row">
                 <div className="flex flex-col md:items-center justify-center">
                   <p className="flex items-center gap-2">
                     <span className="text-[40px]">
-                      {(
-                        (averages.behaviour +
-                          averages.execution +
-                          averages.quality) /
-                        3
-                      ).toFixed(1)}
+                      {vendorType === "interiorDesigner"
+                        ? (
+                            ((averages as InteriorDesignerRating).behaviour +
+                              (averages as InteriorDesignerRating).execution +
+                              (averages as InteriorDesignerRating).quality) /
+                            3
+                          ).toFixed(1)
+                        : (averages as number).toFixed(1)}
                     </span>
                     <StarIcon
                       style={{
                         color: colors(
-                          (averages.behaviour +
-                            averages.execution +
-                            averages.quality) /
-                            3
+                          vendorType === "interiorDesigner"
+                            ? ((averages as InteriorDesignerRating).behaviour +
+                                (averages as InteriorDesignerRating).execution +
+                                (averages as InteriorDesignerRating).quality) /
+                                3
+                            : (averages as number)
                         ),
                       }}
                     />
@@ -178,61 +210,88 @@ const Reviews: React.FC<user> = ({ id }) => {
                 <div className="flex flex-col ">
                   <p className="my-[1em]">What our customers said</p>
                   <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
+                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[255px]">
                       <p className="flex items-center md:text-sm">
-                        Work Quality
+                        {vendorType === "interiorDesigner"
+                          ? "Work Quality"
+                          : "Rating"}
                       </p>
                       <BorderLinearProgress
                         variant="determinate"
-                        value={averages.quality * 20}
+                        value={
+                          vendorType === "interiorDesigner"
+                            ? (averages as InteriorDesignerRating).quality * 20
+                            : (averages as number) * 20
+                        }
                         sx={{
                           width: isLargeDevice ? "160px" : "30vw",
                           "& .MuiLinearProgress-bar": {
                             backgroundColor: `var(--${colors(
-                              averages.quality
+                              (averages as InteriorDesignerRating).quality
                             )})`,
                           },
                         }}
                       />
                     </p>
-                    <p className="text-[10px]">{averages.quality}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
-                      <p className="flex items-center md:text-sm"> Execution</p>
-                      <BorderLinearProgress
-                        variant="determinate"
-                        value={averages.execution * 20}
-                        sx={{
-                          width: isLargeDevice ? "160px" : "30vw",
-                          "& .MuiLinearProgress-bar": {
-                            backgroundColor: `var(--${colors(
-                              averages.execution
-                            )})`,
-                          },
-                        }}
-                      />
+                    <p className="text-[10px]">
+                      {(averages as InteriorDesignerRating).quality}
                     </p>
-                    <p className="text-[10px]">{averages.execution}</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[293px]">
-                      <p className="flex items-center md:text-sm">Behaviour</p>
-                      <BorderLinearProgress
-                        variant="determinate"
-                        value={averages.behaviour * 20}
-                        sx={{
-                          width: isLargeDevice ? "160px" : "30vw",
-                          "& .MuiLinearProgress-bar": {
-                            backgroundColor: `var(--${colors(
-                              averages.behaviour
-                            )})`,
-                          },
-                        }}
-                      />
-                    </p>
-                    <p className="text-[10px]">{averages.behaviour}</p>
-                  </div>
+                  {vendorType === "interiorDesigner" && (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[255px]">
+                          <p className="flex items-center md:text-sm">
+                            {" "}
+                            Execution
+                          </p>
+                          <BorderLinearProgress
+                            variant="determinate"
+                            value={
+                              (averages as InteriorDesignerRating).execution *
+                              20
+                            }
+                            sx={{
+                              width: isLargeDevice ? "160px" : "30vw",
+                              "& .MuiLinearProgress-bar": {
+                                backgroundColor: `var(--${colors(
+                                  (averages as InteriorDesignerRating).execution
+                                )})`,
+                              },
+                            }}
+                          />
+                        </p>
+                        <p className="text-[10px]">
+                          {(averages as InteriorDesignerRating).execution}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <p className="flex items-center gap-3 justify-between w-[55vw] md:w-[255px]">
+                          <p className="flex items-center md:text-sm">
+                            Behaviour
+                          </p>
+                          <BorderLinearProgress
+                            variant="determinate"
+                            value={
+                              (averages as InteriorDesignerRating).behaviour *
+                              20
+                            }
+                            sx={{
+                              width: isLargeDevice ? "160px" : "30vw",
+                              "& .MuiLinearProgress-bar": {
+                                backgroundColor: `var(--${colors(
+                                  (averages as InteriorDesignerRating).behaviour
+                                )})`,
+                              },
+                            }}
+                          />
+                        </p>
+                        <p className="text-[10px]">
+                          {(averages as InteriorDesignerRating).behaviour}
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -245,28 +304,38 @@ const Reviews: React.FC<user> = ({ id }) => {
                         className={`flex items-center gap-1  p-[2px] text-white`}
                         style={{
                           backgroundColor: `var(--${colors(
-                            (review.rating_behaviour +
-                              review.rating_execution +
-                              review.rating_quality) /
-                              3
+                            vendorType === "interiorDesigner"
+                              ? (review.rating_behaviour! +
+                                  review.rating_execution! +
+                                  review.rating_quality!) /
+                                  3
+                              : (averages as number)
                           )})`,
                         }}
                       >
-                        {(
-                          (review.rating_behaviour +
-                            review.rating_execution +
-                            review.rating_quality) /
-                          3
-                        ).toFixed(1)}
+                        {vendorType === "interiorDesigner"
+                          ? (
+                              (review.rating_behaviour! +
+                                review.rating_execution! +
+                                review.rating_quality!) /
+                              3
+                            ).toFixed(1)
+                          : review?.rating?.toFixed(1)}
                         <StarIcon sx={{ fontSize: "13px" }} />
                       </p>
                       <div>
                         <div className="flex gap-3">
-                          <p>{review.user_name}</p>
+                          {vendorType === "interiorDesigner" ? (
+                            <p>{review.user_name}</p>
+                          ) : (
+                            <p>
+                              {review.first_name} {review.last_name}
+                            </p>
+                          )}
                           <Divider orientation="vertical" flexItem />
                           <p>{review.title}</p>
                           <div>
-                            {sessionStorage.getItem("token") &&
+                            {localStorage.getItem("token") &&
                               userDetails?.user_id === review.user_id && (
                                 <button
                                   onClick={() => handleDelete(review.review_id)}
@@ -286,7 +355,7 @@ const Reviews: React.FC<user> = ({ id }) => {
           </>
         ) : (
           <>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-center justify-center">
                 <div>
                   <img src={reviewImage} alt="" className="w-[300px]" />

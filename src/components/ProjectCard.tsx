@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import {
-  Chip,
   Paper,
   Typography,
   Box,
-  Tabs,
-  Tab,
   Card,
   CardContent,
   CardActionArea,
-  Grid,
-  useTheme,
   Tooltip,
   Button,
+  useTheme,
   useMediaQuery,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -21,7 +17,10 @@ import constants from "../constants";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import NoProjectImage from "../assets/noImageinProject.jpg";
-import { truncateText } from "../utils";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../helpers/StringHelpers";
 
 interface ImageCarouselProps {
   title: string;
@@ -30,6 +29,7 @@ interface ImageCarouselProps {
   state: string;
   imageObj: Record<string, string[]>;
   showProjectDetails: boolean;
+  isActive?: boolean;
 }
 interface ItemProps {
   item: string;
@@ -41,6 +41,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   city,
   imageObj,
   showProjectDetails = true,
+  isActive,
 }) => {
   const keysArray = Object.keys(imageObj);
   const arr: string[] = [];
@@ -56,47 +57,17 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   }, [imageObj, keysArray]);
   const themeArray = theme?.split(",");
 
-  const [selectedSpace, setSelectedSpace] = useState(keysArray[0]);
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setSelectedSpace(newValue);
-  };
-
-  const funct = (ar: any) => {
-    if (ar) {
-      return ar.map((item: any) => (
-        <img
-          src={`${constants.apiImageUrl}/${item}`}
-          className="h-10 ml-2"
-          alt="indicator"
-        />
-      ));
-    } else return;
-  };
-
-  const formatString = (str: string) => {
-    const formattedStr = str.toLowerCase().replace(/_/g, " ");
-    return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
-  };
-  const dynamicHeight = keysArray.length > 3 ? "520px" : "auto";
-  const themes = useTheme();
-
-  //device-width >900px
-  const isLargeDevice = useMediaQuery(themes.breakpoints.up("md"));
-
-  const maxChipCount = isLargeDevice ? 2 : 1;
+  const maxChipCount = 1;
 
   return (
     <>
       {showProjectDetails ? (
         <Card
           sx={{
-            width: "355px",
-            [themes.breakpoints.down("md")]: {
-              width: "130px",
-              border: "none",
-              boxShadow: "none",
-            },
+            width: "130px",
+            border: "none",
+            boxShadow: "none",
+            background: isActive ? "#f2f2f2" : "",
           }}
         >
           <CardActionArea>
@@ -104,16 +75,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               <WovenImageList items={arr} />
             </Box>
             <CardContent sx={{ padding: "0px 5px" }}>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                className={
-                  isLargeDevice
-                    ? "flex items-center justify-between mt-[1em]"
-                    : ""
-                }
-              >
+              <Typography gutterBottom variant="h5" component="div">
                 {title && (
                   <p className="font-bold text-base text-black">
                     <Tooltip title={title} placement="top-start">
@@ -138,18 +100,10 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 </p>
               </Typography>
               <Typography variant="body2">
-                <p className={`flex gap-1 pb-1 lg:justify-start`}>
+                <p className={`flex gap-1 pb-1`}>
                   {themeArray.map(
                     (item, ind) =>
-                      ind < maxChipCount &&
-                      (isLargeDevice ? (
-                        <Chip
-                          label={item}
-                          variant="outlined"
-                          key={ind}
-                          sx={{ height: "25px" }}
-                        />
-                      ) : (
+                      ind < maxChipCount && (
                         <div className="flex flex-col w-[120px]">
                           <div>
                             <div className="flex gap-1">
@@ -175,16 +129,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                             </Button>
                           </div>
                         </div>
-                      ))
-                  )}
-                  {isLargeDevice ? (
-                    <>
-                      {themeArray.length > 2 && (
-                        <span>+{themeArray.length - 2}</span>
-                      )}
-                    </>
-                  ) : (
-                    <></>
+                      )
                   )}
                 </p>
               </Typography>
@@ -192,108 +137,33 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </CardActionArea>
         </Card>
       ) : keysArray.length > 0 ? (
-        isLargeDevice ? (
-          <Grid container spacing={2}>
-            <Grid item xs={2}>
-              <Tabs
-                value={selectedSpace}
-                onChange={handleChange}
-                aria-label="Spaces tabs"
-                orientation="vertical"
-                variant={keysArray.length <= 3 ? "standard" : "scrollable"}
-                sx={{
-                  textAlign: "center",
-                  rotate: "180deg",
-                  marginRight: "60px",
-                  height: dynamicHeight,
-
-                  "& .MuiTabs-indicator": {
-                    transition: "none",
-                  },
-                  "& .MuiTab-root": {
-                    transition: "none",
-                  },
-                  "& .MuiSvgIcon-root": {
-                    marginLeft: "38px",
-                  },
-                  "& .MuiButtonBase-root": {
-                    transition: "none",
-                    animation: "none",
-                  },
-                }}
-                TabIndicatorProps={{
-                  sx: { display: "none" },
-                }}
-              >
-                {keysArray.map((key) => (
-                  <Tab
-                    label={
-                      <span style={{ writingMode: "vertical-rl" }}>
-                        {formatString(key)}
-                      </span>
-                    }
-                    value={key}
-                    key={key}
-                    sx={{
-                      transition: "none",
-                      color: selectedSpace === key ? "black" : "grey",
-                      "&.Mui-selected": {
-                        color: "black",
-                      },
-                    }}
-                  />
-                ))}
-              </Tabs>
-            </Grid>
-            <Grid item xs={10} sx={{ position: "relative", top: "-60px" }}>
-              <Box>
+        <Box sx={{ boxShadow: "none" }}>
+          {showImages ? (
+            keysArray.map((key) => (
+              <>
+                <p className="text-base font-bold">
+                  {removeUnderscoresAndFirstLetterCapital(key)}
+                </p>
                 <Carousel
                   animation="slide"
-                  cycleNavigation={true}
-                  IndicatorIcon={funct(imageObj[selectedSpace])}
-                  sx={{ width: "90vw" }}
+                  cycleNavigation={false}
+                  sx={{ boxShadow: "none" }}
                 >
-                  {imageObj[selectedSpace]?.map((img, i) => (
+                  {imageObj[key]?.map((img, i) => (
                     <>
                       <Item key={i} item={img} />
                     </>
                   ))}
                 </Carousel>
-              </Box>
-            </Grid>
-          </Grid>
-        ) : (
-          <>
-            {showImages ? (
-              keysArray.map((key) => (
-                <>
-                  <p className="text-base font-bold">{formatString(key)}</p>
-
-                  {imageObj[selectedSpace].length === 0 && (
-                    <Box>
-                      <Carousel animation="slide">
-                        {imageObj[selectedSpace]?.map((img, i) => (
-                          <>
-                            <Item key={i} item={img} />
-                          </>
-                        ))}
-                      </Carousel>
-                    </Box>
-                  )}
-                </>
-              ))
-            ) : (
-              <p className="text-center  ">
-                No images uploaded by the designer
-              </p>
-            )}
-          </>
-        )
+              </>
+            ))
+          ) : (
+            <p className="text-center  ">No images uploaded by the designer</p>
+          )}
+        </Box>
       ) : (
         <>
-          <p className="text-center top-[-78px] relative">
-            No images uploaded by the designer
-          </p>
+          <p className="text-center ">No images uploaded by the designer</p>
         </>
       )}
     </>
@@ -306,7 +176,12 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Paper
-      sx={{ display: "flex", justifyContent: "center", marginBottom: "1em" }}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: "1em",
+        boxShadow: "none",
+      }}
     >
       <img
         src={`${constants.apiImageUrl}/${item}`}
@@ -321,58 +196,36 @@ interface ItemProp {
   items: string[];
 }
 const WovenImageList: React.FC<ItemProp> = ({ items }) => {
-  const theme = useTheme();
-
-  //device-width > 900px
-  const isLargeDevice = useMediaQuery(theme.breakpoints.up("md"));
-  let numberOfImages: number = 0;
-  if (items.length <= 2) {
-    numberOfImages = 1;
-  } else {
-    numberOfImages = 2;
-  }
-
   return (
     <>
       <ImageList
         sx={{
-          height: isLargeDevice ? 250 : 180,
-          width: isLargeDevice ? "100% " : "130px",
+          height: 180,
+          width: "130px",
           scrollbarWidth: "none",
           scrollbarColor: "black",
-          padding: isLargeDevice ? 0 : "10px",
-          border: isLargeDevice ? "none" : "solid #e5e7eb 0.2px",
-          borderRadius: isLargeDevice ? 0 : "10px",
+          padding: "10px",
+          border: "solid #e5e7eb 0.2px",
+          borderRadius: "10px",
         }}
         variant="standard"
-        cols={isLargeDevice ? numberOfImages : 1}
+        cols={1}
         gap={1}
       >
         {items.length !== 0 ? (
           <>
             {items?.map((item, ind: number) => (
               <>
-                {isLargeDevice ? (
+                {ind < 1 && (
                   <ImageListItem key={ind}>
                     <img
                       src={`${constants.apiImageUrl}/${item}`}
                       loading="lazy"
+                      style={{
+                        height: "128.67px",
+                      }}
                     />
                   </ImageListItem>
-                ) : (
-                  <>
-                    {ind < 1 && (
-                      <ImageListItem key={ind}>
-                        <img
-                          src={`${constants.apiImageUrl}/${item}`}
-                          loading="lazy"
-                          style={{
-                            height: isLargeDevice ? "250px" : "128.67px",
-                          }}
-                        />
-                      </ImageListItem>
-                    )}
-                  </>
                 )}
               </>
             ))}
@@ -383,7 +236,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
               <img
                 src={NoProjectImage}
                 loading="lazy"
-                style={{ height: isLargeDevice ? "250px" : "128.67px" }}
+                style={{ height: "128.67px" }}
               />
             </ImageListItem>
           </>

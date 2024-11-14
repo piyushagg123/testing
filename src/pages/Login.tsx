@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import ForgotPassword from "../components/ForgotPassword";
+import { ForgotPassword } from "../components";
 import { Alert, TextField } from "@mui/material";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/Login";
 import axios from "axios";
 import CryptoJS from "crypto-js";
@@ -32,10 +32,13 @@ const Login = () => {
     return mobileRegex.test(input);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -66,24 +69,24 @@ const Login = () => {
     }
 
     data.password = CryptoJS.SHA1(password).toString();
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${constants.apiBaseUrl}/user/login`,
         data
       );
 
-      sessionStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("token", response.data.access_token);
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      const decodedJWT = jwtDecode(sessionStorage.getItem("token")!);
+      const decodedJWT = jwtDecode(localStorage.getItem("token")!);
       const combinedData = {
         ...user_data.data.data,
         ...decodedJWT,
@@ -92,13 +95,13 @@ const Login = () => {
       setLogin(true);
       navigate("/");
     } catch (error: any) {
-      setError(error.response.data.message);
+      setError(error.response.data.debug_info);
+      setLoading(false);
     }
     setLoading(false);
   };
   return (
     <>
-      {window.scrollTo(0, 0)}
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         {openForgotPassword ? (
           <div className=" mt-28">

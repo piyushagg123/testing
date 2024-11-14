@@ -19,6 +19,7 @@ interface ReviewDialogProps {
   handleReviewSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   loading: boolean;
   reviewError?: string | null;
+  professional: string;
 }
 
 const ReviewDialog: React.FC<ReviewDialogProps> = ({
@@ -27,6 +28,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   handleReviewSubmit,
   loading,
   reviewError,
+  professional,
 }) => {
   const theme = useTheme();
 
@@ -80,35 +82,48 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             }}
             fullWidth
           />
-          <label
-            htmlFor="rating_quality"
-            className="flex w-[70vw] md:w-[524px]"
-          >
-            <div className="flex flex-col md:flex-row  w-[250px] justify-between">
-              <p>Quality</p>
-              <Rating name="rating_quality" />
-            </div>
-          </label>
+          {professional === "interiorDesigner" ? (
+            <>
+              <label
+                htmlFor="rating_quality"
+                className="flex w-[70vw] md:w-[524px]"
+              >
+                <div className="flex flex-col md:flex-row  w-[250px] justify-between">
+                  <p>Quality</p>
+                  <Rating name="rating_quality" />
+                </div>
+              </label>
 
-          <label
-            htmlFor="rating_execution"
-            className="flex w-[70vw] md:w-[524px] "
-          >
-            <div className="flex flex-col md:flex-row w-[250px] justify-between">
-              <p>Execution</p>
-              <Rating name="rating_execution" />
-            </div>
-          </label>
+              <label
+                htmlFor="rating_execution"
+                className="flex w-[70vw] md:w-[524px] "
+              >
+                <div className="flex flex-col md:flex-row w-[250px] justify-between">
+                  <p>Execution</p>
+                  <Rating name="rating_execution" />
+                </div>
+              </label>
 
-          <label
-            htmlFor="rating_behaviour"
-            className="flex w-[70vw] md:w-[524px] "
-          >
-            <div className="flex flex-col md:flex-row w-[250px] justify-between">
-              <p>Behaviour</p>
-              <Rating name="rating_behaviour" />
-            </div>
-          </label>
+              <label
+                htmlFor="rating_behaviour"
+                className="flex w-[70vw] md:w-[524px] "
+              >
+                <div className="flex flex-col md:flex-row w-[250px] justify-between">
+                  <p>Behaviour</p>
+                  <Rating name="rating_behaviour" />
+                </div>
+              </label>
+            </>
+          ) : (
+            <>
+              <label htmlFor="rating" className="flex w-[70vw] md:w-[524px] ">
+                <div className="flex flex-col md:flex-row w-[250px] justify-between">
+                  <p>Rating</p>
+                  <Rating name="rating" />
+                </div>
+              </label>
+            </>
+          )}
 
           <DialogActions
             sx={{

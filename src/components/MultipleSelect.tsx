@@ -31,6 +31,7 @@ function getStyles(value: string, selectedValues: string[], theme: any) {
 
 const fetchOptions = async (apiEndpoint: string) => {
   const response = await axios.get(apiEndpoint);
+
   return response.data.data.value;
 };
 

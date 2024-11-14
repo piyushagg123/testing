@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
-import spacesData from "./spaces.ts";
+import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
 
 interface AddAProjectProps {
@@ -153,7 +153,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
         processedFormData,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

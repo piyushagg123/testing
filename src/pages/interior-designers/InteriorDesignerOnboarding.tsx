@@ -1,11 +1,11 @@
 import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
 import axios from "axios";
-import MultipleSelect from "../components/MultipleSelect";
+import { MultipleSelect } from "../../components";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { StateContext } from "../context/State";
-import constants from "../constants";
+import { StateContext } from "../../context/State";
+import constants from "../../constants";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -36,11 +36,7 @@ interface FormData {
   social: SocialLinks;
 }
 
-interface JoinAsProProps {
-  handleClose: () => void;
-}
-
-const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
+const InteriorDesignerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(false);
@@ -155,13 +151,13 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
         processedFormData,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      sessionStorage.removeItem("token");
-      sessionStorage.setItem("token", response.data.access_token);
+      localStorage.removeItem("token");
+      localStorage.setItem("token", response.data.access_token);
 
       if (logoFile) {
         const formData = new FormData();
@@ -172,16 +168,15 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "multipart/form-data",
             },
           }
         );
       }
     } catch (error) {}
-    navigate("/");
+    navigate("/interior-designers");
     window.location.reload();
-    handleClose();
     setLoading(false);
   };
 
@@ -677,4 +672,4 @@ const JoinAsPro: React.FC<JoinAsProProps> = ({ handleClose }) => {
   );
 };
 
-export default JoinAsPro;
+export default InteriorDesignerOnboarding;
