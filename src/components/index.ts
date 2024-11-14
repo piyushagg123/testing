@@ -5,6 +5,6 @@ export { default as ProjectImages } from "./ProjectImages";
 export { default as Carousel } from "./ProjectCard";
 export { default as Professional } from "./Professional";
 export { default as InteriorDesignerFilters } from "./filters/InteriorDesignerFilters";
-export { default as FinancePlannerFilters } from "./filters/FinancePlannerFilters";
+export { default as FinancePlannerFilters } from "./filters/FInancePlannerFilters";
 export { default as ForgotPassword } from "./ForgotPassword";
 export { default as MultipleSelect } from "./MultipleSelect";

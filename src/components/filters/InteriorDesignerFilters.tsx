@@ -18,7 +18,7 @@ import {
   FilterItem,
   handleCheckboxChange,
   handleFilterChange,
-} from "./controller";
+} from "./Controller";
 
 const fetchThemes = async () => {
   const response = await axios.get(
