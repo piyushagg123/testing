@@ -1,6 +1,6 @@
 import React from "react";
 import { Rating } from "@mui/material";
-import { truncateText } from "../helpers/StringHelpers";
+import { truncateText } from "../helpers/stringHelpers";
 import constants from "../constants";
 import NoProjectImage from "../assets/noImageinProject.jpg";
 

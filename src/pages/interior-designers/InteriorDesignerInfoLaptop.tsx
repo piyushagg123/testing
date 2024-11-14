@@ -39,7 +39,7 @@ import {
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
-} from "../../helpers/StringHelpers";
+} from "../../helpers/stringHelpers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,

@@ -17,7 +17,7 @@ import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
-} from "../../helpers/StringHelpers";
+} from "../../helpers/stringHelpers";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,

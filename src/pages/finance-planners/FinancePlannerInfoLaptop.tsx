@@ -29,7 +29,7 @@ import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
-} from "../../helpers/StringHelpers";
+} from "../../helpers/stringHelpers";
 import { ReviewDialog, Reviews } from "../../components";
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({

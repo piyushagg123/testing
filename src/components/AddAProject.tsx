@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
-import spacesData from "./Spaces.ts";
+import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
 
 interface AddAProjectProps {

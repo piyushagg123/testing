@@ -20,7 +20,7 @@ import NoProjectImage from "../assets/noImageinProject.jpg";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
-} from "../helpers/StringHelpers";
+} from "../helpers/stringHelpers";
 
 interface ImageCarouselProps {
   title: string;
