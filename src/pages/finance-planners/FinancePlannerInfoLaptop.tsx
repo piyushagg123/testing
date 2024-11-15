@@ -255,7 +255,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             {vendorData?.deals &&
               vendorData.deals.map((item, ind) => (
                 <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  label={removeUnderscoresAndFirstLetterCapital(item)}
                   variant="outlined"
                   key={ind}
                   sx={{ height: "20px", fontSize: "11px" }}
@@ -272,7 +272,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             {vendorData?.investment_ideology &&
               vendorData.investment_ideology.map((item, ind) => (
                 <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  label={removeUnderscoresAndFirstLetterCapital(item)}
                   variant="outlined"
                   key={ind}
                   sx={{ height: "20px", fontSize: "11px" }}
