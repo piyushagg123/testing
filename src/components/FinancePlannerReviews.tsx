@@ -173,16 +173,6 @@ const FinancePlannerReviews: React.FC<user> = ({ id }) => {
                           </p>
                           <Divider orientation="vertical" flexItem />
                           <p>{review.title}</p>
-                          {/* <div>
-                            {localStorage.getItem("token") &&
-                              userDetails?.user_id === review.user_id && (
-                                <button
-                                  onClick={() => handleDelete(review.review_id)}
-                                >
-                                  <DeleteIcon sx={{ color: "var(--red)" }} />
-                                </button>
-                              )}
-                          </div> */}
                         </div>
                         <p>{review.body}</p>
                       </div>

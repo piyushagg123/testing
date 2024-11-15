@@ -22,7 +22,7 @@ interface FormData {
   business_name: string;
   sebi_registered: boolean;
   started_in: string;
-  number_of_employees: string;
+  number_of_employees: number;
   address: string;
   city: string;
   state: string;
@@ -54,7 +54,7 @@ const FinancePlannerOnboarding = () => {
     business_name: "",
     sebi_registered: false,
     started_in: "",
-    number_of_employees: "",
+    number_of_employees: -1,
     address: "",
     city: "",
     state: "",
@@ -139,47 +139,48 @@ const FinancePlannerOnboarding = () => {
 
     const processedFormData = {
       ...formData,
-      number_of_employees: parseInt(formData.number_of_employees, 10),
       deals: formData.deals.join(","),
       investment_ideology: formData.investment_ideology.join(","),
       fees_type: formData.fees_type.join(","),
       aum_handled: parseFloat(formData.aum_handled.toString()),
       minimum_investment: parseFloat(formData.minimum_investment.toString()),
       number_of_clients: parseInt(formData.number_of_clients.toString(), 10),
+      number_of_employees: parseInt(
+        formData.number_of_employees.toString(),
+        10
+      ),
       fees: parseInt(formData.fees.toString(), 10),
     };
 
-    console.log(processedFormData);
+    try {
+      await axios.post(
+        `${constants.apiBaseUrl}/financial-advisor/create`,
+        processedFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    // try {
-    //   await axios.post(
-    //     `${constants.apiBaseUrl}/financial-advisor/create`,
-    //     processedFormData,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //       },
-    //     }
-    //   );
+      if (logoFile) {
+        const formData = new FormData();
+        formData.append("logo", logoFile);
 
-    //   if (logoFile) {
-    //     const formData = new FormData();
-    //     formData.append("logo", logoFile);
-
-    //     await axios.post(
-    //       `${constants.apiBaseUrl}/image-upload/logo`,
-    //       formData,
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
-    //   }
-    // } catch (error) {}
-    // window.location.reload();
-    // navigate("/finance-planners");
+        await axios.post(
+          `${constants.apiBaseUrl}/image-upload/logo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
+    } catch (error) {}
+    window.location.reload();
+    navigate("/finance-planners");
   };
 
   const nextStep = () => {
@@ -320,7 +321,9 @@ const FinancePlannerOnboarding = () => {
                       type="number"
                       name="aum_handled"
                       className="w-[235px] px-2 outline-none"
-                      value={formData.aum_handled}
+                      value={
+                        formData.aum_handled === -1 ? "" : formData.aum_handled
+                      }
                       onChange={handleChange}
                       required
                       style={{ borderRadius: "5px", border: "none" }}
@@ -334,7 +337,11 @@ const FinancePlannerOnboarding = () => {
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="number_of_employees"
                     className="w-[235px] px-2"
-                    value={formData.number_of_employees}
+                    value={
+                      formData.number_of_employees === -1
+                        ? ""
+                        : formData.number_of_employees
+                    }
                     onChange={handleChange}
                     required
                   />
@@ -350,7 +357,7 @@ const FinancePlannerOnboarding = () => {
                       name="minimum_investment"
                       className="w-full px-2 outline-none"
                       value={
-                        formData.minimum_investment === 0
+                        formData.minimum_investment === -1
                           ? ""
                           : formData.minimum_investment
                       }
@@ -358,7 +365,7 @@ const FinancePlannerOnboarding = () => {
                       required
                       style={{
                         borderRadius: "5px",
-                        border: "none", // Remove the inner input border if needed
+                        border: "none",
                       }}
                     />
                   </div>
@@ -370,7 +377,11 @@ const FinancePlannerOnboarding = () => {
                     type="number"
                     name="number_of_clients"
                     className="w-[235px] px-2"
-                    value={formData.number_of_clients}
+                    value={
+                      formData.number_of_clients === -1
+                        ? ""
+                        : formData.number_of_clients
+                    }
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -486,7 +497,7 @@ const FinancePlannerOnboarding = () => {
                     type="number"
                     name="fees"
                     className="w-full px-2 border-none outline-none"
-                    value={formData.fees}
+                    value={formData.fees === -1 ? "" : formData.fees}
                     onChange={handleChange}
                     required
                   />

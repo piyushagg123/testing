@@ -123,49 +123,45 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const showFilters = () => {
     return (
       <>
-        <div className="flex flex-col pt-3">
+        <div className="flex flex-col pt-3 gap-1">
           <p className="font-bold text-base text-darkgrey">{"DEALS"}</p>
-          <div className="flex flex-col" style={{ lineHeight: "normal" }}>
-            {formattedDeals.map((deal: string) => {
-              return (
-                <>
-                  <FormControlLabel
-                    key={deal}
-                    // className="-mb-2.5 "
-                    sx={{ lineHeight: "normal" }}
-                    control={
-                      <Checkbox
-                        checked={selectedDeals.has(deal)}
-                        sx={{
-                          "&.Mui-checked": {
-                            color: "#ff5757",
-                          },
-                          transform: "scale(0.75)",
-                        }}
-                        onChange={() =>
-                          handleCheckboxChange(
-                            deal,
-                            selectedDeals,
-                            setSelectedDeals,
-                            setDealFilters,
-                            dealFilters
-                          )
-                        }
-                      />
-                    }
-                    label={
-                      <span
-                        className="text-sm"
-                        style={{ lineHeight: "normal" }}
-                      >
-                        {deal}
-                      </span>
-                    }
-                  />
-                </>
-              );
-            })}
-          </div>
+          {formattedDeals.map((deal: string) => {
+            return (
+              <>
+                <FormControlLabel
+                  key={deal}
+                  className="-mb-2.5 -mt-2.5"
+                  control={
+                    <Checkbox
+                      checked={selectedDeals.has(deal)}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#ff5757",
+                        },
+                        transform: "scale(0.75)",
+                      }}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          deal,
+                          selectedDeals,
+                          setSelectedDeals,
+                          setDealFilters,
+                          dealFilters
+                        )
+                      }
+                    />
+                  }
+                  label={
+                    <span className="text-sm">
+                      {deal === "Complete wealth management"
+                        ? "Wealth management"
+                        : deal}
+                    </span>
+                  }
+                />
+              </>
+            );
+          })}
         </div>
         <div className="flex flex-col gap-1 pt-5">
           <p className="font-bold text-base text-darkgrey">

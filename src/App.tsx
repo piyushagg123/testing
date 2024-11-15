@@ -63,8 +63,6 @@ const App: React.FC = () => {
           ...decodedJWT,
         };
         setUserDetails(combinedData);
-
-        console.log(combinedData);
       }
     },
     onError: () => {

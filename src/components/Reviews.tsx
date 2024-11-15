@@ -63,22 +63,18 @@ const Reviews: React.FC<user> = ({ id }) => {
   };
 
   const handleDialogSubmit = () => {
-    refetch(); // Refetch reviews to get the updated list
+    refetch();
     setSnackbarOpen(true);
     setSelectedReview(null);
-    setIsEditMode(false);
   };
 
   const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleEdit = (review: Review) => {
     setSelectedReview(review);
-    setIsEditMode(true); // Enable edit mode
-    setDialogOpen(true); // Assuming `setDialogOpen` is used to open the dialog
-    console.log(review);
+    setDialogOpen(true);
   };
 
   const calculateAverages = (reviews: Review[]) => {
@@ -338,10 +334,9 @@ const Reviews: React.FC<user> = ({ id }) => {
           setDialogOpen(false);
           handleDialogSubmit();
         }}
-        reviewData={selectedReview} // Pass selected review data for editing
-        // isEditMode={isEditMode}
+        reviewData={selectedReview}
         professional="interiorDesigner"
-        e={true}
+        editMode={true}
       />
     </>
   );

@@ -25,7 +25,7 @@ interface ReviewDialogProps {
   loading?: boolean;
   reviewError?: string | null;
   professional?: string;
-  e?: boolean;
+  editMode?: boolean;
 }
 
 const ReviewDialog: React.FC<ReviewDialogProps> = ({
@@ -36,7 +36,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   reviewError,
   professional,
   reviewData,
-  e,
+  editMode,
 }) => {
   const [review, setReview] = useState<Review>({
     title: "",
@@ -67,21 +67,12 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      // Call update API
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/review/update`,
-        review,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error("Error updating review", error);
-    }
-    // console.log(review);
+      await axios.post(`${constants.apiBaseUrl}/vendor/review/update`, review, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+    } catch (error) {}
     handleReviewDialogClose();
   };
   const handleChange = (
@@ -104,7 +95,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
         onClose={() => handleReviewDialogClose}
         fullScreen={isFullScreen}
       >
-        <form onSubmit={e ? handleSubmit : handleReviewSubmit}>
+        <form onSubmit={editMode ? handleSubmit : handleReviewSubmit}>
           <DialogTitle sx={{ width: isLargeDevice ? "524px" : "70vw" }}>
             Write a review
           </DialogTitle>
@@ -160,7 +151,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                     <Rating
                       name="rating_quality"
                       defaultValue={reviewData?.rating_quality}
-                      onChange={(event, newValue) =>
+                      onChange={(_, newValue) =>
                         handleRatingChange("rating_quality", newValue)
                       }
                     />
@@ -176,7 +167,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                     <Rating
                       name="rating_execution"
                       defaultValue={reviewData?.rating_execution}
-                      onChange={(event, newValue) =>
+                      onChange={(_, newValue) =>
                         handleRatingChange("rating_execution", newValue)
                       }
                     />
@@ -192,7 +183,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                     <Rating
                       name="rating_behaviour"
                       defaultValue={reviewData?.rating_behaviour}
-                      onChange={(event, newValue) =>
+                      onChange={(_, newValue) =>
                         handleRatingChange("rating_behaviour", newValue)
                       }
                     />

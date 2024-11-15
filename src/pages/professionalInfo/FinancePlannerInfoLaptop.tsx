@@ -192,10 +192,6 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         </div>
       </div>
       <div className="flex  w-full flex-row ">
-        {/* <div className="w-1/2 mt-[1em]">
-          <p className="font-bold  text-black">Fees type</p>
-          <p className="">{vendorData?.fees_type ?? "N/A"}</p>
-        </div> */}
         <div className=" w-1/2 mt-[1em]">
           <p className="font-bold  text-black"> Fees</p>
           <p className="flex">
@@ -209,25 +205,29 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             )}
           </p>
         </div>
-      </div>
-      <div className="flex  w-full flex-row ">
         <div className="w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Minimum investment</p>
           <p className="">₹{vendorData?.minimum_investment ?? "N/A"}</p>
         </div>
+      </div>
+      <div className="flex  w-full flex-row ">
         <div className=" w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Number of employees</p>
           <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
         </div>
-      </div>
-      <div className="flex  w-full flex-row">
         <div className="w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Number of clients</p>
           <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
         </div>
+      </div>
+      <div className="flex  w-full flex-row">
         <div className=" w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Location</p>
           <p className="">{vendorData?.city ?? "N/A"}</p>
+        </div>
+        <div className="w-1/2 ">
+          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex flex-row  w-full">
@@ -265,10 +265,6 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         )}
-        <div className="w-1/2 ">
-          <p className="font-bold text-black mt-[1em]">Contact Number</p>
-          <p className="">{vendorData?.mobile ?? "N/A"}</p>
-        </div>
       </div>
       <div className="w-full mt-[1em]">
         <p className="font-bold  text-black">Email</p>

@@ -48,7 +48,7 @@ export default function MultipleSelect({
   const [selectedValues, setSelectedValues] = useState<string[]>(
     initialSelectedValues
   );
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md")); // Detects if the screen is large (desktop)
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
 
   let options = dataArray;
   let isLoading = apiEndpoint ? true : false;
