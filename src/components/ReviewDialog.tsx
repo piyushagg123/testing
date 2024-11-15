@@ -13,7 +13,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Review } from "./Reviews";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import constants from "../constants";
 
@@ -39,22 +39,37 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   e,
 }) => {
   const [review, setReview] = useState<Review>({
-    title: reviewData?.title || "",
-    body: reviewData?.body || "",
-    rating_quality: reviewData?.rating_quality || 0,
-    rating_execution: reviewData?.rating_execution || 0,
-    rating_behaviour: reviewData?.rating_behaviour || 0,
-    user_name: reviewData?.user_name || "",
-    review_id: reviewData?.review_id || 0,
-    user_id: reviewData?.user_id || 0,
+    title: "",
+    body: "",
+    rating_quality: 0,
+    rating_execution: 0,
+    rating_behaviour: 0,
+    user_name: "",
+    review_id: 0,
+    user_id: 0,
   });
   const theme = useTheme();
+  useEffect(() => {
+    if (reviewData) {
+      setReview({
+        title: reviewData.title || "",
+        body: reviewData.body || "",
+        rating_quality: reviewData.rating_quality || 0,
+        rating_execution: reviewData.rating_execution || 0,
+        rating_behaviour: reviewData.rating_behaviour || 0,
+        user_name: reviewData.user_name || "",
+        review_id: reviewData.review_id || 0,
+        user_id: reviewData.user_id || 0,
+      });
+    }
+  }, [reviewData]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     try {
       // Call update API
       const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/update/review`,
+        `${constants.apiBaseUrl}/vendor/review/update`,
         review,
         {
           headers: {
@@ -66,6 +81,8 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
     } catch (error) {
       console.error("Error updating review", error);
     }
+    // console.log(review);
+    handleReviewDialogClose();
   };
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -82,7 +99,6 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
-      {reviewData && console.log(reviewData)}
       <Dialog
         open={reviewDialogOpen}
         onClose={() => handleReviewDialogClose}
@@ -108,7 +124,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
               variant="outlined"
               size="small"
               name="title"
-              defaultValue={review.title}
+              defaultValue={reviewData?.title}
               onChange={handleChange}
               fullWidth
               sx={{
@@ -123,7 +139,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
               label="Your review"
               name="body"
               multiline
-              value={review.body}
+              defaultValue={reviewData?.body}
               onChange={handleChange}
               rows={4}
               sx={{
@@ -143,7 +159,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                     <p>Quality</p>
                     <Rating
                       name="rating_quality"
-                      value={review.rating_quality}
+                      defaultValue={reviewData?.rating_quality}
                       onChange={(event, newValue) =>
                         handleRatingChange("rating_quality", newValue)
                       }
@@ -159,9 +175,9 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                     <p>Execution</p>
                     <Rating
                       name="rating_execution"
-                      value={review.rating_execution}
+                      defaultValue={reviewData?.rating_execution}
                       onChange={(event, newValue) =>
-                        handleRatingChange("execution", newValue)
+                        handleRatingChange("rating_execution", newValue)
                       }
                     />
                   </div>
@@ -175,7 +191,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                     <p>Behaviour</p>
                     <Rating
                       name="rating_behaviour"
-                      value={review.rating_behaviour}
+                      defaultValue={reviewData?.rating_behaviour}
                       onChange={(event, newValue) =>
                         handleRatingChange("rating_behaviour", newValue)
                       }

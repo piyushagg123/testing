@@ -62,7 +62,7 @@ const Reviews: React.FC<user> = ({ id }) => {
     return data.data;
   };
 
-  const handleDialogSubmit = (updatedReview: Review) => {
+  const handleDialogSubmit = () => {
     refetch(); // Refetch reviews to get the updated list
     setSnackbarOpen(true);
     setSelectedReview(null);
@@ -334,7 +334,10 @@ const Reviews: React.FC<user> = ({ id }) => {
 
       <ReviewDialog
         reviewDialogOpen={dialogOpen}
-        handleReviewDialogClose={() => setDialogOpen(false)}
+        handleReviewDialogClose={() => {
+          setDialogOpen(false);
+          handleDialogSubmit();
+        }}
         reviewData={selectedReview} // Pass selected review data for editing
         // isEditMode={isEditMode}
         professional="interiorDesigner"

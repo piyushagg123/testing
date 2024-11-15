@@ -59,9 +59,9 @@ const FinancePlannerOnboarding = () => {
     city: "",
     state: "",
     description: "",
-    aum_handled: 0,
-    minimum_investment: 0,
-    number_of_clients: 0,
+    aum_handled: -1,
+    minimum_investment: -1,
+    number_of_clients: -1,
     fees: 0,
     deals: [],
     investment_ideology: [],
@@ -149,35 +149,37 @@ const FinancePlannerOnboarding = () => {
       fees: parseInt(formData.fees.toString(), 10),
     };
 
-    try {
-      await axios.post(
-        `${constants.apiBaseUrl}/financial-advisor/create`,
-        processedFormData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+    console.log(processedFormData);
 
-      if (logoFile) {
-        const formData = new FormData();
-        formData.append("logo", logoFile);
+    // try {
+    //   await axios.post(
+    //     `${constants.apiBaseUrl}/financial-advisor/create`,
+    //     processedFormData,
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //       },
+    //     }
+    //   );
 
-        await axios.post(
-          `${constants.apiBaseUrl}/image-upload/logo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      }
-    } catch (error) {}
-    window.location.reload();
-    navigate("/finance-planners");
+    //   if (logoFile) {
+    //     const formData = new FormData();
+    //     formData.append("logo", logoFile);
+
+    //     await axios.post(
+    //       `${constants.apiBaseUrl}/image-upload/logo`,
+    //       formData,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //           "Content-Type": "multipart/form-data",
+    //         },
+    //       }
+    //     );
+    //   }
+    // } catch (error) {}
+    // window.location.reload();
+    // navigate("/finance-planners");
   };
 
   const nextStep = () => {
@@ -347,7 +349,11 @@ const FinancePlannerOnboarding = () => {
                       type="number"
                       name="minimum_investment"
                       className="w-full px-2 outline-none"
-                      value={formData.minimum_investment}
+                      value={
+                        formData.minimum_investment === 0
+                          ? ""
+                          : formData.minimum_investment
+                      }
                       onChange={handleChange}
                       required
                       style={{
@@ -471,16 +477,23 @@ const FinancePlannerOnboarding = () => {
               </label>
               <label className="flex flex-col lg:flex-row justify-start lg:justify-between">
                 <p className="text-base">Fees</p>
-                <div className="w-[226px] h-[40px] flex justify-center">
+                <div className="w-[206.67px] h-[40px] flex items-center border border-black rounded">
+                  {formData.fees_type[0] === "FIXED" && (
+                    <span className="ml-1">₹</span>
+                  )}{" "}
+                  {/* Currency symbol */}
                   <input
                     type="number"
                     name="fees"
-                    className="w-[206.67px] px-2"
+                    className="w-full px-2 border-none outline-none"
                     value={formData.fees}
                     onChange={handleChange}
                     required
-                    style={{ borderRadius: "5px", border: "solid 1px" }}
                   />
+                  {formData.fees_type[0] === "PERCENTAGE" && (
+                    <span className="mr-1">%</span>
+                  )}{" "}
+                  {/* Percentage symbol */}
                 </div>
               </label>
               <div className="flex gap-2 justify-end  mt-[1em]">

@@ -195,7 +195,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({ vendor_id }) => {
       <div className="flex flex-row lg:flex-col w-full">
         <div className="mt-[1em] lg:mt-0 w-1/2 lg:w-fit">
           <p className="font-bold  text-black">AUM handled</p>
-          <p className="">{vendorData?.aum_handled ?? "N/A"}</p>
+          <p className="">₹{vendorData?.aum_handled ?? "N/A"}</p>
         </div>
         <div className="mt-[1em] w-1/2 lg:w-fit">
           <p className="font-bold  text-black">Sebi registered</p>
@@ -209,13 +209,22 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({ vendor_id }) => {
         </div>
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Fees</p>
-          <p className="">{vendorData?.fees ?? "N/A"}</p>
+          <p className="flex">
+            {vendorData?.fees && vendorData.fees_type === "FIXED" && (
+              <p className="mr-1">{"₹"}</p>
+            )}
+            {vendorData?.fees ?? "N/A"}
+
+            {vendorData?.fees && vendorData.fees_type === "PERCENTAGE" && (
+              <p className="ml-1">{"%"}</p>
+            )}
+          </p>
         </div>
       </div>
       <div className="flex  w-full flex-row lg:flex-col ">
         <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Minimum investment</p>
-          <p className="">{vendorData?.minimum_investment ?? "N/A"}</p>
+          <p className="">₹{vendorData?.minimum_investment ?? "N/A"}</p>
         </div>
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Number of employees</p>

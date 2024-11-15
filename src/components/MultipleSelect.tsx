@@ -66,6 +66,17 @@ export default function MultipleSelect({
     setSelectedValues(initialSelectedValues);
   }, []);
 
+  const formatCategory = (str: string) => {
+    let formattedStr = str.replace(/_/g, " ");
+    formattedStr = formattedStr
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    return formattedStr;
+  };
+
   const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
@@ -90,7 +101,9 @@ export default function MultipleSelect({
 
   selectedValuesWithIds.sort((a, b) => a.id - b.id);
 
-  const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
+  const sortedSelectedValues = selectedValuesWithIds.map((item) =>
+    formatCategory(item.value)
+  );
 
   const MenuProps = {
     PaperProps: {
@@ -147,7 +160,7 @@ export default function MultipleSelect({
                   ? constants.MATERIAL_SUPPORT
                   : option.value === "COMPLETE"
                   ? constants.COMPLETE
-                  : option.value}
+                  : formatCategory(option.value)}
               </MenuItem>
             ))
           )}
