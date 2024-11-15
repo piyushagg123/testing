@@ -4,7 +4,7 @@ import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
-import InteriorDesignerOnboarding from "./onboarding/InteriorDesignerOnboarding";
+import InteriorDesignerOnboarding from "./interior-designers/InteriorDesignerOnboarding";
 import {
   Alert,
   FormControl,
@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
-import FinancePlannerOnboarding from "./onboarding/FinancePlannerOnboarding";
+import FinancePlannerOnboarding from "./finance-planners/FinancePlannerOnboarding";
 import { LoadingButton } from "@mui/lab";
 
 interface FormObject {
@@ -32,7 +32,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
   if (authContext === undefined) {
     return;
   }
-  const { setLogin, setUserDetails, userDetails } = authContext;
+  const { setLogin, setUserDetails, login } = authContext;
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [openJoinasPro, setOpenJoinasPro] = useState<boolean>(false);
@@ -43,14 +43,13 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleProfessionalChange = (event: SelectChangeEvent) => {
     setJoinAs(event.target.value as string);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -65,63 +64,56 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
 
     if (!formObject.first_name) {
       setError("Please enter your first name.");
-      setLoading(false);
       return;
     }
 
     if (!formObject.last_name) {
       setError("Please enter your last name.");
-      setLoading(false);
       return;
     }
 
     if (!formObject.email) {
       setError("Please enter your email.");
-      setLoading(false);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formObject.email)) {
       setError("Please enter a valid email.");
-      setLoading(false);
       return;
     }
 
     if (!formObject.mobile) {
       setError("Please enter your mobile number.");
-      setLoading(false);
       return;
     }
 
     const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(formObject.mobile)) {
       setError("Please enter a valid mobile number.");
-      setLoading(false);
       return;
     }
 
     if (joinAsPro) {
       if (!joinAs) {
         setError("Please select the professional type");
-        setLoading(false);
         return;
       }
     }
 
     if (!formObject.password) {
       setError("Please enter your password.");
-      setLoading(false);
       return;
     }
 
     if (formObject.password !== confirmPassword) {
       setError("Passwords do not match.");
-      setLoading(false);
       return;
     }
 
     formObject.password = CryptoJS.SHA1(formObject.password).toString();
+
+    setLoading(true);
     try {
       const response = await axios.post(
         `${constants.apiBaseUrl}/user/register`,
@@ -129,15 +121,16 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
       );
 
       localStorage.setItem("token", response.data.access_token);
+
       const user_data = await axios.get(
         `${constants.apiBaseUrl}/user/details`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${response.data.access_token}`,
           },
         }
       );
-      const decodedJWT = jwtDecode(localStorage.getItem("token")!);
+      const decodedJWT = jwtDecode(response.data.access_token);
       const combinedData = {
         ...user_data.data.data,
         ...decodedJWT,
@@ -159,7 +152,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
     setLoading(false);
   };
 
-  const handleProfession = (event: FormEvent<HTMLFormElement>) => {
+  const handleSetProfession = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
     if (!joinAs) {
@@ -229,11 +222,9 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
               )}
               <form
                 className="flex flex-col"
-                onSubmit={
-                  userDetails.first_name ? handleProfession : handleSubmit
-                }
+                onSubmit={login ? handleSetProfession : handleSubmit}
               >
-                {!userDetails.first_name && (
+                {!login && (
                   <>
                     {" "}
                     <TextField
@@ -272,15 +263,11 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                     fullWidth
                     sx={{ marginBottom: "1em", width: "300px" }}
                   >
-                    <InputLabel id="demo-simple-select-label" size="small">
-                      Profession
-                    </InputLabel>
+                    <InputLabel size="small">Profession</InputLabel>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
                       value={joinAs}
                       label="Profession"
-                      onChange={handleChange}
+                      onChange={handleProfessionalChange}
                       size="small"
                     >
                       <MenuItem value={"InteriorDesigner"}>
@@ -292,7 +279,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                     </Select>
                   </FormControl>
                 )}
-                {!userDetails.first_name && (
+                {!login && (
                   <TextField
                     label="Password"
                     type="password"
@@ -303,7 +290,7 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
                   />
                 )}
                 <label>
-                  {!userDetails.first_name && (
+                  {!login && (
                     <TextField
                       label="Confirm Password"
                       type="password"

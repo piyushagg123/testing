@@ -47,6 +47,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
     user_name: "",
     review_id: 0,
     user_id: 0,
+    rating: 0,
   });
   const theme = useTheme();
   useEffect(() => {
@@ -67,11 +68,27 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      await axios.post(`${constants.apiBaseUrl}/vendor/review/update`, review, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      if (professional === "interiorDesigner") {
+        await axios.post(
+          `${constants.apiBaseUrl}/vendor/review/update`,
+          review,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      } else {
+        await axios.post(
+          `${constants.apiBaseUrl}/financial-advisor/review/update`,
+          review,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      }
     } catch (error) {}
     handleReviewDialogClose();
   };
@@ -195,7 +212,13 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
                 <label htmlFor="rating" className="flex w-[70vw] md:w-[524px] ">
                   <div className="flex flex-col md:flex-row w-[250px] justify-between">
                     <p>Rating</p>
-                    <Rating name="rating" />
+                    <Rating
+                      name="rating"
+                      defaultValue={reviewData?.rating}
+                      onChange={(_, newValue) =>
+                        handleRatingChange("rating", newValue)
+                      }
+                    />
                   </div>
                 </label>
               </>

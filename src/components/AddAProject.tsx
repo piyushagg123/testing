@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import ProjectImages from "./ProjectImages";
 import constants from "../constants";
 import { Alert, Button } from "@mui/material";
-import spacesData from "./spaces.ts";
+import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
 
 interface AddAProjectProps {
@@ -271,7 +271,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
-                  dataArray={spacesData}
+                  dataArray={spacesData.values}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -298,7 +298,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <div className="flex flex-col gap-2 w-[220px] md:w-[534px]  justify-between ">
+            <div className="flex flex-col gap-2 w-[220px] md:w-[540px]  justify-between ">
               <div className="mt-4">
                 <label
                   htmlFor=""
@@ -316,7 +316,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                       width: 208,
                       borderRadius: "5px",
                       border: "solid 0.3px",
-                      marginRight: "3px",
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -359,7 +358,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                       width: 208,
                       borderRadius: "5px",
                       border: "solid 0.3px",
-                      marginRight: "3px",
                     }}
                     renderInput={(params) => (
                       <TextField

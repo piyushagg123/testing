@@ -1,9 +1,11 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import img from "../../assets/noImageinProject.jpg";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import img from "../../assets/NoImage.jpg";
+import {
+  OpenInNew,
+  StarBorder,
+  Facebook,
+  Instagram,
+} from "@mui/icons-material";
 import {
   Chip,
   Dialog,
@@ -19,59 +21,19 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import { LoadingButton } from "@mui/lab";
-import ReviewDialog from "../../components/ReviewDialog";
-import FinancePlannerReviews from "../../components/FinancePlannerReviews";
-
-interface VendorData {
-  logo?: string;
-  deals?: string;
-  investment_ideology?: string;
-  fees_type?: string;
-  fees?: number;
-  number_of_clients?: number;
-  aum_handled?: number;
-  sebi_registered?: boolean;
-  minimum_investment?: number;
-  description: string;
-  business_name: string;
-  number_of_employees: number;
-  mobile: string;
-  email: string;
-  city: string;
-  social?: {
-    facebook?: string;
-    instagram?: string;
-    website?: string;
-  };
-}
-
-interface ReviewFormObject {
-  title?: string;
-  body?: string;
-  rating?: number;
-  financial_advisor_id?: number;
-}
-
-interface ProfessionalInfoProps {
-  vendor_id?: number;
-}
-
-const fetchVendorDetails = async (id: string) => {
-  let data;
-
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/details?financial_advisor_id=${id}`
-  );
-  data = response.data;
-
-  return data.data as VendorData;
-};
+import { ProfessionalInfoProps } from "./Types";
+import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../../helpers/StringHelpers";
+import { ReviewDialog, Reviews } from "../../components";
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
+  renderProfessionalInfoView,
   vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
@@ -80,13 +42,14 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     return;
   }
   const { login, userDetails } = authContext;
-  const { professionalId } = useParams<{ professionalId: string }>();
-
-  const vendorIdString = vendor_id ? vendor_id.toString() : professionalId;
+  const { professionalId } = useParams();
 
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(vendorIdString!)
+    () =>
+      fetchFinancialAdvisorDetails(
+        vendor_id ? vendor_id.toString()! : professionalId!
+      )
   );
 
   useEffect(() => {
@@ -115,54 +78,24 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     setServiceDialogOpen(false);
     setReviewError("");
   };
-  const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
-    formattedStr = formattedStr
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
-    return formattedStr;
-  };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     setLoading(true);
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    const formObject: ReviewFormObject = {
-      financial_advisor_id: Number(professionalId),
-    };
-    formData.forEach((value, key) => {
-      if (key === "rating") {
-        (formObject[key as "rating"] as number) = Number(value);
-      } else {
-        formObject[key as "body"] = value.toString();
+    submitReview(
+      event,
+      professionalId!,
+      () => {
+        setReviewDialogOpen(false);
+        setSnackbarOpen(true);
+      },
+      (errorMessage) => {
+        setReviewError(errorMessage);
       }
-    });
-
-    try {
-      await axios.post(
-        `${constants.apiBaseUrl}/financial-advisor/review`,
-        formObject,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      handleDialogClose();
-      setSnackbarOpen(true);
-    } catch (error: any) {
-      setReviewError(error.response.data.debug_info);
-    }
+    );
     setLoading(false);
   };
 
@@ -172,13 +105,11 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     setExpanded(!expanded);
   };
 
-  const isMobile = window.innerWidth < 1024;
   const maxVisibleLength = 100;
 
-  const contentPreview =
-    isMobile && !expanded && vendorData?.description?.length! > maxVisibleLength
-      ? vendorData?.description.slice(0, maxVisibleLength) + "..."
-      : vendorData?.description;
+  const contentPreview = !expanded
+    ? truncateText(vendorData?.description!, maxVisibleLength)
+    : vendorData?.description;
   const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2 lg:border lg:rounded-md">
       <div className="flex flex-row w-full">
@@ -195,14 +126,15 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         <div className=" w-1/2 mt-[1em]">
           <p className="font-bold  text-black"> Fees</p>
           <p className="flex">
-            {vendorData?.fees && vendorData.fees_type === "FIXED" && (
+            {vendorData?.fees_type && vendorData.fees_type[0] === "FIXED" && (
               <p className="mr-1">{"₹"}</p>
             )}
             {vendorData?.fees ?? "N/A"}
 
-            {vendorData?.fees && vendorData.fees_type === "PERCENTAGE" && (
-              <p className="ml-1">{"%"}</p>
-            )}
+            {vendorData?.fees_type &&
+              vendorData.fees_type[0] === "PERCENTAGE" && (
+                <p className="ml-1">{"%"}</p>
+              )}
           </p>
         </div>
         <div className="w-1/2 mt-[1em]">
@@ -242,7 +174,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FacebookIcon />
+                <Facebook />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -251,7 +183,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <InstagramIcon />
+                <Instagram />
               </a>
             )}
             {vendorData.social.website && (
@@ -260,7 +192,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNewIcon />
+                <OpenInNew />
               </a>
             )}
           </div>
@@ -304,21 +236,24 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             DEALS :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.deals ?? "N/A")
-              .split(",")
-              .map((item, ind) => (
+            {vendorData?.deals &&
+              vendorData.deals.map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"
@@ -334,9 +269,8 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             INVESTMENT IDEOLOGY :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.investment_ideology ?? "N/A")
-              .split(",")
-              .map((item, ind) => (
+            {vendorData?.investment_ideology &&
+              vendorData.investment_ideology.map((item, ind) => (
                 <Chip
                   label={item.charAt(0).toUpperCase() + item.slice(1)}
                   variant="outlined"
@@ -364,13 +298,13 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             {login && userDetails?.vendor_id !== Number(professionalId) && (
               <div className=" gap-3 hidden md:flex mb-[2em]">
                 <div>
-                  {!vendor_id && (
+                  {renderProfessionalInfoView && (
                     <Button
                       variant="outlined"
                       style={{ backgroundColor: "#8c52ff", color: "white" }}
                       onClick={handleReviewDialogOpen}
                     >
-                      <StarBorderIcon /> <p>Write a Review</p>
+                      <StarBorder /> <p>Write a Review</p>
                     </Button>
                   )}
                 </div>
@@ -386,7 +320,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
           <div id="reviews" className=" mb-[10px]  m-auto ml-6">
             <div className=" flex justify-center flex-col items-center px-2">
-              {<FinancePlannerReviews id={Number(vendorIdString)} />}
+              {<Reviews id={Number(professionalId)} />}
             </div>
           </div>
         </div>

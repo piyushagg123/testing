@@ -62,7 +62,7 @@ const FinancePlannerOnboarding = () => {
     aum_handled: -1,
     minimum_investment: -1,
     number_of_clients: -1,
-    fees: 0,
+    fees: -1,
     deals: [],
     investment_ideology: [],
     fees_type: [],
@@ -179,8 +179,8 @@ const FinancePlannerOnboarding = () => {
         );
       }
     } catch (error) {}
-    window.location.reload();
     navigate("/finance-planners");
+    window.location.reload();
   };
 
   const nextStep = () => {

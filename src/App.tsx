@@ -14,13 +14,14 @@ import constants from "./constants";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/AboutUs";
-import InteriorDesignerInfoMobile from "./pages/professionalInfo/InteriorDesignerInfoMobile";
+import InteriorDesignerInfoMobile from "./pages/interior-designers/InteriorDesignerInfoMobile";
 import ProfileForMobile from "./pages/ProfileForMobile";
 import { jwtDecode } from "jwt-decode";
-import FinancePlannerInfo from "./pages/professionalInfo/FinancePlannerInfo";
-import InteriorDesignerInfoLaptop from "./pages/professionalInfo/InteriorDesignerInfoLaptop";
+import FinancePlannerInfo from "./pages/finance-planners/FinancePlannerInfoMobile";
+import InteriorDesignerInfoLaptop from "./pages/interior-designers/InteriorDesignerInfoLaptop";
 import { useMediaQuery, useTheme } from "@mui/material";
-import FinancePlannerInfoLaptop from "./pages/professionalInfo/FinancePlannerInfoLaptop";
+import { ApiContext } from "./context/Api";
+import FinancePlannerInfoLaptop from "./pages/finance-planners/FinancePlannerInfoLaptop";
 
 const fetchUserData = async () => {
   const token = localStorage.getItem("token");
@@ -46,9 +47,16 @@ const App: React.FC = () => {
   const authContext = useContext(AuthContext);
   const stateContext = useContext(StateContext);
 
-  if (authContext === undefined || stateContext === undefined) {
+  const apiContext = useContext(ApiContext);
+
+  if (
+    authContext === undefined ||
+    stateContext === undefined ||
+    apiContext === undefined
+  ) {
     return;
   }
+  const { setErrorInApi } = apiContext;
   const { setState } = stateContext;
   const { setLogin, setUserDetails, userDetails } = authContext;
   useQuery("userDetails", fetchUserData, {
@@ -75,7 +83,9 @@ const App: React.FC = () => {
     onSuccess: (data) => {
       setState(data);
     },
-    onError: () => {},
+    onError: () => {
+      setErrorInApi(true);
+    },
   });
 
   const themes = useTheme();
@@ -117,9 +127,9 @@ const App: React.FC = () => {
             path="/finance-planners/:professionalId"
             element={
               isLargeDevice ? (
-                <FinancePlannerInfoLaptop />
+                <FinancePlannerInfoLaptop renderProfessionalInfoView={true} />
               ) : (
-                <FinancePlannerInfo />
+                <FinancePlannerInfo renderProfessionalInfoView={true} />
               )
             }
           />

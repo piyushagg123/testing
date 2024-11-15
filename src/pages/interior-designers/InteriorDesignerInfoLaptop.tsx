@@ -1,6 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import projectImage from "../../assets/noProjectAdded.jpg";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import projectImage from "../../assets/NoProjectsAdded.jpg";
 import {
   Dialog,
   DialogContent,
@@ -11,117 +10,36 @@ import {
   useTheme,
   Chip,
 } from "@mui/material";
-import Carousel from "../../components/ProjectCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import axios from "axios";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
-import Reviews from "../../components/Reviews";
-import ReviewDialog from "../../components/ReviewDialog";
+import {
+  Reviews,
+  ReviewDialog,
+  AddAProject,
+  ProjectImages,
+  Carousel,
+} from "../../components";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import AddAProject from "../../components/AddAProject";
-import ProjectImages from "../../components/ProjectImages";
 import CloseIcon from "@mui/icons-material/Close";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import img from "../../assets/noImageinProject.jpg";
-
-interface VendorData {
-  logo?: string;
-  category: string;
-  sub_category_1: string;
-  sub_category_2: string;
-  sub_category_3: string;
-  description: string;
-  business_name: string;
-  average_project_value: string;
-  number_of_employees: number;
-  projects_completed: number;
-  mobile: string;
-  email: string;
-  city: string;
-  social?: {
-    facebook?: string;
-    instagram?: string;
-    website?: string;
-  };
-}
-
-interface ProjectData {
-  images: Record<string, string[]>;
-  title: string;
-  description: string;
-  city: string;
-  state: string;
-  sub_category_1: string;
-  sub_category_2: string;
-  start_date: string;
-  end_date: string;
-}
-
-interface ReviewFormObject {
-  title?: string;
-  body?: string;
-  rating_quality?: number;
-  rating_execution?: number;
-  rating_behaviour?: number;
-  vendor_id?: number;
-}
-
-interface ProfessionalInfoProps {
-  renderProfileView: boolean;
-  renderProfessionalInfoView: boolean;
-}
-
-const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
-  let data;
-  if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/auth/details`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    data = response.data;
-  } else if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/financial-advisor/details?financial_advisor_id=${id}`
-    );
-    data = response.data;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
-    );
-    data = response.data;
-  }
-
-  return data.data as VendorData;
-};
-
-const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
-  let data;
-  if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/auth/project/details`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    data = response.data;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
-    );
-    data = response.data;
-  }
-  return data.data as ProjectData[];
-};
+import {
+  OpenInNew,
+  StarBorder,
+  Facebook,
+  Instagram,
+} from "@mui/icons-material";
+import img from "../../assets/NoImage.jpg";
+import { ProfessionalInfoProps, ProjectData } from "./Types";
+import {
+  fetchVendorDetails,
+  fetchVendorProjects,
+  submitReview,
+} from "./Controller";
+import {
+  removeUnderscoresAndFirstLetterCapital,
+  truncateText,
+} from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfileView,
@@ -182,16 +100,6 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     setReviewDialogOpen(false);
     setReviewError("");
   };
-  const formatCategory = (str: string) => {
-    let formattedStr = str?.replace(/_/g, " ");
-    formattedStr = formattedStr
-      ?.toLowerCase()
-      ?.split(" ")
-      ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      ?.join(" ");
-
-    return formattedStr;
-  };
 
   const handleCarouselClick = (project: ProjectData) => {
     setSelectedProject(project);
@@ -202,34 +110,18 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     setLoading(true);
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    const formObject: ReviewFormObject = { vendor_id: Number(professionalId) };
-    formData.forEach((value, key) => {
-      if (key.startsWith("rating_")) {
-        (formObject[
-          key as "rating_quality" | "rating_execution" | "rating_behaviour"
-        ] as number) = Number(value);
-      } else {
-        formObject[key as "body"] = value.toString();
+    await submitReview(
+      event,
+      professionalId!,
+      () => {
+        setReviewDialogOpen(false);
+        setSnackbarOpen(true);
+      },
+      (errorMessage) => {
+        setReviewError(errorMessage);
       }
-    });
-
-    try {
-      await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      handleReviewDialogClose();
-      setSnackbarOpen(true);
-    } catch (error: any) {
-      setReviewError(error.response.data.debug_info);
-    }
+    );
     setLoading(false);
   };
 
@@ -248,10 +140,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const maxVisibleLength = 300;
 
-  const contentPreview =
-    !expanded && vendorData?.description?.length! > maxVisibleLength
-      ? vendorData?.description.slice(0, maxVisibleLength) + "..."
-      : vendorData?.description;
+  const contentPreview = !expanded
+    ? truncateText(vendorData?.description!, maxVisibleLength)
+    : vendorData?.description;
 
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -290,7 +181,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FacebookIcon />
+                <Facebook />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -299,7 +190,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <InstagramIcon />
+                <Instagram />
               </a>
             )}
             {vendorData.social.website && (
@@ -308,7 +199,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNewIcon />
+                <OpenInNew />
               </a>
             )}
           </div>
@@ -356,19 +247,25 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         )}
         <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
       </div>
       <div className="w-[93vw] md:w-auto">
         <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {formatCategory(vendorData?.business_name ?? "Unknown Business")}
+          {removeUnderscoresAndFirstLetterCapital(
+            vendorData?.business_name ?? "Unknown Business"
+          )}
         </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>{" "}
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.sub_category_1 ?? "N/A")
+            {removeUnderscoresAndFirstLetterCapital(
+              vendorData?.sub_category_1 ?? "N/A"
+            )
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -386,7 +283,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             SPECIALIZED SPACES :
           </span>
           <div className="flex flex-wrap gap-1">
-            {formatCategory(vendorData?.sub_category_2 ?? "N/A")
+            {removeUnderscoresAndFirstLetterCapital(
+              vendorData?.sub_category_2 ?? "N/A"
+            )
               ?.split(",")
               .map((item, ind) => (
                 <Chip
@@ -442,7 +341,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                     style={{ backgroundColor: "#8c52ff", color: "white" }}
                     onClick={handleReviewDialogOpen}
                   >
-                    <StarBorderIcon /> <p>Write a Review</p>
+                    <StarBorder /> <p>Write a Review</p>
                   </Button>
                 )}
               </div>
@@ -552,7 +451,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                           state={item.state}
                           theme={item.sub_category_1}
                           showProjectDetails={true}
-                          color={item === selectedProject}
+                          isActive={item === selectedProject}
                         />
                       </div>
                     ))}
@@ -584,7 +483,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                   <div className="w-1/2">
                     <p className="font-bold  text-black mt-[1em]">Spaces</p>
                     <p className="">
-                      {formatCategory(
+                      {removeUnderscoresAndFirstLetterCapital(
                         Object.keys(selectedProject.images).join(",")
                       )}
                     </p>
@@ -592,7 +491,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                   <div className="w-1/2">
                     <p className="font-bold  text-black  mt-[1em]">Theme</p>
                     <p className="">
-                      {formatCategory(selectedProject.sub_category_1)}
+                      {removeUnderscoresAndFirstLetterCapital(
+                        selectedProject.sub_category_1
+                      )}
                     </p>
                   </div>
                 </div>
@@ -639,6 +540,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
               {
                 <Reviews
                   id={professionalId ? Number(professionalId) : Number(-1)}
+                  vendorType="interiorDesigner"
                 />
               }
             </div>

@@ -13,6 +13,9 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
+import { handleCheckboxChange, handleFilterChange } from "./Controller";
+import { FilterItem } from "./Types";
 
 const fetchDeals = async () => {
   const response = await axios.get(
@@ -34,11 +37,6 @@ interface FiltersProps {
   fetchVendorList: (dealFilters: any, investmentIdeologyFilters: any) => void;
 }
 
-interface FilterItem {
-  id: number;
-  value: string;
-}
-
 const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const { data: filterCategory1 = [] } = useQuery(["deals"], () =>
     fetchDeals()
@@ -57,57 +55,17 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     window.scrollTo(0, 0);
   }, [dealFilters, investmentIdeologyFilters]);
 
-  const formatString = (str: string) => {
-    const formattedStr = str?.toLowerCase().replace(/_/g, " ");
-    return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
-  };
-
   const formattedDeals = filterCategory1.map((item: FilterItem) =>
-    formatString(item.value)
+    removeUnderscoresAndFirstLetterCapital(item.value)
   );
   const formattedInvestmentIdeology = filterCategory2.map((item: FilterItem) =>
-    formatString(item.value)
+    removeUnderscoresAndFirstLetterCapital(item.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);
   const [selectedDeals, setSelectedDeals] = useState(new Set<string>());
   const [selectedInvestmentIdeologies, setSelectedInvestmentIdeologies] =
     useState(new Set<string>());
-
-  const handleCheckboxChange = (
-    item: string,
-    selectedItems: Set<any>,
-    setSelectedItems: React.Dispatch<React.SetStateAction<Set<any>>>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>,
-    filters: Set<any>
-  ) => {
-    const updatedItems = new Set(selectedItems);
-    if (updatedItems.has(item)) {
-      updatedItems.delete(item);
-    } else {
-      updatedItems.add(item);
-    }
-    setSelectedItems(updatedItems);
-    handleFilterChange(item, filters, setFilters);
-  };
-
-  const handleFilterChange = (
-    updatedItem: string,
-    filters: Set<any>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>
-  ) => {
-    if (updatedItem === "") setFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      const updatedFilters = new Set(filters);
-      if (updatedFilters.has(updatedItem)) {
-        updatedFilters.delete(updatedItem);
-      } else {
-        updatedFilters.add(updatedItem);
-      }
-      setFilters(updatedFilters);
-    }
-  };
 
   const clearAll = () => {
     setSelectedDeals(new Set());
@@ -124,7 +82,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
     return (
       <>
         <div className="flex flex-col pt-3 gap-1">
-          <p className="font-bold text-base text-darkgrey">{"DEALS"}</p>
+          <p className="font-bold text-base text-black">{"DEALS"}</p>
           {formattedDeals.map((deal: string) => {
             return (
               <>

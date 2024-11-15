@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import ForgotPassword from "../components/ForgotPassword";
+import { ForgotPassword } from "../components";
 import { Alert, TextField } from "@mui/material";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/Login";
@@ -39,7 +39,6 @@ const Login = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    setLoading(true);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -49,13 +48,11 @@ const Login = () => {
 
     if (!emailOrMobile) {
       setError("Please enter your email or mobile number.");
-      setLoading(false);
       return;
     }
 
     if (!password) {
       setError("Please enter your password.");
-      setLoading(false);
       return;
     }
 
@@ -68,12 +65,11 @@ const Login = () => {
       data.mobile = emailOrMobile;
     } else {
       setError("Please enter a valid email or mobile number.");
-      setLoading(false);
       return;
     }
 
     data.password = CryptoJS.SHA1(password).toString();
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${constants.apiBaseUrl}/user/login`,

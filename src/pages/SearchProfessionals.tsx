@@ -12,13 +12,15 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import Professional from "../components/Professional";
-import InteriorDesignerFilters from "../components/filters/InteriorDesignerFilters";
+import {
+  Professional,
+  InteriorDesignerFilters,
+  FinancePlannerFilters,
+} from "../components";
 import constants from "../constants";
 import { StateContext } from "../context/State";
-import service from "../assets/service.png";
+import service from "../assets/Services.png";
 import { ApiContext } from "../context/Api";
-import FinancePlannerFilters from "../components/filters/FInancePlannerFilters";
 
 interface VendorItem {
   vendor_id?: string;
@@ -71,7 +73,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchVendorList = async (
+  const fetchInteriorDesignerList = async (
     themeFilters = new Set(),
     spaceFilters = new Set(),
     executionFilters = new Set()
@@ -100,7 +102,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchFinanceList = async (
+  const fetchFinanceAdvisorsList = async (
     dealFilters = new Set(),
     investmentIdeologyFilters = new Set()
   ) => {
@@ -245,9 +247,13 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
           <div className="w-fit" style={{ borderRight: "solid 0.2px #e3e3e3" }}>
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               {professional === "interiorDesigners" ? (
-                <InteriorDesignerFilters fetchVendorList={fetchVendorList} />
+                <InteriorDesignerFilters
+                  fetchVendorList={fetchInteriorDesignerList}
+                />
               ) : (
-                <FinancePlannerFilters fetchVendorList={fetchFinanceList} />
+                <FinancePlannerFilters
+                  fetchVendorList={fetchFinanceAdvisorsList}
+                />
               )}
             </div>
           </div>

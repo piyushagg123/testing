@@ -1,6 +1,6 @@
 import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
 import axios from "axios";
-import MultipleSelect from "../../components/MultipleSelect";
+import { MultipleSelect } from "../../components";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";

@@ -13,6 +13,9 @@ import {
   Select,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
+import { handleCheckboxChange, handleFilterChange } from "./Controller";
+import { FilterItem } from "./Types";
 
 const fetchThemes = async () => {
   const response = await axios.get(
@@ -43,11 +46,6 @@ interface FiltersProps {
   ) => void;
 }
 
-interface FilterItem {
-  id: number;
-  value: string;
-}
-
 const InteriorDesignerFilters: React.FC<FiltersProps> = ({
   fetchVendorList,
 }) => {
@@ -66,16 +64,11 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
     window.scrollTo(0, 0);
   }, [themeFilters, spaceFilters, executionFilters]);
 
-  const formatString = (str: string) => {
-    const formattedStr = str?.toLowerCase().replace(/_/g, " ");
-    return formattedStr?.charAt(0)?.toUpperCase() + formattedStr?.slice(1);
-  };
-
   const formattedThemes = themes.map((theme: FilterItem) =>
-    formatString(theme.value)
+    removeUnderscoresAndFirstLetterCapital(theme.value)
   );
   const formattedSpaces = spaces.map((space: FilterItem) =>
-    formatString(space.value)
+    removeUnderscoresAndFirstLetterCapital(space.value)
   );
 
   const [filterMenu, setFilterMenu] = useState(false);
@@ -84,41 +77,6 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
   const [selectedExecutions, setSelectedExecutions] = useState(
     new Set<string>()
   );
-
-  const handleCheckboxChange = (
-    item: string,
-    selectedItems: Set<any>,
-    setSelectedItems: React.Dispatch<React.SetStateAction<Set<any>>>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>,
-    filters: Set<any>
-  ) => {
-    const updatedItems = new Set(selectedItems);
-    if (updatedItems.has(item)) {
-      updatedItems.delete(item);
-    } else {
-      updatedItems.add(item);
-    }
-    setSelectedItems(updatedItems);
-    handleFilterChange(item, filters, setFilters);
-  };
-
-  const handleFilterChange = (
-    updatedItem: string,
-    filters: Set<any>,
-    setFilters: React.Dispatch<React.SetStateAction<Set<any>>>
-  ) => {
-    if (updatedItem === "") setFilters(new Set());
-    else {
-      updatedItem = updatedItem.replace(/\s+/g, "_");
-      const updatedFilters = new Set(filters);
-      if (updatedFilters.has(updatedItem)) {
-        updatedFilters.delete(updatedItem);
-      } else {
-        updatedFilters.add(updatedItem);
-      }
-      setFilters(updatedFilters);
-    }
-  };
 
   const clearAll = () => {
     setSelectedThemes(new Set());
