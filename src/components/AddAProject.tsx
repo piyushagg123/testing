@@ -12,6 +12,7 @@ import constants from "../constants";
 import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
 import { StateContext } from "../context";
+import { handleStateChange } from "../helpers/CityHelper";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -81,33 +82,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     return;
   }
   const { state } = stateContext;
-  const handleStateChange = async (
-    _event: React.SyntheticEvent,
-    value: string | null,
-    _reason: any,
-    _details?: any
-  ) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      state: value?.toString() ?? "",
-      city: "",
-    }));
-    setCities([]);
-    setLoadingCities(true);
-    if (value) {
-      try {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/location/cities?state=${value}`
-        );
-        setCities(response.data.data);
-      } catch (error) {
-      } finally {
-        setLoadingCities(false);
-      }
-    } else {
-      setLoadingCities(false);
-    }
-  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -307,7 +281,15 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                     disablePortal
                     id="state-autocomplete"
                     options={state}
-                    onChange={handleStateChange}
+                    onChange={(event, value) =>
+                      handleStateChange({
+                        event,
+                        value,
+                        setFormData,
+                        setCities,
+                        setLoadingCities,
+                      })
+                    }
                     size="small"
                     sx={{
                       width: 208,

@@ -281,7 +281,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             </div>
 
             {login && userDetails?.vendor_id !== Number(professionalId) && (
-              <div className=" gap-3 hidden md:flex mb-[2em]">
+              <div className=" gap-3 mt-2 ml-[8px] md:flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
                     <Button

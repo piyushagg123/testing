@@ -20,6 +20,7 @@ import { deepOrange, grey } from "@mui/material/colors";
 import { AccountCircle, ArrowDropDown, Logout } from "@mui/icons-material";
 import constants from "../constants";
 import { PickeleLogo } from "../assets";
+import { setDefaultUserDetails } from "../context/Login";
 
 const Navbar: React.FC = () => {
   const apiContext = useContext(ApiContext);
@@ -108,16 +109,7 @@ const Navbar: React.FC = () => {
         setToggleProfileMenu(false);
         setLogin(false);
         localStorage.removeItem("token");
-        setUserDetails({
-          email: "",
-          first_name: "",
-          is_vendor: false,
-          last_name: "",
-          mobile: "",
-          user_id: 0,
-          vendor_id: 0,
-          vendor_type: "",
-        });
+        setUserDetails(setDefaultUserDetails);
         navigate("/");
       }
     } catch (error) {}

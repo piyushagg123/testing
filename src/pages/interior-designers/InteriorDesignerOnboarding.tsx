@@ -15,6 +15,7 @@ import { LoadingButton } from "@mui/lab";
 import { VendorData } from "./Types";
 import axios from "axios";
 import { uploadLogo } from "../../helpers/LogoHelpers";
+import { handleStateChange } from "../../helpers/CityHelper";
 
 const InteriorDesignerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -58,33 +59,6 @@ const InteriorDesignerOnboarding = () => {
     null
   );
 
-  const handleStateChange = async (
-    _event: React.SyntheticEvent,
-    value: string | null,
-    _reason: any,
-    _details?: any
-  ) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      state: value?.toString() ?? "",
-      city: "",
-    }));
-    setCities([]);
-    setLoadingCities(true);
-    if (value) {
-      try {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/location/cities?state=${value}`
-        );
-        setCities(response.data.data);
-      } catch (error) {
-      } finally {
-        setLoadingCities(false);
-      }
-    } else {
-      setLoadingCities(false);
-    }
-  };
   const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -450,7 +424,15 @@ const InteriorDesignerOnboarding = () => {
                   disablePortal
                   id="state-autocomplete"
                   options={state}
-                  onChange={handleStateChange}
+                  onChange={(event, value) =>
+                    handleStateChange({
+                      event,
+                      value,
+                      setFormData,
+                      setCities,
+                      setLoadingCities,
+                    })
+                  }
                   size="small"
                   sx={{
                     width: 235,

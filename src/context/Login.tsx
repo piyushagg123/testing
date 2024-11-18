@@ -24,7 +24,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const defaultUserDetails: UserDetails = {
+export const setDefaultUserDetails: UserDetails = {
   email: "",
   first_name: "",
   is_vendor: false,
@@ -37,8 +37,9 @@ export const defaultUserDetails: UserDetails = {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [login, setLogin] = useState<boolean>(false);
-  const [userDetails, setUserDetails] =
-    useState<UserDetails>(defaultUserDetails);
+  const [userDetails, setUserDetails] = useState<UserDetails>(
+    setDefaultUserDetails
+  );
 
   return (
     <AuthContext.Provider

@@ -14,6 +14,7 @@ import { OpenInNew, Facebook, Instagram } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { VendorData } from "./Types";
 import { uploadLogo } from "../../helpers/LogoHelpers";
+import { handleStateChange } from "../../helpers/CityHelper";
 
 const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -57,34 +58,6 @@ const FinancePlannerOnboarding = () => {
   );
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
-
-  const handleStateChange = async (
-    _event: React.SyntheticEvent,
-    value: string | null,
-    _reason: any,
-    _details?: any
-  ) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      state: value?.toString() ?? "",
-      city: "",
-    }));
-    setCities([]);
-    setLoadingCities(true);
-    if (value) {
-      try {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/location/cities?state=${value}`
-        );
-        setCities(response.data.data);
-      } catch (error) {
-      } finally {
-        setLoadingCities(false);
-      }
-    } else {
-      setLoadingCities(false);
-    }
-  };
   const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -532,7 +505,15 @@ const FinancePlannerOnboarding = () => {
                   disablePortal
                   id="state-autocomplete"
                   options={state}
-                  onChange={handleStateChange}
+                  onChange={(event, value) =>
+                    handleStateChange({
+                      event,
+                      value,
+                      setFormData,
+                      setCities,
+                      setLoadingCities,
+                    })
+                  }
                   size="small"
                   sx={{
                     width: 235,

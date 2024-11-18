@@ -110,7 +110,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                   }
                   label={
                     <span className="text-sm">
-                      {deal === "Complete wealth management"
+                      {deal === "Complete Wealth Management"
                         ? "Wealth management"
                         : deal}
                     </span>

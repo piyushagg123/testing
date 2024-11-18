@@ -116,7 +116,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
             Write a review
           </DialogTitle>
 
-          <DialogContent className="flex flex-col gap-4 justify-center items-center">
+          <DialogContent className="flex flex-col gap-4 justify-center items-center w-fit">
             {reviewError && (
               <Alert
                 severity="error"
