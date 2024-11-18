@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import projectImage from "../../assets/NoProjectsAdded.jpg";
+import { NoProjectsAdded, NoLogoUploaded } from "../../assets";
 import {
   Tab,
   Box,
@@ -34,7 +34,6 @@ import {
   Facebook,
   Instagram,
 } from "@mui/icons-material";
-import img from "../../assets/NoImage.jpg";
 import { ProfessionalInfoProps, ProjectData } from "./Types";
 import {
   fetchVendorDetails,
@@ -47,7 +46,7 @@ import {
 } from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
-  renderProfileView,
+  vendor_id,
   renderProfessionalInfoView,
 }) => {
   const authContext = useContext(AuthContext);
@@ -62,12 +61,13 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   const [value, setValue] = useState("1");
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(professionalId!, renderProfileView)
+    () => fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
     ["vendorProjects", professionalId],
-    () => fetchVendorProjects(professionalId!, renderProfileView)
+    () =>
+      fetchVendorProjects(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -345,7 +345,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           />
         ) : (
           <img
-            src={img}
+            src={NoLogoUploaded}
             alt=""
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
@@ -368,7 +368,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_1 ?? "N/A"
+              vendorData?.sub_category_1 as string
             )
               ?.split(",")
               .map((item, ind) => (
@@ -388,7 +388,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_2 ?? "N/A"
+              vendorData?.sub_category_2 as string
             )
               ?.split(",")
               .map((item, ind) => (
@@ -405,7 +405,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           <span className="font-bold text-[11px] md:text-sm text-black">
             EXECUTION TYPE :
           </span>
-          {(vendorData?.sub_category_3 ?? "N/A")
+          {(vendorData?.sub_category_3 as string)
             ?.split(",")
             .map((item: string, ind: number) => (
               <Chip
@@ -542,7 +542,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                     </div>
                   </TabPanel>
                   <TabPanel value={"2"} sx={{ padding: 0, marginTop: "10px" }}>
-                    {(renderProfileView ||
+                    {(vendor_id ||
                       Number(professionalId) == userDetails.vendor_id) && (
                       <div
                         className={`${
@@ -567,7 +567,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                           <div className="flex flex-col items-center justify-center ">
                             <div className="mb-[1em]">
                               <img
-                                src={projectImage}
+                                src={NoProjectsAdded}
                                 alt=""
                                 className="w-[300px]"
                               />
@@ -651,7 +651,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                     <div className="   ">
                       {!projectsData ? (
                         <div className="flex flex-col items-center justify-center w-[90vw]">
-                          {(renderProfileView ||
+                          {(vendor_id ||
                             Number(professionalId) ==
                               userDetails.vendor_id) && (
                             <div
@@ -686,11 +686,11 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                             </div>
                           )}
                           {Number(professionalId) !== userDetails.vendor_id &&
-                            !renderProfileView && (
+                            !vendor_id && (
                               <>
                                 <div className="mb-[1em]">
                                   <img
-                                    src={projectImage}
+                                    src={NoProjectsAdded}
                                     alt=""
                                     className="w-[300px]"
                                   />
@@ -717,7 +717,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                       ) : (
                         <div className="flex overflow-x-auto whitespace-nowrap lg:w-[750px] items-start ">
                           <div>
-                            {(renderProfileView ||
+                            {(vendor_id ||
                               Number(professionalId) ==
                                 userDetails.vendor_id) && (
                               <div

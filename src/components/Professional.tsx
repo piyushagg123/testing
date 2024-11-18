@@ -2,7 +2,7 @@ import React from "react";
 import { Rating } from "@mui/material";
 import { truncateText } from "../helpers/StringHelpers";
 import constants from "../constants";
-import NoProjectImage from "../assets/NoImage.jpg";
+import { NoLogoUploaded } from "../assets";
 
 interface ProfessionalProps {
   img: string;
@@ -21,7 +21,7 @@ const Professional: React.FC<ProfessionalProps> = ({
     <div className="flex gap-8 mb-7 items-center sm:items-start flex-col sm:flex-row mt-3 sm:mt-0 text-black px-4">
       <div>
         <img
-          src={img ? `${constants.apiImageUrl}/${img}` : NoProjectImage}
+          src={img ? `${constants.apiImageUrl}/${img}` : NoLogoUploaded}
           alt="Professional"
           className="h-[192px] w-[300px] sm:w-[342px] rounded-[10px] sm:max-w-[342px]"
         />

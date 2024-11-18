@@ -1,40 +1,20 @@
 import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
-import axios from "axios";
 import { MultipleSelect } from "../../components";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CircularProgress from "@mui/material/CircularProgress";
-import { StateContext } from "../../context/State";
+import { StateContext } from "../../context";
 import constants from "../../constants";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import { Instagram, Facebook, OpenInNew } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-
-interface SocialLinks {
-  instagram: string;
-  facebook: string;
-  website: string;
-}
-
-interface FormData {
-  business_name: string;
-  address: string;
-  sub_category_1: string[];
-  sub_category_2: string[];
-  sub_category_3: string[];
-  category: string;
-  started_in: string;
-  number_of_employees: string;
-  average_project_value: string;
-  projects_completed: string;
-  city: string;
-  state: string;
-  description: string;
-  social: SocialLinks;
-}
+import { VendorData } from "./Types";
+import axios from "axios";
+import { uploadLogo } from "../../helpers/LogoHelpers";
 
 const InteriorDesignerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -50,7 +30,7 @@ const InteriorDesignerOnboarding = () => {
   }
   const { state } = stateContext;
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<VendorData>({
     business_name: "",
     address: "",
     sub_category_1: [],
@@ -58,9 +38,9 @@ const InteriorDesignerOnboarding = () => {
     sub_category_3: [],
     category: "INTERIOR_DESIGNER",
     started_in: "",
-    number_of_employees: "",
+    number_of_employees: 0,
     average_project_value: "",
-    projects_completed: "",
+    projects_completed: 0,
     city: "",
     state: "",
     description: "",
@@ -137,12 +117,15 @@ const InteriorDesignerOnboarding = () => {
 
     const processedFormData = {
       ...formData,
-      number_of_employees: parseInt(formData.number_of_employees, 10),
+      number_of_employees: parseInt(
+        formData.number_of_employees.toString(),
+        10
+      ),
       average_project_value: parseFloat(formData.average_project_value),
-      projects_completed: parseInt(formData.projects_completed, 10),
-      sub_category_1: formData.sub_category_1.join(","),
-      sub_category_2: formData.sub_category_2.join(","),
-      sub_category_3: formData.sub_category_3.join(","),
+      projects_completed: parseInt(formData.projects_completed.toString(), 10),
+      sub_category_1: [formData.sub_category_1 as Array<string>].join(","),
+      sub_category_2: [formData.sub_category_2 as Array<string>].join(","),
+      sub_category_3: [formData.sub_category_3 as Array<string>].join(","),
     };
 
     try {
@@ -163,16 +146,7 @@ const InteriorDesignerOnboarding = () => {
         const formData = new FormData();
         formData.append("logo", logoFile);
 
-        await axios.post(
-          `${constants.apiBaseUrl}/image-upload/logo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await uploadLogo(formData);
       }
     } catch (error) {}
     navigate("/interior-designers");
@@ -275,7 +249,7 @@ const InteriorDesignerOnboarding = () => {
                   <input
                     type="text"
                     name="business_name"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.business_name}
                     onChange={handleChange}
                     required
@@ -288,7 +262,7 @@ const InteriorDesignerOnboarding = () => {
                     type="text"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="started_in"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.started_in}
                     onChange={handleChange}
                     required
@@ -303,7 +277,7 @@ const InteriorDesignerOnboarding = () => {
                     type="text"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="address"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.address}
                     onChange={handleChange}
                     required
@@ -315,7 +289,7 @@ const InteriorDesignerOnboarding = () => {
                     type="number"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="number_of_employees"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.number_of_employees}
                     onChange={handleChange}
                     required
@@ -332,7 +306,7 @@ const InteriorDesignerOnboarding = () => {
                       step="0.01"
                       style={{ borderRadius: "5px", border: "none" }}
                       name="average_project_value"
-                      className="w-[235px] px-2 outline-none"
+                      className="w-[235px] px-2 h-[40px] outline-none"
                       value={formData.average_project_value}
                       onChange={handleChange}
                       required
@@ -344,7 +318,7 @@ const InteriorDesignerOnboarding = () => {
                   <input
                     type="number"
                     name="projects_completed"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.projects_completed}
                     onChange={handleChange}
                     required
@@ -390,7 +364,9 @@ const InteriorDesignerOnboarding = () => {
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   selectedValue={
-                    formData.sub_category_1 ? formData.sub_category_1 : []
+                    formData.sub_category_1
+                      ? (formData.sub_category_1 as Array<string>)
+                      : []
                   }
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -410,7 +386,9 @@ const InteriorDesignerOnboarding = () => {
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
                   maxSelection={3}
                   selectedValue={
-                    formData.sub_category_2 ? formData.sub_category_2 : []
+                    formData.sub_category_2
+                      ? (formData.sub_category_2 as Array<string>)
+                      : []
                   }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -430,7 +408,9 @@ const InteriorDesignerOnboarding = () => {
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
                   selectedValue={
-                    formData.sub_category_3 ? formData.sub_category_3 : []
+                    formData.sub_category_3
+                      ? (formData.sub_category_3 as Array<string>)
+                      : []
                   }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
@@ -605,40 +585,40 @@ const InteriorDesignerOnboarding = () => {
               <div className="flex flex-col gap-2 mt-[1em]">
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between">
                   <p>
-                    <InstagramIcon className="text-red" /> Instagram
+                    <Instagram className="text-red" /> Instagram
                   </p>
                   <input
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="instagram"
-                    className="w-[235px] px-2"
-                    value={formData.social.instagram}
+                    className="w-[235px] px-2 h-[40px]"
+                    value={formData.social?.instagram}
                     onChange={handleSocialChange}
                   />
                 </label>
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
-                    <FacebookIcon className="text-purple" /> Facebook
+                    <Facebook className="text-purple" /> Facebook
                   </p>
                   <input
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="facebook"
-                    className="w-[235px] px-2"
-                    value={formData.social.facebook}
+                    className="w-[235px] px-2 h-[40px]"
+                    value={formData.social?.facebook}
                     onChange={handleSocialChange}
                   />
                 </label>
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
-                    <OpenInNewIcon className="text-black" /> Website
+                    <OpenInNew className="text-black" /> Website
                   </p>
                   <input
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="website"
-                    className="w-[235px] px-2"
-                    value={formData.social.website}
+                    className="w-[235px] px-2 h-[40px]"
+                    value={formData.social?.website}
                     onChange={handleSocialChange}
                   />
                 </label>

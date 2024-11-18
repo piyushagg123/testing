@@ -111,15 +111,9 @@ const App: React.FC = () => {
             path="/interior-designers/:professionalId"
             element={
               isLargeDevice ? (
-                <InteriorDesignerInfoLaptop
-                  renderProfileView={false}
-                  renderProfessionalInfoView={true}
-                />
+                <InteriorDesignerInfoLaptop renderProfessionalInfoView={true} />
               ) : (
-                <InteriorDesignerInfoMobile
-                  renderProfileView={false}
-                  renderProfessionalInfoView={true}
-                />
+                <InteriorDesignerInfoMobile renderProfessionalInfoView={true} />
               )
             }
           />
@@ -148,13 +142,13 @@ const App: React.FC = () => {
                 )
               ) : isLargeDevice ? (
                 <InteriorDesignerInfoLaptop
-                  renderProfileView={true}
                   renderProfessionalInfoView={false}
+                  vendor_id={userDetails.vendor_id}
                 />
               ) : (
                 <InteriorDesignerInfoMobile
-                  renderProfileView={true}
                   renderProfessionalInfoView={false}
+                  vendor_id={userDetails.vendor_id}
                 />
               )
             }

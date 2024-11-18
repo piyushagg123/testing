@@ -18,9 +18,8 @@ import {
   FinancePlannerFilters,
 } from "../components";
 import constants from "../constants";
-import { StateContext } from "../context/State";
-import service from "../assets/Services.png";
-import { ApiContext } from "../context/Api";
+import { StateContext, ApiContext } from "../context";
+import { UnderMaintainence } from "../assets";
 
 interface VendorItem {
   vendor_id?: string;
@@ -139,7 +138,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     return (
       <div className="maintenance-container flex flex-col justify-center items-center">
         <img
-          src={service}
+          src={UnderMaintainence}
           alt=""
           className="w-[30vw]"
           style={{ mixBlendMode: "multiply" }}

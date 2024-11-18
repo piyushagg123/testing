@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../../constants";
@@ -11,8 +9,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Checkbox,
 } from "@mui/material";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { FilterAlt, Close } from "@mui/icons-material";
 import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import { handleCheckboxChange, handleFilterChange } from "./Controller";
 import { FilterItem } from "./Types";
@@ -168,7 +167,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
             className="font-bold text-base text-darkgrey"
             onClick={() => setFilterMenu(() => true)}
           >
-            <FilterAltIcon />
+            <FilterAlt />
           </p>
 
           <div className="lg:hidden">
@@ -199,7 +198,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
               <div>
                 <div className="flex items-center justify-between pr-4">
                   <h1 className="font-bold">FILTERS</h1>
-                  <CloseIcon onClick={() => setFilterMenu(false)} />
+                  <Close onClick={() => setFilterMenu(false)} />
                 </div>
                 {showFilters()}
                 <div className="flex justify-center mt-4">

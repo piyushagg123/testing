@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import img from "../../assets/NoImage.jpg";
+import { NoLogoUploaded } from "../../assets";
 import {
   OpenInNew,
   StarBorder,
@@ -22,7 +22,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import constants from "../../constants";
-import { AuthContext } from "../../context/Login";
+import { AuthContext } from "../../context/index";
 import { LoadingButton } from "@mui/lab";
 import { ProfessionalInfoProps } from "./Types";
 import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
@@ -48,7 +48,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     ["vendorDetails", professionalId],
     () =>
       fetchFinancialAdvisorDetails(
-        vendor_id ? vendor_id.toString()! : professionalId!
+        vendor_id ? vendor_id.toString() : professionalId!
       )
   );
 
@@ -230,7 +230,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         ) : (
           <img
-            src={img}
+            src={NoLogoUploaded}
             alt=""
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
@@ -253,6 +253,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </span>{" "}
           <div className="flex flex-wrap gap-1">
             {vendorData?.deals &&
+              Array.isArray(vendorData.deals) &&
               vendorData.deals.map((item, ind) => (
                 <Chip
                   label={removeUnderscoresAndFirstLetterCapital(item)}
@@ -270,6 +271,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {vendorData?.investment_ideology &&
+              Array.isArray(vendorData.investment_ideology) &&
               vendorData.investment_ideology.map((item, ind) => (
                 <Chip
                   label={removeUnderscoresAndFirstLetterCapital(item)}

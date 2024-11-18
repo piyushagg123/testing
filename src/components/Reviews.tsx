@@ -1,19 +1,20 @@
-import StarIcon from "@mui/icons-material/Star";
-import { styled, useTheme } from "@mui/material/styles";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../constants";
-import reviewImage from "../assets/NoReviewAdded.png";
-import { Divider, Snackbar, useMediaQuery } from "@mui/material";
+import { NoReviewAdded } from "../assets";
+import {
+  Divider,
+  Snackbar,
+  useMediaQuery,
+  LinearProgress,
+  linearProgressClasses,
+  styled,
+  useTheme,
+} from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
-import DeleteIcon from "@mui/icons-material/Delete";
-import VerifiedIcon from "@mui/icons-material/Verified";
+import { Delete, Verified, Edit, Star } from "@mui/icons-material";
 import ReviewDialog from "./ReviewDialog";
-import EditIcon from "@mui/icons-material/Edit";
 
 interface Vendor {
   id: number;
@@ -78,7 +79,6 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
       );
       data = response.data;
     }
-    refetch();
     return data.data;
   };
 
@@ -200,7 +200,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
         {reviews?.length > 0 ? (
           <>
             <div className="flex gap-1 items-center text-[green]">
-              <VerifiedIcon sx={{ fontSize: 20 }} />
+              <Verified sx={{ fontSize: 20 }} />
               <p>By verified users only</p>
             </div>
             <div className={`flex flex-col w-full gap-3 mt-1`}>
@@ -217,7 +217,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                           ).toFixed(1)
                         : (averages as number).toFixed(1)}
                     </span>
-                    <StarIcon
+                    <Star
                       style={{
                         color: colors(
                           vendorType === "interiorDesigner"
@@ -347,7 +347,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                               3
                             ).toFixed(1)
                           : review?.rating?.toFixed(1)}
-                        <StarIcon sx={{ fontSize: "13px" }} />
+                        <Star sx={{ fontSize: "13px" }} />
                       </p>
                       <div>
                         <div className="flex gap-3">
@@ -369,10 +369,10 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                                       handleDelete(review.review_id)
                                     }
                                   >
-                                    <DeleteIcon sx={{ color: "var(--red)" }} />
+                                    <Delete sx={{ color: "var(--red)" }} />
                                   </button>
                                   <button onClick={() => handleEdit(review)}>
-                                    <EditIcon />
+                                    <Edit />
                                   </button>
                                 </div>
                               )}
@@ -391,7 +391,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
             <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-center justify-center">
                 <div>
-                  <img src={reviewImage} alt="" className="w-[300px]" />
+                  <img src={NoReviewAdded} alt="" className="w-[300px]" />
                 </div>
                 <p className="mb-[1em]">No reviews added yet by the users</p>
               </div>
@@ -404,11 +404,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        message={
-          selectedReview
-            ? "Review updated successfully"
-            : "Review deleted successfully"
-        }
+        message={"Review deleted successfully"}
         key="bottom-center"
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />

@@ -1,15 +1,17 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import axios from "axios";
-import { useQuery } from "react-query";
-import MultipleSelect from "./MultipleSelect";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CircularProgress from "@mui/material/CircularProgress";
-import ProjectImages from "./ProjectImages";
+import { MultipleSelect, ProjectImages } from "./index";
+import {
+  TextField,
+  Autocomplete,
+  CircularProgress,
+  Alert,
+  Button,
+} from "@mui/material";
 import constants from "../constants";
-import { Alert, Button } from "@mui/material";
 import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
+import { StateContext } from "../context";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -73,16 +75,12 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     state: "",
   });
 
-  const fetchStates = async () => {
-    const response = await axios.get(`${constants.apiBaseUrl}/location/states`);
-    return response.data.data;
-  };
+  const stateContext = useContext(StateContext);
 
-  const { data: states, isLoading: loadingStates } = useQuery(
-    "states",
-    fetchStates
-  );
-
+  if (stateContext === undefined) {
+    return;
+  }
+  const { state } = stateContext;
   const handleStateChange = async (
     _event: React.SyntheticEvent,
     value: string | null,
@@ -113,7 +111,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -146,6 +143,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setError("Please select a city");
       return;
     }
+    setLoading(true);
 
     try {
       const response = await axios.post(
@@ -247,7 +245,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
         {currentStep === 2 && (
           <>
             {error && <Alert severity="error">{error}</Alert>}
-            <div className="flex flex-col items-end flex-wrap justify-around w-[220px] md:w-[540px]">
+            <div className="flex flex-col items-end flex-wrap justify-around w-[220px] mt-2 md:w-[540px]">
               <label
                 htmlFor=""
                 className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
@@ -308,9 +306,8 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   <Autocomplete
                     disablePortal
                     id="state-autocomplete"
-                    options={states}
+                    options={state}
                     onChange={handleStateChange}
-                    loading={loadingStates}
                     size="small"
                     sx={{
                       width: 208,
@@ -322,14 +319,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                         {...params}
                         InputProps={{
                           ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {loadingStates ? (
-                                <CircularProgress color="inherit" size={20} />
-                              ) : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
+                          endAdornment: <>{params.InputProps.endAdornment}</>,
                         }}
                       />
                     )}

@@ -3,46 +3,24 @@ import constants from "../../constants";
 import { ProjectData, ReviewFormObject, VendorData } from "./Types";
 import { FormEvent } from "react";
 
-const fetchVendorDetails = async (id: string, renderProfileView: boolean) => {
+const fetchVendorDetails = async (id: string) => {
   let data;
-  if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/auth/details`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    data = response.data;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
-    );
-    data = response.data;
-  }
+  const response = await axios.get(
+    `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
+  );
+  data = response.data;
 
   return data.data as VendorData;
 };
 
-const fetchVendorProjects = async (id: string, renderProfileView: boolean) => {
+const fetchVendorProjects = async (id: string) => {
   let data;
-  if (renderProfileView) {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/auth/project/details`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    data = response.data;
-  } else {
-    const response = await axios.get(
-      `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
-    );
-    data = response.data;
-  }
+
+  const response = await axios.get(
+    `${constants.apiBaseUrl}/vendor/project/details?vendor_id=${id}`
+  );
+  data = response.data;
+
   return data.data as ProjectData[];
 };
 
@@ -79,6 +57,7 @@ const submitReview = async (
   } catch (error: any) {
     onError(error.response?.data?.debug_info || "Error submitting review");
   }
+  window.location.reload();
 };
 
 export { fetchVendorDetails, fetchVendorProjects, submitReview };

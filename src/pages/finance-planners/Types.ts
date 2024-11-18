@@ -1,13 +1,13 @@
 export interface VendorData {
-  logo?: string;
-  deals?: string[];
-  investment_ideology?: string[];
-  fees_type?: string[];
-  fees?: number;
-  number_of_clients?: number;
-  aum_handled?: number;
+  logo?: string | null;
+  deals: string[] | string;
+  investment_ideology: string[] | string;
+  fees_type: string[] | string;
+  fees: number;
+  number_of_clients: number;
+  aum_handled: number;
   sebi_registered?: boolean;
-  minimum_investment?: number;
+  minimum_investment: number;
   description: string;
   business_name: string;
   number_of_employees: number;

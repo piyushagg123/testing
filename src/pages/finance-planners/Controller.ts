@@ -64,6 +64,8 @@ const submitReview = async (
   } catch (error: any) {
     onError(error.response?.data?.debug_info || "Error submitting review");
   }
+
+  window.location.reload();
 };
 
 const initializeFormData = (): VendorData => ({

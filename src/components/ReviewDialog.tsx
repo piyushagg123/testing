@@ -8,10 +8,9 @@ import {
   DialogTitle,
   Rating,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { Review } from "./Reviews";
 import { useEffect, useState } from "react";
 import axios from "axios";

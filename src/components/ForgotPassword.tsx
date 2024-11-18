@@ -1,11 +1,16 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import DialogContent from "@mui/material/DialogContent";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import {
+  Button,
+  TextField,
+  DialogContent,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { Input as BaseInput } from "@mui/base/Input";
 import { styled } from "@mui/system";
@@ -13,7 +18,6 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
 import { Alert, LoadingButton } from "@mui/lab";
-import { StepContent, useTheme, useMediaQuery } from "@mui/material";
 
 interface OTPProps {
   separator: React.ReactNode;

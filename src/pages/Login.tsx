@@ -2,11 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ForgotPassword } from "../components";
 import { Alert, TextField } from "@mui/material";
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/Login";
+import { AuthContext } from "../context";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import constants from "../constants";
-import LabelImportantIcon from "@mui/icons-material/LabelImportant";
+import { LabelImportant } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
 import { LoadingButton } from "@mui/lab";
 
@@ -201,15 +201,15 @@ const Login = () => {
             Sign in today to recreate your home
           </h1>
           <div className="flex items-center mt-[2em]">
-            <LabelImportantIcon className="text-sm" />
+            <LabelImportant className="text-sm" />
             <p>Explore vast selection of ideas</p>
           </div>
           <div className="flex items-center mt-[1em]">
-            <LabelImportantIcon className="text-sm" />
+            <LabelImportant className="text-sm" />
             <p>Get matched with best interior designers near you</p>
           </div>
           <div className="flex items-center mt-[1em]">
-            <LabelImportantIcon className="text-sm" />
+            <LabelImportant className="text-sm" />
             <p>Sit back, relax and get your home recreated.</p>
           </div>
         </div>

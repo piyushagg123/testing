@@ -1,16 +1,16 @@
 import * as React from "react";
-import { AuthContext } from "../context/Login";
 import data from "../assets/ProfessionalIcon.json";
 import { Link } from "react-router-dom";
 import { ImageList, ImageListItem } from "@mui/material";
 import GroupsIcon from "@mui/icons-material/Groups";
-import { StateContext } from "../context/State";
-import { ApiContext } from "../context/Api";
-import service from "../assets/Services.png";
-import HomePagePhoto1 from "../assets/HomePagePhoto1.jpg";
-import HomePagePhoto2 from "../assets/HomePagePhoto2.jpeg";
-import HomePagePhoto3 from "../assets/HomePagePhoto3.jpeg";
-import HomePagePhoto4 from "../assets/HomePagePhoto4.jpg";
+import { StateContext, ApiContext, AuthContext } from "../context";
+import {
+  HomePagePhoto1,
+  HomePagePhoto2,
+  HomePagePhoto3,
+  HomePagePhoto4,
+  UnderMaintainence,
+} from "../assets";
 
 const HomePage = () => {
   const authContext = React.useContext(AuthContext);
@@ -53,7 +53,7 @@ const HomePage = () => {
     return (
       <div className="maintenance-container flex flex-col justify-center items-center min-h-screen">
         <img
-          src={service}
+          src={UnderMaintainence}
           alt=""
           className="w-[30vw]"
           style={{ mixBlendMode: "multiply" }}

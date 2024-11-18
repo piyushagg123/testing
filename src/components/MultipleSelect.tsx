@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { Checkbox, useMediaQuery } from "@mui/material";
+import {
+  Checkbox,
+  useMediaQuery,
+  OutlinedInput,
+  MenuItem,
+  FormControl,
+  useTheme,
+  Select,
+  SelectChangeEvent,
+  CircularProgress,
+} from "@mui/material";
 import constants from "../constants";
+import { removeUnderscoresAndFirstLetterCapital } from "../helpers/StringHelpers";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -66,17 +71,6 @@ export default function MultipleSelect({
     setSelectedValues(initialSelectedValues);
   }, []);
 
-  const formatCategory = (str: string) => {
-    let formattedStr = str.replace(/_/g, " ");
-    formattedStr = formattedStr
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
-    return formattedStr;
-  };
-
   const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
@@ -102,7 +96,7 @@ export default function MultipleSelect({
   selectedValuesWithIds.sort((a, b) => a.id - b.id);
 
   const sortedSelectedValues = selectedValuesWithIds.map((item) =>
-    formatCategory(item.value)
+    removeUnderscoresAndFirstLetterCapital(item.value)
   );
 
   const MenuProps = {
@@ -160,7 +154,7 @@ export default function MultipleSelect({
                   ? constants.MATERIAL_SUPPORT
                   : option.value === "COMPLETE"
                   ? constants.COMPLETE
-                  : formatCategory(option.value)}
+                  : removeUnderscoresAndFirstLetterCapital(option.value)}
               </MenuItem>
             ))
           )}

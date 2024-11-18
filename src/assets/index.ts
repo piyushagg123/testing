@@ -1,0 +1,9 @@
+export { default as HomePagePhoto1 } from "./HomePagePhoto1.jpg";
+export { default as HomePagePhoto2 } from "./HomePagePhoto2.jpeg";
+export { default as HomePagePhoto3 } from "./HomePagePhoto3.jpeg";
+export { default as HomePagePhoto4 } from "./HomePagePhoto4.jpg";
+export { default as NoLogoUploaded } from "./NoLogoUploaded.jpg";
+export { default as NoProjectsAdded } from "./NoProjectsAdded.jpg";
+export { default as NoReviewAdded } from "./NoReviewAdded.png";
+export { default as PickeleLogo } from "./PickeleLogo.png";
+export { default as UnderMaintainence } from "./UnderMaintainence.png";
