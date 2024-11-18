@@ -7,7 +7,7 @@ const Error = () => {
           alt=""
           className="w-[400px]"
         />
-        <p>Session expired</p>
+        <p>Session expired!</p>
       </div>
     </div>
   );
