@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import img from "../../assets/noImageinProject.jpg";
+import { NoLogoUploaded } from "../../assets";
 import {
   OpenInNew,
   StarBorder,
@@ -206,7 +206,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           />
         ) : (
           <img
-            src={img}
+            src={NoLogoUploaded}
             alt=""
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
@@ -229,6 +229,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           </span>{" "}
           <div className="flex flex-wrap gap-1">
             {vendorData?.deals &&
+              Array.isArray(vendorData.deals) &&
               vendorData.deals.map((item, ind) => (
                 <Chip
                   label={removeUnderscoresAndFirstLetterCapital(item)}
@@ -246,6 +247,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {vendorData?.investment_ideology &&
+              Array.isArray(vendorData.investment_ideology) &&
               vendorData.investment_ideology.map((item, ind) => (
                 <Chip
                   label={removeUnderscoresAndFirstLetterCapital(item)}
@@ -279,7 +281,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             </div>
 
             {login && userDetails?.vendor_id !== Number(professionalId) && (
-              <div className=" gap-3 hidden md:flex mb-[2em]">
+              <div className=" gap-3 mt-2 ml-[8px] md:flex mb-[2em]">
                 <div>
                   {renderProfessionalInfoView && (
                     <Button

@@ -58,8 +58,7 @@ const App: React.FC = () => {
   }
   const { setErrorInApi } = apiContext;
   const { setState } = stateContext;
-  const { setLogin, setUserDetails } = authContext;
-
+  const { setLogin, setUserDetails, userDetails } = authContext;
   useQuery("userDetails", fetchUserData, {
     onSuccess: (data) => {
       setLogin(true);
@@ -112,15 +111,9 @@ const App: React.FC = () => {
             path="/interior-designers/:professionalId"
             element={
               isLargeDevice ? (
-                <InteriorDesignerInfoLaptop
-                  renderProfileView={false}
-                  renderProfessionalInfoView={true}
-                />
+                <InteriorDesignerInfoLaptop renderProfessionalInfoView={true} />
               ) : (
-                <InteriorDesignerInfoMobile
-                  renderProfileView={false}
-                  renderProfessionalInfoView={true}
-                />
+                <InteriorDesignerInfoMobile renderProfessionalInfoView={true} />
               )
             }
           />
@@ -128,15 +121,9 @@ const App: React.FC = () => {
             path="/finance-planners/:professionalId"
             element={
               isLargeDevice ? (
-                <FinancePlannerInfoLaptop
-                  renderProfileView={false}
-                  renderProfessionalInfoView={true}
-                />
+                <FinancePlannerInfoLaptop renderProfessionalInfoView={true} />
               ) : (
-                <FinancePlannerInfo
-                  renderProfileView={false}
-                  renderProfessionalInfoView={true}
-                />
+                <FinancePlannerInfo renderProfessionalInfoView={true} />
               )
             }
           />
@@ -147,16 +134,21 @@ const App: React.FC = () => {
           <Route
             path="/profile"
             element={
-              //vendorType
-              isLargeDevice ? (
+              userDetails.vendor_type === "FINANCIAL_ADVISOR" ? (
+                isLargeDevice ? (
+                  <FinancePlannerInfoLaptop vendor_id={userDetails.vendor_id} />
+                ) : (
+                  <FinancePlannerInfo vendor_id={userDetails.vendor_id} />
+                )
+              ) : isLargeDevice ? (
                 <InteriorDesignerInfoLaptop
-                  renderProfileView={true}
                   renderProfessionalInfoView={false}
+                  vendor_id={userDetails.vendor_id}
                 />
               ) : (
                 <InteriorDesignerInfoMobile
-                  renderProfileView={true}
                   renderProfessionalInfoView={false}
+                  vendor_id={userDetails.vendor_id}
                 />
               )
             }

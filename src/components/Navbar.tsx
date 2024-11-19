@@ -1,6 +1,6 @@
 import { useState, useContext, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/Login";
+import { AuthContext, ApiContext } from "../context";
 import axios from "axios";
 import {
   Button,
@@ -13,16 +13,14 @@ import {
   Popper,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Button as MaterialButton,
 } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import { deepOrange, grey } from "@mui/material/colors";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { AccountCircle, ArrowDropDown, Logout } from "@mui/icons-material";
 import constants from "../constants";
-import pickelelogo from "../assets/PickeleLogo.png";
-import { Button as MaterialButton } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { ApiContext } from "../context/Api";
+import { PickeleLogo } from "../assets";
+import { setDefaultUserDetails } from "../context/Login";
 
 const Navbar: React.FC = () => {
   const apiContext = useContext(ApiContext);
@@ -111,15 +109,7 @@ const Navbar: React.FC = () => {
         setToggleProfileMenu(false);
         setLogin(false);
         localStorage.removeItem("token");
-        setUserDetails({
-          email: "",
-          first_name: "",
-          is_vendor: false,
-          last_name: "",
-          mobile: "",
-          user_id: 0,
-          vendor_id: 0,
-        });
+        setUserDetails(setDefaultUserDetails);
         navigate("/");
       }
     } catch (error) {}
@@ -154,7 +144,7 @@ const Navbar: React.FC = () => {
       <div className="flex items-center gap-2 md:gap-4">
         <div className="logo">
           <Link to="/" className="text-[purple]">
-            <img src={pickelelogo} alt="Pickele" className="h-10 w-auto" />
+            <img src={PickeleLogo} alt="Pickele" className="h-10 w-auto" />
           </Link>
         </div>
       </div>
@@ -222,7 +212,7 @@ const Navbar: React.FC = () => {
                             className="text-black p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                             onClick={() => setToggleProfileMenu(false)}
                           >
-                            <AccountCircleIcon /> <p>View Profile</p>
+                            <AccountCircle /> <p>View Profile</p>
                           </NavLink>
                         </div>
                       ) : (
@@ -244,7 +234,7 @@ const Navbar: React.FC = () => {
                             handleLogout();
                           }}
                         >
-                          <LogoutIcon /> <p className="text-left">Log Out</p>
+                          <Logout /> <p className="text-left">Log Out</p>
                         </Button>
                       </div>
                     </div>
@@ -306,7 +296,7 @@ const Navbar: React.FC = () => {
                     sx={{ padding: "5px" }}
                     style={{ backgroundColor: "#8c52ff", color: "white" }}
                   >
-                    <ArrowDropDownIcon />
+                    <ArrowDropDown />
                   </Button>
                 </ButtonGroup>
                 <Popper

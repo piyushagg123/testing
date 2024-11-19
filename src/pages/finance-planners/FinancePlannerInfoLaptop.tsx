@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import img from "../../assets/noImageinProject.jpg";
+import { NoLogoUploaded } from "../../assets";
 import {
   OpenInNew,
   StarBorder,
@@ -22,7 +22,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import constants from "../../constants";
-import { AuthContext } from "../../context/Login";
+import { AuthContext } from "../../context/index";
 import { LoadingButton } from "@mui/lab";
 import { ProfessionalInfoProps } from "./Types";
 import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
@@ -34,6 +34,7 @@ import { ReviewDialog, Reviews } from "../../components";
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
+  vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
 
@@ -45,7 +46,10 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchFinancialAdvisorDetails(professionalId!)
+    () =>
+      fetchFinancialAdvisorDetails(
+        vendor_id ? vendor_id.toString() : professionalId!
+      )
   );
 
   useEffect(() => {
@@ -111,7 +115,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       <div className="flex flex-row w-full">
         <div className="mt-[1em]  w-1/2 ">
           <p className="font-bold  text-black">AUM handled</p>
-          <p className="">{vendorData?.aum_handled ?? "N/A"}</p>
+          <p className="">₹{vendorData?.aum_handled ?? "N/A"}</p>
         </div>
         <div className="mt-[1em] w-1/2 ">
           <p className="font-bold  text-black">Sebi registered</p>
@@ -119,33 +123,43 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         </div>
       </div>
       <div className="flex  w-full flex-row ">
-        <div className="w-1/2 mt-[1em]">
-          <p className="font-bold  text-black">Fees type</p>
-          <p className="">{vendorData?.fees_type ?? "N/A"}</p>
-        </div>
         <div className=" w-1/2 mt-[1em]">
-          <p className="font-bold  text-black">Fees</p>
-          <p className="">{vendorData?.fees ?? "N/A"}</p>
+          <p className="font-bold  text-black"> Fees</p>
+          <p className="flex">
+            {vendorData?.fees_type && vendorData.fees_type[0] === "FIXED" && (
+              <p className="mr-1">{"₹"}</p>
+            )}
+            {vendorData?.fees ?? "N/A"}
+
+            {vendorData?.fees_type &&
+              vendorData.fees_type[0] === "PERCENTAGE" && (
+                <p className="ml-1">{"%"}</p>
+              )}
+          </p>
+        </div>
+        <div className="w-1/2 mt-[1em]">
+          <p className="font-bold  text-black">Minimum investment</p>
+          <p className="">₹{vendorData?.minimum_investment ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex  w-full flex-row ">
-        <div className="w-1/2 mt-[1em]">
-          <p className="font-bold  text-black">Minimum investment</p>
-          <p className="">{vendorData?.minimum_investment ?? "N/A"}</p>
-        </div>
         <div className=" w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Number of employees</p>
           <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
         </div>
-      </div>
-      <div className="flex  w-full flex-row">
         <div className="w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Number of clients</p>
           <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
         </div>
+      </div>
+      <div className="flex  w-full flex-row">
         <div className=" w-1/2 mt-[1em]">
           <p className="font-bold  text-black">Location</p>
           <p className="">{vendorData?.city ?? "N/A"}</p>
+        </div>
+        <div className="w-1/2 ">
+          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex flex-row  w-full">
@@ -183,10 +197,6 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         )}
-        <div className="w-1/2 ">
-          <p className="font-bold text-black mt-[1em]">Contact Number</p>
-          <p className="">{vendorData?.mobile ?? "N/A"}</p>
-        </div>
       </div>
       <div className="w-full mt-[1em]">
         <p className="font-bold  text-black">Email</p>
@@ -220,7 +230,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         ) : (
           <img
-            src={img}
+            src={NoLogoUploaded}
             alt=""
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
@@ -243,9 +253,10 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </span>{" "}
           <div className="flex flex-wrap gap-1">
             {vendorData?.deals &&
+              Array.isArray(vendorData.deals) &&
               vendorData.deals.map((item, ind) => (
                 <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  label={removeUnderscoresAndFirstLetterCapital(item)}
                   variant="outlined"
                   key={ind}
                   sx={{ height: "20px", fontSize: "11px" }}
@@ -260,9 +271,10 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {vendorData?.investment_ideology &&
+              Array.isArray(vendorData.investment_ideology) &&
               vendorData.investment_ideology.map((item, ind) => (
                 <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
+                  label={removeUnderscoresAndFirstLetterCapital(item)}
                   variant="outlined"
                   key={ind}
                   sx={{ height: "20px", fontSize: "11px" }}

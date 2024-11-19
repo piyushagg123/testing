@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import projectImage from "../../assets/noProjectAdded.jpg";
+import { NoProjectsAdded, NoLogoUploaded } from "../../assets";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import constants from "../../constants";
-import { AuthContext } from "../../context/Login";
+import { AuthContext } from "../../context";
 import {
   Reviews,
   ReviewDialog,
@@ -21,15 +21,14 @@ import {
   ProjectImages,
   Carousel,
 } from "../../components";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   OpenInNew,
   StarBorder,
   Facebook,
   Instagram,
+  AddCircle,
+  Close,
 } from "@mui/icons-material";
-import img from "../../assets/noImageinProject.jpg";
 import { ProfessionalInfoProps, ProjectData } from "./Types";
 import {
   fetchVendorDetails,
@@ -42,8 +41,8 @@ import {
 } from "../../helpers/StringHelpers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
-  renderProfileView,
   renderProfessionalInfoView,
+  vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
 
@@ -59,7 +58,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const { data: projectsData } = useQuery(
     ["vendorProjects", professionalId],
-    () => fetchVendorProjects(professionalId!, renderProfileView)
+    () =>
+      fetchVendorProjects(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     }
   }, [projectsData]);
   const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
-    fetchVendorDetails(professionalId!, renderProfileView)
+    fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -241,7 +241,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           />
         ) : (
           <img
-            src={img}
+            src={NoLogoUploaded}
             alt=""
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
@@ -264,7 +264,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </span>{" "}
           <div className="flex flex-wrap gap-1">
             {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_1 ?? "N/A"
+              vendorData?.sub_category_1 as string
             )
               ?.split(",")
               .map((item, ind) => (
@@ -284,7 +284,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </span>
           <div className="flex flex-wrap gap-1">
             {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_2 ?? "N/A"
+              vendorData?.sub_category_2 as string
             )
               ?.split(",")
               .map((item, ind) => (
@@ -301,7 +301,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           <span className="font-bold text-[11px] md:text-sm text-black">
             EXECUTION TYPE :
           </span>{" "}
-          {(vendorData?.sub_category_3 ?? "N/A")
+          {(vendorData?.sub_category_3 as string)
             ?.split(",")
             .map((item: string, ind: number) => (
               <Chip
@@ -354,7 +354,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
               <div className="flex   w-full">
                 {!projectsData ? (
                   <div className="flex flex-col items-center justify-center w-full">
-                    {(renderProfileView ||
+                    {(vendor_id ||
                       Number(professionalId) == userDetails.vendor_id) && (
                       <div
                         className={`${
@@ -381,19 +381,19 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                             }}
                             onClick={() => setOpen(true)}
                           >
-                            <AddCircleIcon />
+                            <AddCircle />
                             <p>Add a project</p>
                           </Button>
                         </div>
                       </div>
                     )}
                     {Number(professionalId) !== userDetails.vendor_id &&
-                      !renderProfileView && (
+                      !vendor_id && (
                         <>
                           <div>
                             <div className="mb-[1em]">
                               <img
-                                src={projectImage}
+                                src={NoProjectsAdded}
                                 alt=""
                                 className="w-[300px]"
                               />
@@ -411,7 +411,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                   >
                     <div>
-                      {(renderProfileView ||
+                      {(vendor_id ||
                         Number(professionalId) == userDetails.vendor_id) && (
                         <div
                           className={`
@@ -431,7 +431,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                             }}
                             onClick={() => setOpen(true)}
                           >
-                            <AddCircleIcon />
+                            <AddCircle />
                             <p>Add a project</p>
                           </Button>
                         </div>
@@ -569,7 +569,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                   color: (theme) => theme.palette.grey[500],
                 }}
               >
-                <CloseIcon />
+                <Close />
               </IconButton>
             </div>
             {!isSubmitted ? (

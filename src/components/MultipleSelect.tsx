@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { Checkbox } from "@mui/material";
+import {
+  Checkbox,
+  useMediaQuery,
+  OutlinedInput,
+  MenuItem,
+  FormControl,
+  useTheme,
+  Select,
+  SelectChangeEvent,
+  CircularProgress,
+} from "@mui/material";
 import constants from "../constants";
+import { removeUnderscoresAndFirstLetterCapital } from "../helpers/StringHelpers";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-    },
-  },
-};
-
 function getStyles(value: string, selectedValues: string[], theme: any) {
   return {
     fontWeight:
@@ -32,7 +29,9 @@ function getStyles(value: string, selectedValues: string[], theme: any) {
 const fetchOptions = async (apiEndpoint: string) => {
   const response = await axios.get(apiEndpoint);
 
-  return response.data.data.value;
+  return response.data.data.value
+    ? response.data.data.value
+    : response.data.data;
 };
 
 interface MultipleSelectProps {
@@ -54,6 +53,7 @@ export default function MultipleSelect({
   const [selectedValues, setSelectedValues] = useState<string[]>(
     initialSelectedValues
   );
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
 
   let options = dataArray;
   let isLoading = apiEndpoint ? true : false;
@@ -95,9 +95,19 @@ export default function MultipleSelect({
 
   selectedValuesWithIds.sort((a, b) => a.id - b.id);
 
-  const sortedSelectedValues = selectedValuesWithIds.map((item) => item.value);
+  const sortedSelectedValues = selectedValuesWithIds.map((item) =>
+    removeUnderscoresAndFirstLetterCapital(item.value)
+  );
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * (isLargeScreen ? 7 : 4.5) + ITEM_PADDING_TOP,
+      },
+    },
+  };
   return (
-    <div className="w-[226px] flex justify-center">
+    <div className="w-[206.67px] flex justify-center">
       <FormControl>
         <Select
           multiple
@@ -144,7 +154,7 @@ export default function MultipleSelect({
                   ? constants.MATERIAL_SUPPORT
                   : option.value === "COMPLETE"
                   ? constants.COMPLETE
-                  : option.value}
+                  : removeUnderscoresAndFirstLetterCapital(option.value)}
               </MenuItem>
             ))
           )}

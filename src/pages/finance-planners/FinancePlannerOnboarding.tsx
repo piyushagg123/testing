@@ -1,18 +1,20 @@
 import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
 import axios from "axios";
 import { MultipleSelect } from "../../components";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CircularProgress from "@mui/material/CircularProgress";
+import {
+  TextField,
+  Autocomplete,
+  CircularProgress,
+  Alert,
+  Button,
+} from "@mui/material";
 import { StateContext } from "../../context/State";
 import constants from "../../constants";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import { OpenInNew, Facebook, Instagram } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button } from "@mui/material";
 import { VendorData } from "./Types";
-import { initializeFormData } from "./Controller";
+import { uploadLogo } from "../../helpers/LogoHelpers";
+import { handleStateChange } from "../../helpers/CityHelper";
 
 const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -26,7 +28,28 @@ const FinancePlannerOnboarding = () => {
   }
   const { state } = stateContext;
 
-  const [formData, setFormData] = useState<VendorData>(initializeFormData());
+  const [formData, setFormData] = useState<VendorData>({
+    business_name: "",
+    sebi_registered: false,
+    started_in: "",
+    number_of_employees: -1,
+    address: "",
+    city: "",
+    state: "",
+    description: "",
+    aum_handled: -1,
+    minimum_investment: -1,
+    number_of_clients: -1,
+    fees: -1,
+    deals: [],
+    investment_ideology: [],
+    fees_type: [],
+    social: {
+      instagram: "",
+      facebook: "",
+      website: "",
+    },
+  });
 
   const navigate = useNavigate();
 
@@ -34,33 +57,7 @@ const FinancePlannerOnboarding = () => {
     null
   );
 
-  const handleStateChange = async (
-    _event: React.SyntheticEvent,
-    value: string | null,
-    _reason: any,
-    _details?: any
-  ) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      state: value?.toString() ?? "",
-      city: "",
-    }));
-    setCities([]);
-    setLoadingCities(true);
-    if (value) {
-      try {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/location/cities?state=${value}`
-        );
-        setCities(response.data.data);
-      } catch (error) {
-      } finally {
-        setLoadingCities(false);
-      }
-    } else {
-      setLoadingCities(false);
-    }
-  };
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const handleSocialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -84,7 +81,7 @@ const FinancePlannerOnboarding = () => {
 
   const handleDeleteLogo = async () => {
     setLogoPreview(null);
-    setFormData((prevData) => ({ ...prevData, logo: undefined }));
+    setFormData((prevData) => ({ ...prevData, logo: null }));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -92,17 +89,23 @@ const FinancePlannerOnboarding = () => {
 
     const processedFormData = {
       ...formData,
-      deals: formData?.deals?.join(","),
-      investment_ideology: formData.investment_ideology?.join(","),
-      fees_type: formData.fees_type?.join(","),
-      aum_handled: parseFloat(formData?.aum_handled!.toString()),
-      minimum_investment: parseFloat(formData.minimum_investment!.toString()),
-      number_of_clients: parseInt(formData.number_of_clients!.toString(), 10),
-      fees: parseInt(formData.fees!.toString(), 10),
+      deals: [formData.deals as Array<string>].join(","),
+      investment_ideology: [formData.investment_ideology as Array<string>].join(
+        ","
+      ),
+      fees_type: [formData.fees_type as Array<string>].join(","),
+      aum_handled: parseFloat(formData.aum_handled.toString()),
+      minimum_investment: parseFloat(formData.minimum_investment.toString()),
+      number_of_clients: parseInt(formData.number_of_clients.toString(), 10),
+      number_of_employees: parseInt(
+        formData.number_of_employees.toString(),
+        10
+      ),
+      fees: parseInt(formData.fees.toString(), 10),
     };
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${constants.apiBaseUrl}/financial-advisor/create`,
         processedFormData,
         {
@@ -111,8 +114,18 @@ const FinancePlannerOnboarding = () => {
           },
         }
       );
+      localStorage.removeItem("token");
+      localStorage.setItem("token", response.data.access_token);
+
+      if (logoFile) {
+        const formData = new FormData();
+        formData.append("logo", logoFile);
+
+        await uploadLogo(formData);
+      }
     } catch (error) {}
     navigate("/finance-planners");
+    window.location.reload();
   };
 
   const nextStep = () => {
@@ -131,7 +144,7 @@ const FinancePlannerOnboarding = () => {
         return;
       }
       if (!formData.aum_handled) {
-        setError("Please enter average value of your projects ");
+        setError("Please enter the aum handled by you till now ");
         return;
       }
 
@@ -140,31 +153,38 @@ const FinancePlannerOnboarding = () => {
         return;
       }
       if (!formData.number_of_clients) {
-        setError("Please enter the number of your clients");
+        setError("Please enter the number of clients you have served");
         return;
       }
       if (!formData.description) {
-        setError("Please enter your business description ");
+        setError("Please enter your business description");
         return;
       }
     }
 
     if (currentStep === 2) {
-      if (formData.deals!.length === 0) {
-        setError("please select your theme");
+      if (formData.deals.length === 0) {
+        setError("please select the deals you provide");
         return;
       }
-      if (formData.investment_ideology!.length === 0) {
-        setError("please select your specialized spaces");
+      if (formData.investment_ideology.length === 0) {
+        setError("please select your investment ideology");
         return;
       }
-      if (formData.fees_type!.length === 0) {
-        setError("please select your type of execution");
+      if (formData.fees_type.length === 0) {
+        setError("please select your fees type");
         return;
       }
       if (!formData.fees) {
         setError("Please enter your fees");
         return;
+      }
+
+      if (formData.fees_type[0] === "PERCENTAGE") {
+        if (formData.fees > 100) {
+          setError("Please enter a correct percentage");
+          return;
+        }
       }
     }
 
@@ -183,11 +203,16 @@ const FinancePlannerOnboarding = () => {
       }
     }
     setCurrentStep((prevStep) => prevStep + 1);
+    window.scrollTo(0, 0);
     setError("");
   };
-  const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
+  const prevStep = () => {
+    setCurrentStep((prevStep) => prevStep - 1);
+    window.scrollTo(0, 0);
+  };
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
+    setLogoFile(file);
 
     if (file) {
       const reader = new FileReader();
@@ -218,7 +243,7 @@ const FinancePlannerOnboarding = () => {
                   <input
                     type="text"
                     name="business_name"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.business_name}
                     onChange={handleChange}
                     required
@@ -231,7 +256,7 @@ const FinancePlannerOnboarding = () => {
                     type="text"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="started_in"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.started_in}
                     onChange={handleChange}
                     required
@@ -241,16 +266,21 @@ const FinancePlannerOnboarding = () => {
 
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
-                  Aum handled
-                  <input
-                    type="number"
-                    name="aum_handled"
-                    className="w-[235px] px-2"
-                    value={formData.aum_handled}
-                    onChange={handleChange}
-                    required
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  />
+                  Aum handled (in lakhs)
+                  <div className="flex items-center border border-black rounded w-[235px]">
+                    <span className="px-2">₹</span>
+                    <input
+                      type="number"
+                      name="aum_handled"
+                      className="w-[235px] px-2 h-[40px] outline-none"
+                      value={
+                        formData.aum_handled === -1 ? "" : formData.aum_handled
+                      }
+                      onChange={handleChange}
+                      required
+                      style={{ borderRadius: "5px", border: "none" }}
+                    />
+                  </div>
                 </label>
                 <label className="flex flex-col text-[16px]">
                   Number of Employees
@@ -258,8 +288,12 @@ const FinancePlannerOnboarding = () => {
                     type="number"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="number_of_employees"
-                    className="w-[235px] px-2"
-                    value={formData.number_of_employees}
+                    className="w-[235px] px-2 h-[40px]"
+                    value={
+                      formData.number_of_employees === -1
+                        ? ""
+                        : formData.number_of_employees
+                    }
                     onChange={handleChange}
                     required
                   />
@@ -268,23 +302,38 @@ const FinancePlannerOnboarding = () => {
               <div className="flex flex-col lg:flex-row gap-3">
                 <label className="flex flex-col text-[16px]">
                   Minimum investment
-                  <input
-                    type="number"
-                    name="minimum_investment"
-                    className="w-[235px] px-2"
-                    value={formData.minimum_investment}
-                    onChange={handleChange}
-                    required
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
-                  />
+                  <div className="flex items-center border border-black rounded w-[235px]">
+                    <span className="px-2">₹</span>
+                    <input
+                      type="number"
+                      name="minimum_investment"
+                      className="w-full px-2 h-[40px] outline-none"
+                      value={
+                        formData.minimum_investment === -1
+                          ? ""
+                          : formData.minimum_investment
+                      }
+                      onChange={handleChange}
+                      required
+                      style={{
+                        borderRadius: "5px",
+                        border: "none",
+                      }}
+                    />
+                  </div>
                 </label>
+
                 <label className="flex flex-col text-[16px]">
                   Number of clients
                   <input
                     type="number"
                     name="number_of_clients"
-                    className="w-[235px] px-2"
-                    value={formData.number_of_clients}
+                    className="w-[235px] px-2 h-[40px]"
+                    value={
+                      formData.number_of_clients === -1
+                        ? ""
+                        : formData.number_of_clients
+                    }
                     onChange={handleChange}
                     required
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
@@ -340,7 +389,9 @@ const FinancePlannerOnboarding = () => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/deals`}
                   maxSelection={3}
-                  selectedValue={formData.deals ? formData.deals : []}
+                  selectedValue={
+                    formData.deals ? (formData.deals as Array<string>) : []
+                  }
                   onChange={(selected) => {
                     setFormData((prevData) => ({
                       ...prevData,
@@ -360,7 +411,7 @@ const FinancePlannerOnboarding = () => {
                   maxSelection={3}
                   selectedValue={
                     formData.investment_ideology
-                      ? formData.investment_ideology
+                      ? (formData.investment_ideology as Array<string>)
                       : []
                   }
                   onChange={(selected) =>
@@ -380,7 +431,11 @@ const FinancePlannerOnboarding = () => {
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/fees-type`}
                   maxSelection={1}
-                  selectedValue={formData.fees_type ? formData.fees_type : []}
+                  selectedValue={
+                    formData.fees_type
+                      ? (formData.fees_type as Array<string>)
+                      : []
+                  }
                   onChange={(selected) =>
                     setFormData((prevData) => ({
                       ...prevData,
@@ -391,16 +446,21 @@ const FinancePlannerOnboarding = () => {
               </label>
               <label className="flex flex-col lg:flex-row justify-start lg:justify-between">
                 <p className="text-base">Fees</p>
-                <div className="w-[226px] flex justify-center">
+                <div className="w-[206.67px] h-[40px] flex items-center border border-black rounded">
+                  {formData.fees_type[0] === "FIXED" && (
+                    <span className="ml-1">₹</span>
+                  )}
                   <input
                     type="number"
                     name="fees"
-                    className="w-[206.67px] px-2"
-                    value={formData.fees}
+                    className="w-full px-2 border-none outline-none"
+                    value={formData.fees === -1 ? "" : formData.fees}
                     onChange={handleChange}
                     required
-                    style={{ borderRadius: "5px", border: "solid 0.3px" }}
                   />
+                  {formData.fees_type[0] === "PERCENTAGE" && (
+                    <span className="mr-1">%</span>
+                  )}
                 </div>
               </label>
               <div className="flex gap-2 justify-end  mt-[1em]">
@@ -427,9 +487,9 @@ const FinancePlannerOnboarding = () => {
                 Address
                 <input
                   type="text"
-                  style={{ borderRadius: "5px", border: "solid 0.3px" }}
+                  style={{ borderRadius: "5px", border: "solid 1px" }}
                   name="address"
-                  className="w-[235px] px-2"
+                  className="w-[235px] h-[40px] px-2"
                   value={formData.address}
                   onChange={handleChange}
                   required
@@ -445,7 +505,15 @@ const FinancePlannerOnboarding = () => {
                   disablePortal
                   id="state-autocomplete"
                   options={state}
-                  onChange={handleStateChange}
+                  onChange={(event, value) =>
+                    handleStateChange({
+                      event,
+                      value,
+                      setFormData,
+                      setCities,
+                      setLoadingCities,
+                    })
+                  }
                   size="small"
                   sx={{
                     width: 235,
@@ -580,39 +648,39 @@ const FinancePlannerOnboarding = () => {
               <div className="flex flex-col gap-2 mt-[1em]">
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between">
                   <p>
-                    <InstagramIcon className="text-red" /> Instagram
+                    <Instagram className="text-red" /> Instagram
                   </p>
                   <input
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="instagram"
-                    className="w-[235px] px-2"
-                    value={formData?.social?.instagram}
+                    className="w-[235px] px-2 h-[40px]"
+                    value={formData.social?.instagram}
                     onChange={handleSocialChange}
                   />
                 </label>
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
-                    <FacebookIcon className="text-purple" /> Facebook
+                    <Facebook className="text-purple" /> Facebook
                   </p>
                   <input
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="facebook"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.social?.facebook}
                     onChange={handleSocialChange}
                   />
                 </label>
                 <label className="flex flex-col lg:flex-row text-[16px] justify-between mt-[1em]">
                   <p>
-                    <OpenInNewIcon className="text-darkgrey" /> Website
+                    <OpenInNew className="text-darkgrey" /> Website
                   </p>
                   <input
                     type="url"
                     style={{ borderRadius: "5px", border: "solid 0.3px" }}
                     name="website"
-                    className="w-[235px] px-2"
+                    className="w-[235px] px-2 h-[40px]"
                     value={formData.social?.website}
                     onChange={handleSocialChange}
                   />

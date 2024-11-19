@@ -1,8 +1,3 @@
-export interface FilterItem {
-  id: number;
-  value: string;
-}
-
 const handleCheckboxChange = (
   item: string,
   selectedItems: Set<any>,

@@ -18,9 +18,8 @@ import {
   FinancePlannerFilters,
 } from "../components";
 import constants from "../constants";
-import { StateContext } from "../context/State";
-import service from "../assets/service.png";
-import { ApiContext } from "../context/Api";
+import { StateContext, ApiContext } from "../context";
+import { UnderMaintainence } from "../assets";
 
 interface VendorItem {
   vendor_id?: string;
@@ -102,11 +101,26 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchFinanceAdvisorsList = async () => {
+  const fetchFinanceAdvisorsList = async (
+    dealFilters = new Set(),
+    investmentIdeologyFilters = new Set()
+  ) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${constants.apiBaseUrl}/financial-advisor/advisors`
+        `${constants.apiBaseUrl}/financial-advisor/advisors`,
+        {
+          params: {
+            deals: Array.from(dealFilters as Set<string>)
+              .map((option) => option.toUpperCase())
+              .join(","),
+            investment_ideology: Array.from(
+              investmentIdeologyFilters as Set<string>
+            )
+              .map((option) => option.toUpperCase())
+              .join(","),
+          },
+        }
       );
       setFilteredItems(response.data.data);
     } catch (error) {
@@ -124,7 +138,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     return (
       <div className="maintenance-container flex flex-col justify-center items-center">
         <img
-          src={service}
+          src={UnderMaintainence}
           alt=""
           className="w-[30vw]"
           style={{ mixBlendMode: "multiply" }}

@@ -11,12 +11,12 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  ImageList,
+  ImageListItem,
 } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import constants from "../constants";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import NoProjectImage from "../assets/noImageinProject.jpg";
+import { NoLogoUploaded } from "../assets";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
@@ -234,7 +234,7 @@ const WovenImageList: React.FC<ItemProp> = ({ items }) => {
           <>
             <ImageListItem>
               <img
-                src={NoProjectImage}
+                src={NoLogoUploaded}
                 loading="lazy"
                 style={{ height: "128.67px" }}
               />

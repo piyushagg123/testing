@@ -1,24 +1,27 @@
-import StarIcon from "@mui/icons-material/Star";
-import { styled, useTheme } from "@mui/material/styles";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
 import { useQuery } from "react-query";
 import axios from "axios";
 import constants from "../constants";
-import reviewImage from "../assets/noReviewsAdded.png";
-import { Divider, Snackbar, useMediaQuery } from "@mui/material";
+import { NoReviewAdded } from "../assets";
+import {
+  Divider,
+  Snackbar,
+  useMediaQuery,
+  LinearProgress,
+  linearProgressClasses,
+  styled,
+  useTheme,
+} from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
-import DeleteIcon from "@mui/icons-material/Delete";
-import VerifiedIcon from "@mui/icons-material/Verified";
+import { Delete, Verified, Edit, Star } from "@mui/icons-material";
+import ReviewDialog from "./ReviewDialog";
 
 interface Vendor {
   id: number;
   vendorType?: string;
 }
 
-interface Review {
+export interface Review {
   rating_quality?: number;
   rating_execution?: number;
   rating_behaviour?: number;
@@ -79,7 +82,19 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
     return data.data;
   };
 
+  const handleDialogSubmit = () => {
+    refetch();
+    setSelectedReview(null);
+  };
+
   const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleEdit = (review: Review) => {
+    setSelectedReview(review);
+    setDialogOpen(true);
+  };
 
   const calculateAverages = (reviews: Review[]) => {
     if (reviews.length === 0) {
@@ -117,14 +132,25 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
 
   const handleDelete = async (reviewId: number) => {
     try {
-      await axios.delete(
-        `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      if (vendorType === "interiorDesigner") {
+        await axios.delete(
+          `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      } else {
+        await axios.delete(
+          `${constants.apiBaseUrl}/financial-advisor/review?review_id=${reviewId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      }
 
       refetch();
 
@@ -174,7 +200,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
         {reviews?.length > 0 ? (
           <>
             <div className="flex gap-1 items-center text-[green]">
-              <VerifiedIcon sx={{ fontSize: 20 }} />
+              <Verified sx={{ fontSize: 20 }} />
               <p>By verified users only</p>
             </div>
             <div className={`flex flex-col w-full gap-3 mt-1`}>
@@ -191,7 +217,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                           ).toFixed(1)
                         : (averages as number).toFixed(1)}
                     </span>
-                    <StarIcon
+                    <Star
                       style={{
                         color: colors(
                           vendorType === "interiorDesigner"
@@ -321,7 +347,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                               3
                             ).toFixed(1)
                           : review?.rating?.toFixed(1)}
-                        <StarIcon sx={{ fontSize: "13px" }} />
+                        <Star sx={{ fontSize: "13px" }} />
                       </p>
                       <div>
                         <div className="flex gap-3">
@@ -337,11 +363,18 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                           <div>
                             {localStorage.getItem("token") &&
                               userDetails?.user_id === review.user_id && (
-                                <button
-                                  onClick={() => handleDelete(review.review_id)}
-                                >
-                                  <DeleteIcon sx={{ color: "var(--red)" }} />
-                                </button>
+                                <div>
+                                  <button
+                                    onClick={() =>
+                                      handleDelete(review.review_id)
+                                    }
+                                  >
+                                    <Delete sx={{ color: "var(--red)" }} />
+                                  </button>
+                                  <button onClick={() => handleEdit(review)}>
+                                    <Edit />
+                                  </button>
+                                </div>
                               )}
                           </div>
                         </div>
@@ -358,7 +391,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
             <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-center justify-center">
                 <div>
-                  <img src={reviewImage} alt="" className="w-[300px]" />
+                  <img src={NoReviewAdded} alt="" className="w-[300px]" />
                 </div>
                 <p className="mb-[1em]">No reviews added yet by the users</p>
               </div>
@@ -371,9 +404,24 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        message="Review deleted successfully"
+        message={"Review deleted successfully"}
         key="bottom-center"
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
+
+      <ReviewDialog
+        reviewDialogOpen={dialogOpen}
+        handleReviewDialogClose={() => {
+          setDialogOpen(false);
+          handleDialogSubmit();
+        }}
+        reviewData={selectedReview}
+        professional={
+          vendorType === "interiorDesigner"
+            ? "interiorDesigner"
+            : "financeAdvisor"
+        }
+        editMode={true}
       />
     </>
   );

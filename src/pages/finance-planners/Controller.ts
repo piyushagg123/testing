@@ -26,8 +26,6 @@ const fetchFinancialAdvisorDetails = async (id: string) => {
       .map((item: string) => item.trim());
   }
 
-  console.log(data.data);
-
   return data.data as VendorData;
 };
 
@@ -66,6 +64,8 @@ const submitReview = async (
   } catch (error: any) {
     onError(error.response?.data?.debug_info || "Error submitting review");
   }
+
+  window.location.reload();
 };
 
 const initializeFormData = (): VendorData => ({

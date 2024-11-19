@@ -8,6 +8,7 @@ interface UserDetails {
   mobile: string;
   user_id: number;
   vendor_id: number;
+  vendor_type: string;
 }
 
 interface AuthContextType {
@@ -23,7 +24,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const defaultUserDetails: UserDetails = {
+export const setDefaultUserDetails: UserDetails = {
   email: "",
   first_name: "",
   is_vendor: false,
@@ -31,12 +32,14 @@ export const defaultUserDetails: UserDetails = {
   mobile: "",
   user_id: 0,
   vendor_id: 0,
+  vendor_type: "",
 };
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [login, setLogin] = useState<boolean>(false);
-  const [userDetails, setUserDetails] =
-    useState<UserDetails>(defaultUserDetails);
+  const [userDetails, setUserDetails] = useState<UserDetails>(
+    setDefaultUserDetails
+  );
 
   return (
     <AuthContext.Provider

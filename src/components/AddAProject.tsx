@@ -1,15 +1,18 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import axios from "axios";
-import { useQuery } from "react-query";
-import MultipleSelect from "./MultipleSelect";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CircularProgress from "@mui/material/CircularProgress";
-import ProjectImages from "./ProjectImages";
+import { MultipleSelect, ProjectImages } from "./index";
+import {
+  TextField,
+  Autocomplete,
+  CircularProgress,
+  Alert,
+  Button,
+} from "@mui/material";
 import constants from "../constants";
-import { Alert, Button } from "@mui/material";
 import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
+import { StateContext } from "../context";
+import { handleStateChange } from "../helpers/CityHelper";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -73,47 +76,15 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     state: "",
   });
 
-  const fetchStates = async () => {
-    const response = await axios.get(`${constants.apiBaseUrl}/location/states`);
-    return response.data.data;
-  };
+  const stateContext = useContext(StateContext);
 
-  const { data: states, isLoading: loadingStates } = useQuery(
-    "states",
-    fetchStates
-  );
-
-  const handleStateChange = async (
-    _event: React.SyntheticEvent,
-    value: string | null,
-    _reason: any,
-    _details?: any
-  ) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      state: value?.toString() ?? "",
-      city: "",
-    }));
-    setCities([]);
-    setLoadingCities(true);
-    if (value) {
-      try {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/location/cities?state=${value}`
-        );
-        setCities(response.data.data);
-      } catch (error) {
-      } finally {
-        setLoadingCities(false);
-      }
-    } else {
-      setLoadingCities(false);
-    }
-  };
+  if (stateContext === undefined) {
+    return;
+  }
+  const { state } = stateContext;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
 
     const processedFormData = {
       ...formData,
@@ -146,6 +117,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
       setError("Please select a city");
       return;
     }
+    setLoading(true);
 
     try {
       const response = await axios.post(
@@ -247,7 +219,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
         {currentStep === 2 && (
           <>
             {error && <Alert severity="error">{error}</Alert>}
-            <div className="flex flex-col items-end flex-wrap justify-around w-[220px] md:w-[540px]">
+            <div className="flex flex-col items-end flex-wrap justify-around w-[220px] mt-2 md:w-[540px]">
               <label
                 htmlFor=""
                 className="flex flex-col md:flex-row  w-[220px] md:w-[540px] items-center justify-between"
@@ -271,7 +243,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
               >
                 <p>Select the spaces</p>
                 <MultipleSelect
-                  dataArray={spacesData}
+                  dataArray={spacesData.values}
                   maxSelection={7}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
@@ -298,7 +270,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 />
               </label>
             </div>
-            <div className="flex flex-col gap-2 w-[220px] md:w-[534px]  justify-between ">
+            <div className="flex flex-col gap-2 w-[220px] md:w-[540px]  justify-between ">
               <div className="mt-4">
                 <label
                   htmlFor=""
@@ -308,29 +280,28 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                   <Autocomplete
                     disablePortal
                     id="state-autocomplete"
-                    options={states}
-                    onChange={handleStateChange}
-                    loading={loadingStates}
+                    options={state}
+                    onChange={(event, value) =>
+                      handleStateChange({
+                        event,
+                        value,
+                        setFormData,
+                        setCities,
+                        setLoadingCities,
+                      })
+                    }
                     size="small"
                     sx={{
                       width: 208,
                       borderRadius: "5px",
                       border: "solid 0.3px",
-                      marginRight: "3px",
                     }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         InputProps={{
                           ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {loadingStates ? (
-                                <CircularProgress color="inherit" size={20} />
-                              ) : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
+                          endAdornment: <>{params.InputProps.endAdornment}</>,
                         }}
                       />
                     )}
@@ -359,7 +330,6 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                       width: 208,
                       borderRadius: "5px",
                       border: "solid 0.3px",
-                      marginRight: "3px",
                     }}
                     renderInput={(params) => (
                       <TextField

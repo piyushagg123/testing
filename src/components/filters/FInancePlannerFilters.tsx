@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../../constants";
@@ -11,14 +9,12 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Checkbox,
 } from "@mui/material";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { FilterAlt, Close } from "@mui/icons-material";
 import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
-import {
-  FilterItem,
-  handleCheckboxChange,
-  handleFilterChange,
-} from "./Controller";
+import { handleCheckboxChange, handleFilterChange } from "./Controller";
+import { FilterItem } from "./Types";
 
 const fetchDeals = async () => {
   const response = await axios.get(
@@ -55,6 +51,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
 
   useEffect(() => {
     fetchVendorList(dealFilters, investmentIdeologyFilters);
+    window.scrollTo(0, 0);
   }, [dealFilters, investmentIdeologyFilters]);
 
   const formattedDeals = filterCategory1.map((item: FilterItem) =>
@@ -83,7 +80,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const showFilters = () => {
     return (
       <>
-        <div className="flex flex-col gap-1 pt-3">
+        <div className="flex flex-col pt-3 gap-1">
           <p className="font-bold text-base text-black">{"DEALS"}</p>
           {formattedDeals.map((deal: string) => {
             return (
@@ -111,7 +108,13 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                       }
                     />
                   }
-                  label={<span className="text-sm">{deal}</span>}
+                  label={
+                    <span className="text-sm">
+                      {deal === "Complete Wealth Management"
+                        ? "Wealth management"
+                        : deal}
+                    </span>
+                  }
                 />
               </>
             );
@@ -164,7 +167,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
             className="font-bold text-base text-darkgrey"
             onClick={() => setFilterMenu(() => true)}
           >
-            <FilterAltIcon />
+            <FilterAlt />
           </p>
 
           <div className="lg:hidden">
@@ -195,7 +198,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
               <div>
                 <div className="flex items-center justify-between pr-4">
                   <h1 className="font-bold">FILTERS</h1>
-                  <CloseIcon onClick={() => setFilterMenu(false)} />
+                  <Close onClick={() => setFilterMenu(false)} />
                 </div>
                 {showFilters()}
                 <div className="flex justify-center mt-4">

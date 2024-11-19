@@ -5,8 +5,7 @@ import constants from "../constants";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/Login";
 import { deepOrange } from "@mui/material/colors";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { Logout, AccountCircle } from "@mui/icons-material";
 
 const ProfileForMobile = () => {
   const authContext = useContext(AuthContext);
@@ -58,7 +57,7 @@ const ProfileForMobile = () => {
                   to={"/profile"}
                   className="text-black p-1 rounded-[8px] flex items-center gap-2 w-[95vw] sm:w-[350px] hover:bg-[#f3f1f1] transition-all"
                 >
-                  <AccountCircleIcon /> <p>View Profile</p>
+                  <AccountCircle /> <p>View Profile</p>
                 </NavLink>
               </div>
             ) : (
@@ -76,7 +75,7 @@ const ProfileForMobile = () => {
                 }}
                 onClick={handleLogout}
               >
-                <LogoutIcon /> <p>Log Out</p>
+                <Logout /> <p>Log Out</p>
               </Button>
             </div>
           </div>

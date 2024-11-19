@@ -1,22 +1,25 @@
 export type VendorData = {
-  logo?: string;
+  logo?: string | null;
   category: string;
-  sub_category_1: string;
-  sub_category_2: string;
-  sub_category_3: string;
+  sub_category_1: string | string[];
+  sub_category_2: string | string[];
+  sub_category_3: string | string[];
   description: string;
   business_name: string;
   average_project_value: string;
   number_of_employees: number;
   projects_completed: number;
-  mobile: string;
-  email: string;
+  mobile?: string;
+  email?: string;
   city: string;
   social?: {
     facebook?: string;
     instagram?: string;
     website?: string;
   };
+  address?: string;
+  started_in?: string;
+  state?: string;
 };
 
 export type ProjectData = {
@@ -41,6 +44,6 @@ export type ReviewFormObject = {
 };
 
 export type ProfessionalInfoProps = {
-  renderProfileView: boolean;
   renderProfessionalInfoView: boolean;
+  vendor_id?: number;
 };

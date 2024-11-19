@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../../constants";
@@ -11,14 +9,12 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Checkbox,
 } from "@mui/material";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { FilterAlt, Close } from "@mui/icons-material";
 import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
-import {
-  FilterItem,
-  handleCheckboxChange,
-  handleFilterChange,
-} from "./Controller";
+import { handleCheckboxChange, handleFilterChange } from "./Controller";
+import { FilterItem } from "./Types";
 
 const fetchThemes = async () => {
   const response = await axios.get(
@@ -215,7 +211,7 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
             className="font-bold text-base text-black"
             onClick={() => setFilterMenu(() => true)}
           >
-            <FilterAltIcon />
+            <FilterAlt />
           </p>
 
           <div className="lg:hidden">
@@ -246,7 +242,7 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
               <div>
                 <div className="flex items-center justify-between pr-4">
                   <h1 className="font-bold">FILTERS</h1>
-                  <CloseIcon onClick={() => setFilterMenu(false)} />
+                  <Close onClick={() => setFilterMenu(false)} />
                 </div>
                 {showFilters()}
                 <div className="flex justify-center mt-4">
