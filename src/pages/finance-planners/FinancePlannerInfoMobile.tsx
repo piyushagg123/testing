@@ -146,7 +146,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook />
+                <Facebook className="text-purple" />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -155,7 +155,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Instagram />
+                <Instagram className="text-red" />
               </a>
             )}
             {vendorData.social.website && (
@@ -164,7 +164,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNew />
+                <OpenInNew className="text-black" />
               </a>
             )}
           </div>

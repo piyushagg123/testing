@@ -155,50 +155,54 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
             );
           })}
         </div>
-        <div className="flex flex-col gap-7 pt-5">
-          <p className="font-bold text-base text-black">EXECUTION TYPE</p>
-          {executionType.map((executionType: FilterItem) => {
-            const labelValue =
-              executionType.value === "DESIGN"
-                ? constants.DESIGN
-                : executionType.value === "MATERIAL_SUPPORT"
-                ? constants.MATERIAL_SUPPORT
-                : executionType.value === "COMPLETE"
-                ? constants.COMPLETE
-                : "";
-            return (
-              <FormControlLabel
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                }}
-                className="-mb-2.5 -mt-2.5"
-                control={
-                  <Checkbox
-                    checked={selectedExecutions.has(executionType.value)}
-                    sx={{
-                      "&.Mui-checked": {
-                        color: "#ff5757",
-                      },
+        <div className="flex flex-col pt-5">
+          <p className="font-bold text-base text-black mb-[20px]">
+            EXECUTION TYPE
+          </p>
+          <div className="flex flex-col gap-7">
+            {executionType.map((executionType: FilterItem) => {
+              const labelValue =
+                executionType.value === "DESIGN"
+                  ? constants.DESIGN
+                  : executionType.value === "MATERIAL_SUPPORT"
+                  ? constants.MATERIAL_SUPPORT
+                  : executionType.value === "COMPLETE"
+                  ? constants.COMPLETE
+                  : "";
+              return (
+                <FormControlLabel
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                  }}
+                  className="-mb-2.5 -mt-2.5"
+                  control={
+                    <Checkbox
+                      checked={selectedExecutions.has(executionType.value)}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#ff5757",
+                        },
 
-                      transform: "scale(0.75)",
-                      paddingY: 0,
-                    }}
-                    onChange={(_event: any) => {
-                      handleCheckboxChange(
-                        executionType.value,
-                        selectedExecutions,
-                        setSelectedExecutions,
-                        setExecutionFilters,
-                        executionFilters
-                      );
-                    }}
-                  />
-                }
-                label={<span className="text-sm">{labelValue}</span>}
-              />
-            );
-          })}
+                        transform: "scale(0.75)",
+                        paddingY: 0,
+                      }}
+                      onChange={(_event: any) => {
+                        handleCheckboxChange(
+                          executionType.value,
+                          selectedExecutions,
+                          setSelectedExecutions,
+                          setExecutionFilters,
+                          executionFilters
+                        );
+                      }}
+                    />
+                  }
+                  label={<span className="text-sm">{labelValue}</span>}
+                />
+              );
+            })}
+          </div>
         </div>
       </>
     );

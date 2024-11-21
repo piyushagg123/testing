@@ -125,7 +125,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 textTransform: "none",
                               }}
                             >
-                              View details
+                              {isActive ? "Hide details" : "View details"}
                             </Button>
                           </div>
                         </div>

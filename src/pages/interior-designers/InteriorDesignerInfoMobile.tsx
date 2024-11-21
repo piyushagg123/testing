@@ -244,33 +244,33 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             </>
           ) : (
             <>
-              <div className="flex flex-row lg:flex-col w-full">
-                <div className="mt-[1em] w-1/2 lg:w-fit">
+              <div className="flex flex-row lg:flex-col w-full mt-[1em]">
+                <div className=" w-1/2 lg:w-fit">
                   <p className="font-bold  text-black">Typical Job Cost</p>
                   <p className="">
                     {vendorData?.average_project_value ?? "N/A"}
                   </p>
                 </div>
-                <div className="mt-[1em] w-1/2 lg:w-fit">
+                <div className=" w-1/2 lg:w-fit">
                   <p className="font-bold  text-black">Number of Employees</p>
                   <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
                 </div>
               </div>
               <div className="flex  w-full flex-row lg:flex-col mt-[1em]">
-                <div className="w-1/2 lg:w-fit mt-[1em]">
+                <div className="w-1/2 lg:w-fit ">
                   <p className="font-bold  text-black">Projects Completed</p>
                   <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
                 </div>
-                <div className=" w-1/2 lg:w-fit mt-[1em]">
+                <div className=" w-1/2 lg:w-fit ">
                   <p className="font-bold  text-black">Location</p>
                   <p className="">{vendorData?.city ?? "N/A"}</p>
                 </div>
               </div>
-              <div className="flex flex-row lg:flex-col  w-full">
+              <div className="flex flex-row lg:flex-col  w-full  mt-[1em]">
                 {(vendorData?.social?.facebook ||
                   vendorData?.social?.instagram ||
                   vendorData?.social?.website) && (
-                  <div className="w-1/2 mt-[1em]">
+                  <div className="w-1/2 ">
                     <p className="font-bold  text-black">Socials</p>
                     {vendorData.social.facebook && (
                       <a
@@ -278,7 +278,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Facebook />
+                        <Facebook className="text-purple" />
                       </a>
                     )}
                     {vendorData.social.instagram && (
@@ -287,7 +287,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Instagram />
+                        <Instagram className="text-red" />
                       </a>
                     )}
                     {vendorData.social.website && (
@@ -296,7 +296,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <OpenInNew />
+                        <OpenInNew className="text-black" />
                       </a>
                     )}
                   </div>
@@ -312,7 +312,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <p className="font-bold  text-black">Email</p>
                 <p className="">{vendorData?.email ?? "N/A"}</p>
               </div>
-              <div className="lg:hidden w-full ">
+              <div className="lg:hidden w-full  mt-[1em]">
                 <p className="font-bold  text-black">About</p>
                 <p className=" text-justify mb-[1em] rounded-md">
                   {contentPreview}

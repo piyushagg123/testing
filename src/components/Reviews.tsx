@@ -83,13 +83,17 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
   };
 
   const handleDialogSubmit = () => {
-    refetch();
+    refetchReviews();
     setSelectedReview(null);
   };
 
-  const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
+  const { data: reviews, refetch: refetchReviews } = useQuery(
+    ["reviews", id],
+    fetchReviews
+  );
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleEdit = (review: Review) => {
     setSelectedReview(review);
@@ -152,7 +156,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
         );
       }
 
-      refetch();
+      refetchReviews();
 
       setSnackbarOpen(true);
     } catch (error) {}
@@ -322,7 +326,14 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
               </div>
 
               <p className="font-bold">Customer Reviews ({reviews?.length})</p>
-              <div className="flex flex-col gap-9 justify-start w-full">
+              <div
+                className={`flex flex-col gap-9 justify-start w-full max-h-[300px] ${
+                  isHovered ? "overflow-y-auto" : "overflow-y-hidden"
+                }`}
+                style={{ scrollbarWidth: isHovered ? "thin" : "none" }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
                 {reviews?.map((review: Review) => (
                   <div className="flex items-start gap-2 justify-between">
                     <div className="flex items-start gap-2">
