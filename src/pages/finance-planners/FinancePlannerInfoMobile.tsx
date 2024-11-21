@@ -105,33 +105,43 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         </div>
       </div>
       <div className="flex  w-full flex-row lg:flex-col ">
-        <div className="w-1/2 lg:w-fit mt-[1em]">
-          <p className="font-bold  text-black">Fees type</p>
-          <p className="">{vendorData?.fees_type ?? "N/A"}</p>
+        <div className=" w-1/2">
+          <p className="font-bold  text-black"> Fees</p>
+          <p className="flex">
+            {vendorData?.fees_type && vendorData.fees_type[0] === "FIXED" && (
+              <p className="mr-1">{"₹"}</p>
+            )}
+            {vendorData?.fees ?? "N/A"}
+
+            {vendorData?.fees_type &&
+              vendorData.fees_type[0] === "PERCENTAGE" && (
+                <p className="ml-1">{"%"}</p>
+              )}
+          </p>
         </div>
-        <div className=" w-1/2 lg:w-fit mt-[1em]">
-          <p className="font-bold  text-black">Fees</p>
-          <p className="">{vendorData?.fees ?? "N/A"}</p>
+        <div className="w-1/2">
+          <p className="font-bold  text-black">Minimum investment</p>
+          <p className="">₹{vendorData?.minimum_investment ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex  w-full flex-row lg:flex-col ">
-        <div className="w-1/2 lg:w-fit mt-[1em]">
-          <p className="font-bold  text-black">Minimum investment</p>
-          <p className="">{vendorData?.minimum_investment ?? "N/A"}</p>
-        </div>
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Number of employees</p>
           <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
         </div>
-      </div>
-      <div className="flex  w-full flex-row lg:flex-col ">
         <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Number of clients</p>
           <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
         </div>
+      </div>
+      <div className="flex  w-full flex-row lg:flex-col ">
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Location</p>
           <p className="">{vendorData?.city ?? "N/A"}</p>
+        </div>
+        <div className="w-1/2 lg:w-fit">
+          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex flex-row lg:flex-col  w-full">
@@ -169,10 +179,6 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         )}
-        <div className="w-1/2 lg:w-fit">
-          <p className="font-bold text-black mt-[1em]">Contact Number</p>
-          <p className="">{vendorData?.mobile ?? "N/A"}</p>
-        </div>
       </div>
       <div className="w-full mt-[1em]">
         <p className="font-bold  text-black">Email</p>
@@ -295,7 +301,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
               </div>
             )}
-            <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+            <div id="reviews" className="mt-[20px] mb-[10px] w-[98vw] m-auto">
               <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
                 {
                   <Reviews
