@@ -1,6 +1,8 @@
 import { useState, useCallback, ChangeEvent } from "react";
-import axios from "axios";
-import constants from "../constants";
+import {
+  deleteImage,
+  uploadImage,
+} from "../controllers/interior-designers/VendorControllers";
 
 interface ProjectImagesProps {
   subCategories: string[];
@@ -54,15 +56,11 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
       formData.append("image", file);
 
       try {
-        const response = await axios.post(
-          `${constants.apiBaseUrl}/image-upload/project?project_id=${projectId}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
+        const response = await uploadImage(
+          projectId,
           formData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
+          subCategories,
+          spaceIndex
         );
         const imageName = response.data.data;
 
@@ -84,14 +82,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
       }
 
       try {
-        await axios.delete(
-          `${constants.apiBaseUrl}/image-upload/project?project_id=${projectId}&key=${imageName}&category=INTERIOR_DESIGNER&sub_category_2=${subCategories[spaceIndex]}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        await deleteImage(projectId, imageName, subCategories, spaceIndex);
 
         setSpaceTypes((prevSpaceTypes) => {
           const updatedSpaces = [...prevSpaceTypes];

@@ -13,11 +13,14 @@ import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import { ReviewDialog, Reviews } from "../../components";
 import { ProfessionalInfoProps } from "./Types";
-import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
+import {
+  fetchFinancialAdvisorDetails,
+  submitReview,
+} from "../../controllers/finance-planners/VendorControllers";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,

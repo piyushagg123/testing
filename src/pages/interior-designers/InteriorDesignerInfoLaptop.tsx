@@ -31,14 +31,14 @@ import {
 } from "@mui/icons-material";
 import { ProfessionalInfoProps, ProjectData } from "./Types";
 import {
-  fetchVendorDetails,
-  fetchVendorProjects,
-  submitReview,
-} from "./Controller";
-import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
+import {
+  fetchVendorDetails,
+  fetchVendorProjects,
+  submitReview,
+} from "../../controllers/interior-designers/VendorControllers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,

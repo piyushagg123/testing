@@ -1,6 +1,4 @@
 import { useQuery } from "react-query";
-import axios from "axios";
-import constants from "../constants";
 import { NoReviewAdded } from "../assets";
 import {
   Divider,
@@ -15,6 +13,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import { Delete, Verified, Edit, Star } from "@mui/icons-material";
 import ReviewDialog from "./ReviewDialog";
+import { deleteReview, fetchReviews } from "../controllers/ReviewControllers";
 
 interface Vendor {
   id: number;
@@ -54,40 +53,14 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
     setSnackbarOpen(false);
   };
 
-  const fetchReviews = async () => {
-    let data;
-    if (vendorType) {
-      if (id === -1) {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/vendor/auth/reviews`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        data = response.data;
-      } else {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
-        );
-        data = response.data;
-      }
-    } else {
-      const response = await axios.get(
-        `${constants.apiBaseUrl}/financial-advisor/reviews?financial_advisor_id=${id}`
-      );
-      data = response.data;
-    }
-    return data.data;
-  };
-
   const handleDialogSubmit = () => {
     refetch();
     setSelectedReview(null);
   };
 
-  const { data: reviews, refetch } = useQuery(["reviews", id], fetchReviews);
+  const { data: reviews, refetch } = useQuery(["reviews", id, vendorType], () =>
+    fetchReviews(id, vendorType)
+  );
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -132,25 +105,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
 
   const handleDelete = async (reviewId: number) => {
     try {
-      if (vendorType === "interiorDesigner") {
-        await axios.delete(
-          `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      } else {
-        await axios.delete(
-          `${constants.apiBaseUrl}/financial-advisor/review?review_id=${reviewId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      }
+      deleteReview(reviewId, vendorType);
 
       refetch();
 

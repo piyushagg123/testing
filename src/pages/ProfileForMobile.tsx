@@ -1,11 +1,10 @@
 import { Avatar, Button } from "@mui/material";
-import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
-import constants from "../constants";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/Login";
 import { deepOrange } from "@mui/material/colors";
 import { Logout, AccountCircle } from "@mui/icons-material";
+import { logOut } from "../controllers/UserControllers";
 
 const ProfileForMobile = () => {
   const authContext = useContext(AuthContext);
@@ -21,11 +20,7 @@ const ProfileForMobile = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const result = await logOut();
       if (result) {
         setLogin(false);
         localStorage.removeItem("token");

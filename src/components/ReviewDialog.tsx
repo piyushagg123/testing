@@ -13,8 +13,7 @@ import {
 } from "@mui/material";
 import { Review } from "./Reviews";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import constants from "../constants";
+import { updateReview } from "../controllers/ReviewControllers";
 
 interface ReviewDialogProps {
   reviewDialogOpen: boolean;
@@ -67,27 +66,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      if (professional === "interiorDesigner") {
-        await axios.post(
-          `${constants.apiBaseUrl}/vendor/review/update`,
-          review,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      } else {
-        await axios.post(
-          `${constants.apiBaseUrl}/financial-advisor/review/update`,
-          review,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      }
+      await updateReview(review, professional);
     } catch (error) {}
     handleReviewDialogClose();
   };

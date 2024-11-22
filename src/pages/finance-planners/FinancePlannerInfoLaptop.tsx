@@ -25,12 +25,15 @@ import constants from "../../constants";
 import { AuthContext } from "../../context/index";
 import { LoadingButton } from "@mui/lab";
 import { ProfessionalInfoProps } from "./Types";
-import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
 import { ReviewDialog, Reviews } from "../../components";
+import {
+  fetchFinancialAdvisorDetails,
+  submitReview,
+} from "../../controllers/finance-planners/VendorControllers";
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,

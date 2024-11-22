@@ -36,3 +36,8 @@ export const handleStateChange = async ({
     setLoadingCities(false);
   }
 };
+
+export const fetchStateData = async () => {
+  const { data } = await axios.get(`${constants.apiBaseUrl}/location/states`);
+  return data.data;
+};

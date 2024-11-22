@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../../constants";
 import {
@@ -15,27 +14,11 @@ import { FilterAlt, Close } from "@mui/icons-material";
 import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import { handleCheckboxChange, handleFilterChange } from "./Controller";
 import { FilterItem } from "./Types";
-
-const fetchThemes = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
-  );
-  return response.data.data.value;
-};
-
-const fetchSpaces = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
-  );
-  return response.data.data.value;
-};
-
-const fetchExecutionTypes = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
-  );
-  return response.data.data.value;
-};
+import {
+  fetchExecutionTypes,
+  fetchSpaces,
+  fetchThemes,
+} from "../../controllers/interior-designers/FilterControllers";
 
 interface FiltersProps {
   fetchVendorList: (

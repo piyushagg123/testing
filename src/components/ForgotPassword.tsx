@@ -14,10 +14,13 @@ import {
 import PropTypes from "prop-types";
 import { Input as BaseInput } from "@mui/base/Input";
 import { styled } from "@mui/system";
-import axios from "axios";
 import CryptoJS from "crypto-js";
-import constants from "../constants";
 import { Alert, LoadingButton } from "@mui/lab";
+import {
+  getOTP,
+  newPasswordUpdate,
+  validateOTP,
+} from "../controllers/UserControllers";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -280,17 +283,13 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       if (activeStep === 0) {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/user/password-reset/otp?email=${email}`
-        );
+        const response = await getOTP(email);
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setError("");
         }
       } else if (activeStep === 1) {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/user/password-reset/validate-otp?otp=${otp}&email=${email}`
-        );
+        const response = await validateOTP(otp, email);
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setAccessToken(response.data.otp_access_token);
@@ -298,15 +297,7 @@ const ForgotPassword = () => {
         }
       } else if (activeStep === 2) {
         const newPass = CryptoJS.SHA1(password).toString();
-        const response = await axios.post(
-          `${constants.apiBaseUrl}/user/password-reset/update`,
-          { password: newPass },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await newPasswordUpdate(accessToken, newPass);
         if (response.data.success) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setError("");

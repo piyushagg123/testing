@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { VendorData } from "./Types";
-import axios from "axios";
-import { uploadLogo } from "../../helpers/LogoHelpers";
-import { handleStateChange } from "../../helpers/CityHelper";
+import { uploadLogo } from "../../controllers/LogoControllers";
+import { handleStateChange } from "../../controllers/StateControllers";
+import { interiorDesignerOnboarding } from "../../controllers/interior-designers/VendorControllers";
 
 const InteriorDesignerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -103,15 +103,7 @@ const InteriorDesignerOnboarding = () => {
     };
 
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/onboard`,
-        processedFormData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await interiorDesignerOnboarding(processedFormData);
 
       localStorage.removeItem("token");
       localStorage.setItem("token", response.data.access_token);

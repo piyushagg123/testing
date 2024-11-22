@@ -20,6 +20,8 @@ import {
 import constants from "../constants";
 import { StateContext, ApiContext } from "../context";
 import { UnderMaintainence } from "../assets";
+import { interiorDesignerList } from "../controllers/interior-designers/VendorControllers";
+import { financePlannerList } from "../controllers/finance-planners/VendorControllers";
 
 interface VendorItem {
   vendor_id?: string;
@@ -79,20 +81,11 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
   ) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${constants.apiBaseUrl}/vendor/list`, {
-        params: {
-          category: "INTERIOR_DESIGNER",
-          sub_category_1: Array.from(themeFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_2: Array.from(spaceFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_3: Array.from(executionFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-        },
-      });
+      const response = await interiorDesignerList(
+        themeFilters,
+        spaceFilters,
+        executionFilters
+      );
       setFilteredItems(response.data.data);
     } catch (error) {
       setErrorInApi(true);
@@ -107,20 +100,9 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
   ) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `${constants.apiBaseUrl}/financial-advisor/advisors`,
-        {
-          params: {
-            deals: Array.from(dealFilters as Set<string>)
-              .map((option) => option.toUpperCase())
-              .join(","),
-            investment_ideology: Array.from(
-              investmentIdeologyFilters as Set<string>
-            )
-              .map((option) => option.toUpperCase())
-              .join(","),
-          },
-        }
+      const response = await financePlannerList(
+        dealFilters,
+        investmentIdeologyFilters
       );
       setFilteredItems(response.data.data);
     } catch (error) {

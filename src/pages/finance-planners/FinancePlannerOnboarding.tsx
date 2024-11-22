@@ -1,5 +1,4 @@
 import React, { FormEvent, useContext, useState, ChangeEvent } from "react";
-import axios from "axios";
 import { MultipleSelect } from "../../components";
 import {
   TextField,
@@ -13,8 +12,9 @@ import constants from "../../constants";
 import { OpenInNew, Facebook, Instagram } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { VendorData } from "./Types";
-import { uploadLogo } from "../../helpers/LogoHelpers";
-import { handleStateChange } from "../../helpers/CityHelper";
+import { uploadLogo } from "../../controllers/LogoControllers";
+import { handleStateChange } from "../../controllers/StateControllers";
+import { financePlannerOnboarding } from "../../controllers/finance-planners/VendorControllers";
 
 const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -105,15 +105,7 @@ const FinancePlannerOnboarding = () => {
     };
 
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/financial-advisor/create`,
-        processedFormData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await financePlannerOnboarding(processedFormData);
       localStorage.removeItem("token");
       localStorage.setItem("token", response.data.access_token);
 

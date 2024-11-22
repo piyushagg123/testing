@@ -1,7 +1,6 @@
 import { useState, useContext, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext, ApiContext } from "../context";
-import axios from "axios";
 import {
   Button,
   ButtonGroup,
@@ -18,9 +17,9 @@ import {
 } from "@mui/material";
 import { deepOrange, grey } from "@mui/material/colors";
 import { AccountCircle, ArrowDropDown, Logout } from "@mui/icons-material";
-import constants from "../constants";
 import { PickeleLogo } from "../assets";
 import { setDefaultUserDetails } from "../context/Login";
+import { logOut } from "../controllers/UserControllers";
 
 const Navbar: React.FC = () => {
   const apiContext = useContext(ApiContext);
@@ -100,11 +99,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const result = await axios.delete(`${constants.apiBaseUrl}/user/logout`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const result = await logOut();
       if (result) {
         setToggleProfileMenu(false);
         setLogin(false);
