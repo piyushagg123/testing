@@ -308,6 +308,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
                               rating={item.rating}
                               img={item.logo}
                               profCat={item.business_name}
+                              professional={professional}
                             />
                           </div>
                         </NavLink>
