@@ -45,7 +45,7 @@ const Professional: React.FC<ProfessionalProps> = ({
                       : "Sebi registered"
                   }
                 >
-                  <Verified sx={{ color: "green" }} />
+                  <Verified className="text-purple" />
                 </Tooltip>
               )}
             </span>
