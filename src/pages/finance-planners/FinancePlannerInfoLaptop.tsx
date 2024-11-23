@@ -32,7 +32,7 @@ import {
 import { ReviewDialog, Reviews } from "../../components";
 import {
   fetchFinancialAdvisorDetails,
-  submitReview,
+  submitFinancePlannerReview,
 } from "../../controllers/finance-planners/VendorControllers";
 
 const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
@@ -88,7 +88,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    submitReview(
+    submitFinancePlannerReview(
       event,
       professionalId!,
       () => {

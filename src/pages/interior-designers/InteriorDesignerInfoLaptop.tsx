@@ -37,7 +37,7 @@ import {
 import {
   fetchVendorDetails,
   fetchVendorProjects,
-  submitReview,
+  submitInteriorDesignerReview,
 } from "../../controllers/interior-designers/VendorControllers";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
@@ -111,7 +111,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    await submitReview(
+    await submitInteriorDesignerReview(
       event,
       professionalId!,
       () => {

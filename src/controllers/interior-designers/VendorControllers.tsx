@@ -40,7 +40,7 @@ export const interiorDesignerOnboarding = async (processedFormData: any) => {
   );
 };
 
-export const submitReview = async (
+export const submitInteriorDesignerReview = async (
   event: FormEvent<HTMLFormElement>,
   professionalId: string | number,
   onSuccess: () => void,

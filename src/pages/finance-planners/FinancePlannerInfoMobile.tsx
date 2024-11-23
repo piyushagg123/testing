@@ -19,7 +19,7 @@ import {
 } from "../../helpers/StringHelpers";
 import {
   fetchFinancialAdvisorDetails,
-  submitReview,
+  submitFinancePlannerReview,
 } from "../../controllers/finance-planners/VendorControllers";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
@@ -68,7 +68,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    submitReview(
+    submitFinancePlannerReview(
       event,
       professionalId!,
       () => {

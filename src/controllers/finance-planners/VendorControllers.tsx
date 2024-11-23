@@ -44,7 +44,7 @@ export const financePlannerOnboarding = async (processedFormData: any) => {
   );
 };
 
-export const submitReview = async (
+export const submitFinancePlannerReview = async (
   event: FormEvent<HTMLFormElement>,
   professionalId: string | number,
   onSuccess: () => void,
