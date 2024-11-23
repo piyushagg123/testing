@@ -212,7 +212,7 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
       <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
         <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
           <p
-            className="font-bold text-base text-black"
+            className="font-bold text-base text-black pl-[10px]"
             onClick={() => setFilterMenu(() => true)}
           >
             <FilterAlt />
@@ -220,7 +220,7 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
 
           <div className="lg:hidden">
             <FormControl
-              className="w-[200px] py-[10px] left-[15px]"
+              className="w-[150px] py-[10px] left-[15px]"
               sx={{ height: "40px" }}
               size="small"
             >
