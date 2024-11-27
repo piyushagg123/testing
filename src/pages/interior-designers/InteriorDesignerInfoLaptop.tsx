@@ -67,7 +67,6 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     if (projectsData && projectsData.length > 0) {
       setSelectedProject(projectsData[0]);
     }
-    console.log(vendorData);
   }, [projectsData]);
   const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
     fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
@@ -236,7 +235,14 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const professionalHeader = (
     <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] lg:w-[100%] md:w-auto mx-auto lg:mx-0">
-      <button onClick={() => setEdit((edit) => !edit)}>Edit</button>
+      <button
+        onClick={() => {
+          setEdit((edit) => !edit);
+          console.log(formData);
+        }}
+      >
+        Edit
+      </button>
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -303,53 +309,85 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED SPACES :
           </span>
-          <div className="flex flex-wrap gap-1">
-            {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_2 as string
-            )
-              ?.split(",")
-              .map((item, ind) => (
-                <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
-                  variant="outlined"
-                  key={ind}
-                  sx={{ height: "20px", fontSize: "11px" }}
-                />
-              ))}
-          </div>
+
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    sub_category_2: selected,
+                  }));
+                }}
+                maxSelection={3}
+                selectedValue={vendorData?.sub_category_2.split(",")}
+              />
+            </>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.sub_category_2 as string
+              )
+                ?.split(",")
+                .map((item, ind) => (
+                  <Chip
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    variant="outlined"
+                    key={ind}
+                    sx={{ height: "20px", fontSize: "11px" }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
           <span className="font-bold text-[11px] md:text-sm text-black">
             EXECUTION TYPE :
           </span>{" "}
-          {(vendorData?.sub_category_3 as string)
-            ?.split(",")
-            .map((item: string, ind: number) => (
-              <Chip
-                label={
-                  item === "DESIGN"
-                    ? constants.DESIGN
-                    : item === "MATERIAL_SUPPORT"
-                    ? constants.MATERIAL_SUPPORT
-                    : constants.COMPLETE
-                }
-                variant="outlined"
-                key={ind}
-                sx={{
-                  height: "20px",
-                  fontSize: "11px",
-                  maxWidth: "90vw",
-                  overflowWrap: "break-word",
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    sub_category_3: selected,
+                  }));
                 }}
+                maxSelection={1}
+                selectedValue={vendorData?.sub_category_3.split(",")}
               />
-            ))}
+            </>
+          ) : (
+            (vendorData?.sub_category_3 as string)
+              ?.split(",")
+              .map((item: string, ind: number) => (
+                <Chip
+                  label={
+                    item === "DESIGN"
+                      ? constants.DESIGN
+                      : item === "MATERIAL_SUPPORT"
+                      ? constants.MATERIAL_SUPPORT
+                      : constants.COMPLETE
+                  }
+                  variant="outlined"
+                  key={ind}
+                  sx={{
+                    height: "20px",
+                    fontSize: "11px",
+                    maxWidth: "90vw",
+                    overflowWrap: "break-word",
+                  }}
+                />
+              ))
+          )}
         </div>
       </div>
     </div>
   );
   return (
     <>
-      {console.log(vendorData?.sub_category_1.toString().split(","))}
       <div className="mt-16 px-16 flex">
         <div className="w-[60%]">
           {professionalHeader}

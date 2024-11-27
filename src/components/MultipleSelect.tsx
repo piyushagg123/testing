@@ -68,9 +68,6 @@ export default function MultipleSelect({
   }
 
   useEffect(() => {
-    console.log(initialSelectedValues);
-    console.log(options);
-
     setSelectedValues(initialSelectedValues);
   }, []);
 
@@ -93,17 +90,17 @@ export default function MultipleSelect({
 
   const selectedValuesWithIds = selectedValues.map((value) => {
     const option = options.find((option: any) => option.value === value);
-    console.log(option);
 
-    return { id: option.id, value: option.value };
+    return option ? { id: option.id, value: option.value } : null;
   });
 
-  selectedValuesWithIds.sort((a, b) => a.id - b.id);
+  selectedValuesWithIds.sort((a, b) => a!.id - b!.id);
 
   const sortedSelectedValues = selectedValuesWithIds.map((item) =>
-    removeUnderscoresAndFirstLetterCapital(item.value)
+    removeUnderscoresAndFirstLetterCapital(item?.value)
   );
 
+  // const sortedSelectedValues = selectedValuesWithIds.map((item) => item?.value);
   const MenuProps = {
     PaperProps: {
       style: {
