@@ -1,17 +1,17 @@
 export type VendorData = {
   logo?: string | null;
-  category: string;
-  sub_category_1: string | string[];
-  sub_category_2: string | string[];
-  sub_category_3: string | string[];
-  description: string;
-  business_name: string;
-  average_project_value: string;
-  number_of_employees: number;
-  projects_completed: number;
+  category?: string;
+  sub_category_1?: string | string[];
+  sub_category_2?: string | string[];
+  sub_category_3?: string | string[];
+  description?: string;
+  business_name?: string;
+  average_project_value?: string;
+  number_of_employees?: number;
+  projects_completed?: number;
   mobile?: string;
   email?: string;
-  city: string;
+  city?: string;
   social?: {
     facebook?: string;
     instagram?: string;

@@ -68,6 +68,9 @@ export default function MultipleSelect({
   }
 
   useEffect(() => {
+    console.log(initialSelectedValues);
+    console.log(options);
+
     setSelectedValues(initialSelectedValues);
   }, []);
 
@@ -90,6 +93,8 @@ export default function MultipleSelect({
 
   const selectedValuesWithIds = selectedValues.map((value) => {
     const option = options.find((option: any) => option.value === value);
+    console.log(option);
+
     return { id: option.id, value: option.value };
   });
 

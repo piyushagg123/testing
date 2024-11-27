@@ -261,6 +261,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                 <MultipleSelect
                   apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
                   maxSelection={1}
+                  // selectedValue={["DESIGN"]}
                   onChange={(selected) => {
                     setFormData((prevData) => ({
                       ...prevData,

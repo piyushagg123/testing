@@ -20,6 +20,7 @@ import {
   AddAProject,
   ProjectImages,
   Carousel,
+  MultipleSelect,
 } from "../../components";
 import {
   OpenInNew,
@@ -29,7 +30,7 @@ import {
   AddCircle,
   Close,
 } from "@mui/icons-material";
-import { ProfessionalInfoProps, ProjectData } from "./Types";
+import { ProfessionalInfoProps, ProjectData, VendorData } from "./Types";
 import {
   fetchVendorDetails,
   fetchVendorProjects,
@@ -66,6 +67,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     if (projectsData && projectsData.length > 0) {
       setSelectedProject(projectsData[0]);
     }
+    console.log(vendorData);
   }, [projectsData]);
   const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
     fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
@@ -79,6 +81,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [projectId, setProjectId] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [formData, setFormData] = useState<VendorData>();
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
@@ -217,7 +221,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         <p className="font-bold  text-black">About</p>
         <p className=" text-justify mb-[1em] rounded-md">
           {contentPreview}
-          {vendorData?.description.length! > maxVisibleLength && (
+          {vendorData?.description?.length! > maxVisibleLength && (
             <button
               onClick={handleExpandClick}
               className="text-blue-500 hover:text-blue-700 font-medium"
@@ -232,6 +236,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const professionalHeader = (
     <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:justify-start   lg:items-start gap-3 md:mt-[2em] mb-[1em] w-[93vw] lg:w-[100%] md:w-auto mx-auto lg:mx-0">
+      <button onClick={() => setEdit((edit) => !edit)}>Edit</button>
       <div className="m-auto md:m-0 flex flex-col md:justify-center items-center">
         {vendorData?.logo ? (
           <img
@@ -262,20 +267,36 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>{" "}
-          <div className="flex flex-wrap gap-1">
-            {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_1 as string
-            )
-              ?.split(",")
-              .map((item, ind) => (
-                <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
-                  variant="outlined"
-                  key={ind}
-                  sx={{ height: "20px", fontSize: "11px" }}
-                />
-              ))}
-          </div>
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    sub_category_1: selected,
+                  }));
+                }}
+                maxSelection={3}
+                selectedValue={vendorData?.sub_category_1.split(",")}
+              />
+            </>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.sub_category_1 as string
+              )
+                ?.split(",")
+                .map((item, ind) => (
+                  <Chip
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    variant="outlined"
+                    key={ind}
+                    sx={{ height: "20px", fontSize: "11px" }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
@@ -328,6 +349,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   );
   return (
     <>
+      {console.log(vendorData?.sub_category_1.toString().split(","))}
       <div className="mt-16 px-16 flex">
         <div className="w-[60%]">
           {professionalHeader}
