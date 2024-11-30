@@ -6,7 +6,7 @@ export type VendorData = {
   sub_category_3?: string | string[];
   description?: string;
   business_name?: string;
-  average_project_value?: string;
+  average_project_value?: number;
   number_of_employees?: number;
   projects_completed?: number;
   mobile?: string;

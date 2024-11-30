@@ -40,7 +40,7 @@ const InteriorDesignerOnboarding = () => {
     category: "INTERIOR_DESIGNER",
     started_in: "",
     number_of_employees: 0,
-    average_project_value: "",
+    average_project_value: 0,
     projects_completed: 0,
     city: "",
     state: "",
@@ -92,11 +92,11 @@ const InteriorDesignerOnboarding = () => {
     const processedFormData = {
       ...formData,
       number_of_employees: parseInt(
-        formData.number_of_employees.toString(),
+        formData.number_of_employees!.toString(),
         10
       ),
-      average_project_value: parseFloat(formData.average_project_value),
-      projects_completed: parseInt(formData.projects_completed.toString(), 10),
+      average_project_value: formData.average_project_value,
+      projects_completed: formData.projects_completed,
       sub_category_1: [formData.sub_category_1 as Array<string>].join(","),
       sub_category_2: [formData.sub_category_2 as Array<string>].join(","),
       sub_category_3: [formData.sub_category_3 as Array<string>].join(","),
@@ -161,15 +161,15 @@ const InteriorDesignerOnboarding = () => {
     }
 
     if (currentStep === 2) {
-      if (formData.sub_category_1.length === 0) {
+      if (formData.sub_category_1?.length === 0) {
         setError("please select your theme");
         return;
       }
-      if (formData.sub_category_2.length === 0) {
+      if (formData.sub_category_2?.length === 0) {
         setError("please select your specialized spaces");
         return;
       }
-      if (formData.sub_category_3.length === 0) {
+      if (formData.sub_category_3?.length === 0) {
         setError("please select your type of execution");
         return;
       }
@@ -277,7 +277,6 @@ const InteriorDesignerOnboarding = () => {
                     <span className="px-2">₹</span>
                     <input
                       type="number"
-                      step="0.01"
                       style={{ borderRadius: "5px", border: "none" }}
                       name="average_project_value"
                       className="w-[235px] px-2 h-[40px] outline-none"

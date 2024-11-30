@@ -94,7 +94,7 @@ export default function MultipleSelect({
     return option ? { id: option.id, value: option.value } : null;
   });
 
-  selectedValuesWithIds.sort((a, b) => a!.id - b!.id);
+  selectedValuesWithIds.sort((a, b) => a?.id - b?.id);
 
   const sortedSelectedValues = selectedValuesWithIds.map((item) =>
     removeUnderscoresAndFirstLetterCapital(item?.value)
