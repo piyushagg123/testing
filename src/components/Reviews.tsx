@@ -13,7 +13,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import { Delete, Verified, Edit, Star } from "@mui/icons-material";
 import ReviewDialog from "./ReviewDialog";
-import { deleteReview, fetchReviews } from "../controllers/ReviewControllers";
+import { deleteReview, fetchReviews } from "../controllers/ReviewController";
 
 interface Vendor {
   id: number;
@@ -105,7 +105,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
 
   const handleDelete = async (reviewId: number) => {
     try {
-      deleteReview(reviewId, vendorType);
+      await deleteReview(reviewId, vendorType);
 
       refetch();
 

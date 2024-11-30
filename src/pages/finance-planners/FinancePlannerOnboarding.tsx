@@ -12,9 +12,9 @@ import constants from "../../constants";
 import { OpenInNew, Facebook, Instagram } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { VendorData } from "./Types";
-import { uploadLogo } from "../../controllers/LogoControllers";
-import { handleStateChange } from "../../controllers/StateControllers";
-import { financePlannerOnboarding } from "../../controllers/finance-planners/VendorControllers";
+import { uploadLogo } from "../../controllers/LogoController";
+import { fetchCities } from "../../controllers/StateController";
+import { createFinancePlanner } from "../../controllers/finance-planners/VendorController";
 
 const FinancePlannerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -105,7 +105,7 @@ const FinancePlannerOnboarding = () => {
     };
 
     try {
-      const response = await financePlannerOnboarding(processedFormData);
+      const response = await createFinancePlanner(processedFormData);
       localStorage.removeItem("token");
       localStorage.setItem("token", response.data.access_token);
 
@@ -498,7 +498,7 @@ const FinancePlannerOnboarding = () => {
                   id="state-autocomplete"
                   options={state}
                   onChange={(event, value) =>
-                    handleStateChange({
+                    fetchCities({
                       event,
                       value,
                       setFormData,

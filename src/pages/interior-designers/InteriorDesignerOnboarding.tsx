@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { VendorData } from "./Types";
-import { uploadLogo } from "../../controllers/LogoControllers";
-import { handleStateChange } from "../../controllers/StateControllers";
-import { interiorDesignerOnboarding } from "../../controllers/interior-designers/VendorControllers";
+import { uploadLogo } from "../../controllers/LogoController";
+import { fetchCities } from "../../controllers/StateController";
+import { createInteriorDesigner } from "../../controllers/interior-designers/VendorController";
 
 const InteriorDesignerOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -103,7 +103,7 @@ const InteriorDesignerOnboarding = () => {
     };
 
     try {
-      const response = await interiorDesignerOnboarding(processedFormData);
+      const response = await createInteriorDesigner(processedFormData);
 
       localStorage.removeItem("token");
       localStorage.setItem("token", response.data.access_token);
@@ -417,7 +417,7 @@ const InteriorDesignerOnboarding = () => {
                   id="state-autocomplete"
                   options={state}
                   onChange={(event, value) =>
-                    handleStateChange({
+                    fetchCities({
                       event,
                       value,
                       setFormData,

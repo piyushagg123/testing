@@ -16,7 +16,7 @@ import { FilterItem } from "./Types";
 import {
   fetchDeals,
   fetchInvestmentIdeology,
-} from "../../controllers/finance-planners/FilterControllers";
+} from "../../controllers/finance-planners/FilterController";
 
 interface FiltersProps {
   fetchVendorList: (dealFilters: any, investmentIdeologyFilters: any) => void;

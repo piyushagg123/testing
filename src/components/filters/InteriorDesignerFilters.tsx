@@ -18,7 +18,7 @@ import {
   fetchExecutionTypes,
   fetchSpaces,
   fetchThemes,
-} from "../../controllers/interior-designers/FilterControllers";
+} from "../../controllers/interior-designers/FilterController";
 
 interface FiltersProps {
   fetchVendorList: (

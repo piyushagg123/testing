@@ -18,9 +18,9 @@ import CryptoJS from "crypto-js";
 import { Alert, LoadingButton } from "@mui/lab";
 import {
   getOTP,
-  newPasswordUpdate,
+  resetPassword,
   validateOTP,
-} from "../controllers/UserControllers";
+} from "../controllers/UserController";
 
 interface OTPProps {
   separator: React.ReactNode;
@@ -286,21 +286,18 @@ const ForgotPassword = () => {
         const response = await getOTP(email);
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
-          setError("");
         }
       } else if (activeStep === 1) {
         const response = await validateOTP(otp, email);
         if (response) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           setAccessToken(response.data.otp_access_token);
-          setError("");
         }
       } else if (activeStep === 2) {
-        const newPass = CryptoJS.SHA1(password).toString();
-        const response = await newPasswordUpdate(accessToken, newPass);
+        const newPassword = CryptoJS.SHA1(password).toString();
+        const response = await resetPassword(accessToken, newPassword);
         if (response.data.success) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
-          setError("");
           setSuccess("Password updated successfully");
         }
         handleReset();

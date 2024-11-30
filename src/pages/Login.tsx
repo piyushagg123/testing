@@ -7,7 +7,7 @@ import CryptoJS from "crypto-js";
 import { LabelImportant } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
 import { LoadingButton } from "@mui/lab";
-import { fetchUserData, login } from "../controllers/UserControllers";
+import { fetchUserData, login } from "../controllers/UserController";
 
 const Login = () => {
   const authContext = useContext(AuthContext);

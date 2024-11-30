@@ -1,7 +1,7 @@
 import axios from "axios";
 import constants from "../constants";
 
-export const handleStateChange = async ({
+export const fetchCities = async ({
   event: _event,
   value,
   setFormData,

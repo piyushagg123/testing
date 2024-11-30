@@ -19,7 +19,7 @@ import { deepOrange, grey } from "@mui/material/colors";
 import { AccountCircle, ArrowDropDown, Logout } from "@mui/icons-material";
 import { PickeleLogo } from "../assets";
 import { setDefaultUserDetails } from "../context/Login";
-import { logOut } from "../controllers/UserControllers";
+import { logOut } from "../controllers/UserController";
 
 const Navbar: React.FC = () => {
   const apiContext = useContext(ApiContext);

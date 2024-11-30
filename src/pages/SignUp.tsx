@@ -16,7 +16,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerOnboarding from "./finance-planners/FinancePlannerOnboarding";
 import { LoadingButton } from "@mui/lab";
-import { fetchUserData, signUp } from "../controllers/UserControllers";
+import { fetchUserData, signUp } from "../controllers/UserController";
 
 interface FormObject {
   [key: string]: string;

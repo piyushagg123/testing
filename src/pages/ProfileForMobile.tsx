@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/Login";
 import { deepOrange } from "@mui/material/colors";
 import { Logout, AccountCircle } from "@mui/icons-material";
-import { logOut } from "../controllers/UserControllers";
+import { logOut } from "../controllers/UserController";
 
 const ProfileForMobile = () => {
   const authContext = useContext(AuthContext);

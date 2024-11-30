@@ -1,6 +1,8 @@
 import axios from "axios";
 import constants from "../constants";
 import { Review } from "../components/Reviews";
+import { ReviewFormObject as FinancePlannerReviewFormObject } from "../pages/finance-planners/Types";
+import { ReviewFormObject as InteriorDesignerReviewFormObject } from "../pages/interior-designers/Types";
 
 export const fetchReviews = async (id: number, vendorType?: string) => {
   let data;
@@ -69,5 +71,71 @@ export const deleteReview = async (reviewId: number, vendorType?: string) => {
         },
       }
     );
+  }
+};
+
+export const submitFinancePlannerReview = async (
+  formData: any,
+  professionalId: string | number,
+  onSuccess: () => void,
+  onError: (errorMessage: string) => void
+) => {
+  const formObject: FinancePlannerReviewFormObject = {
+    financial_advisor_id: Number(professionalId),
+  };
+
+  formData.forEach((value: any, key: any) => {
+    if (key === "rating") {
+      formObject[key as "rating"] = Number(value);
+    } else {
+      formObject[key as "body"] = value.toString();
+    }
+  });
+
+  try {
+    await axios.post(
+      `${constants.apiBaseUrl}/financial-advisor/review`,
+      formObject,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    onSuccess();
+  } catch (error: any) {
+    onError(error.response?.data?.debug_info || "Error submitting review");
+  }
+};
+
+export const submitInteriorDesignerReview = async (
+  formData: any,
+  professionalId: string | number,
+  onSuccess: () => void,
+  onError: (errorMessage: string) => void
+) => {
+  const formObject: InteriorDesignerReviewFormObject = {
+    vendor_id: Number(professionalId),
+  };
+
+  formData.forEach((value: any, key: any) => {
+    if (key.startsWith("rating_")) {
+      (formObject[
+        key as "rating_quality" | "rating_execution" | "rating_behaviour"
+      ] as number) = Number(value);
+    } else {
+      formObject[key as "body"] = value.toString();
+    }
+  });
+
+  try {
+    await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    onSuccess();
+  } catch (error: any) {
+    onError(error.response?.data?.debug_info || "Error submitting review");
   }
 };

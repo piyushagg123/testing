@@ -9,7 +9,7 @@ interface ProfessionalProps {
   img: string;
   rating: number;
   about: string;
-  profCat: string;
+  professionalCategory: string;
   professional: string;
 }
 
@@ -17,7 +17,7 @@ const Professional: React.FC<ProfessionalProps> = ({
   img,
   rating,
   about,
-  profCat,
+  professionalCategory,
   professional,
 }) => {
   return (
@@ -34,7 +34,9 @@ const Professional: React.FC<ProfessionalProps> = ({
         <div className=" ">
           <div className="flex flex-col gap-1 items-start">
             <div className="flex gap-2 items-center">
-              <span className="font-bold text-base text-black">{profCat} </span>
+              <span className="font-bold text-base text-black">
+                {professionalCategory}{" "}
+              </span>
               <span className="flex items-center text-sm text-blue-400">
                 <LocationOn sx={{ fontSize: "14px" }} /> {"Gurugram"},
                 {"Haryana"}

@@ -1,10 +1,6 @@
 import axios from "axios";
 import constants from "../../constants";
-import {
-  ReviewFormObject,
-  VendorData,
-} from "../../pages/finance-planners/Types";
-import { FormEvent } from "react";
+import { VendorData } from "../../pages/finance-planners/Types";
 
 export const fetchFinancialAdvisorDetails = async (id: string) => {
   let data;
@@ -32,7 +28,7 @@ export const fetchFinancialAdvisorDetails = async (id: string) => {
   return data.data as VendorData;
 };
 
-export const financePlannerOnboarding = async (processedFormData: any) => {
+export const createFinancePlanner = async (processedFormData: any) => {
   return await axios.post(
     `${constants.apiBaseUrl}/financial-advisor/create`,
     processedFormData,
@@ -42,45 +38,6 @@ export const financePlannerOnboarding = async (processedFormData: any) => {
       },
     }
   );
-};
-
-export const submitFinancePlannerReview = async (
-  event: FormEvent<HTMLFormElement>,
-  professionalId: string | number,
-  onSuccess: () => void,
-  onError: (errorMessage: string) => void
-) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.currentTarget);
-  const formObject: ReviewFormObject = {
-    financial_advisor_id: Number(professionalId),
-  };
-
-  formData.forEach((value, key) => {
-    if (key === "rating") {
-      formObject[key as "rating"] = Number(value);
-    } else {
-      formObject[key as "body"] = value.toString();
-    }
-  });
-
-  try {
-    await axios.post(
-      `${constants.apiBaseUrl}/financial-advisor/review`,
-      formObject,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    onSuccess();
-  } catch (error: any) {
-    onError(error.response?.data?.debug_info || "Error submitting review");
-  }
-
-  window.location.reload();
 };
 
 export const financePlannerList = async (

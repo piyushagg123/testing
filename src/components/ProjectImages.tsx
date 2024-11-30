@@ -1,8 +1,8 @@
 import { useState, useCallback, ChangeEvent } from "react";
 import {
-  deleteImage,
-  uploadImage,
-} from "../controllers/interior-designers/VendorControllers";
+  deleteProjectImage,
+  uploadProjectImage,
+} from "../controllers/interior-designers/VendorController";
 
 interface ProjectImagesProps {
   subCategories: string[];
@@ -56,7 +56,7 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
       formData.append("image", file);
 
       try {
-        const response = await uploadImage(
+        const response = await uploadProjectImage(
           projectId,
           formData,
           subCategories,
@@ -82,7 +82,12 @@ const ProjectImages: React.FC<ProjectImagesProps> = ({
       }
 
       try {
-        await deleteImage(projectId, imageName, subCategories, spaceIndex);
+        await deleteProjectImage(
+          projectId,
+          imageName,
+          subCategories,
+          spaceIndex
+        );
 
         setSpaceTypes((prevSpaceTypes) => {
           const updatedSpaces = [...prevSpaceTypes];

@@ -11,8 +11,8 @@ import constants from "../constants";
 import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
 import { StateContext } from "../context";
-import { handleStateChange } from "../controllers/StateControllers";
-import { AddProject } from "../controllers/interior-designers/AddAProjectControllers";
+import { fetchCities } from "../controllers/StateController";
+import { AddProject } from "../controllers/interior-designers/AddAProjectController";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -274,7 +274,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                     id="state-autocomplete"
                     options={state}
                     onChange={(event, value) =>
-                      handleStateChange({
+                      fetchCities({
                         event,
                         value,
                         setFormData,

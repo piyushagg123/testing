@@ -28,13 +28,13 @@ export const validateOTP = async (otp: string, email: string) => {
   );
 };
 
-export const newPasswordUpdate = async (
+export const resetPassword = async (
   accessToken: string,
-  newPass: string
+  newPassword: string
 ) => {
   return await axios.post(
     `${constants.apiBaseUrl}/user/password-reset/update`,
-    { password: newPass },
+    { password: newPassword },
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,

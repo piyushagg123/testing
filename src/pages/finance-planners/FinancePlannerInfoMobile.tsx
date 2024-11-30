@@ -17,10 +17,8 @@ import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
-import {
-  fetchFinancialAdvisorDetails,
-  submitFinancePlannerReview,
-} from "../../controllers/finance-planners/VendorControllers";
+import { fetchFinancialAdvisorDetails } from "../../controllers/finance-planners/VendorController";
+import { submitFinancePlannerReview } from "../../controllers/ReviewController";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
@@ -68,8 +66,10 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
     submitFinancePlannerReview(
-      event,
+      formData,
       professionalId!,
       () => {
         setReviewDialogOpen(false);
@@ -80,6 +80,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       }
     );
     setLoading(false);
+    window.location.reload();
   };
 
   const [expanded, setExpanded] = useState(false);

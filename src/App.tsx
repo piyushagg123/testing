@@ -20,8 +20,8 @@ import InteriorDesignerInfoLaptop from "./pages/interior-designers/InteriorDesig
 import { useMediaQuery, useTheme } from "@mui/material";
 import { ApiContext } from "./context/Api";
 import FinancePlannerInfoLaptop from "./pages/finance-planners/FinancePlannerInfoLaptop";
-import { fetchUserData } from "./controllers/UserControllers";
-import { fetchStateData } from "./controllers/StateControllers";
+import { fetchUserData } from "./controllers/UserController";
+import { fetchStateData } from "./controllers/StateController";
 
 const App: React.FC = () => {
   const authContext = useContext(AuthContext);

@@ -1,11 +1,6 @@
 import axios from "axios";
 import constants from "../../constants";
-import {
-  ProjectData,
-  ReviewFormObject,
-  VendorData,
-} from "../../pages/interior-designers/Types";
-import { FormEvent } from "react";
+import { ProjectData, VendorData } from "../../pages/interior-designers/Types";
 
 export const fetchVendorDetails = async (id: string) => {
   let data;
@@ -28,7 +23,7 @@ export const fetchVendorProjects = async (id: string) => {
   return data.data as ProjectData[];
 };
 
-export const interiorDesignerOnboarding = async (processedFormData: any) => {
+export const createInteriorDesigner = async (processedFormData: any) => {
   return await axios.post(
     `${constants.apiBaseUrl}/vendor/onboard`,
     processedFormData,
@@ -40,43 +35,7 @@ export const interiorDesignerOnboarding = async (processedFormData: any) => {
   );
 };
 
-export const submitInteriorDesignerReview = async (
-  event: FormEvent<HTMLFormElement>,
-  professionalId: string | number,
-  onSuccess: () => void,
-  onError: (errorMessage: string) => void
-) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.currentTarget);
-  const formObject: ReviewFormObject = {
-    vendor_id: Number(professionalId),
-  };
-
-  formData.forEach((value, key) => {
-    if (key.startsWith("rating_")) {
-      (formObject[
-        key as "rating_quality" | "rating_execution" | "rating_behaviour"
-      ] as number) = Number(value);
-    } else {
-      formObject[key as "body"] = value.toString();
-    }
-  });
-
-  try {
-    await axios.post(`${constants.apiBaseUrl}/vendor/review`, formObject, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    onSuccess();
-  } catch (error: any) {
-    onError(error.response?.data?.debug_info || "Error submitting review");
-  }
-  window.location.reload();
-};
-
-export const interiorDesignerList = async (
+export const fetchInteriorDesignerList = async (
   themeFilters: Set<any>,
   spaceFilters: Set<any>,
   executionFilters: Set<any>
@@ -97,7 +56,7 @@ export const interiorDesignerList = async (
   });
 };
 
-export const uploadImage = async (
+export const uploadProjectImage = async (
   projectId: number,
   formData: any,
   subCategories: any,
@@ -115,7 +74,7 @@ export const uploadImage = async (
   );
 };
 
-export const deleteImage = async (
+export const deleteProjectImage = async (
   projectId: number,
   imageName: any,
   subCategories: any,

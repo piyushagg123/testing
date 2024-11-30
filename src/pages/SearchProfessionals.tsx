@@ -20,8 +20,8 @@ import {
 import constants from "../constants";
 import { StateContext, ApiContext } from "../context";
 import { UnderMaintainence } from "../assets";
-import { interiorDesignerList } from "../controllers/interior-designers/VendorControllers";
-import { financePlannerList } from "../controllers/finance-planners/VendorControllers";
+import { fetchInteriorDesignerList } from "../controllers/interior-designers/VendorController";
+import { financePlannerList } from "../controllers/finance-planners/VendorController";
 
 interface VendorItem {
   vendor_id?: string;
@@ -74,14 +74,14 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchInteriorDesignerList = async (
+  const fetchInteriorDesigners = async (
     themeFilters = new Set(),
     spaceFilters = new Set(),
     executionFilters = new Set()
   ) => {
     setIsLoading(true);
     try {
-      const response = await interiorDesignerList(
+      const response = await fetchInteriorDesignerList(
         themeFilters,
         spaceFilters,
         executionFilters
@@ -229,7 +229,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               {professional === "interiorDesigners" ? (
                 <InteriorDesignerFilters
-                  fetchVendorList={fetchInteriorDesignerList}
+                  fetchVendorList={fetchInteriorDesigners}
                 />
               ) : (
                 <FinancePlannerFilters
@@ -307,7 +307,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
                               about={item.description}
                               rating={item.rating}
                               img={item.logo}
-                              profCat={item.business_name}
+                              professionalCategory={item.business_name}
                               professional={professional}
                             />
                           </div>

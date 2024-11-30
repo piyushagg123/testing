@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import constants from "../constants";
 import { removeUnderscoresAndFirstLetterCapital } from "../helpers/StringHelpers";
-import { fetchOptions } from "../controllers/MultipleSelectControllers";
+import { fetchOptions } from "../controllers/MultipleSelectController";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;

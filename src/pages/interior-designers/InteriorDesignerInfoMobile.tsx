@@ -42,8 +42,8 @@ import {
 import {
   fetchVendorDetails,
   fetchVendorProjects,
-  submitInteriorDesignerReview,
-} from "../../controllers/interior-designers/VendorControllers";
+} from "../../controllers/interior-designers/VendorController";
+import { submitInteriorDesignerReview } from "../../controllers/ReviewController";
 
 const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   vendor_id,
@@ -143,8 +143,11 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
+
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
     await submitInteriorDesignerReview(
-      event,
+      formData,
       professionalId!,
       () => {
         setReviewDialogOpen(false);
@@ -155,6 +158,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
       }
     );
     setLoading(false);
+    window.location.reload();
   };
 
   useEffect(() => {

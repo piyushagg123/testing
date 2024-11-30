@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Review } from "./Reviews";
 import { useEffect, useState } from "react";
-import { updateReview } from "../controllers/ReviewControllers";
+import { updateReview } from "../controllers/ReviewController";
 
 interface ReviewDialogProps {
   reviewDialogOpen: boolean;
