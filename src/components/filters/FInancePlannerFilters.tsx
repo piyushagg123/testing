@@ -115,13 +115,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
                         }
                       />
                     }
-                    label={
-                      <span className="text-sm w-fit">
-                        {deal === "Complete Wesalth Management"
-                          ? "Wealth management"
-                          : deal}
-                      </span>
-                    }
+                    label={<span className="text-sm w-fit">{deal}</span>}
                   />
                 </>
               );
@@ -129,9 +123,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
           </div>
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <p className="font-bold text-base text-darkgrey">
-            INVESTMENT IDEOLOGY
-          </p>
+          <p className="font-bold text-base text-black">INVESTMENT IDEOLOGY</p>
           {formattedInvestmentIdeology.map((investmentIdeology: string) => {
             return (
               <FormControlLabel
