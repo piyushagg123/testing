@@ -2,7 +2,7 @@ import axios from "axios";
 import constants from "../../constants";
 import { ProjectData, VendorData } from "../../pages/interior-designers/Types";
 
-export const fetchVendorDetails = async (id: string) => {
+export const fetchInteriorDesigner = async (id: string) => {
   let data;
   const response = await axios.get(
     `${constants.apiBaseUrl}/vendor/details?vendor_id=${id}`
@@ -12,7 +12,7 @@ export const fetchVendorDetails = async (id: string) => {
   return data.data as VendorData;
 };
 
-export const fetchVendorProjects = async (id: string) => {
+export const fetchInteriorDesignerProjects = async (id: string) => {
   let data;
 
   const response = await axios.get(

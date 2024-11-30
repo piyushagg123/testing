@@ -35,8 +35,8 @@ import {
   truncateText,
 } from "../../helpers/StringHelpers";
 import {
-  fetchVendorDetails,
-  fetchVendorProjects,
+  fetchInteriorDesigner,
+  fetchInteriorDesignerProjects,
 } from "../../controllers/interior-designers/VendorController";
 import { submitInteriorDesignerReview } from "../../controllers/ReviewController";
 
@@ -59,7 +59,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const { data: projectsData } = useQuery(
     ["vendorProjects", professionalId],
     () =>
-      fetchVendorProjects(vendor_id ? vendor_id.toString() : professionalId!)
+      fetchInteriorDesignerProjects(
+        vendor_id ? vendor_id.toString() : professionalId!
+      )
   );
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     }
   }, [projectsData]);
   const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
-    fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
+    fetchInteriorDesigner(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -111,7 +113,6 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     await submitInteriorDesignerReview(

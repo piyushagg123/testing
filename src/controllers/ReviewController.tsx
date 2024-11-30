@@ -6,7 +6,7 @@ import { ReviewFormObject as InteriorDesignerReviewFormObject } from "../pages/i
 
 export const fetchReviews = async (id: number, vendorType?: string) => {
   let data;
-  if (vendorType) {
+  if (vendorType === "interiorDesigner") {
     if (id === -1) {
       const response = await axios.get(
         `${constants.apiBaseUrl}/vendor/auth/reviews`,
