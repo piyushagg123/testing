@@ -466,18 +466,32 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
               </div>
               <div className="lg:hidden w-full ">
                 <p className="font-bold  text-black">About</p>
-                <p className=" text-justify mb-[1em] rounded-md">
-                  {contentPreview}
-                  {isMobile &&
-                    vendorData?.description?.length! > maxVisibleLength && (
-                      <button
-                        onClick={handleExpandClick}
-                        className="text-blue-500 hover:text-blue-700 font-medium"
-                      >
-                        {expanded ? "Read less" : "Read More"}
-                      </button>
-                    )}
-                </p>
+                {edit ? (
+                  <input
+                    type="text"
+                    name="description"
+                    defaultValue={vendorData?.description}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                  />
+                ) : (
+                  <p className=" text-justify mb-[1em] rounded-md">
+                    {contentPreview}
+                    {isMobile &&
+                      vendorData?.description?.length! > maxVisibleLength && (
+                        <button
+                          onClick={handleExpandClick}
+                          className="text-blue-500 hover:text-blue-700 font-medium"
+                        >
+                          {expanded ? "Read less" : "Read More"}
+                        </button>
+                      )}
+                  </p>
+                )}
               </div>
             </>
           )}
