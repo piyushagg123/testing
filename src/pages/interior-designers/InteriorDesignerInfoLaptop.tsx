@@ -874,7 +874,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           open={locationChangeDialogOpen}
           onClose={() => handleDialogClose}
         >
-          <DialogTitle sx={{ width: "524px" }}>Edit the location</DialogTitle>
+          <DialogTitle sx={{ width: "450px" }}>Edit the location</DialogTitle>
 
           <DialogContent
             className="flex flex-col gap-4  items-center w-fit justify-between"
@@ -966,7 +966,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
             <DialogActions
               sx={{
-                width: "524px",
+                width: "408px",
                 display: "flex",
                 justifyContent: "flex-end",
                 gap: "10px",

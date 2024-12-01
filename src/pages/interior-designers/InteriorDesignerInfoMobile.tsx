@@ -12,6 +12,14 @@ import {
   useMediaQuery,
   useTheme,
   Chip,
+  Tooltip,
+  DialogActions,
+  TextField,
+  CircularProgress,
+  Autocomplete,
+  DialogTitle,
+  styled,
+  Popper,
 } from "@mui/material";
 import {
   Reviews,
@@ -19,6 +27,7 @@ import {
   AddAProject,
   ProjectImages,
   Carousel,
+  MultipleSelect,
 } from "../../components";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -33,8 +42,10 @@ import {
   StarBorder,
   Facebook,
   Instagram,
+  SaveOutlined,
+  Edit,
 } from "@mui/icons-material";
-import { ProfessionalInfoProps, ProjectData } from "./Types";
+import { ProfessionalInfoProps, ProjectData, VendorData } from "./Types";
 import {
   fetchVendorDetails,
   fetchVendorProjects,
@@ -44,6 +55,15 @@ import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
+import axios from "axios";
+import { StateContext } from "../../context";
+
+const CustomPopper = styled(Popper)(() => ({
+  "& .MuiAutocomplete-listbox": {
+    maxHeight: "120px",
+    overflowY: "auto",
+  },
+}));
 
 const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   vendor_id,
@@ -51,17 +71,23 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
 }) => {
   const authContext = useContext(AuthContext);
 
-  if (authContext === undefined) {
+  const stateContext = useContext(StateContext);
+
+  if (authContext === undefined || stateContext === undefined) {
     return;
   }
   const { login, userDetails } = authContext;
+  const { state } = stateContext;
   const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<ProjectData>();
   const [value, setValue] = useState("1");
-  const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", professionalId],
-    () => fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
+  const {
+    data: vendorData,
+    isLoading: isVendorLoading,
+    refetch: refetchInteriorDesignerDetails,
+  } = useQuery(["vendorDetails", professionalId], () =>
+    fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
@@ -78,6 +104,16 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [projectId, setProjectId] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const [updateVendorSnackbarOpen, setUpdateVendorSnackbarOpen] =
+    useState(false);
+  const [edit, setEdit] = useState(false);
+  const [formData, setFormData] = useState<VendorData>();
+  const [cities, setCities] = useState<string[]>([]);
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [locationChangeDialogOpen, setLocationChangeDialogOpen] =
+    useState(false);
+  const [updateMessage, setUpdateMessage] = useState("");
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
@@ -88,6 +124,20 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
   const [expandedAbout, setExpandedAbout] = useState(false);
   const handleExpandAboutClick = () => {
     setExpandedAbout(!expandedAbout);
+  };
+
+  const handleStateChange = async (value: string | undefined) => {
+    if (!value) return;
+    setLoadingCities(true);
+    if (value) {
+      try {
+        const response = await axios.get(
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
+        );
+        setCities(response.data.data);
+      } catch (error) {}
+    }
+    setLoadingCities(false);
   };
 
   const handleReviewDialogOpen = () => {
@@ -114,7 +164,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
     };
   }, [selectedProject]);
 
-  const handleReviewDialogClose = (
+  const handleDialogClose = (
     _?: React.SyntheticEvent<Element, Event>,
     reason?: "backdropClick" | "escapeKeyDown"
   ) => {
@@ -122,6 +172,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
       return;
     }
     setReviewDialogOpen(false);
+    setLocationChangeDialogOpen(false);
     setReviewError("");
   };
 
@@ -157,6 +208,52 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
     setLoading(false);
   };
 
+  const handleButtonClick = async () => {
+    if (edit) {
+      await handl({
+        ...formData,
+        sub_category_1: Array.isArray(formData?.sub_category_1)
+          ? formData.sub_category_1.toString()
+          : vendorData?.sub_category_1,
+        sub_category_2: Array.isArray(formData?.sub_category_2)
+          ? formData.sub_category_2.toString()
+          : vendorData?.sub_category_2,
+        sub_category_3: Array.isArray(formData?.sub_category_3)
+          ? formData.sub_category_3.toString()
+          : vendorData?.sub_category_3,
+      });
+      refetchInteriorDesignerDetails();
+      setUpdateVendorSnackbarOpen(true);
+    }
+
+    setEdit((prevEdit) => !prevEdit);
+  };
+
+  const handl = async (data: VendorData) => {
+    if (data.state) {
+      if (!data.city) {
+        setUpdateMessage("Please select a city as well to update the state");
+        setFormData(undefined);
+        return;
+      }
+    }
+    try {
+      const response = await axios.post(
+        `${constants.apiBaseUrl}/vendor/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("Update successful", response);
+      setUpdateMessage("vendor updated successfully!");
+    } catch (error) {
+      console.error("Error updating vendor data", error);
+    }
+    setFormData(undefined);
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -248,22 +345,77 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <div className="mt-[1em] w-1/2 lg:w-fit">
                   <p className="font-bold  text-black">Typical Job Cost</p>
                   <p className="">
-                    {vendorData?.average_project_value ?? "N/A"}
+                    {edit ? (
+                      <input
+                        type="text"
+                        name="average_project_value"
+                        defaultValue={vendorData?.average_project_value}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            average_project_value: Number(e.target.value),
+                          }))
+                        }
+                      />
+                    ) : (
+                      vendorData?.average_project_value ?? "N/A"
+                    )}
                   </p>
                 </div>
                 <div className="mt-[1em] w-1/2 lg:w-fit">
                   <p className="font-bold  text-black">Number of Employees</p>
-                  <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+                  <p className="">
+                    {edit ? (
+                      <input
+                        type="text"
+                        name="number_of_employees"
+                        defaultValue={vendorData?.number_of_employees}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            number_of_employees: Number(e.target.value),
+                          }))
+                        }
+                      />
+                    ) : (
+                      vendorData?.number_of_employees ?? "N/A"
+                    )}
+                  </p>
                 </div>
               </div>
               <div className="flex  w-full flex-row lg:flex-col mt-[1em]">
                 <div className="w-1/2 lg:w-fit mt-[1em]">
                   <p className="font-bold  text-black">Projects Completed</p>
-                  <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
+                  <p className="">
+                    {edit ? (
+                      <input
+                        type="text"
+                        name="projects_completed"
+                        defaultValue={vendorData?.projects_completed}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            projects_completed: Number(e.target.value),
+                          }))
+                        }
+                      />
+                    ) : (
+                      vendorData?.projects_completed ?? "N/A"
+                    )}
+                  </p>
                 </div>
                 <div className=" w-1/2 lg:w-fit mt-[1em]">
                   <p className="font-bold  text-black">Location</p>
-                  <p className="">{vendorData?.city ?? "N/A"}</p>
+                  <p className="">
+                    {edit ? (
+                      <button onClick={() => setLocationChangeDialogOpen(true)}>
+                        {formData?.city ? formData.city : vendorData?.city},{" "}
+                        {formData?.state ? formData.state : vendorData?.state}
+                      </button>
+                    ) : (
+                      vendorData?.city ?? "N/A"
+                    )}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-row lg:flex-col  w-full">
@@ -350,82 +502,201 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
         )}
-        <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {removeUnderscoresAndFirstLetterCapital(
-            vendorData?.business_name ?? "Unknown Business"
+        <div className="flex gap-2 items-center">
+          {edit ? (
+            <input
+              type="text"
+              name="business_name"
+              defaultValue={vendorData?.business_name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  business_name: e.target.value,
+                }))
+              }
+            />
+          ) : (
+            <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.business_name ?? "Unknown Business"
+              )}
+            </p>
           )}
-        </p>
+          {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
+            <button
+              onClick={handleButtonClick}
+              className="flex items-center justify-center"
+            >
+              {edit ? (
+                <Tooltip
+                  title="Save changes"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <SaveOutlined sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  title="Edit profile"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <Edit sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </button>
+          )}
+        </div>
       </div>
       <div className="w-[93vw] md:w-auto">
-        <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {removeUnderscoresAndFirstLetterCapital(
-            vendorData?.business_name ?? "Unknown Business"
-          )}
-        </p>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
           </span>
-          <div className="flex flex-wrap gap-1">
-            {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_1 as string
-            )
-              ?.split(",")
-              .map((item, ind) => (
-                <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
-                  variant="outlined"
-                  key={ind}
-                  sx={{ height: "20px", fontSize: "11px" }}
-                />
-              ))}
-          </div>
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    sub_category_1: selected,
+                  }));
+                }}
+                maxSelection={3}
+                selectedValue={
+                  Array.isArray(vendorData?.sub_category_1)
+                    ? vendorData?.sub_category_1
+                    : vendorData?.sub_category_1?.split(",") || []
+                }
+              />
+            </>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.sub_category_1 as string
+              )
+                ?.split(",")
+                .map((item, ind) => (
+                  <Chip
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    variant="outlined"
+                    key={ind}
+                    sx={{ height: "20px", fontSize: "11px" }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED SPACES :
           </span>
-          <div className="flex flex-wrap gap-1">
-            {removeUnderscoresAndFirstLetterCapital(
-              vendorData?.sub_category_2 as string
-            )
-              ?.split(",")
-              .map((item, ind) => (
-                <Chip
-                  label={item.charAt(0).toUpperCase() + item.slice(1)}
-                  variant="outlined"
-                  key={ind}
-                  sx={{ height: "20px", fontSize: "11px" }}
-                />
-              ))}
-          </div>
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    sub_category_2: selected,
+                  }));
+                }}
+                maxSelection={3}
+                selectedValue={
+                  Array.isArray(vendorData?.sub_category_2)
+                    ? vendorData?.sub_category_2
+                    : vendorData?.sub_category_2?.split(",") || []
+                }
+              />
+            </>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.sub_category_2 as string
+              )
+                ?.split(",")
+                .map((item, ind) => (
+                  <Chip
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    variant="outlined"
+                    key={ind}
+                    sx={{ height: "20px", fontSize: "11px" }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
           <span className="font-bold text-[11px] md:text-sm text-black">
             EXECUTION TYPE :
           </span>
-          {(vendorData?.sub_category_3 as string)
-            ?.split(",")
-            .map((item: string, ind: number) => (
-              <Chip
-                label={
-                  item === "DESIGN"
-                    ? constants.DESIGN
-                    : item === "MATERIAL_SUPPORT"
-                    ? constants.MATERIAL_SUPPORT
-                    : constants.COMPLETE
-                }
-                variant="outlined"
-                key={ind}
-                sx={{
-                  height: "20px",
-                  fontSize: "11px",
-                  maxWidth: "90vw",
-                  overflowWrap: "break-word",
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    sub_category_3: selected,
+                  }));
                 }}
+                maxSelection={1}
+                selectedValue={
+                  Array.isArray(vendorData?.sub_category_3)
+                    ? vendorData?.sub_category_3
+                    : vendorData?.sub_category_3?.split(",") || []
+                }
               />
-            ))}
+            </>
+          ) : (
+            (vendorData?.sub_category_3 as string)
+              ?.split(",")
+              .map((item: string, ind: number) => (
+                <Chip
+                  label={
+                    item === "DESIGN"
+                      ? constants.DESIGN
+                      : item === "MATERIAL_SUPPORT"
+                      ? constants.MATERIAL_SUPPORT
+                      : constants.COMPLETE
+                  }
+                  variant="outlined"
+                  key={ind}
+                  sx={{
+                    height: "20px",
+                    fontSize: "11px",
+                    maxWidth: "90vw",
+                    overflowWrap: "break-word",
+                  }}
+                />
+              ))
+          )}
         </div>
       </div>
     </div>
@@ -795,7 +1066,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           )}
         </div>
         <ReviewDialog
-          handleReviewDialogClose={handleReviewDialogClose}
+          handleReviewDialogClose={handleDialogClose}
           handleReviewSubmit={handleReviewSubmit}
           loading={loading}
           reviewDialogOpen={reviewDialogOpen}
@@ -831,11 +1102,143 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
         </Dialog>
       </div>
 
+      <Dialog open={locationChangeDialogOpen} onClose={() => handleDialogClose}>
+        <DialogTitle sx={{}}>Edit the location</DialogTitle>
+
+        <DialogContent
+          className="flex flex-col gap-4  items-center w-fit justify-between"
+          // sx={{ height: "190px" }}
+        >
+          <div className="flex gap-2 flex-col ">
+            <div className="flex flex-col">
+              <p className="text-sm">Select your state</p>
+              <Autocomplete
+                disablePortal
+                value={formData?.state ? formData?.state : vendorData?.state}
+                size="small"
+                id="city-autocomplete"
+                options={state}
+                onChange={(_event, value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    state: value ?? "",
+                  }));
+                }}
+                sx={{
+                  borderRadius: "5px",
+                  border: "solid 0.3px",
+                  width: "200px",
+                }}
+                PopperComponent={CustomPopper}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingCities ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="flex flex-col mb-14">
+              <p className="text-sm">Select your city</p>
+              <Autocomplete
+                onFocus={() =>
+                  handleStateChange(
+                    formData?.state ? formData.state : vendorData?.state
+                  )
+                }
+                disablePortal
+                value={formData?.city ? formData?.city : vendorData?.city}
+                size="small"
+                id="city-autocomplete"
+                options={cities}
+                onChange={(_event, value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    city: value ?? "",
+                  }));
+                }}
+                sx={{
+                  borderRadius: "5px",
+                  border: "solid 0.3px",
+                  width: "200px",
+                }}
+                PopperComponent={CustomPopper}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingCities ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </div>
+          </div>
+
+          <DialogActions
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              gap: "10px",
+              padding: 0,
+              width: 200,
+            }}
+          >
+            <Button
+              onClick={handleDialogClose}
+              variant="outlined"
+              style={{ borderColor: "#000", color: "#000" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              style={{
+                background: "#8c52ff",
+                height: "36px",
+                width: "85px",
+              }}
+              onClick={() => setLocationChangeDialogOpen(false)}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={snackbarOpen}
         onClose={handleSnackbarClose}
         message="Review submitted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={updateVendorSnackbarOpen}
+        onClose={handleSnackbarClose}
+        message={updateMessage}
         key="bottom-center"
         autoHideDuration={3000}
       />
