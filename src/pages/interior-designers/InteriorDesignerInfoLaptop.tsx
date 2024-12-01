@@ -12,11 +12,16 @@ import {
   TextField,
   Autocomplete,
   CircularProgress,
+  Tooltip,
+  DialogTitle,
+  DialogActions,
+  styled,
+  Popper,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import constants from "../../constants";
-import { AuthContext } from "../../context";
+import { AuthContext, StateContext } from "../../context";
 import {
   Reviews,
   ReviewDialog,
@@ -32,6 +37,8 @@ import {
   Instagram,
   AddCircle,
   Close,
+  Edit,
+  SaveOutlined,
 } from "@mui/icons-material";
 import { ProfessionalInfoProps, ProjectData, VendorData } from "./Types";
 import {
@@ -45,16 +52,25 @@ import {
 } from "../../helpers/StringHelpers";
 import axios from "axios";
 
+const CustomPopper = styled(Popper)(() => ({
+  "& .MuiAutocomplete-listbox": {
+    maxHeight: "120px",
+    overflowY: "auto",
+  },
+}));
+
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
   vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
+  const stateContext = useContext(StateContext);
 
-  if (authContext === undefined) {
+  if (authContext === undefined || stateContext === undefined) {
     return;
   }
   const { login, userDetails } = authContext;
+  const { state } = stateContext;
   const { professionalId } = useParams();
 
   const [selectedProject, setSelectedProject] = useState<
@@ -72,9 +88,10 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       setSelectedProject(projectsData[0]);
     }
   }, [projectsData]);
-  const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
-    fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
-  );
+  const { data: vendorData, refetch: refetchInteriorDesignerDetails } =
+    useQuery(["vendorDetails", professionalId], () =>
+      fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
+    );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewError, setReviewError] = useState("");
@@ -83,11 +100,17 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [projectId, setProjectId] = useState<number>(0);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [reviewSubmitSnackbarOpen, setReviewSubmitSnackbarOpen] =
+    useState(false);
+  const [updateVendorSnackbarOpen, setUpdateVendorSnackbarOpen] =
+    useState(false);
   const [edit, setEdit] = useState(false);
   const [formData, setFormData] = useState<VendorData>();
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
+  const [locationChangeDialogOpen, setLocationChangeDialogOpen] =
+    useState(false);
+  const [updateMessage, setUpdateMessage] = useState("");
   const handleClose = () => {
     setOpen(false);
     setIsSubmitted(false);
@@ -100,7 +123,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   };
 
   const handleStateChange = async (value: string | undefined) => {
-    // setLoadingCities(true);
+    if (!value) return;
+    setLoadingCities(true);
     if (value) {
       try {
         const response = await axios.get(
@@ -109,14 +133,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         setCities(response.data.data);
       } catch (error) {}
     }
-    // setLoadingCities(false);
+    setLoadingCities(false);
   };
-
-  useEffect(() => {
-    handleStateChange(vendorData?.state);
-  }, []);
-
-  const handleReviewDialogClose = (
+  const handleDialogClose = (
     _?: React.SyntheticEvent<Element, Event>,
     reason?: "backdropClick" | "escapeKeyDown"
   ) => {
@@ -124,6 +143,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       return;
     }
     setReviewDialogOpen(false);
+    setLocationChangeDialogOpen(false);
     setReviewError("");
   };
 
@@ -132,7 +152,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   };
 
   const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    setReviewSubmitSnackbarOpen(false);
+    setUpdateVendorSnackbarOpen(false);
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -142,7 +163,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       professionalId!,
       () => {
         setReviewDialogOpen(false);
-        setSnackbarOpen(true);
+        setReviewSubmitSnackbarOpen(true);
       },
       (errorMessage) => {
         setReviewError(errorMessage);
@@ -187,13 +208,22 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           ? formData.sub_category_3.toString()
           : vendorData?.sub_category_3,
       });
-      window.location.reload();
+      // window.location.reload();
+      refetchInteriorDesignerDetails();
+      setUpdateVendorSnackbarOpen(true);
     }
 
     setEdit((prevEdit) => !prevEdit);
   };
 
   const handl = async (data: VendorData) => {
+    if (data.state) {
+      if (!data.city) {
+        setUpdateMessage("Please select a city as well to update the state");
+        setFormData(undefined);
+        return;
+      }
+    }
     try {
       const response = await axios.post(
         `${constants.apiBaseUrl}/vendor/update`,
@@ -205,9 +235,11 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         }
       );
       console.log("Update successful", response);
+      setUpdateMessage("vendor updated successfully!");
     } catch (error) {
       console.error("Error updating vendor data", error);
     }
+    setFormData(undefined);
   };
 
   const professionalCard = (
@@ -280,39 +312,10 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           <p className="font-bold  text-black">Location</p>
 
           {edit ? (
-            <Autocomplete
-              disablePortal
-              value={formData?.city ? formData?.city : vendorData?.city}
-              size="small"
-              id="city-autocomplete"
-              options={cities}
-              onChange={(_event, value) => {
-                setFormData((prevData) => ({
-                  ...prevData,
-                  city: value ?? "",
-                }));
-              }}
-              sx={{
-                borderRadius: "5px",
-                border: "solid 0.3px",
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {loadingCities ? (
-                          <CircularProgress color="inherit" size={20} />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
-              )}
-            />
+            <button onClick={() => setLocationChangeDialogOpen(true)}>
+              {formData?.city ? formData.city : vendorData?.city},{" "}
+              {formData?.state ? formData.state : vendorData?.state}
+            </button>
           ) : (
             <p className="">{vendorData?.city ?? "N/A"}</p>
           )}
@@ -364,17 +367,31 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       </div>
       <div className=" w-full ">
         <p className="font-bold  text-black">About</p>
-        <p className=" text-justify mb-[1em] rounded-md">
-          {contentPreview}
-          {vendorData?.description?.length! > maxVisibleLength && (
-            <button
-              onClick={handleExpandClick}
-              className="text-blue-500 hover:text-blue-700 font-medium"
-            >
-              {expanded ? "Read less" : "Read More"}
-            </button>
-          )}
-        </p>
+        {edit ? (
+          <input
+            type="text"
+            name="description"
+            defaultValue={vendorData?.description}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          <p className=" text-justify mb-[1em] rounded-md">
+            {contentPreview}
+            {vendorData?.description?.length! > maxVisibleLength && (
+              <button
+                onClick={handleExpandClick}
+                className="text-blue-500 hover:text-blue-700 font-medium"
+              >
+                {expanded ? "Read less" : "Read More"}
+              </button>
+            )}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -397,7 +414,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         )}
       </div>
       <div className="w-[93vw] md:w-auto">
-        <div className="flex gap-4">
+        <div className="flex gap-1 items-center ">
           <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
             {edit ? (
               <input
@@ -418,8 +435,51 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
             )}
           </p>
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
-            <button onClick={handleButtonClick}>
-              {edit ? "Save" : "Edit"}
+            <button
+              onClick={handleButtonClick}
+              className="flex items-center justify-center"
+            >
+              {edit ? (
+                <Tooltip
+                  title="Save changes"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <SaveOutlined sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  title="Edit profile"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <Edit sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </button>
           )}
         </div>
@@ -775,7 +835,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         </div>
 
         <ReviewDialog
-          handleReviewDialogClose={handleReviewDialogClose}
+          handleReviewDialogClose={handleDialogClose}
           handleReviewSubmit={handleReviewSubmit}
           loading={loading}
           reviewDialogOpen={reviewDialogOpen}
@@ -810,11 +870,146 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </DialogContent>
         </Dialog>
 
+        <Dialog
+          open={locationChangeDialogOpen}
+          onClose={() => handleDialogClose}
+        >
+          <DialogTitle sx={{ width: "524px" }}>Edit the location</DialogTitle>
+
+          <DialogContent
+            className="flex flex-col gap-4  items-center w-fit justify-between"
+            sx={{ height: "190px" }}
+          >
+            <div className="flex gap-2 ">
+              <div className="flex flex-col">
+                <p className="text-sm">Select your state</p>
+                <Autocomplete
+                  disablePortal
+                  value={formData?.state ? formData?.state : vendorData?.state}
+                  size="small"
+                  id="city-autocomplete"
+                  options={state}
+                  onChange={(_event, value) => {
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      state: value ?? "",
+                    }));
+                  }}
+                  sx={{
+                    borderRadius: "5px",
+                    border: "solid 0.3px",
+                    width: "200px",
+                  }}
+                  PopperComponent={CustomPopper}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loadingCities ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex flex-col">
+                <p className="text-sm">Select your city</p>
+                <Autocomplete
+                  onFocus={() =>
+                    handleStateChange(
+                      formData?.state ? formData.state : vendorData?.state
+                    )
+                  }
+                  disablePortal
+                  value={formData?.city ? formData?.city : vendorData?.city}
+                  size="small"
+                  id="city-autocomplete"
+                  options={cities}
+                  onChange={(_event, value) => {
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      city: value ?? "",
+                    }));
+                  }}
+                  sx={{
+                    borderRadius: "5px",
+                    border: "solid 0.3px",
+                    width: "200px",
+                  }}
+                  PopperComponent={CustomPopper}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loadingCities ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            <DialogActions
+              sx={{
+                width: "524px",
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                padding: 0,
+              }}
+            >
+              <Button
+                onClick={handleDialogClose}
+                variant="outlined"
+                style={{ borderColor: "#000", color: "#000" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                style={{
+                  background: "#8c52ff",
+                  height: "36px",
+                  width: "85px",
+                }}
+                onClick={() => setLocationChangeDialogOpen(false)}
+              >
+                Submit
+              </Button>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
+
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          open={snackbarOpen}
+          open={reviewSubmitSnackbarOpen}
           onClose={handleSnackbarClose}
           message="Review submitted successfully!"
+          key="bottom-center"
+          autoHideDuration={3000}
+        />
+
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={updateVendorSnackbarOpen}
+          onClose={handleSnackbarClose}
+          message={updateMessage}
           key="bottom-center"
           autoHideDuration={3000}
         />
