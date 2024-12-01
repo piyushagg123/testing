@@ -317,7 +317,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                 <p className=" text-justify mb-[1em] rounded-md">
                   {contentPreview}
                   {isMobile &&
-                    vendorData?.description.length! > maxVisibleLength && (
+                    vendorData?.description?.length! > maxVisibleLength && (
                       <button
                         onClick={handleExpandClick}
                         className="text-blue-500 hover:text-blue-700 font-medium"
@@ -529,7 +529,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                       <p className="text-sm md:text-base text-justify mb-[1em]">
                         {contentPreview}
                         {isMobile &&
-                          vendorData?.description.length! >
+                          vendorData?.description?.length! >
                             maxVisibleLength && (
                             <button
                               onClick={handleExpandClick}
