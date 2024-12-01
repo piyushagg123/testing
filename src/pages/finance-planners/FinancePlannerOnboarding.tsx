@@ -94,14 +94,11 @@ const FinancePlannerOnboarding = () => {
         ","
       ),
       fees_type: [formData.fees_type as Array<string>].join(","),
-      aum_handled: parseFloat(formData.aum_handled.toString()),
-      minimum_investment: parseFloat(formData.minimum_investment.toString()),
-      number_of_clients: parseInt(formData.number_of_clients.toString(), 10),
-      number_of_employees: parseInt(
-        formData.number_of_employees.toString(),
-        10
-      ),
-      fees: parseInt(formData.fees.toString(), 10),
+      aum_handled: formData.aum_handled,
+      minimum_investment: formData.minimum_investment,
+      number_of_clients: formData.number_of_clients,
+      number_of_employees: formData?.number_of_employees,
+      fees: formData.fees,
     };
 
     try {
@@ -163,15 +160,15 @@ const FinancePlannerOnboarding = () => {
     }
 
     if (currentStep === 2) {
-      if (formData.deals.length === 0) {
+      if (formData.deals?.length === 0) {
         setError("please select the deals you provide");
         return;
       }
-      if (formData.investment_ideology.length === 0) {
+      if (formData.investment_ideology?.length === 0) {
         setError("please select your investment ideology");
         return;
       }
-      if (formData.fees_type.length === 0) {
+      if (formData.fees_type?.length === 0) {
         setError("please select your fees type");
         return;
       }
@@ -180,7 +177,11 @@ const FinancePlannerOnboarding = () => {
         return;
       }
 
-      if (formData.fees_type[0] === "PERCENTAGE") {
+      if (
+        formData.fees_type &&
+        Array.isArray(formData.fees_type) &&
+        formData.fees_type[0] === "PERCENTAGE"
+      ) {
         if (formData.fees > 100) {
           setError("Please enter a correct percentage");
           return;
@@ -447,9 +448,11 @@ const FinancePlannerOnboarding = () => {
               <label className="flex flex-col lg:flex-row justify-start lg:justify-between">
                 <p className="text-base">Fees</p>
                 <div className="w-[206.67px] h-[40px] flex items-center border border-black rounded">
-                  {formData.fees_type[0] === "FIXED" && (
-                    <span className="ml-1">₹</span>
-                  )}
+                  {formData?.fees_type &&
+                    Array.isArray(formData.fees_type) &&
+                    formData.fees_type[0] === "FIXED" && (
+                      <span className="ml-1">₹</span>
+                    )}
                   <input
                     type="number"
                     name="fees"
@@ -458,9 +461,11 @@ const FinancePlannerOnboarding = () => {
                     onChange={handleChange}
                     required
                   />
-                  {formData.fees_type[0] === "PERCENTAGE" && (
-                    <span className="mr-1">%</span>
-                  )}
+                  {formData.fees_type &&
+                    Array.isArray(formData.fees_type) &&
+                    formData.fees_type[0] === "PERCENTAGE" && (
+                      <span className="mr-1">%</span>
+                    )}
                 </div>
               </label>
               <div className="flex gap-2 justify-end  mt-[1em]">
