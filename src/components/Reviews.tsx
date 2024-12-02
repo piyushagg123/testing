@@ -1,6 +1,4 @@
 import { useQuery } from "react-query";
-import axios from "axios";
-import constants from "../constants";
 import { NoReviewAdded } from "../assets";
 import {
   Divider,
@@ -15,6 +13,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/Login";
 import { Delete, Verified, Edit, Star } from "@mui/icons-material";
 import ReviewDialog from "./ReviewDialog";
+import { deleteReview, fetchReviews } from "../controllers/ReviewController";
 
 interface Vendor {
   id: number;
@@ -54,46 +53,17 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
     setSnackbarOpen(false);
   };
 
-  const fetchReviews = async () => {
-    let data;
-    if (vendorType) {
-      if (id === -1) {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/vendor/auth/reviews`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        data = response.data;
-      } else {
-        const response = await axios.get(
-          `${constants.apiBaseUrl}/vendor/reviews?vendor_id=${id}`
-        );
-        data = response.data;
-      }
-    } else {
-      const response = await axios.get(
-        `${constants.apiBaseUrl}/financial-advisor/reviews?financial_advisor_id=${id}`
-      );
-      data = response.data;
-    }
-    return data.data;
-  };
-
   const handleDialogSubmit = () => {
     refetchReviews();
     setSelectedReview(null);
   };
 
   const { data: reviews, refetch: refetchReviews } = useQuery(
-    ["reviews", id],
-    fetchReviews
+    ["reviews", id, vendorType],
+    () => fetchReviews(id, vendorType)
   );
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleEdit = (review: Review) => {
     setSelectedReview(review);
@@ -136,25 +106,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
 
   const handleDelete = async (reviewId: number) => {
     try {
-      if (vendorType === "interiorDesigner") {
-        await axios.delete(
-          `${constants.apiBaseUrl}/vendor/review?review_id=${reviewId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      } else {
-        await axios.delete(
-          `${constants.apiBaseUrl}/financial-advisor/review?review_id=${reviewId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-      }
+      await deleteReview(reviewId, vendorType);
 
       refetchReviews();
 
@@ -327,13 +279,8 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
 
               <p className="font-bold">Customer Reviews ({reviews?.length})</p>
               <div
-                className={`flex flex-col gap-9 justify-start w-full max-h-[300px] ${
-                  isHovered ? "overflow-y-auto" : "overflow-y-hidden"
-                }`}
-                // remove ishovered from state
-                style={{ scrollbarWidth: isHovered ? "thin" : "none" }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                className="group flex flex-col gap-9 justify-start w-full max-h-[300px] overflow-hidden hover:overflow-auto"
+                style={{ scrollbarWidth: "thin" }}
               >
                 {reviews?.map((review: Review) => (
                   <div className="flex items-start gap-2 justify-between">

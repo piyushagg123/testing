@@ -13,11 +13,12 @@ import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import { ReviewDialog, Reviews } from "../../components";
 import { ProfessionalInfoProps } from "./Types";
-import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
+import { fetchFinancialAdvisorDetails } from "../../controllers/finance-planners/VendorController";
+import { submitFinancePlannerReview } from "../../controllers/ReviewController";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
@@ -65,8 +66,10 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    submitReview(
-      event,
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    submitFinancePlannerReview(
+      formData,
       professionalId!,
       () => {
         setReviewDialogOpen(false);
@@ -77,6 +80,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       }
     );
     setLoading(false);
+    window.location.reload();
   };
 
   const [expanded, setExpanded] = useState(false);

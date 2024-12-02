@@ -9,7 +9,7 @@ interface ProfessionalProps {
   img: string;
   rating: number;
   about: string;
-  profCat: string;
+  professionalCategory: string;
   isVerified: boolean;
   professional: string;
 }
@@ -18,7 +18,7 @@ const Professional: React.FC<ProfessionalProps> = ({
   img,
   rating,
   about,
-  profCat,
+  professionalCategory,
   isVerified,
   professional,
 }) => {
@@ -36,7 +36,7 @@ const Professional: React.FC<ProfessionalProps> = ({
         <div className=" ">
           <div className="flex flex-col gap-1 items-start">
             <span className="font-bold text-base text-black flex items-center gap-2">
-              {profCat}
+              {professionalCategory}
               {isVerified && (
                 <Tooltip
                   title={

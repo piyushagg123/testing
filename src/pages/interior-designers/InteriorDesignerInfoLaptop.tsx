@@ -31,14 +31,14 @@ import {
 } from "@mui/icons-material";
 import { ProfessionalInfoProps, ProjectData } from "./Types";
 import {
-  fetchVendorDetails,
-  fetchVendorProjects,
-  submitReview,
-} from "./Controller";
-import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
+import {
+  fetchInteriorDesigner,
+  fetchInteriorDesignerProjects,
+} from "../../controllers/interior-designers/VendorController";
+import { submitInteriorDesignerReview } from "../../controllers/ReviewController";
 
 const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
@@ -59,7 +59,9 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
     ["vendorProjects", professionalId],
     () =>
-      fetchVendorProjects(vendor_id ? vendor_id.toString() : professionalId!)
+      fetchInteriorDesignerProjects(
+        vendor_id ? vendor_id.toString() : professionalId!
+      )
   );
 
   useEffect(() => {
@@ -69,7 +71,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   }, [projectsData]);
   const { data: vendorData, isLoading: isVendorLoading } = useQuery(
     ["vendorDetails", professionalId],
-    () => fetchVendorDetails(vendor_id ? vendor_id.toString() : professionalId!)
+    () =>
+      fetchInteriorDesigner(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -113,8 +116,10 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    await submitReview(
-      event,
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    await submitInteriorDesignerReview(
+      formData,
       professionalId!,
       () => {
         setReviewDialogOpen(false);
@@ -125,6 +130,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       }
     );
     setLoading(false);
+    window.location.reload();
   };
 
   useEffect(() => {

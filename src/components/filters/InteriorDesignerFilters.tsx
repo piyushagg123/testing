@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useQuery } from "react-query";
 import constants from "../../constants";
 import {
@@ -15,27 +14,11 @@ import { FilterAlt, Close } from "@mui/icons-material";
 import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import { handleCheckboxChange, handleFilterChange } from "./Controller";
 import { FilterItem } from "./Types";
-
-const fetchThemes = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory1/list?category=INTERIOR_DESIGNER`
-  );
-  return response.data.data.value;
-};
-
-const fetchSpaces = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory2/list?category=INTERIOR_DESIGNER`
-  );
-  return response.data.data.value;
-};
-
-const fetchExecutionTypes = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/category/subcategory3/list?category=INTERIOR_DESIGNER`
-  );
-  return response.data.data.value;
-};
+import {
+  fetchExecutionTypes,
+  fetchSpaces,
+  fetchThemes,
+} from "../../controllers/interior-designers/FilterController";
 
 interface FiltersProps {
   fetchVendorList: (
@@ -212,7 +195,7 @@ const InteriorDesignerFilters: React.FC<FiltersProps> = ({
       <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
         <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
           <p
-            className="font-bold text-base text-black pl-[10px]"
+            className="font-bold text-base text-black pl-[10px] lg:pl-0"
             onClick={() => setFilterMenu(() => true)}
           >
             <FilterAlt />

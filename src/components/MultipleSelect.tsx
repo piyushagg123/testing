@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
 import {
   Checkbox,
   useMediaQuery,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import constants from "../constants";
 import { removeUnderscoresAndFirstLetterCapital } from "../helpers/StringHelpers";
+import { fetchOptions } from "../controllers/MultipleSelectController";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -25,12 +25,6 @@ function getStyles(value: string, selectedValues: string[], theme: any) {
         : theme.typography.fontWeightMedium,
   };
 }
-
-const fetchOptions = async (apiEndpoint: string) => {
-  const response = await axios.get(apiEndpoint);
-
-  return response.data.data.value;
-};
 
 interface MultipleSelectProps {
   apiEndpoint?: string;
