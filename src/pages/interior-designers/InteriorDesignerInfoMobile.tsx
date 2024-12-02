@@ -521,7 +521,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
         )}
-        <div className="flex gap-2 items-center">
+        <div className="flex md:hidden gap-2 items-center ">
           {edit ? (
             <input
               type="text"
@@ -593,7 +593,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
         </div>
       </div>
       <div className="w-[93vw] md:w-auto">
-        <div className="flex gap-2 items-center">
+        <div className="hidden md:flex gap-2 items-center">
           {edit ? (
             <input
               type="text"
