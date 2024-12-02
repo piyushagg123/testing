@@ -457,7 +457,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                           state={item.state}
                           theme={item.sub_category_1}
                           showProjectDetails={true}
-                          isActive={item === selectedProject}
+                          isSelected={item === selectedProject}
                         />
                       </div>
                     ))}

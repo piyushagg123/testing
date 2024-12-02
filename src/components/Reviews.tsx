@@ -330,6 +330,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
                 className={`flex flex-col gap-9 justify-start w-full max-h-[300px] ${
                   isHovered ? "overflow-y-auto" : "overflow-y-hidden"
                 }`}
+                // remove ishovered from state
                 style={{ scrollbarWidth: isHovered ? "thin" : "none" }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
