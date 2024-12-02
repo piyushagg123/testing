@@ -1,5 +1,4 @@
 import { FormEvent, useContext, useState } from "react";
-import axios from "axios";
 import { MultipleSelect, ProjectImages } from "./index";
 import {
   TextField,
@@ -12,7 +11,8 @@ import constants from "../constants";
 import spacesData from "./Spaces";
 import { LoadingButton } from "@mui/lab";
 import { StateContext } from "../context";
-import { handleStateChange } from "../helpers/CityHelper";
+import { fetchCities } from "../controllers/StateController";
+import { AddProject } from "../controllers/interior-designers/AddAProjectController";
 
 interface AddAProjectProps {
   setProjectId: (id: number) => void;
@@ -120,15 +120,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/vendor/project`,
-        processedFormData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await AddProject(processedFormData);
       setProjectId(response.data.data.project_id);
       setSelectedSubCategories(formData.sub_category_2);
       setIsSubmitted(true);
@@ -282,7 +274,7 @@ const AddAProject: React.FC<AddAProjectProps> = ({
                     id="state-autocomplete"
                     options={state}
                     onChange={(event, value) =>
-                      handleStateChange({
+                      fetchCities({
                         event,
                         value,
                         setFormData,

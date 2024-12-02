@@ -1,7 +1,6 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
-import axios from "axios";
 import { AuthContext } from "../context/Login";
 import CryptoJS from "crypto-js";
 import InteriorDesignerOnboarding from "./interior-designers/InteriorDesignerOnboarding";
@@ -14,10 +13,10 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import constants from "../constants";
 import { jwtDecode } from "jwt-decode";
 import FinancePlannerOnboarding from "./finance-planners/FinancePlannerOnboarding";
 import { LoadingButton } from "@mui/lab";
+import { fetchUserData, signUp } from "../controllers/UserController";
 
 interface FormObject {
   [key: string]: string;
@@ -115,24 +114,14 @@ const SignUp: React.FC<SignupProps> = ({ joinAsPro }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/user/register`,
-        formObject
-      );
+      const response = await signUp(formObject);
 
       localStorage.setItem("token", response.data.access_token);
 
-      const user_data = await axios.get(
-        `${constants.apiBaseUrl}/user/details`,
-        {
-          headers: {
-            Authorization: `Bearer ${response.data.access_token}`,
-          },
-        }
-      );
+      const user_data = await fetchUserData();
       const decodedJWT = jwtDecode(response.data.access_token);
       const combinedData = {
-        ...user_data.data.data,
+        ...user_data,
         ...decodedJWT,
       };
       setUserDetails(combinedData);

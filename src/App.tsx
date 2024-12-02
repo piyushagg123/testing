@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useQuery } from "react-query";
-import axios from "axios";
 import Navbar from "./components/Navbar";
 import SearchProfessionals from "./pages/SearchProfessionals";
 import SignUp from "./pages/SignUp";
@@ -10,7 +9,6 @@ import Login from "./pages/Login";
 import Error from "./pages/Error";
 import { AuthContext } from "./context/Login";
 import { StateContext } from "./context/State";
-import constants from "./constants";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/AboutUs";
@@ -22,26 +20,8 @@ import InteriorDesignerInfoLaptop from "./pages/interior-designers/InteriorDesig
 import { useMediaQuery, useTheme } from "@mui/material";
 import { ApiContext } from "./context/Api";
 import FinancePlannerInfoLaptop from "./pages/finance-planners/FinancePlannerInfoLaptop";
-
-const fetchUserData = async () => {
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    const { data } = await axios.get(`${constants.apiBaseUrl}/user/details`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return data.data;
-  } else {
-    throw Error();
-  }
-};
-
-const fetchStateData = async () => {
-  const { data } = await axios.get(`${constants.apiBaseUrl}/location/states`);
-  return data.data;
-};
+import { fetchUserData } from "./controllers/UserController";
+import { fetchStateData } from "./controllers/StateController";
 
 const App: React.FC = () => {
   const authContext = useContext(AuthContext);

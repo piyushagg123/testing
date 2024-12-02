@@ -3,12 +3,11 @@ import { ForgotPassword } from "../components";
 import { Alert, TextField } from "@mui/material";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context";
-import axios from "axios";
 import CryptoJS from "crypto-js";
-import constants from "../constants";
 import { LabelImportant } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
 import { LoadingButton } from "@mui/lab";
+import { fetchUserData, login } from "../controllers/UserController";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
@@ -71,24 +70,12 @@ const Login = () => {
     data.password = CryptoJS.SHA1(password).toString();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/user/login`,
-        data
-      );
-
+      const response = await login(data);
       localStorage.setItem("token", response.data.access_token);
-      const user_data = await axios.get(
-        `${constants.apiBaseUrl}/user/details`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
+      const user_data = await fetchUserData();
       const decodedJWT = jwtDecode(localStorage.getItem("token")!);
       const combinedData = {
-        ...user_data.data.data,
+        ...user_data,
         ...decodedJWT,
       };
       setUserDetails(combinedData);

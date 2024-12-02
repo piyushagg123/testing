@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useQuery } from "react-query";
-import constants from "../../constants";
 import {
   Button,
   FormControl,
@@ -15,22 +13,10 @@ import { FilterAlt, Close } from "@mui/icons-material";
 import { removeUnderscoresAndFirstLetterCapital } from "../../helpers/StringHelpers";
 import { handleCheckboxChange, handleFilterChange } from "./Controller";
 import { FilterItem } from "./Types";
-
-const fetchDeals = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/deals`
-  );
-
-  return response.data.data;
-};
-
-const fetchInvestmentIdeology = async () => {
-  const response = await axios.get(
-    `${constants.apiBaseUrl}/financial-advisor/investment-ideology`
-  );
-
-  return response.data.data;
-};
+import {
+  fetchDeals,
+  fetchInvestmentIdeology,
+} from "../../controllers/finance-planners/FilterController";
 
 interface FiltersProps {
   fetchVendorList: (dealFilters: any, investmentIdeologyFilters: any) => void;
