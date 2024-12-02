@@ -8,7 +8,7 @@ export interface VendorData {
   aum_handled?: number;
   sebi_registered?: boolean;
   minimum_investment?: number;
-  description: string;
+  description?: string;
   business_name?: string;
   number_of_employees?: number;
   mobile?: string;

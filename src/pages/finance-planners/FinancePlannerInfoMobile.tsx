@@ -5,34 +5,69 @@ import {
   StarBorder,
   Facebook,
   Instagram,
+  SaveOutlined,
+  Edit,
 } from "@mui/icons-material";
-import { Chip, Button, Snackbar } from "@mui/material";
+import {
+  Chip,
+  Button,
+  Snackbar,
+  Tooltip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Autocomplete,
+  TextField,
+  CircularProgress,
+  DialogActions,
+  Popper,
+  styled,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
-import { ReviewDialog, Reviews } from "../../components";
-import { ProfessionalInfoProps } from "./Types";
+import { MultipleSelect, ReviewDialog, Reviews } from "../../components";
+import { ProfessionalInfoProps, VendorData } from "./Types";
 import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
 } from "../../helpers/StringHelpers";
+import axios from "axios";
+import { StateContext } from "../../context";
+
+const CustomPopper = styled(Popper)(() => ({
+  "& .MuiAutocomplete-listbox": {
+    maxHeight: "120px",
+    overflowY: "auto",
+  },
+}));
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
+  vendor_id,
 }) => {
   const authContext = useContext(AuthContext);
 
-  if (authContext === undefined) {
+  const stateContext = useContext(StateContext);
+
+  if (authContext === undefined || stateContext === undefined) {
     return;
   }
   const { login, userDetails } = authContext;
+  const { state } = stateContext;
   const { professionalId } = useParams();
 
-  const { data: vendorData, isLoading: isVendorLoading } = useQuery(
-    ["vendorDetails", professionalId],
-    () => fetchFinancialAdvisorDetails(professionalId!)
+  const {
+    data: vendorData,
+    isLoading: isVendorLoading,
+    refetch: refetchFinancePlannerDetails,
+  } = useQuery(["vendorDetails", professionalId], () =>
+    fetchFinancialAdvisorDetails(
+      vendor_id ? vendor_id.toString() : professionalId!
+    )
   );
 
   useEffect(() => {
@@ -44,23 +79,100 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  const [updateVendorSnackbarOpen, setUpdateVendorSnackbarOpen] =
+    useState(false);
+  const [edit, setEdit] = useState(false);
+  const [formData, setFormData] = useState<VendorData>();
+  const [cities, setCities] = useState<string[]>([]);
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [locationChangeDialogOpen, setLocationChangeDialogOpen] =
+    useState(false);
+  const [feesChangeDialogOpen, setFeesChangeDialogOpen] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState("");
+
   const handleReviewDialogOpen = () => {
     setReviewDialogOpen(true);
   };
 
-  const handleReviewDialogClose = (
+  const handleStateChange = async (value: string | undefined) => {
+    if (!value) return;
+    setLoadingCities(true);
+    if (value) {
+      try {
+        const response = await axios.get(
+          `${constants.apiBaseUrl}/location/cities?state=${value}`
+        );
+        setCities(response.data.data);
+      } catch (error) {}
+    }
+    setLoadingCities(false);
+  };
+
+  const handl = async (data: VendorData) => {
+    if (data.state) {
+      if (!data.city) {
+        setUpdateMessage("Please select a city as well to update the state");
+        setFormData(undefined);
+        return;
+      }
+    }
+    try {
+      const response = await axios.post(
+        `${constants.apiBaseUrl}/financial-advisor/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("Update successful", response);
+      setUpdateMessage("vendor updated successfully!");
+    } catch (error) {
+      console.error("Error updating vendor data", error);
+    }
+    setFormData(undefined);
+  };
+
+  const handleDialogClose = (
     _?: React.SyntheticEvent<Element, Event>,
     reason?: "backdropClick" | "escapeKeyDown"
   ) => {
     if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
       return;
     }
-    setReviewDialogOpen(false);
+    setLocationChangeDialogOpen(false);
+    setFeesChangeDialogOpen(false);
     setReviewError("");
+  };
+
+  const handleButtonClick = async () => {
+    if (edit) {
+      await handl({
+        ...formData,
+        investment_ideology: Array.isArray(formData?.investment_ideology)
+          ? formData.investment_ideology.toString()
+          : vendorData?.investment_ideology?.toString(),
+        deals: Array.isArray(formData?.deals)
+          ? formData.deals.toString()
+          : vendorData?.deals?.toString(),
+        fees_type: Array.isArray(formData?.fees_type)
+          ? formData.fees_type.toString()
+          : vendorData?.fees_type?.toString(),
+        // sub_category_3: Array.isArray(formData?.sub_category_3)
+        //   ? formData.sub_category_3.toString()
+        //   : vendorData?.sub_category_3,
+      });
+      refetchFinancePlannerDetails();
+      setUpdateVendorSnackbarOpen(true);
+    }
+
+    setEdit((prevEdit) => !prevEdit);
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    setUpdateVendorSnackbarOpen(false);
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -97,41 +209,134 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       <div className="flex flex-row lg:flex-col w-full">
         <div className="mt-[1em] lg:mt-0 w-1/2 lg:w-fit">
           <p className="font-bold  text-black">AUM handled</p>
-          <p className="">{vendorData?.aum_handled ?? "N/A"}</p>
+          {edit ? (
+            <input
+              type="number"
+              name="aum_handled"
+              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              defaultValue={vendorData?.aum_handled}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  aum_handled: Number(e.target.value),
+                }))
+              }
+            />
+          ) : (
+            <p className="">
+              {" "}
+              <span className="mr-1">{"₹"}</span>
+              {vendorData?.aum_handled ?? "N/A"}
+            </p>
+          )}
         </div>
         <div className="mt-[1em] w-1/2 lg:w-fit">
           <p className="font-bold  text-black">Sebi registered</p>
+
           <p className="">{vendorData?.sebi_registered?.toString() ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex  w-full flex-row lg:flex-col ">
-        <div className="w-1/2 lg:w-fit mt-[1em]">
-          <p className="font-bold  text-black">Fees type</p>
-          <p className="">{vendorData?.fees_type ?? "N/A"}</p>
-        </div>
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Fees</p>
-          <p className="">{vendorData?.fees ?? "N/A"}</p>
+          {edit ? (
+            <button onClick={() => setFeesChangeDialogOpen(true)}>
+              {formData?.fees ? formData.fees : vendorData?.fees}
+            </button>
+          ) : (
+            <p className="flex">
+              {vendorData?.fees_type && vendorData.fees_type[0] === "FIXED" && (
+                <p className="mr-1">{"₹"}</p>
+              )}
+              {vendorData?.fees ?? "N/A"}
+
+              {vendorData?.fees_type &&
+                vendorData.fees_type[0] === "PERCENTAGE" && (
+                  <p className="ml-1">{"%"}</p>
+                )}
+            </p>
+          )}
         </div>
-      </div>
-      <div className="flex  w-full flex-row lg:flex-col ">
         <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Minimum investment</p>
-          <p className="">{vendorData?.minimum_investment ?? "N/A"}</p>
-        </div>
-        <div className=" w-1/2 lg:w-fit mt-[1em]">
-          <p className="font-bold  text-black">Number of employees</p>
-          <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+          {edit ? (
+            <input
+              type="text"
+              name="minimum_investment"
+              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              defaultValue={vendorData?.minimum_investment}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  minimum_investment: Number(e.target.value),
+                }))
+              }
+            />
+          ) : (
+            <p className="">
+              {" "}
+              <span className="mr-1">{"₹"}</span>
+              {vendorData?.minimum_investment ?? "N/A"}
+            </p>
+          )}
         </div>
       </div>
       <div className="flex  w-full flex-row lg:flex-col ">
+        <div className=" w-1/2 lg:w-fit mt-[1em]">
+          <p className="font-bold  text-black">Number of employees</p>
+
+          {edit ? (
+            <input
+              type="text"
+              name="number_of_employees"
+              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              defaultValue={vendorData?.number_of_employees}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  number_of_employees: Number(e.target.value),
+                }))
+              }
+            />
+          ) : (
+            <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
+          )}
+        </div>
         <div className="w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Number of clients</p>
-          <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
+          {edit ? (
+            <input
+              type="text"
+              name="number_of_clients"
+              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              defaultValue={vendorData?.number_of_clients}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  number_of_clients: Number(e.target.value),
+                }))
+              }
+            />
+          ) : (
+            <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
+          )}
         </div>
+      </div>
+      <div className="flex  w-full flex-row lg:flex-col ">
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Location</p>
-          <p className="">{vendorData?.city ?? "N/A"}</p>
+          {edit ? (
+            <button onClick={() => setLocationChangeDialogOpen(true)}>
+              {formData?.city ? formData.city : vendorData?.city},{" "}
+              {formData?.state ? formData.state : vendorData?.state}
+            </button>
+          ) : (
+            <p className="">{vendorData?.city ?? "N/A"}</p>
+          )}
+        </div>
+        <div className="w-1/2 lg:w-fit">
+          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex flex-row lg:flex-col  w-full">
@@ -169,10 +374,6 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             )}
           </div>
         )}
-        <div className="w-1/2 lg:w-fit">
-          <p className="font-bold text-black mt-[1em]">Contact Number</p>
-          <p className="">{vendorData?.mobile ?? "N/A"}</p>
-        </div>
       </div>
       <div className="w-full mt-[1em]">
         <p className="font-bold  text-black">Email</p>
@@ -180,17 +381,34 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       </div>
       <div className="lg:hidden w-full ">
         <p className="font-bold  text-black">About</p>
-        <p className=" text-justify mb-[1em] rounded-md">
-          {contentPreview}
-          {isMobile && vendorData?.description.length! > maxVisibleLength && (
-            <button
-              onClick={handleExpandClick}
-              className="text-blue-500 hover:text-blue-700 font-medium"
-            >
-              {expanded ? "Read less" : "Read More"}
-            </button>
-          )}
-        </p>
+
+        {edit ? (
+          <input
+            type="text"
+            name="description"
+            className="h-[40px] w-[100%] px-2 text-lg  border-black rounded"
+            defaultValue={vendorData?.description}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
+          />
+        ) : (
+          <p className=" text-justify mb-[1em] rounded-md">
+            {contentPreview}
+            {isMobile &&
+              vendorData?.description?.length! > maxVisibleLength && (
+                <button
+                  onClick={handleExpandClick}
+                  className="text-blue-500 hover:text-blue-700 font-medium"
+                >
+                  {expanded ? "Read less" : "Read More"}
+                </button>
+              )}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -211,52 +429,223 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             className="w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-full"
           />
         )}
-        <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
-          {removeUnderscoresAndFirstLetterCapital(
-            vendorData?.business_name ?? "Unknown Business"
+        <div className="flex gap-1 items-center md:hidden">
+          {edit ? (
+            <input
+              type="text"
+              name="business_name"
+              className="h-[40px] mt-2 px-2 text-lg border-black rounded"
+              defaultValue={vendorData?.business_name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  business_name: e.target.value,
+                }))
+              }
+            />
+          ) : (
+            <p className="font-semibold text-base text-black text-center md:text-left mx-3 md:hidden">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.business_name ?? "Unknown Business"
+              )}
+            </p>
           )}
-        </p>
+          {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
+            <button
+              onClick={handleButtonClick}
+              className="flex items-center justify-center"
+            >
+              {edit ? (
+                <Tooltip
+                  title="Save changes"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <SaveOutlined sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  title="Edit profile"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <Edit sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </button>
+          )}
+        </div>
       </div>
       <div className="w-[93vw] md:w-auto">
-        <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
-          {removeUnderscoresAndFirstLetterCapital(
-            vendorData?.business_name ?? "Unknown Business"
+        <div className=" gap-2 items-center hidden md:flex">
+          {edit ? (
+            <input
+              type="text"
+              name="business_name"
+              className="h-[40px] mt-2 px-2 text-lg  border-black rounded"
+              defaultValue={vendorData?.business_name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  business_name: e.target.value,
+                }))
+              }
+            />
+          ) : (
+            <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.business_name ?? "Unknown Business"
+              )}
+            </p>
           )}
-        </p>
+
+          {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
+            <button
+              onClick={handleButtonClick}
+              className="flex items-center justify-center"
+            >
+              {edit ? (
+                <Tooltip
+                  title="Save changes"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <SaveOutlined sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  title="Edit profile"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <Edit sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </button>
+          )}
+        </div>
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             DEALS :
           </span>{" "}
-          <div className="flex flex-wrap gap-1">
-            {vendorData?.deals &&
-              Array.isArray(vendorData.deals) &&
-              vendorData.deals.map((item, ind) => (
-                <Chip
-                  label={removeUnderscoresAndFirstLetterCapital(item)}
-                  variant="outlined"
-                  key={ind}
-                  sx={{ height: "20px", fontSize: "11px" }}
-                />
-              ))}
-          </div>
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/deals`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    deals: selected,
+                  }));
+                }}
+                maxSelection={3}
+                selectedValue={
+                  Array.isArray(vendorData?.deals)
+                    ? vendorData?.deals
+                    : vendorData?.deals?.split(",") || []
+                }
+              />
+            </>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {vendorData?.deals &&
+                Array.isArray(vendorData.deals) &&
+                vendorData.deals.map((item, ind) => (
+                  <Chip
+                    label={removeUnderscoresAndFirstLetterCapital(item)}
+                    variant="outlined"
+                    key={ind}
+                    sx={{ height: "20px", fontSize: "11px" }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center mb-2">
           <span className="font-bold text-[11px] md:text-sm text-black">
             INVESTMENT IDEOLOGY :
           </span>
-          <div className="flex flex-wrap gap-1">
-            {vendorData?.investment_ideology &&
-              Array.isArray(vendorData.investment_ideology) &&
-              vendorData.investment_ideology.map((item, ind) => (
-                <Chip
-                  label={removeUnderscoresAndFirstLetterCapital(item)}
-                  variant="outlined"
-                  key={ind}
-                  sx={{ height: "20px", fontSize: "11px" }}
-                />
-              ))}
-          </div>
+          {edit ? (
+            <>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/investment-ideology`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    investment_ideology: selected,
+                  }));
+                }}
+                maxSelection={3}
+                selectedValue={
+                  Array.isArray(vendorData?.investment_ideology)
+                    ? vendorData?.investment_ideology
+                    : vendorData?.investment_ideology?.split(",") || []
+                }
+              />
+            </>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {vendorData?.investment_ideology &&
+                Array.isArray(vendorData.investment_ideology) &&
+                vendorData.investment_ideology.map((item, ind) => (
+                  <Chip
+                    label={removeUnderscoresAndFirstLetterCapital(item)}
+                    variant="outlined"
+                    key={ind}
+                    sx={{ height: "20px", fontSize: "11px" }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -308,7 +697,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         </div>
 
         <ReviewDialog
-          handleReviewDialogClose={handleReviewDialogClose}
+          handleReviewDialogClose={handleDialogClose}
           handleReviewSubmit={handleReviewSubmit}
           loading={loading}
           reviewDialogOpen={reviewDialogOpen}
@@ -322,6 +711,207 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         open={snackbarOpen}
         onClose={handleSnackbarClose}
         message="Review submitted successfully!"
+        key="bottom-center"
+        autoHideDuration={3000}
+      />
+
+      <Dialog open={locationChangeDialogOpen} onClose={() => handleDialogClose}>
+        <DialogTitle>Edit the location</DialogTitle>
+
+        <DialogContent className="flex flex-col gap-4  items-center w-fit justify-between">
+          <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col">
+              <p className="text-sm">Select your state</p>
+              <Autocomplete
+                disablePortal
+                value={formData?.state ? formData?.state : vendorData?.state}
+                size="small"
+                id="city-autocomplete"
+                options={state}
+                onChange={(_event, value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    state: value ?? "",
+                  }));
+                }}
+                sx={{
+                  borderRadius: "5px",
+                  border: "solid 0.3px",
+                  width: "200px",
+                }}
+                PopperComponent={CustomPopper}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingCities ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-sm">Select your city</p>
+              <Autocomplete
+                onFocus={() =>
+                  handleStateChange(
+                    formData?.state ? formData.state : vendorData?.state
+                  )
+                }
+                disablePortal
+                value={formData?.city ? formData?.city : vendorData?.city}
+                size="small"
+                id="city-autocomplete"
+                options={cities}
+                onChange={(_event, value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    city: value ?? "",
+                  }));
+                }}
+                sx={{
+                  borderRadius: "5px",
+                  border: "solid 0.3px",
+                  width: "200px",
+                }}
+                PopperComponent={CustomPopper}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingCities ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </div>
+          </div>
+
+          <DialogActions
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "10px",
+              padding: 0,
+              width: 200,
+            }}
+          >
+            <Button
+              onClick={handleDialogClose}
+              variant="outlined"
+              style={{ borderColor: "#000", color: "#000" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              style={{
+                background: "#8c52ff",
+                height: "36px",
+                width: "85px",
+              }}
+              onClick={() => setLocationChangeDialogOpen(false)}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={feesChangeDialogOpen} onClose={() => handleDialogClose}>
+        <DialogTitle>Edit the fees and its type</DialogTitle>
+
+        <DialogContent className="flex flex-col gap-4  items-center w-fit justify-between">
+          <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col">
+              <p className="text-sm">Select your fees type</p>
+              <MultipleSelect
+                apiEndpoint={`${constants.apiBaseUrl}/financial-advisor/fees-type`}
+                onChange={(selected) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    fees_type: selected,
+                  }));
+                }}
+                maxSelection={1}
+                selectedValue={
+                  Array.isArray(vendorData?.fees_type)
+                    ? vendorData?.fees_type
+                    : vendorData?.fees_type?.split(",") || []
+                }
+              />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-sm">Select your fees</p>
+              <input
+                type="text"
+                name="fees"
+                className="h-[40px] px-2 text-lg border-black rounded w-[206.67px]"
+                defaultValue={vendorData?.fees}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    fees: Number(e.target.value),
+                  }))
+                }
+              />
+            </div>
+          </div>
+
+          <DialogActions
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "10px",
+              padding: 0,
+              width: 206.67,
+            }}
+          >
+            <Button
+              onClick={handleDialogClose}
+              variant="outlined"
+              style={{ borderColor: "#000", color: "#000" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              style={{
+                background: "#8c52ff",
+                height: "36px",
+                width: "85px",
+              }}
+              onClick={() => setFeesChangeDialogOpen(false)}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={updateVendorSnackbarOpen}
+        onClose={handleSnackbarClose}
+        message={updateMessage}
         key="bottom-center"
         autoHideDuration={3000}
       />

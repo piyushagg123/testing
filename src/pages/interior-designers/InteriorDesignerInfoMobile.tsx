@@ -190,6 +190,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    setUpdateVendorSnackbarOpen(false);
   };
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -349,6 +350,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                       <input
                         type="text"
                         name="average_project_value"
+                        className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
                         defaultValue={vendorData?.average_project_value}
                         onChange={(e) =>
                           setFormData((prev) => ({
@@ -369,6 +371,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                       <input
                         type="text"
                         name="number_of_employees"
+                        className="h-[40px] w-[70%] px-2 text-lg  border-black rounded"
                         defaultValue={vendorData?.number_of_employees}
                         onChange={(e) =>
                           setFormData((prev) => ({
@@ -391,6 +394,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                       <input
                         type="text"
                         name="projects_completed"
+                        className="h-[40px] w-[70%] px-2 text-lg  border-black rounded"
                         defaultValue={vendorData?.projects_completed}
                         onChange={(e) =>
                           setFormData((prev) => ({
@@ -470,6 +474,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
                   <input
                     type="text"
                     name="description"
+                    className="h-[40px] w-[100%] px-2 text-lg  border-black rounded"
                     defaultValue={vendorData?.description}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -521,6 +526,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             <input
               type="text"
               name="business_name"
+              className="h-[40px] mt-2 px-2 text-lg  border-black rounded md:hidden"
               defaultValue={vendorData?.business_name}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -536,6 +542,79 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
               )}
             </p>
           )}
+          {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
+            <button
+              onClick={handleButtonClick}
+              className="flex items-center justify-center md:hidden"
+            >
+              {edit ? (
+                <Tooltip
+                  title="Save changes"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <SaveOutlined sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  title="Edit profile"
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, -14],
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                >
+                  <IconButton>
+                    <Edit sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="w-[93vw] md:w-auto">
+        <div className="flex gap-2 items-center">
+          {edit ? (
+            <input
+              type="text"
+              name="business_name"
+              className="h-[40px] mt-2 px-2 text-lg  border-black rounded"
+              defaultValue={vendorData?.business_name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  business_name: e.target.value,
+                }))
+              }
+            />
+          ) : (
+            <p className="font-semibold text-base text-black text-center md:text-left hidden md:block">
+              {removeUnderscoresAndFirstLetterCapital(
+                vendorData?.business_name ?? "Unknown Business"
+              )}
+            </p>
+          )}
+
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
             <button
               onClick={handleButtonClick}
@@ -585,8 +664,6 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
             </button>
           )}
         </div>
-      </div>
-      <div className="w-[93vw] md:w-auto">
         <div className="mb-2 mt-2 flex flex-col md:flex-row gap-2 items-start md:items-center">
           <span className="font-bold text-[11px] md:text-sm text-black">
             SPECIALIZED THEMES :
