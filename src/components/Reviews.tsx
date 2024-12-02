@@ -54,12 +54,13 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
   };
 
   const handleDialogSubmit = () => {
-    refetch();
+    refetchReviews();
     setSelectedReview(null);
   };
 
-  const { data: reviews, refetch } = useQuery(["reviews", id, vendorType], () =>
-    fetchReviews(id, vendorType)
+  const { data: reviews, refetch: refetchReviews } = useQuery(
+    ["reviews", id, vendorType],
+    () => fetchReviews(id, vendorType)
   );
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -107,7 +108,7 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
     try {
       await deleteReview(reviewId, vendorType);
 
-      refetch();
+      refetchReviews();
 
       setSnackbarOpen(true);
     } catch (error) {}
@@ -277,7 +278,10 @@ const Reviews: React.FC<Vendor> = ({ id, vendorType }) => {
               </div>
 
               <p className="font-bold">Customer Reviews ({reviews?.length})</p>
-              <div className="flex flex-col gap-9 justify-start w-full">
+              <div
+                className="group flex flex-col gap-9 justify-start w-full max-h-[300px] overflow-hidden hover:overflow-auto"
+                style={{ scrollbarWidth: "thin" }}
+              >
                 {reviews?.map((review: Review) => (
                   <div className="flex items-start gap-2 justify-between">
                     <div className="flex items-start gap-2">

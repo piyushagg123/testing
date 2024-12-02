@@ -56,7 +56,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     ProjectData | undefined
   >(undefined);
 
-  const { data: projectsData } = useQuery(
+  const { data: projectsData, isLoading: isProjectsLoading } = useQuery(
     ["vendorProjects", professionalId],
     () =>
       fetchInteriorDesignerProjects(
@@ -69,8 +69,10 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       setSelectedProject(projectsData[0]);
     }
   }, [projectsData]);
-  const { data: vendorData } = useQuery(["vendorDetails", professionalId], () =>
-    fetchInteriorDesigner(vendor_id ? vendor_id.toString() : professionalId!)
+  const { data: vendorData, isLoading: isVendorLoading } = useQuery(
+    ["vendorDetails", professionalId],
+    () =>
+      fetchInteriorDesigner(vendor_id ? vendor_id.toString() : professionalId!)
   );
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -104,7 +106,8 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   };
 
   const handleCarouselClick = (project: ProjectData) => {
-    setSelectedProject(project);
+    if (selectedProject === project) setSelectedProject(undefined);
+    else setSelectedProject(project);
   };
 
   const handleSnackbarClose = () => {
@@ -154,31 +157,31 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
 
   const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-10 flex-col flex  gap-4 items-center p-2 lg:border lg:rounded-md">
-      <div className="flex flex-row  w-full">
-        <div className="mt-[1em] w-1/2 ">
+      <div className="flex flex-row  w-full mt-[1em] ">
+        <div className=" w-1/2 ">
           <p className="font-bold  text-black">Typical Job Cost</p>
           <p className="">{vendorData?.average_project_value ?? "N/A"}</p>
         </div>
-        <div className="mt-[1em] w-1/2 ">
+        <div className="w-1/2 ">
           <p className="font-bold  text-black">Number of Employees</p>
           <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
         </div>
       </div>
       <div className="flex  w-full flex-row  mt-[1em]">
-        <div className="w-1/2  mt-[1em]">
+        <div className="w-1/2 ">
           <p className="font-bold  text-black">Projects Completed</p>
           <p className="">{vendorData?.projects_completed ?? "N/A"}</p>
         </div>
-        <div className=" w-1/2  mt-[1em]">
+        <div className=" w-1/2">
           <p className="font-bold  text-black">Location</p>
           <p className="">{vendorData?.city ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex flex-row  w-full">
+      <div className="flex flex-row  w-full mt-[1em] ">
         {(vendorData?.social?.facebook ||
           vendorData?.social?.instagram ||
           vendorData?.social?.website) && (
-          <div className="w-1/2 mt-[1em]">
+          <div className="w-1/2 ">
             <p className="font-bold  text-black">Socials</p>
             {vendorData.social.facebook && (
               <a
@@ -186,7 +189,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook />
+                <Facebook className="text-purple" />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -195,7 +198,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Instagram />
+                <Instagram className="text-red" />
               </a>
             )}
             {vendorData.social.website && (
@@ -204,13 +207,13 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNew />
+                <OpenInNew className="text-black" />
               </a>
             )}
           </div>
         )}
         <div className="w-1/2 ">
-          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="font-bold text-black ">Contact Number</p>
           <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
       </div>
@@ -218,7 +221,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
         <p className="font-bold  text-black">Email</p>
         <p className="">{vendorData?.email ?? "N/A"}</p>
       </div>
-      <div className=" w-full ">
+      <div className=" w-full mt-[1em] ">
         <p className="font-bold  text-black">About</p>
         <p className=" text-justify mb-[1em] rounded-md">
           {contentPreview}
@@ -331,6 +334,10 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
       </div>
     </div>
   );
+
+  if (isProjectsLoading || isVendorLoading) {
+    return <p className="min-h-screen">Loading</p>;
+  }
   return (
     <>
       <div className="mt-16 px-16 flex">
@@ -456,7 +463,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                           state={item.state}
                           theme={item.sub_category_1}
                           showProjectDetails={true}
-                          isActive={item === selectedProject}
+                          isSelected={item === selectedProject}
                         />
                       </div>
                     ))}

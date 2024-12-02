@@ -66,50 +66,50 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
   const showFilters = () => {
     return (
       <>
-        <div className="flex flex-col pt-3 gap-1">
-          <p className="font-bold text-base text-black">{"DEALS"}</p>
-          {formattedDeals.map((deal: string) => {
-            return (
-              <>
-                <FormControlLabel
-                  key={deal}
-                  className="-mb-2.5 -mt-2.5"
-                  control={
-                    <Checkbox
-                      checked={selectedDeals.has(deal)}
-                      sx={{
-                        "&.Mui-checked": {
-                          color: "#ff5757",
-                        },
-                        transform: "scale(0.75)",
-                      }}
-                      onChange={() =>
-                        handleCheckboxChange(
-                          deal,
-                          selectedDeals,
-                          setSelectedDeals,
-                          setDealFilters,
-                          dealFilters
-                        )
-                      }
-                    />
-                  }
-                  label={
-                    <span className="text-sm">
-                      {deal === "Complete Wealth Management"
-                        ? "Wealth management"
-                        : deal}
-                    </span>
-                  }
-                />
-              </>
-            );
-          })}
+        <div className="flex flex-col pt-3 ">
+          <p className="font-bold text-base text-black mb-[15px]">{"DEALS"}</p>
+          <div className="flex flex-col gap-6">
+            {formattedDeals.map((deal: string) => {
+              return (
+                <>
+                  <FormControlLabel
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      width: "fit-content",
+                    }}
+                    key={deal}
+                    className="-mb-2.5 -mt-2.5"
+                    control={
+                      <Checkbox
+                        checked={selectedDeals.has(deal)}
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#ff5757",
+                          },
+                          transform: "scale(0.75)",
+                          paddingY: 0,
+                        }}
+                        onChange={() =>
+                          handleCheckboxChange(
+                            deal,
+                            selectedDeals,
+                            setSelectedDeals,
+                            setDealFilters,
+                            dealFilters
+                          )
+                        }
+                      />
+                    }
+                    label={<span className="text-sm w-fit">{deal}</span>}
+                  />
+                </>
+              );
+            })}
+          </div>
         </div>
         <div className="flex flex-col gap-1 pt-5">
-          <p className="font-bold text-base text-darkgrey">
-            {"INVESTMENT IDEOLOGY"}
-          </p>
+          <p className="font-bold text-base text-black">INVESTMENT IDEOLOGY</p>
           {formattedInvestmentIdeology.map((investmentIdeology: string) => {
             return (
               <FormControlLabel
@@ -150,7 +150,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
       <div className="flex gap-5 justify-between pr-2 xl:pr-4 text-[15px] w-[93vw] md:w-[97vw] lg:w-auto m-auto md:m-0">
         <div className="flex gap-5 justify-between items-center w-[93vw] md:w-[97vw] lg:w-auto m-auto lg:m-0   text-[15px]">
           <p
-            className="font-bold text-base text-darkgrey"
+            className="font-bold text-base text-darkgrey pl-[10px] lg:pl-0"
             onClick={() => setFilterMenu(() => true)}
           >
             <FilterAlt />
@@ -158,7 +158,7 @@ const FinancePlannerFilters: React.FC<FiltersProps> = ({ fetchVendorList }) => {
 
           <div className="lg:hidden">
             <FormControl
-              className="w-[200px] py-[10px] left-[15px]"
+              className="w-[150px] py-[10px] left-[15px]"
               sx={{ height: "40px" }}
               size="small"
             >

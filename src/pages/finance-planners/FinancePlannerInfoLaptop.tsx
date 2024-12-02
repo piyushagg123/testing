@@ -116,18 +116,18 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
     : vendorData?.description;
   const professionalCard = (
     <div className=" text-[12px] md:text-[16px]  lg:ml-6 lg:mt-7 flex-col flex lg:block gap-4 items-center p-2 lg:border lg:rounded-md">
-      <div className="flex flex-row w-full">
-        <div className="mt-[1em]  w-1/2 ">
+      <div className="flex flex-row w-full mt-[1em] ">
+        <div className=" w-1/2 ">
           <p className="font-bold  text-black">AUM handled</p>
           <p className="">₹{vendorData?.aum_handled ?? "N/A"}</p>
         </div>
-        <div className="mt-[1em] w-1/2 ">
+        <div className="w-1/2 ">
           <p className="font-bold  text-black">Sebi registered</p>
           <p className="">{vendorData?.sebi_registered?.toString() ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex  w-full flex-row ">
-        <div className=" w-1/2 mt-[1em]">
+      <div className="flex  w-full flex-row mt-[1em] ">
+        <div className=" w-1/2">
           <p className="font-bold  text-black"> Fees</p>
           <p className="flex">
             {vendorData?.fees_type && vendorData.fees_type[0] === "FIXED" && (
@@ -141,36 +141,36 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
               )}
           </p>
         </div>
-        <div className="w-1/2 mt-[1em]">
+        <div className="w-1/2">
           <p className="font-bold  text-black">Minimum investment</p>
           <p className="">₹{vendorData?.minimum_investment ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex  w-full flex-row ">
-        <div className=" w-1/2 mt-[1em]">
+      <div className="flex  w-full flex-row mt-[1em] ">
+        <div className=" w-1/2">
           <p className="font-bold  text-black">Number of employees</p>
           <p className="">{vendorData?.number_of_employees ?? "N/A"}</p>
         </div>
-        <div className="w-1/2 mt-[1em]">
+        <div className="w-1/2 ">
           <p className="font-bold  text-black">Number of clients</p>
           <p className="">{vendorData?.number_of_clients ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex  w-full flex-row">
-        <div className=" w-1/2 mt-[1em]">
+      <div className="flex  w-full flex-row mt-[1em] ">
+        <div className=" w-1/2 ">
           <p className="font-bold  text-black">Location</p>
           <p className="">{vendorData?.city ?? "N/A"}</p>
         </div>
         <div className="w-1/2 ">
-          <p className="font-bold text-black mt-[1em]">Contact Number</p>
+          <p className="font-bold text-black ">Contact Number</p>
           <p className="">{vendorData?.mobile ?? "N/A"}</p>
         </div>
       </div>
-      <div className="flex flex-row  w-full">
+      <div className="flex flex-row  w-full mt-[1em] ">
         {(vendorData?.social?.facebook ||
           vendorData?.social?.instagram ||
           vendorData?.social?.website) && (
-          <div className="w-1/2 mt-[1em]">
+          <div className="w-1/2">
             <p className="font-bold  text-black">Socials</p>
             {vendorData.social.facebook && (
               <a
@@ -178,7 +178,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook />
+                <Facebook className="text-purple" />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -187,7 +187,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Instagram />
+                <Instagram className="text-red" />
               </a>
             )}
             {vendorData.social.website && (
@@ -196,13 +196,13 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNew />
+                <OpenInNew className="text-black" />
               </a>
             )}
           </div>
         )}
       </div>
-      <div className="w-full mt-[1em]">
+      <div className="w-full mt-[1em] ">
         <p className="font-bold  text-black">Email</p>
         <p className="">{vendorData?.email ?? "N/A"}</p>
       </div>
@@ -325,7 +325,7 @@ const FinancePlannerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           <br />
 
           <div id="reviews" className=" mb-[10px]  m-auto ml-6">
-            <div className=" flex justify-center flex-col items-center px-2">
+            <div className=" flex justify-center border rounded-md w-full flex-col items-center px-2   py-[1em]">
               {<Reviews id={Number(professionalId)} />}
             </div>
           </div>

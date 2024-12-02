@@ -30,6 +30,8 @@ interface VendorItem {
   rating: number;
   logo: string;
   business_name: string;
+  sebi_registered?: boolean;
+  is_verified?: boolean;
 }
 
 interface SearchProfessionalsProps {
@@ -144,7 +146,12 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
               NEAR YOU
             </h1>
             <p className="text-black text-m pt-2 pb-6">
-              Answer a few questions to get a list of Interior Designers
+              Answer a few questions to get a list of{" "}
+              <span>
+                {professional === "interiorDesigners"
+                  ? "interior designers "
+                  : "finance planners "}
+              </span>
               suitable for your needs
             </p>
             <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
@@ -308,6 +315,12 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
                               rating={item.rating}
                               img={item.logo}
                               professionalCategory={item.business_name}
+                              isVerified={
+                                professional === "interiorDesigners"
+                                  ? item.is_verified!
+                                  : item.sebi_registered!
+                              }
+                              professional={professional}
                             />
                           </div>
                         </NavLink>
