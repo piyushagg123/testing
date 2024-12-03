@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
 import {
   Checkbox,
   useMediaQuery,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import constants from "../constants";
 import { removeUnderscoresAndFirstLetterCapital } from "../helpers/StringHelpers";
+import { fetchOptions } from "../controllers/MultipleSelectController";
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -25,14 +25,6 @@ function getStyles(value: string, selectedValues: string[], theme: any) {
         : theme.typography.fontWeightMedium,
   };
 }
-
-const fetchOptions = async (apiEndpoint: string) => {
-  const response = await axios.get(apiEndpoint);
-
-  return response.data.data.value
-    ? response.data.data.value
-    : response.data.data;
-};
 
 interface MultipleSelectProps {
   apiEndpoint?: string;
@@ -100,7 +92,6 @@ export default function MultipleSelect({
     removeUnderscoresAndFirstLetterCapital(item?.value)
   );
 
-  // const sortedSelectedValues = selectedValuesWithIds.map((item) => item?.value);
   const MenuProps = {
     PaperProps: {
       style: {
@@ -124,7 +115,7 @@ export default function MultipleSelect({
             justifyContent: "center",
             width: "208px",
             borderRadius: "5px",
-            border: "solid 1px",
+            border: "solid 0.5px #9ca3af",
           }}
           size="small"
         >

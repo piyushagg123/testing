@@ -20,6 +20,8 @@ import {
 import constants from "../constants";
 import { StateContext, ApiContext } from "../context";
 import { UnderMaintainence } from "../assets";
+import { fetchInteriorDesignerList } from "../controllers/interior-designers/VendorController";
+import { financePlannerList } from "../controllers/finance-planners/VendorController";
 
 interface VendorItem {
   vendor_id?: string;
@@ -28,6 +30,8 @@ interface VendorItem {
   rating: number;
   logo: string;
   business_name: string;
+  sebi_registered?: boolean;
+  is_verified?: boolean;
 }
 
 interface SearchProfessionalsProps {
@@ -72,27 +76,18 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
     }
   };
 
-  const fetchInteriorDesignerList = async (
+  const fetchInteriorDesigners = async (
     themeFilters = new Set(),
     spaceFilters = new Set(),
     executionFilters = new Set()
   ) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${constants.apiBaseUrl}/vendor/list`, {
-        params: {
-          category: "INTERIOR_DESIGNER",
-          sub_category_1: Array.from(themeFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_2: Array.from(spaceFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-          sub_category_3: Array.from(executionFilters as Set<string>)
-            .map((option) => option.toUpperCase())
-            .join(","),
-        },
-      });
+      const response = await fetchInteriorDesignerList(
+        themeFilters,
+        spaceFilters,
+        executionFilters
+      );
       setFilteredItems(response.data.data);
     } catch (error) {
       setErrorInApi(true);
@@ -107,20 +102,9 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
   ) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `${constants.apiBaseUrl}/financial-advisor/advisors`,
-        {
-          params: {
-            deals: Array.from(dealFilters as Set<string>)
-              .map((option) => option.toUpperCase())
-              .join(","),
-            investment_ideology: Array.from(
-              investmentIdeologyFilters as Set<string>
-            )
-              .map((option) => option.toUpperCase())
-              .join(","),
-          },
-        }
+      const response = await financePlannerList(
+        dealFilters,
+        investmentIdeologyFilters
       );
       setFilteredItems(response.data.data);
     } catch (error) {
@@ -162,7 +146,12 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
               NEAR YOU
             </h1>
             <p className="text-black text-m pt-2 pb-6">
-              Answer a few questions to get a list of Interior Designers
+              Answer a few questions to get a list of{" "}
+              <span>
+                {professional === "interiorDesigners"
+                  ? "interior designers "
+                  : "finance planners "}
+              </span>
               suitable for your needs
             </p>
             <div className="flex flex-col md:flex-row gap-2 items-center md:items-end">
@@ -247,7 +236,7 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
             <div className="flex flex-wrap justify-center gap-2 lg:block">
               {professional === "interiorDesigners" ? (
                 <InteriorDesignerFilters
-                  fetchVendorList={fetchInteriorDesignerList}
+                  fetchVendorList={fetchInteriorDesigners}
                 />
               ) : (
                 <FinancePlannerFilters
@@ -325,7 +314,13 @@ const SearchProfessionals: React.FC<SearchProfessionalsProps> = ({
                               about={item.description}
                               rating={item.rating}
                               img={item.logo}
-                              profCat={item.business_name}
+                              professionalCategory={item.business_name}
+                              isVerified={
+                                professional === "interiorDesigners"
+                                  ? item.is_verified!
+                                  : item.sebi_registered!
+                              }
+                              professional={professional}
                             />
                           </div>
                         </NavLink>

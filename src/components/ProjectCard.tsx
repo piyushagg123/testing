@@ -29,7 +29,7 @@ interface ImageCarouselProps {
   state: string;
   imageObj: Record<string, string[]>;
   showProjectDetails: boolean;
-  isActive?: boolean;
+  isSelected?: boolean;
 }
 interface ItemProps {
   item: string;
@@ -41,7 +41,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   city,
   imageObj,
   showProjectDetails = true,
-  isActive,
+  isSelected,
 }) => {
   const keysArray = Object.keys(imageObj);
   const arr: string[] = [];
@@ -67,7 +67,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             width: "130px",
             border: "none",
             boxShadow: "none",
-            background: isActive ? "#f2f2f2" : "",
+            background: isSelected ? "#f2f2f2" : "",
           }}
         >
           <CardActionArea>
@@ -125,7 +125,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 textTransform: "none",
                               }}
                             >
-                              View details
+                              {isSelected ? "Hide details" : "View details"}
                             </Button>
                           </div>
                         </div>

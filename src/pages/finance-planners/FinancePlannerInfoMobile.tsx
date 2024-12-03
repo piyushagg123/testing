@@ -30,7 +30,6 @@ import constants from "../../constants";
 import { AuthContext } from "../../context/Login";
 import { MultipleSelect, ReviewDialog, Reviews } from "../../components";
 import { ProfessionalInfoProps, VendorData } from "./Types";
-import { fetchFinancialAdvisorDetails, submitReview } from "./Controller";
 import {
   removeUnderscoresAndFirstLetterCapital,
   truncateText,
@@ -44,6 +43,11 @@ const CustomPopper = styled(Popper)(() => ({
     overflowY: "auto",
   },
 }));
+import {
+  fetchFinancialAdvisorDetails,
+  updateFinancePlanner,
+} from "../../controllers/finance-planners/VendorController";
+import { submitFinancePlannerReview } from "../../controllers/ReviewController";
 
 const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
   renderProfessionalInfoView,
@@ -108,7 +112,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
     setLoadingCities(false);
   };
 
-  const handl = async (data: VendorData) => {
+  const handleUpdate = async (data: VendorData) => {
     if (data.state) {
       if (!data.city) {
         setUpdateMessage("Please select a city as well to update the state");
@@ -117,20 +121,9 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       }
     }
     try {
-      const response = await axios.post(
-        `${constants.apiBaseUrl}/financial-advisor/update`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log("Update successful", response);
+      await updateFinancePlanner(data);
       setUpdateMessage("vendor updated successfully!");
-    } catch (error) {
-      console.error("Error updating vendor data", error);
-    }
+    } catch (error) {}
     setFormData(undefined);
   };
 
@@ -148,7 +141,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
   const handleButtonClick = async () => {
     if (edit) {
-      await handl({
+      await handleUpdate({
         ...formData,
         investment_ideology: Array.isArray(formData?.investment_ideology)
           ? formData.investment_ideology.toString()
@@ -159,9 +152,6 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         fees_type: Array.isArray(formData?.fees_type)
           ? formData.fees_type.toString()
           : vendorData?.fees_type?.toString(),
-        // sub_category_3: Array.isArray(formData?.sub_category_3)
-        //   ? formData.sub_category_3.toString()
-        //   : vendorData?.sub_category_3,
       });
       refetchFinancePlannerDetails();
       setUpdateVendorSnackbarOpen(true);
@@ -177,8 +167,10 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
   const handleReviewSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    submitReview(
-      event,
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    submitFinancePlannerReview(
+      formData,
       professionalId!,
       () => {
         setReviewDialogOpen(false);
@@ -189,6 +181,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
       }
     );
     setLoading(false);
+    window.location.reload();
   };
 
   const [expanded, setExpanded] = useState(false);
@@ -213,7 +206,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             <input
               type="number"
               name="aum_handled"
-              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              className="h-[40px] w-[70%] px-2 text-lg border-gray-400 rounded"
               defaultValue={vendorData?.aum_handled}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -240,7 +233,10 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Fees</p>
           {edit ? (
-            <button onClick={() => setFeesChangeDialogOpen(true)}>
+            <button
+              onClick={() => setFeesChangeDialogOpen(true)}
+              className="border h-[40px] text-lg w-[70%] rounded border-gray-400 flex justify-start items-center px-2"
+            >
               {formData?.fees ? formData.fees : vendorData?.fees}
             </button>
           ) : (
@@ -263,7 +259,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             <input
               type="text"
               name="minimum_investment"
-              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              className="h-[40px] w-[70%] px-2 text-lg border-gray-400 rounded"
               defaultValue={vendorData?.minimum_investment}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -289,7 +285,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             <input
               type="text"
               name="number_of_employees"
-              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              className="h-[40px] w-[70%] px-2 text-lg border-gray-400 rounded"
               defaultValue={vendorData?.number_of_employees}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -308,7 +304,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             <input
               type="text"
               name="number_of_clients"
-              className="h-[40px] w-[70%] px-2 text-lg border-black rounded"
+              className="h-[40px] w-[70%] px-2 text-lg border-gray-400 rounded"
               defaultValue={vendorData?.number_of_clients}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -326,9 +322,11 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
         <div className=" w-1/2 lg:w-fit mt-[1em]">
           <p className="font-bold  text-black">Location</p>
           {edit ? (
-            <button onClick={() => setLocationChangeDialogOpen(true)}>
-              {formData?.city ? formData.city : vendorData?.city},{" "}
-              {formData?.state ? formData.state : vendorData?.state}
+            <button
+              onClick={() => setLocationChangeDialogOpen(true)}
+              className="border h-[40px] w-[70%] rounded text-lg border-gray-400 flex justify-start items-center px-2"
+            >
+              {formData?.city ? formData.city : vendorData?.city}
             </button>
           ) : (
             <p className="">{vendorData?.city ?? "N/A"}</p>
@@ -351,7 +349,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook />
+                <Facebook className="text-purple" />
               </a>
             )}
             {vendorData.social.instagram && (
@@ -360,7 +358,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Instagram />
+                <Instagram className="text-red" />
               </a>
             )}
             {vendorData.social.website && (
@@ -369,7 +367,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <OpenInNew />
+                <OpenInNew className="text-black" />
               </a>
             )}
           </div>
@@ -386,7 +384,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           <input
             type="text"
             name="description"
-            className="h-[40px] w-[100%] px-2 text-lg  border-black rounded"
+            className="h-[40px] w-[100%] px-2 text-lg  border-gray-400 rounded"
             defaultValue={vendorData?.description}
             onChange={(e) =>
               setFormData((prev) => ({
@@ -434,7 +432,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             <input
               type="text"
               name="business_name"
-              className="h-[40px] mt-2 px-2 text-lg border-black rounded"
+              className="h-[40px] mt-2 px-2 text-lg border-gray-400 rounded"
               defaultValue={vendorData?.business_name}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -506,7 +504,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
             <input
               type="text"
               name="business_name"
-              className="h-[40px] mt-2 px-2 text-lg  border-black rounded"
+              className="h-[40px] mt-2 px-2 text-lg  border-gray-400 rounded"
               defaultValue={vendorData?.business_name}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -684,7 +682,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
                 </div>
               </div>
             )}
-            <div id="reviews" className=" mb-[10px] w-[98vw] m-auto">
+            <div id="reviews" className="mt-[20px] mb-[10px] w-[98vw] m-auto">
               <div className=" lg:w-[750px] flex justify-center flex-col items-center px-2">
                 {
                   <Reviews
@@ -863,7 +861,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
               <input
                 type="text"
                 name="fees"
-                className="h-[40px] px-2 text-lg border-black rounded w-[206.67px]"
+                className="h-[40px] px-2 text-lg border-gray-400 rounded w-[206.67px]"
                 defaultValue={vendorData?.fees}
                 onChange={(e) =>
                   setFormData((prev) => ({

@@ -1,7 +1,7 @@
 import axios from "axios";
 import constants from "../constants";
 
-export const handleStateChange = async ({
+export const fetchCities = async ({
   event: _event,
   value,
   setFormData,
@@ -35,4 +35,9 @@ export const handleStateChange = async ({
   } else {
     setLoadingCities(false);
   }
+};
+
+export const fetchStateData = async () => {
+  const { data } = await axios.get(`${constants.apiBaseUrl}/location/states`);
+  return data.data;
 };
