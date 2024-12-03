@@ -215,7 +215,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
     window.location.reload();
   };
 
-  const handleButtonClick = async () => {
+  const handleEditButtonClick = async () => {
     if (edit) {
       await handleUpdate({
         ...formData,
@@ -541,7 +541,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
           )}
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
             <button
-              onClick={handleButtonClick}
+              onClick={handleEditButtonClick}
               className="flex items-center justify-center md:hidden"
             >
               {edit ? (
@@ -614,7 +614,7 @@ const InteriorDesignerInfoMobile: React.FC<ProfessionalInfoProps> = ({
 
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
             <button
-              onClick={handleButtonClick}
+              onClick={handleEditButtonClick}
               className="flex items-center justify-center"
             >
               {edit ? (

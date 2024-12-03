@@ -204,7 +204,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleButtonClick = async () => {
+  const handleEditButtonClick = async () => {
     if (edit) {
       await handleUpdate({
         ...formData,
@@ -441,7 +441,7 @@ const InteriorDesignerInfoLaptop: React.FC<ProfessionalInfoProps> = ({
           </p>
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
             <button
-              onClick={handleButtonClick}
+              onClick={handleEditButtonClick}
               className="flex items-center justify-center"
             >
               {edit ? (

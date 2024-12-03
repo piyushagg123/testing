@@ -139,7 +139,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
     setReviewError("");
   };
 
-  const handleButtonClick = async () => {
+  const handleEditButtonClick = async () => {
     if (edit) {
       await handleUpdate({
         ...formData,
@@ -450,7 +450,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
           )}
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
             <button
-              onClick={handleButtonClick}
+              onClick={handleEditButtonClick}
               className="flex items-center justify-center"
             >
               {edit ? (
@@ -523,7 +523,7 @@ const FinancePlannerInfo: React.FC<ProfessionalInfoProps> = ({
 
           {(vendor_id || Number(professionalId) == userDetails.vendor_id) && (
             <button
-              onClick={handleButtonClick}
+              onClick={handleEditButtonClick}
               className="flex items-center justify-center"
             >
               {edit ? (
