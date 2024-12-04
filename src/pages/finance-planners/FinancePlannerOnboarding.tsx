@@ -94,11 +94,11 @@ const FinancePlannerOnboarding = () => {
         ","
       ),
       fees_type: [formData.fees_type as Array<string>].join(","),
-      aum_handled: formData.aum_handled,
-      minimum_investment: formData.minimum_investment,
-      number_of_clients: formData.number_of_clients,
-      number_of_employees: formData?.number_of_employees,
-      fees: formData.fees,
+      aum_handled: Number(formData.aum_handled),
+      minimum_investment: Number(formData.minimum_investment),
+      number_of_clients: Number(formData.number_of_clients),
+      number_of_employees: Number(formData?.number_of_employees),
+      fees: Number(formData.fees),
     };
 
     try {
