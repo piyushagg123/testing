@@ -95,8 +95,8 @@ const InteriorDesignerOnboarding = () => {
         formData.number_of_employees!.toString(),
         10
       ),
-      average_project_value: formData.average_project_value,
-      projects_completed: formData.projects_completed,
+      average_project_value: Number(formData.average_project_value),
+      projects_completed: Number(formData.projects_completed),
       sub_category_1: [formData.sub_category_1 as Array<string>].join(","),
       sub_category_2: [formData.sub_category_2 as Array<string>].join(","),
       sub_category_3: [formData.sub_category_3 as Array<string>].join(","),
